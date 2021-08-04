@@ -4,18 +4,25 @@
 {% block content %}
     <div class="cafe_info">
         {{ cafe.name }}
-        {{ cafe.location }}
+        {{ cafe.adress }}
         {{ cafe_stars }}        
     </div>
-    <a href="#">지도</a>
+    <a href="">지도</a>
     <a href="{% url 'cafe:review_create' %}">리뷰 작성</a>
 
     <div class="review_list">
+        <div>정렬 | 방문 순 | 총 방문 순 | 리뷰 순 | 최신 순</div>
         {% for review in reviews %}
             {{ review.username }}
             {{ review.stars }}
             {{ review.content }}
-            {{ comment }}
+
+            {% for comment in review_comments %}
+                {{ comment.username }}
+                {{ comment.content }}
+            {% endfor %}
+
+            <input type="text" value="댓글 입력"><button>답글 달기</button>
         {% endfor %}
     </div>
 

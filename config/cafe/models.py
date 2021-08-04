@@ -5,9 +5,9 @@ from user.models import User
 # Create your models here.
 class CafeList(models.Model):
     name = models.CharField(max_length=50)
-    location = models.CharField(max_length=50) #구, 동
-    # location_x = models.FloatField(default=0) #위도, 경도
-    # location_y = models.FloatField(default=0)
+    adress = models.CharField(max_length=50) #구, 동
+    location_x = models.FloatField(default=0) #위도, 경도
+    location_y = models.FloatField(default=0)
     stars = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
 
     def __str__(self):
