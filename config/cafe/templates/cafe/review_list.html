@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="cafe_info">
+        {{ cafe.name }}
+        {{ cafe.location }}
+        {{ cafe_stars }}        
+    </div>
+    <a href="#">지도</a>
+    <a href="{% url 'cafe:review_create' %}">리뷰 작성</a>
+
+    <div class="review_list">
+        {% for review in reviews %}
+            {{ review.username }}
+            {{ review.stars }}
+            {{ review.content }}
+            {{ comment }}
+        {% endfor %}
+    </div>
+
+{% endblock %}
