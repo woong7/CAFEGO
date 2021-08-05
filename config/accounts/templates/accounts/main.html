@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h1>MAIN 입니다</h1>
+
+<h2>NAV - 로그인하기, 회원가입하기 </h2>
+
+<h2>각 페이지별 소개</h2>
+
+
+
+{% if user.is_authenticated %}
+    <p>{{user.username}} 님이 로그인 중</p>
+    <h4><a href="{% url 'logout' %}">로그아웃하기</a></h4>
+{%else%}
+<h4><a href="{% url 'login' %}">로그인하기</a></h4>
+{%endif %}
+{% endblock %}
