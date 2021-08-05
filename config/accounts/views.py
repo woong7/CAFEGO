@@ -24,15 +24,17 @@ def login(request):
         user = auth.authenticate(request, username=username, password=password)
         if user is not None:
             auth.login(request, user)
-            return redirect('home')
+            return redirect('/accounts/')
         else:#실패시
             return render(request, 'accounts/login.html', {'error': 'username or password is incorrect'}) #에러 메시지가 출력이 안됨,,,
     else:
+        print("로그인 성공!")
         return render(request, 'accounts/login.html')
 
 def logout(request):
     auth.logout(request)
-    return redirect('home')
+    print("로그아웃 성공!")
+    return redirect('/accounts/')
 
 def home(request):
     return render(request, 'accounts/home.html')
