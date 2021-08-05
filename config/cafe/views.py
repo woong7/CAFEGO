@@ -4,17 +4,28 @@ from .forms import ReviewForm
 
 # Create your views here.
 def review_list(request, pk):
-    cafe = CafeList.objects.get(pk=pk) #해당 카페 정보 불러옴
-    reviews = Review.objects.filter(cafe=cafe.id) #해당 카페 리뷰만 불러옴
-    review_photo = 
+    this_cafe = CafeList.objects.get(pk=pk) #해당 카페 정보 불러옴
+    reviews = Review.objects.filter(cafe=this_cafe) #해당 카페 리뷰만 불러옴
+    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) #reviews.id 못 받음
+
+    # for문 돌리다가 말음(딕셔너리?)
+    # reviews.id가 만약 #1,3,5
+    # review_id = []
+    # for i in reviews:
+    #     review_id.append(i)
+
+    # review_photo = {}
+    # for i in reviews:
+    #     photos = ReviewPhoto.objects.filter(review=i) #필터는 리스트로 받음
+    #     review_photo[i] = photos
+    
     #review_comments = Comment.objects.filter(review_comment=reviews.id)
     
-    cafe_stars = ['⭐']
-    # for i  in range(cafe.cafe_stars): #소숫점 때문에 별이 잘 안나올듯...
-    #     cafe_stars.append('⭐')
-    #     i += 1
+    cafe_stars = ''
+    for i  in range(int(this_cafe.cafe_stars)): #소숫점 때문에 별이 잘 안나올듯...
+        cafe_stars += '⭐'
 
-    ctx={'cafe': cafe, 'reviews': reviews, 'cafe_stars':cafe_stars}
+    ctx={'this_cafe': this_cafe, 'reviews': reviews, 'cafe_stars':cafe_stars, 'review_photo': review_photo}
     return render(request, 'cafe/review_list.html', ctx)
 
 

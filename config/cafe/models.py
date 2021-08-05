@@ -19,11 +19,11 @@ class Review(models.Model):
     cafe = models.ForeignKey(CafeList, on_delete=models.CASCADE, related_name='this_cafe')
     username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_person')
     STARS_CHOICES = [
-        ('1', '⭐'),
-        ('2', '⭐⭐'),
-        ('3', '⭐⭐⭐'),
-        ('4', '⭐⭐⭐⭐'),
-        ('5', '⭐⭐⭐⭐⭐'),
+        ('⭐', '⭐'),
+        ('⭐⭐', '⭐⭐'),
+        ('⭐⭐⭐', '⭐⭐⭐'),
+        ('⭐⭐⭐⭐', '⭐⭐⭐⭐'),
+        ('⭐⭐⭐⭐⭐', '⭐⭐⭐⭐⭐'),
     ]
     review_stars = models.CharField(verbose_name='리뷰 별점', default='⭐⭐⭐⭐⭐', choices=STARS_CHOICES, max_length=20)
     content = models.TextField(verbose_name='리뷰 내용')
@@ -35,6 +35,7 @@ class Review(models.Model):
         return self.content
 
 class ReviewPhoto(models.Model):
+    review_cafe = models.ForeignKey(CafeList, on_delete=models.CASCADE, related_name='review_cafe')
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='this_review')
     image = models.ImageField(verbose_name='리뷰 사진', upload_to = 'media/review/%Y/%m/%d', null=True) 
 
