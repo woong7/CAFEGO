@@ -2,23 +2,26 @@
 {% load static %}
 
 {% block content %}
-    <!-- <div class="cafe_info">
-        {{ cafe.name }}
-        {{ cafe.adress }}
-        {{ cafe_stars }}        
-    </div> -->
+    <div class="cafe_info">
+        {{ cafe.name }}<br/>
+        {{ cafe.adress }}<br/>
+        {{ cafe_stars }}<br/>        
+    </div>
     <a href="">지도</a>
-    <a href="{% url 'cafe:review_create' %}">리뷰 작성</a>
+    <a href="{% url 'cafe:review_create' %}">리뷰 작성</a><br/>
 
     <div class="review_list">
         <div>정렬 | 방문 순 | 총 방문 순 | 리뷰 순 | 최신 순</div>
-        {% for review in current_review %}
+        {% for review in reviews %}
             {{ review.username }}
-            {{ review.stars }}
-            {{ review.content }}
-            {% for photo in current_review.photo_set.all %}
-                <img src="{{photo.image.url}}" width="50">
-            {% endfor %}
+            {{ review.review_stars }}<br/>
+            {{ review.content }}<br/>
+            {% if review.photo %}
+                {% for photo in review.photo_set.all %}
+                    <img src="{{photo.image.url}}" width="50">
+                {% endfor %}
+            {% endif %}
+            <br/> 
 
             <!-- {% for comment in review_comments %}
                 {{ comment.username }}
@@ -26,7 +29,7 @@
             {% endfor %} -->
 
             <input type="text" value="댓글 입력"><button>답글 달기</button>
-        {% endfor %}
+            <br/> 
+            {% endfor %}
     </div>
-
 {% endblock %}

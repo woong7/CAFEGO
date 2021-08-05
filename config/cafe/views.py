@@ -5,7 +5,8 @@ from .forms import ReviewForm
 # Create your views here.
 def review_list(request, pk):
     cafe = CafeList.objects.get(pk=pk) #해당 카페 정보 불러옴
-    reviews = Review.objects.filter(cafe_review=cafe.id) #해당 카페 리뷰만 불러옴
+    reviews = Review.objects.filter(cafe=cafe.id) #해당 카페 리뷰만 불러옴
+    review_photo = 
     #review_comments = Comment.objects.filter(review_comment=reviews.id)
     
     cafe_stars = ['⭐']
@@ -36,7 +37,7 @@ def review_create(request):
             photo.save()
         
         #해당 리뷰를 쓴 카페 아이디 추출 (해당 카페의 리뷰를 전부 보려고 함)
-        cafe = CafeList.objects.filter(pk=review.cafe.id)
+        cafe = CafeList.objects.get(pk=review.cafe.id)
         
         return redirect('cafe:review_list', cafe.id)
     else:
