@@ -21,5 +21,6 @@ urlpatterns = [
     path('cafe/', include('cafe.urls')),
 
     #path('', include('user.urls')),
-    path('accounts/', include('accounts.urls')),
+    path('', include('accounts.urls')),
+    path('account/', include('allauth.urls')), #accounts.urls
 ]

@@ -20,6 +20,7 @@ SEOUL_DISTRICT_CHOICES = [
     ('MAPO', '마포구'),
     ('YANGCHEON', '양천구'),
     ('GANGSEO', '강서구'),
+    #{'종로구': {'1동', '2동', '3동'}},
 
 ]
 
