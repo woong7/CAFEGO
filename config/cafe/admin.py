@@ -4,7 +4,7 @@ from .models import CafeList, Review, Comment, Map, ReviewPhoto
 # Register your models here
 
 class CafeListAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'adress', 'cafe_stars']
+    list_display = ['id', 'name', 'address', 'cafe_stars']
 admin.site.register(CafeList, CafeListAdmin)
 
 

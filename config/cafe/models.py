@@ -6,7 +6,7 @@ from accounts.models import User
 # Create your models here.
 class CafeList(models.Model):
     name = models.CharField(verbose_name='카페 이름', max_length=50)
-    adress = models.CharField(verbose_name='카페 주소', max_length=50) #구, 동
+    address = models.CharField(verbose_name='카페 주소', max_length=50) #구, 동
     location_x = models.FloatField(verbose_name='카페 위도', default=0) #위도, 경도
     location_y = models.FloatField(verbose_name='카페 경도', default=0)
     cafe_stars = models.FloatField(verbose_name='카페 별점', default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])

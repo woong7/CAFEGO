@@ -29,6 +29,7 @@ def review_create(request):
             photo = ReviewPhoto()
             #외래키로 현재 생성한 review의 기본키 참조(지금 다루는 사진의 리뷰가 위에서 가져온 리뷰)
             photo.review = myreview
+            photo.review_cafe = myreview.cafe
             #imgs에서 가져온 이미지 파일 하나를 저장
             photo.image = img
             #db에 저장
