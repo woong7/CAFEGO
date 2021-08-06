@@ -3,37 +3,9 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager, AbstractBa
 #user model 커스텀
 from typing import Any, Collection, Optional, Set, Tuple, Type, TypeVar, Union
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from accounts.choices import *
 #user.username 원래 있는 이름
-SEOUL_DISTRICT_CHOICES = [
-    #('FR', 'Freshman'), #DB에 저장하는 실제 값, display용 이름
-    ('JONGNO', '종로구'), #이걸 동이랑 어떻게 연결??
-    ('YONGSAN', '용산구'),
-    ('SEOUNGDONG', '성동구'),
-    ('GWANGJIN', '광진구'),
-    ('DONGDAEMUN', '동대문구'),
-    ('JUNGNANG', '중랑구'),
-    ('SEONGBUK', '성북구'),
-    ('GANGBUK', '강북구'),
-    ('DOBONG', '도봉구'),
-    ('NOWON', '노원구'),
-    ('EUNPYEONG', '은평구'),
-    ('SEODAEMUN', '서대문구'),
-    ('MAPO', '마포구'),
-    ('YANGCHEON', '양천구'),
-    ('GANGSEO', '강서구'),
-    #{'종로구': {'1동', '2동', '3동'}},
 
-]
-
-SEOUL_TOWN_CHOICES = [
-    ('CHEONGUN', '청운효자동'),
-    ('SAJIK', '사직동'),
-    ('SAMCHEONG', '삼청동'),
-    ('BUAM', '부암동'),
-    ('PYEONGCHANG', '평창동'),
-    ('MUAK', '무악동'),
-
-]
 
 #class User(AbstractUser):
 #     #username = models.CharField(max_length=20) 내장되어 있음!
@@ -47,13 +19,15 @@ SEOUL_TOWN_CHOICES = [
 #     updated_at = models.DateTimeField(auto_now=True)
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, nickname, agree_terms, agree_marketing,  password=None):
+    def create_user(self, username, nickname, district, town, agree_terms, agree_marketing,  password=None):
         # if not email:
         #     raise ValueError('Users must have an email address')
 
         user = self.model(
             username = username,
             nickname = nickname,
+            district = district,
+            town = town,
             # email=self.normalize_email(email),
             agree_terms=agree_terms,
             agree_marketing=agree_marketing,
@@ -69,7 +43,8 @@ class UserManager(BaseUserManager):
             #email,
             nickname,
             password=password,
-
+            district="default district",
+            town = "default town",
             agree_terms=agree_terms,
             agree_marketing=agree_marketing,
         )
@@ -88,6 +63,8 @@ class User(AbstractBaseUser):
     # )
     email = models.EmailField(blank=True)
     nickname = models.CharField(max_length=150)
+    district = models.CharField(max_length=10, choices=SEOUL_DISTRICT_CHOICES)
+    town = models.CharField(max_length=20, choices=SEOUL_TOWN_CHOICES)
     agree_terms = models.BooleanField(default=False)
     agree_marketing = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -96,7 +73,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD ='username'#'email'
-    REQUIRED_FIELDS = ['nickname', 'agree_terms', 'agree_marketing']
+    REQUIRED_FIELDS = ['nickname', 'agree_terms', 'agree_marketing'] #'town',
 
     def __str__(self):
         return self.username

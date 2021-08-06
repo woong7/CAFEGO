@@ -2,6 +2,7 @@ from django import forms
 from . import models
 from .models import User
 from allauth.account.forms import SignupForm
+from accounts.choices import *
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=20)
@@ -28,9 +29,13 @@ class MyCustomSignupForm(SignupForm):
     agree_terms = forms.BooleanField(label='서비스 이용약관 및 개인정보방침 동의')
     agree_marketing = forms.BooleanField(label='마케팅 이용 동의')
     nickname = forms.CharField(max_length=150, label='닉네임을 입력하세요')
+    district = forms.ChoiceField(choices=SEOUL_DISTRICT_CHOICES)
+    town = forms.ChoiceField(choices=SEOUL_TOWN_CHOICES)
 
     def save(self, request):
         user = super(MyCustomSignupForm, self).save(request)
+        user.district = self.cleaned_data['district']
+        user.town = self.cleaned_data['town']
         user.nickname = self.cleaned_data['nickname']
         user.agree_terms = self.cleaned_data['agree_terms']
         user.agree_marketing = self.cleaned_data['agree_marketing']
