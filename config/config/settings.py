@@ -147,3 +147,6 @@ AUTHENTICATION_BACKENDS=(
 
 SITE_ID=1
 LOGIN_REDIRECT_URL='/'
+
+
+ACCOUNT_FORMS = {'signup': 'accounts.forms.MyCustomSignupForm'} #앱이름.forms.py,클래스 이름

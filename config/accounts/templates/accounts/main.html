@@ -12,7 +12,7 @@
 
 
 {% if user.is_authenticated %}
-    <p>{{user.username}} 님이 로그인 중</p>
+    <p>닉네임 {{user.nickname}} 님이 로그인 중</p>
     <h4><a href="{% url 'logout' %}">로그아웃하기</a></h4>
 {%else%}
 <h4><a href="/account/login">로그인하기</a></h4>
