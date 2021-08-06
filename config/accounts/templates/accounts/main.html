@@ -5,15 +5,16 @@
 
 <h1>MAIN 입니다</h1>
 
-<h2>NAV - 로그인하기, 회원가입하기 </h2>
-
 <h2>각 페이지별 소개</h2>
 
 
 
 {% if user.is_authenticated %}
     <p>닉네임 {{user.nickname}} 님이 로그인 중</p>
+    <h4><a href="{% url 'home' %}">홈페이지로 가기</a></h4>
+
     <h4><a href="{% url 'logout' %}">로그아웃하기</a></h4>
+
 {%else%}
 <h4><a href="/account/login">로그인하기</a></h4>
 {%endif %}

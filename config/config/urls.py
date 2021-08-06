@@ -23,4 +23,5 @@ urlpatterns = [
     #path('', include('user.urls')),
     path('', include('accounts.urls')),
     path('account/', include('allauth.urls')), #accounts.urls
+    path('enroll/', include('enroll.urls')),
 ]

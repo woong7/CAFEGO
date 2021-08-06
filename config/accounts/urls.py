@@ -10,5 +10,4 @@ urlpatterns = [
     #path('', views.home, name ="home"),
     path('', views.main, name='main'),
     path('home/', views.home, name='home'),
-
 ]

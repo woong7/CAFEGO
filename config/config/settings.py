@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'cafe',
     'accounts',
+    'enroll',
 
     'allauth',
     'allauth.account',

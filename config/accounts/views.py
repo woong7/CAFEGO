@@ -77,11 +77,6 @@ def home(request):
 
 
 
-
-
-
-
-
 #인자를 받아와서
 # def detail(request, blog_id):
 #     print("detail!")
