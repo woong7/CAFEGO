@@ -5,27 +5,14 @@ from .forms import ReviewForm
 # Create your views here.
 def review_list(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) #해당 카페 정보 불러옴
-    reviews = Review.objects.filter(cafe=this_cafe) #해당 카페 리뷰만 불러옴
-    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) #reviews.id 못 받음
-
-    # for문 돌리다가 말음(딕셔너리?)
-    # reviews.id가 만약 #1,3,5
-    # review_id = []
-    # for i in reviews:
-    #     review_id.append(i)
-
-    # review_photo = {}
-    # for i in reviews:
-    #     photos = ReviewPhoto.objects.filter(review=i) #필터는 리스트로 받음
-    #     review_photo[i] = photos
-    
-    #review_comments = Comment.objects.filter(review_comment=reviews.id)
+    each_reviews = Review.objects.filter(cafe=this_cafe) #해당 카페 리뷰만 불러옴
+    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
     
     cafe_stars = ''
     for i  in range(int(this_cafe.cafe_stars)): #소숫점 때문에 별이 잘 안나올듯...
         cafe_stars += '⭐'
 
-    ctx={'this_cafe': this_cafe, 'reviews': reviews, 'cafe_stars':cafe_stars, 'review_photo': review_photo}
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'cafe_stars':cafe_stars, 'review_photo': review_photo}
     return render(request, 'cafe/review_list.html', ctx)
 
 
@@ -34,21 +21,21 @@ def review_create(request):
         #사진 제외한 review 요소들 저장
         form = ReviewForm(request.POST)
         if form.is_valid():
-            review = form.save()
+            myreview = form.save()
 
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
         for img in request.FILES.getlist('imgs'):
             #photo 객체 하나 생성
             photo = ReviewPhoto()
             #외래키로 현재 생성한 review의 기본키 참조(지금 다루는 사진의 리뷰가 위에서 가져온 리뷰)
-            photo.review = review
+            photo.review = myreview
             #imgs에서 가져온 이미지 파일 하나를 저장
             photo.image = img
             #db에 저장
             photo.save()
         
         #해당 리뷰를 쓴 카페 아이디 추출 (해당 카페의 리뷰를 전부 보려고 함)
-        cafe = CafeList.objects.get(pk=review.cafe.id)
+        cafe = CafeList.objects.get(pk=myreview.cafe.id)
         
         return redirect('cafe:review_list', cafe.id)
     else:

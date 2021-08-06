@@ -13,28 +13,27 @@
 
     <div class="review_list">
         <div>정렬 | 방문 순 | 총 방문 순 | 리뷰 순 | 최신 순</div>
-        {% for review in reviews %}
-            {{ review.username }}
-            {{ review.review_stars }}<br/> 
-            {{ review.content }}<br/>
+        {% for reviews in each_reviews %}
+            {{ reviews.username }}
+            {{ reviews.review_stars }}<br/> 
+            {{ reviews.content }}<br/>
 
             {% if review_photo %}
                 {% for img in review_photo %}
-                    <img src="{{img.image.url}}" style="width: 100%; height: 100%;">
-                {% endfor %} 
+                    {% if img.review.id == reviews.id %}
+                        <img src="{{img.image.url}}" style="width: 5%; height: 5%;">         
+                    {% endif %}
+                {% endfor %}   
             {% endif %}
                 
             <br/> 
-            {% comment %}
-            <!-- photo_set.all %}
-                    <img src="{{photo.image.url}}" width="50">
-                {% endfor %} -->
+            {% comment %}    
             <!-- {% for comment in review_comments %}
                 {{ comment.username }}
                 {{ comment.content }}
-            {% endfor %} -->
+            {% endfor %} 
+            <input type="text" value="댓글 입력"><button>답글 달기</button>-->
             {% endcomment %}
-            <input type="text" value="댓글 입력"><button>답글 달기</button>
             <hr/>
         {% endfor %}
     </div>
