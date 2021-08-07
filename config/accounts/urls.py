@@ -4,10 +4,17 @@ from . import views
 #app_name = "accounts"
 
 urlpatterns = [
+    path('', views.main, name='main'),
+    path('home/', views.home, name='home'),
     path('signup/', views.signup, name='signup'),
     path('login/', views.LoginView.as_view(), name='login'), #views.login
     path('logout/', views.logout, name='logout'),
-    #path('', views.home, name ="home"),
-    path('', views.main, name='main'),
-    path('home/', views.home, name='home'),
+
+    path('badge/list/', views.badge_list, name='badge_list'),
+    path('badge/taken/', views.badge_taken, name='badge_taken'),
+    path('badge/untaken/', views.badge_untaken, name='badge_untaken'),
+    path('cafemap/', views.user_cafe_map, name='user_cafe_map'),
+    path('detail/', views.user_detail, name='user_detail'),
+    path('rank/detail/', views.rank_detail, name='rank_detail'),
+    path('rank/list/', views.rank_list, name='rank_list'),
 ]
