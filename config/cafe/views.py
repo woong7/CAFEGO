@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import CafeList, Review, ReviewPhoto, Comment
 from .forms import ReviewForm
+from django.db.models import Q
+import json
+from django.views.generic import ListView
 
 # Create your views here.
 def review_list(request, pk):
@@ -9,11 +12,14 @@ def review_list(request, pk):
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
     
     cafe_stars = ''
-    for i  in range(int(this_cafe.cafe_stars)): #소숫점 때문에 별이 잘 안나올듯...
+    for i  in range(int(this_cafe.cafe_stars)): 
         cafe_stars += '⭐'
 
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'cafe_stars':cafe_stars, 'review_photo': review_photo}
+
     return render(request, 'cafe/review_list.html', ctx)
+
+
 
 
 def review_create(request):
@@ -27,7 +33,7 @@ def review_create(request):
         for img in request.FILES.getlist('imgs'):
             #photo 객체 하나 생성
             photo = ReviewPhoto()
-            #외래키로 현재 생성한 review의 기본키 참조(지금 다루는 사진의 리뷰가 위에서 가져온 리뷰)
+            #외래키로 현재 생성한 review의 기본키 참조(지금 다루는 사진의 리뷰가 위에서 가져온 리뷰, 카페도 지정)
             photo.review = myreview
             photo.review_cafe = myreview.cafe
             #imgs에서 가져온 이미지 파일 하나를 저장
@@ -43,3 +49,57 @@ def review_create(request):
         form = ReviewForm()
         ctx = {'form': form}
         return render(request, 'cafe/review_form.html', ctx)
+
+# 일단 내가 했던거..
+# def cafe_search(request):
+#     all_cafe = CafeList.objects.all()
+#     ctx = {
+#         'all_cafe': all_cafe,
+#         # "all_cafe_js": json.dumps([cafe.json() for cafe in all_cafe])
+#     }
+
+#     return render(request, 'cafe/cafe_list.html', ctx)
+
+class CafeListView(ListView):
+    model = CafeList
+    #리스트 몇줄 표시
+    paginate_by = 10
+    template_name = 'cafe/cafe_list.html'
+    context_object_name = 'cafe_list'
+
+    def get_queryset(self):
+        cafe_list = CafeList.objects.order_by('-id') #나중에 ㄱㄴㄷ 순으로 바꿀?
+        return cafe_list
+
+    #하단부에 숫자 범위를 커스텀
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 5
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        return context
+
+
+#doit!
+# class cafe_search(CafeList):
+#     paginate_by = None
+
+#     def get_queryset(self):
+#         #검색으로 받아온 값을 q에 저장
+#         q = self.kwargs['q']
+#         #카페 이름에 q를 포함하는 것을 필터링, 꼭 언더바 2개 쓰기, distinct는 중복 제거
+#         cafe_list = CafeList.objects.filter(Q(name__contains=q)).distinct()
+#         return cafe_list
+        

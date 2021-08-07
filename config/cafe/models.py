@@ -14,6 +14,14 @@ class CafeList(models.Model):
     def __str__(self):
         return self.name
 
+    def to_json(self):
+        return {
+            "name": self.name,
+            "address": self.address,
+            "location_x": self.location_x,
+            "location_y": self.location_y,
+            "cafe_stars": self.cafe_stars,
+        }
 
 class Review(models.Model):
     cafe = models.ForeignKey(CafeList, on_delete=models.CASCADE, related_name='this_cafe')
