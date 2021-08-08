@@ -127,7 +127,7 @@ def cafe_map(request):
     return render(request, 'cafe/cafe_map.html', ctx)
 
 def init_data(request):
-    with open('C:/Users/96jos/Desktop/piro/cafe_go/CAFEGO/crawledminor.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []
@@ -136,4 +136,4 @@ def init_data(request):
         ss.append(st)
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
-    return redirect('cafe:review_create')
+    return redirect('accounts:home')

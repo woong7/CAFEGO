@@ -1,39 +1,122 @@
 {% extends 'base.html' %}
+{% load static %}
 
+{% block title %}
+    새로운 카페 등록
+{% endblock %}
 {% block content %}
     <h1>새로운 카페를 등록하는 페이지입니다.</h1>
     <p>새로운 카페 등록하기</p>
     <p>방문한 카페를 검색해보세요!</p>
-    <form action="" method="get">
-        <span>카페명: </span>
-        <input type="text" id="cafename" name="cafename">
-        <input type="submit" value="검색">
+
+    {% if q %}
+    <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
+    {% endif %}
+
+    <!-- 카페 검색 -->
+    <form action="" method="GET">
+        <select name="type">
+            <option value="name">카페</option>
+            <option value="address">주소</option>
+            <option value="all">카페+주소</option>
+        </select>
+        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
+        <button type="submit" id="search_btn">search</button><br/>
     </form>
 
-    <p>목차     카페명      카페위치        방문여부</p>
-    <p>검색 결과 목록 좌르륵~~</p>
 
-    유저 : {{cafe.user}}
-    {% for cafe in cafe_list %}
-        <div>    
-            카페명 : {{cafe.cafename}}
-            방문횟수 : {{cafe.visit_count}}
-            카페id : {{cafe.cafe_id}}
+    <!-- 카페 리스트  -->
+    <table>
+        <thead>
+            <tr>
+                <th> </th>
+                <th>카페명</th>
+                <th>위치</th>
+                <th>방문여부</th>             
+            </tr>
+        </thead>
+        <tbody>
+            {% if new_cafe_list %}
+                {% for cafe in new_cafe_list %}
+                    <tr class="text-center">
+                        <td>{{ cafe.id }}</td>
+                        <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
+                        <td>{{ cafe.address | truncatechars:10  }}</td>
+                        <td>체크박스</td>
+                    </tr>
+                {% endfor %}
+            {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때-->
+                {% if q %}  <!--검색어가 있어 q가 context로 넘어오면 검색 결과가 없다.-->
+                <tr class="text-center">
+                    <td colspan="5">
+                        등록된 카페가 없습니다.
+                    </td>
+                </tr>
+                {% else %}  <!--q가 없으면 검색어가 아니며 카페가 존재하지 않으므로 카페 미등록-->
+                <tr class="text-center">
+                    <td colspan="5">
+                        등록된 카페가 없습니다.
+                    </td>
+                </tr>
+                {% endif %} 
+            {% endif %}            
+        </tbody>
+    </table>
+
+    <!-- 페이징 처리 -->
+    {% if is_paginated %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">이전</a>
+        </li>
+        {% endif %}
+
+        {% for page in page_range %}
+        <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+
+    <!-- 카페 등록 -->
+    <div>
+        유저 : {{cafe.user}}
+        {% for cafe in cafe_list %}
+            <div>    
+                카페명 : {{cafe.cafename}}
+                방문횟수 : {{cafe.visit_count}}
+                카페id : {{cafe.cafe_id}}
+            </div>
+        {% endfor %}
+
+        카페등록하기
+        <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+
+            <table>
+                {{ form.as_table }}
+            </table>
             
-            
-        </div>
-    {% endfor %}
+            <input type="submit" value="SUBMIT" />
+        </form>        
+    </div>
 
-    카페등록하기
-    <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-        {% csrf_token %}
-
-        <table>
-            {{ form.as_table }}
-        </table>
-        
-        <input type="submit" value="SUBMIT" />
-    </form>
 
     <p>지도 사진</p>
     <p>지도 위에서 태그 표시, 클릭할 수 있게.</p>
