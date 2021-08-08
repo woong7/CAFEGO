@@ -79,4 +79,8 @@ def rank_detail(request):
     return render(request, 'accounts/rank_detail.html')
 
 def rank_list(request):
-    return render(request, 'accounts/rank_list.html')
+    users=User.objects.order_by('-total_visit')
+    ctx={
+        users:'users'
+    }
+    return render(request, 'accounts/rank_list.html', context=ctx)

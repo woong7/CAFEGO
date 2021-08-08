@@ -3,4 +3,8 @@
 {% block content %}
     <h1>랭킹 리스트 페이지입니다.</h1>
 
+    {% for user in users%}
+            <p style="font-size: 25px;">{{ user.username}} 님 !  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
+    {% endfor %}
+
 {% endblock %}

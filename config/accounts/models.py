@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
+import simplejson as json
 class User(AbstractBaseUser):
     username_validator: UnicodeUsernameValidator = ...
     username = models.CharField(max_length=150, unique=True) ##########
@@ -48,6 +48,15 @@ class User(AbstractBaseUser):
     agree_marketing = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    
+    visited_cafe=models.TextField(null=True, default=json.dumps([]))
+    visited_num=models.TextField(null=True, default=json.dumps([]))
+    
+    total_visit=models.IntegerField(default=0)
+
+    badge_taken=models.TextField(null=True, default=json.dumps([]))
+    
+    
 
     objects = UserManager()
 
@@ -71,3 +80,10 @@ class VisitedCafe(models.model):
     user = models.ForeignKey(User, on_delete=CASCADE)
     
     cafe_id = models.PositiveIntegerField(default=0)
+
+
+class Badge(models.model):
+    badge_name=models.TextField(max_length=150, unique=True)
+    badge_image=models.ImageField()
+    
+    
