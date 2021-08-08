@@ -1,25 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <section id="main">
-        <div class="container-lg d-flex flex-column justify-content-center text-center vh-100">
-            <div class="row">
-                <div class="col">
-                <h1 class="fw-bold">1</h1>
-                <h1 class="fw-bold">2</h1>
-                <br><br>
 
-                {% if user.is_authenticated %}
-                    <p class="fw-bolder">{{user.username}} 님이 로그인 중</p>
-                    <br><br>
-                    <h4><a href="" class="btn btn-outline-success">3</a></h4>
-                    <h4><a href="" class="btn btn-outline-success">4</a></h4>
-                {%else%}
-                    <a class="nav-link btn btn-sm btn-outline-success" href="" style="padding : 10px 10px">로그인</a>
-                    <a class="nav-link btn btn-sm btn-outline-success" href="/accounts/signup">회원가입</a>
-                {%endif %}
-                </div>
-            </div>
-        </div>
-    </section>
+    {% if user.is_authenticated %}
+        <p>로그인 후 화면!!</p>
+        <p>{{user.username}} 님이 반가워요!</p> <!--일단 ID로,,-->
+        <p>카페고에 오신 것을 환영합니다~</p>
+        <br><br>
+        <h4><a href="{% url 'enroll_home' %}" >방문카페 등록하러가기</a></h4>
+        <h4><a href="{% url 'user_cafe_map' %}">나의 카페지도 보러가기</a></h4>
+        <h4><a href="">카페 검색하기</a></h4>
+        <h4><a href="{% url 'rank_list' %}">랭킹 확인하러 가기</a></h4>
+
+        <h4><a href="{% url 'logout' %}">로그아웃하기</a></h4>
+    {%else%}
+        <a>로그인</a>
+        <a>회원가입</a>
+    {%endif %}
+
 {% endblock %}

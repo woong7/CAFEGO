@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>새로운 카페를 등록하는 페이지입니다.</h1>
+    <p>새로운 카페 등록하기</p>
+    <p>방문한 카페를 검색해보세요!</p>
+    <form action="" method="get">
+        <span>카페명: </span>
+        <input type="text" id="cafename" name="cafename">
+        <input type="submit" value="검색">
+    </form>
+
+    <p>목차     카페명      카페위치        방문여부</p>
+    <p>검색 결과 목록 좌르륵~~</p>
+
+    유저 : {{cafe.user}}
+    {% for cafe in cafe_list %}
+        <div>    
+            카페명 : {{cafe.cafename}}
+            방문횟수 : {{cafe.visit_count}}
+            카페id : {{cafe.cafe_id}}
+            
+            
+        </div>
+    {% endfor %}
+
+    카페등록하기
+    <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+        {% csrf_token %}
+
+        <table>
+            {{ form.as_table }}
+        </table>
+        
+        <input type="submit" value="SUBMIT" />
+    </form>
+
+    <p>지도 사진</p>
+    <p>지도 위에서 태그 표시, 클릭할 수 있게.</p>
+
+{% endblock %}

@@ -4,12 +4,23 @@ from . import views
 #app_name = "accounts"
 
 urlpatterns = [
+    path('', views.main, name='main'),
+    path('home/', views.home, name='home'),
     path('signup/', views.signup, name='signup'),
-    path('login/', views.login, name='login'),
+    path('login/', views.LoginView.as_view(), name='login'), #views.login
     path('logout/', views.logout, name='logout'),
-    #path('', views.home, name ="home"),
-    path('', views.home1, name='home1'),
-    path('blog/<int:blog_id>', views.detail, name="detail"),
-    path('blog/new/', views.new, name="new"),
-    path('blog/create/', views.create, name="create"),
+
+    path('badge/list/', views.badge_list, name='badge_list'),
+    path('badge/taken/', views.badge_taken, name='badge_taken'),
+    path('badge/untaken/', views.badge_untaken, name='badge_untaken'),
+    path('cafemap/', views.user_cafe_map, name='user_cafe_map'),
+    path('detail/', views.user_detail, name='user_detail'),
+    path('rank/detail/', views.rank_detail, name='rank_detail'),
+    path('rank/list/', views.rank_list, name='rank_list'),
+
+    path('enroll_home/', views.enroll_home, name="enroll_home"),
+    path('enroll_new_cafe/', views.enroll_new_cafe, name="enroll_new_cafe"),
+    path('enroll_visited_cafe/', views.enroll_visited_cafe, name="enroll_visited_cafe"),
+
+
 ]
