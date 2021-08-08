@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core import serializers
 from django.views.generic import ListView
 from .models import CafeList, Review, ReviewPhoto, Comment
 from .forms import ReviewForm
@@ -109,11 +110,24 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
-    return render(request, 'cafe/cafe_map.html')
+    with open('C:/Users/96jos/Desktop/piro/cafe_go/CAFEGO/config/cafe/csv/crawledminor.csv','r', encoding='utf-8') as f:
+        dr = csv.DictReader(f)
+        s = pd.DataFrame(dr)
+    ss = []
+    for i in range(len(s)):
+        st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i])
+        ss.append(st)
 
+
+    cafes = CafeList.objects.all()
+    cafe_list = serializers.serialize('json', cafes)
+    ctx = {
+        'data': cafe_list
+    }
+    return render(request, 'cafe/cafe_map.html', ctx)
 
 def init_data(request):
-    with open('C:/Users/rjsdnd0316/Desktop/testpy/crawledminor.csv','r', encoding='utf-8') as f:
+    with open('C:/Users/96jos/Desktop/piro/cafe_go/CAFEGO/crawledminor.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []
