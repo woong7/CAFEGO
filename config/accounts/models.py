@@ -95,7 +95,7 @@ class Drink(models.Model):
         return self.drinkname
 
 
-class Badge(models.model):
+class Badge(models.Model):
     badge_name=models.TextField(max_length=150, unique=True)
     badge_image=models.ImageField()
     
