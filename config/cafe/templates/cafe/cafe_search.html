@@ -6,34 +6,56 @@
 {% endblock %}
 {% block content %}
     <h2>원하는 카페를 검색해보세요!</h2><br/>
+    {% if q %}
+    <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
+    {% endif %}
     <a href="">지도에서 찾기</a>
     <br/>
 
     <!-- 카페 검색 -->
-    <span>카페명 :</span>
-    <input type="text" placeholder="카페 이름 검색" id="search-input">
-    <!-- input 요소 안에 있는 값을 가져와 검색하기 위해 id값을 부여 -->
-    <button type="button" onclick="searchPost();">search</button><br/>
+    <form action="" method="GET">
+        <span>카페명 :</span>
+        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
+        <!-- id="search-input": input 요소 안에 있는 값을 가져와 검색하기 위해 id값을 부여 -->
+        <button type="submit" id="search_btn">search</button><br/>
+        <!-- onclick="searchPost();": 버튼에 있는 doit 함수 -->        
+    </form>
 
 
     <!-- 카페 리스트  -->
     <table>
         <thead>
-            <th> </th>
-            <th>카페명</th>
-            <th>위치</th>
-            <th>별점</th>
+            <tr>
+                <th> </th>
+                <th>카페명</th>
+                <th>위치</th>
+                <th>별점</th>             
+            </tr>
         </thead>
         <tbody>
             {% if cafe_list %}
                 {% for cafe in cafe_list %}
-                    <tr>
+                    <tr class="text-center">
                         <td>{{ cafe.id }}</td>
                         <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
-                        <td>{{ cafe.address }}</td>
+                        <td>{{ cafe.address | truncatechars:10  }}</td>
                         <td>{{ cafe.cafe_stars }}</td>
                     </tr>
                 {% endfor %}
+            {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때-->
+                {% if q %}  <!--검색어가 있어 q가 context로 넘어오면 검색 결과가 없다.-->
+                <tr class="text-center">
+                    <td colspan="5">
+                        등록된 카페가 없습니다.
+                    </td>
+                </tr>
+                {% else %}  <!--q가 없으면 검색어가 아니며 카페가 존재하지 않으므로 카페 미등록-->
+                <tr class="text-center">
+                    <td colspan="5">
+                        등록된 카페가 없습니다.
+                    </td>
+                </tr>
+                {% endif %} 
             {% endif %}            
         </tbody>
     </table>
@@ -43,7 +65,7 @@
     <ul class="pagination">
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
+            <a class="page-link" href="?q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
         </li>
         {% else %}
         <li class="page-item disabled">
@@ -53,13 +75,13 @@
 
         {% for page in page_range %}
         <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
-            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+            <a class="page-link" href="?q={{ q }}&page={{ page }}">{{ page }}</a>
         </li>
         {% endfor %}
 
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a>
+            <a class="page-link" href="?q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
         </li>
         {% else %}
         <li class="page-item disabled">

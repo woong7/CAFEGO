@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
+from django.views.generic import ListView
 from .models import CafeList, Review, ReviewPhoto, Comment
 from .forms import ReviewForm
+from django.contrib import messages
 from django.db.models import Q
 import json
-from django.views.generic import ListView
 
 # Create your views here.
 def review_list(request, pk):
@@ -18,8 +19,6 @@ def review_list(request, pk):
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'cafe_stars':cafe_stars, 'review_photo': review_photo}
 
     return render(request, 'cafe/review_list.html', ctx)
-
-
 
 
 def review_create(request):
@@ -63,15 +62,28 @@ def review_create(request):
 class CafeListView(ListView):
     model = CafeList
     #리스트 몇줄 표시
-    paginate_by = 10
-    template_name = 'cafe/cafe_list.html'
+    paginate_by = 5
+    template_name = 'cafe/cafe_search.html'
+    #변수 이름을 바꿈
     context_object_name = 'cafe_list'
 
+    #검색 기능
     def get_queryset(self):
-        cafe_list = CafeList.objects.order_by('-id') #나중에 ㄱㄴㄷ 순으로 바꿀?
+        search_keyword = self.request.GET.get('q', '')
+        #search_type = self.request.GET.get('type', '') 
+        cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+
+        if search_keyword:
+            if len(search_keyword) >= 2:
+                #if search_type == 'name':
+                #__incontains 대소문자 구별 없이 데이터 가져온다.
+                search_cafe_list = cafe_list.filter(name__icontains=search_keyword)
+            return search_cafe_list
+        else:
+            messages.error(self.request, '2글자 이상 입력해주세요.')
         return cafe_list
 
-    #하단부에 숫자 범위를 커스텀
+    #하단부에 페이징 처리
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
@@ -89,8 +101,23 @@ class CafeListView(ListView):
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
 
+        search_keyword = self.request.GET.get('q', '')
+
+        if len(search_keyword) > 1:
+            context['q'] = search_keyword
+
         return context
 
+
+
+    #검색어를 알려주거나 검색결과가 없음을 알려주기
+    # def get_context_data(self, **kwargs):
+    #     search_keyword = self.request.GET.get('q', '')
+
+    #     if len(search_keyword) > 1:
+    #         context['q'] = search_keyword
+    #     return context
+        
 
 #doit!
 # class cafe_search(CafeList):
