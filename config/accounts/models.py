@@ -81,6 +81,13 @@ class VisitedCafe(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
     visit_count = models.PositiveIntegerField(default=0)
     cafe_id = models.PositiveIntegerField(default=0)
+
+
+class Badge(models.Model):
+    badge_name=models.TextField(max_length=150, unique=True)
+    badge_image=models.ImageField()
+    
+    
     cafename = models.CharField(max_length=100)
 
     def __str__(self):

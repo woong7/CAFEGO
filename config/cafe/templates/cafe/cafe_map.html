@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>카테고리로 장소 검색하기</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+    
+</head>
+<body>
+    <input type="file" onchange="readExcel()">
+    <div id="map" style="width:910px; height:910px;"></div>
+    <div id="menu_wrap" class="bg_white">
+        <div class="option">
+            <div>
+                <form id="searchForm">
+                    키워드 : <input type="text" value="" id="keyword" size="15"> 
+                    <button type="submit">검색하기</button> 
+                </form>
+            </div>
+        </div>
+        <hr>
+        <ul id="placesList"></ul>
+    </div>
+
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbe48a94474ef23703951ea76b61e90&libraries=services"></script>
+    <script>
+    // 액셀파일 불러오기
+    let rows;
+    let markers;
+    function readExcel() {
+        let input = event.target;
+        let reader = new FileReader();
+        reader.onload = function () {
+            let data = reader.result;
+            let workBook = XLSX.read(data, { type: 'binary' });
+            workBook.SheetNames.forEach(function (sheetName) {
+                rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
+                console.log(rows.length);
+
+                // 지도 영역 변경 시 이벤트
+                kakao.maps.event.addListener(map, 'bounds_changed', function() {             
+                    // 지도 영역정보를 얻어옵니다 
+                    var bounds = map.getBounds();
+                    // 영역정보의 남서쪽 정보를 얻어옵니다 
+                    var swLatlng = bounds.getSouthWest();
+                    // 영역정보의 북동쪽 정보를 얻어옵니다 
+                    var neLatlng = bounds.getNorthEast();
+
+                    // marker 객체들
+                    markers = [];
+
+                    // 마커 데이터 추가
+                    markExcelData(markers, rows, swLatlng, neLatlng);
+                    for(var i = 0; i < markers.length; i++) {
+                        console.log(markers[i].Fb);
+                    }
+                    console.log(markers.length);
+                    console.log('---------------------이벤트 끝-------------------');
+                    //document.getElementById("searchForm").addEventListener("submit", searchPlaces(markers));
+                });
+            })
+        };
+        reader.readAsBinaryString(input.files[0]);
+    }
+
+// TODO: 여기 해야함
+    // 액셀파일 장소들을 지도에 마킹하기
+    function markExcelData(markers, obj, sw, ne) {
+        for(var i=0; i < obj.length; i++) {
+            if(obj[i].X < ne.La && obj[i].X > sw.La && obj[i].Y < ne.Ma && obj[i].Y > sw.Ma) {
+                addMarker(markers, obj[i]);
+                //displayPlaces(objPlaces, markers);
+            }
+        }
+    }
+
+    // 마커를 생성하고 지도위에 표시하는 함수입니다
+    function addMarker(markers, place) {
+        // 마커 아이콘 크기 조정
+        var markerIconSize = place.ID % 5;
+        switch(markerIconSize) {
+            case 0:
+                var imageSize = new kakao.maps.Size(16, 16); // 마커이미지의 크기입니다
+                break;
+            case 1:
+                var imageSize = new kakao.maps.Size(20, 20); // 마커이미지의 크기입니다
+                break;
+            case 2:
+                var imageSize = new kakao.maps.Size(24, 24); // 마커이미지의 크기입니다
+                break;
+            case 3:
+                var imageSize = new kakao.maps.Size(28, 28); // 마커이미지의 크기입니다
+                break;
+            case 4:
+                var imageSize = new kakao.maps.Size(32, 32); // 마커이미지의 크기입니다
+                break;
+            default:
+                alert('파악 불가');
+        }
+
+        // 마커 생성
+        var marker = new kakao.maps.Marker({
+            map: map,
+            title: place.stores,
+            position: new kakao.maps.LatLng(place.Y, place.X),
+            image : new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+        });
+
+        // 생성된 마커를 배열에 추가합니다
+        markers.push(marker);
+
+        // 마커에 클릭이벤트를 등록합니다
+        kakao.maps.event.addListener(marker, 'click', function() {
+            // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+            infowindow.setContent(`
+                <div style="padding:5px;font-size:12px;">${place.stores}</div>
+                <div style="padding:5px;font-size:10px;">${place.ID}</div>
+                <div style="padding:5px;font-size:10px;">
+                    <a href="${place.place_url}">리뷰쓰기</a>
+                </div>
+            `);
+            infowindow.open(map, marker);
+        });
+        
+        return marker;
+    }
+
+    // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
+    var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable : true});  
+
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = {
+            center: new kakao.maps.LatLng(37.540, 126.940), // 지도의 중심좌표
+            level: 2 // 지도의 확대 레벨
+        };
+    
+    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+    var imageSrc = "https://image.flaticon.com/icons/png/512/168/168551.png", // 마커이미지의 주소입니다    
+        imageOption = {offset: new kakao.maps.Point(8, 16)};
+
+    // 키워드로 장소를 검색합니다
+    //searchPlaces();
+
+    // 키워드 검색을 요청하는 함수입니다
+    function searchPlaces(markers) {
+
+        var keyword = document.getElementById('keyword').value;
+
+        if (!keyword.replace(/^\s+|\s+$/g, '')) {
+            alert('키워드를 입력해주세요!');
+            return false;
+        }
+
+        checkKeyword(keyword, markers);
+    }
+
+    function checkKeyword(keyword, markers) {
+        for(var i=0; i < markers.length; i++) {
+            if(markers[i].includes(keyword)) {
+                console.log(markers[i].Fb);
+            }
+        }
+    }
+
+ // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+    function placesSearchCB(data, status) {
+        if (status === kakao.maps.services.Status.OK) {
+
+            // 정상적으로 검색이 완료됐으면
+            // 검색 목록과 마커를 표출합니다
+            displayPlaces(data);
+
+        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
+            alert('검색 결과가 존재하지 않습니다.');
+            return;
+
+        } else if (status === kakao.maps.services.Status.ERROR) {
+
+            alert('검색 결과 중 오류가 발생했습니다.');
+            return;
+
+        }
+    }
+
+    // 검색 결과 목록과 마커를 표출하는 함수입니다
+    function displayPlaces(objPlaces, markers) {
+
+        var listEl = document.getElementById('placesList'), 
+        menuEl = document.getElementById('menu_wrap'),
+        fragment = document.createDocumentFragment(), 
+        bounds = new kakao.maps.LatLngBounds(), 
+        listStr = '';
+        
+        // 검색 결과 목록에 추가된 항목들을 제거합니다
+        removeAllChildNods(listEl);
+        
+        for ( var i=0; i<objPlaces.length; i++ ) {
+
+            // 마커를 생성하고 지도에 표시합니다
+            var placePosition = new kakao.maps.LatLng(objPlaces[i].Y, objPlaces[i].X),
+                // TODO: 요기요기
+                marker = addMarker(markers, objPlaces[i]),
+                itemEl = getListItem(i, objPlaces[i]); // 검색 결과 항목 Element를 생성합니다
+
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+            // LatLngBounds 객체에 좌표를 추가합니다
+            bounds.extend(placePosition);
+
+            // 검색결과 항목에 mouseover 했을때
+            // 해당 장소에 인포윈도우에 장소명을 표시합니다
+            // mouseout 했을 때는 인포윈도우를 닫습니다
+            (function(marker, title) {
+                itemEl.onmouseover =  function () {
+                    displayInfowindow(marker, title);
+                };
+
+                itemEl.onmouseout =  function () {
+                    infowindow.close();
+                };
+            })(marker, objPlaces[i].stores);
+
+            fragment.appendChild(itemEl);
+        }
+
+        // 검색결과 항목들을 검색결과 목록 Elemnet에 추가합니다
+        listEl.appendChild(fragment);
+        menuEl.scrollTop = 0;
+
+        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+        map.setBounds(bounds);
+    }
+
+    // 검색결과 항목을 Element로 반환하는 함수입니다
+    function getListItem(index, places) {
+
+        var el = document.createElement('li'),
+        itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+                    '<div class="info">' +
+                    '   <h5>' + places.stores + '</h5>' +
+                    '   <span>' + places.road_address + '</span>';       
+
+        el.innerHTML = itemStr;
+        el.className = 'item';
+
+        return el;
+    }
+
+    // 검색결과 목록의 자식 Element를 제거하는 함수입니다
+    function removeAllChildNods(el) {   
+        while (el.hasChildNodes()) {
+            el.removeChild (el.lastChild);
+        }
+    }
+
+    {% comment %}
+    HashMap = function() {
+        this.cafes = new Object();
+    }
+    HashMap.prototype = {
+        put : function(key, value) {
+            this.cafes[key] = value;
+        },
+        get : function(key) {
+            return this.cafes[key];
+        },
+        getAll : function() {
+            return this.cafes;
+        },
+        size: function () {
+            var count = 0;
+            for (var prop in this.cafes) {
+                count++;
+            }
+            return count;
+        },
+    };
+
+    var cafes = new HashMap();
+
+
+    for (i = 0; i < 1; i++) {
+        for (j = 0; j < 1; j++) {
+            var mapOption = {
+                    center: new kakao.maps.LatLng(37.490 + i*0.004, 126.990 + j*0.004), // 지도의 중심좌표
+                    level: 2 // 지도의 확대 레벨
+                };
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+            // 장소 검색 객체를 생성합니다
+            var ps = new kakao.maps.services.Places(map);
+            // 카테고리로 은행을 검색합니다
+            ps.categorySearch('CE7', placesSearchCB, {useMapBounds:true});
+        }
+    }
+    console.log(cafes.getAll());
+    console.log(cafes.size());
+
+
+    // 키워드 검색 완료 시 호출되는 콜백함수 입니다
+    function placesSearchCB (data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+            for (var i=0; i<data.length; i++) {
+                displayMarker(data[i]);
+                //console.log(data[i].id, data[i].place_name); 
+                cafes.put(data[i].id, data[i].place_name);
+            }
+
+            if (pagination.hasNextPage) {
+                pagination.nextPage();
+            }
+        }
+    } {% endcomment %}
+    </script>
+</body>
+</html>

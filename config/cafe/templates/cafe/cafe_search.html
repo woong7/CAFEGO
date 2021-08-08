@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    카페 검색
+{% endblock %}
+{% block content %}
+    <h2>원하는 카페를 검색해보세요!</h2><br/>
+    <a href="">지도에서 찾기</a>
+    <br/>
+
+    {% if q %}
+    <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
+    {% endif %}
+
+    <!-- 카페 검색 -->
+    <form action="" method="GET">
+        <select name="type">
+            <option value="name">카페</option>
+            <option value="address">주소</option>
+            <option value="all">카페+주소</option>
+        </select>
+        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
+        <button type="submit" id="search_btn">search</button><br/>
+    </form>
+
+
+    <!-- 카페 리스트  -->
+    <table>
+        <thead>
+            <tr>
+                <th> </th>
+                <th>카페명</th>
+                <th>위치</th>
+                <th>별점</th>             
+            </tr>
+        </thead>
+        <tbody>
+            {% if cafe_list %}
+                {% for cafe in cafe_list %}
+                    <tr class="text-center">
+                        <td>{{ cafe.id }}</td>
+                        <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
+                        <td>{{ cafe.address | truncatechars:10  }}</td>
+                        <td>{{ cafe.cafe_stars }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때-->
+                {% if q %}  <!--검색어가 있어 q가 context로 넘어오면 검색 결과가 없다.-->
+                <tr class="text-center">
+                    <td colspan="5">
+                        등록된 카페가 없습니다.
+                    </td>
+                </tr>
+                {% else %}  <!--q가 없으면 검색어가 아니며 카페가 존재하지 않으므로 카페 미등록-->
+                <tr class="text-center">
+                    <td colspan="5">
+                        등록된 카페가 없습니다.
+                    </td>
+                </tr>
+                {% endif %} 
+            {% endif %}            
+        </tbody>
+    </table>
+
+    <!-- 페이징 처리 -->
+    {% if is_paginated %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">이전</a>
+        </li>
+        {% endif %}
+
+        {% for page in page_range %}
+        <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+
+{% endblock %}

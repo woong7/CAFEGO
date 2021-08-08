@@ -131,6 +131,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -151,3 +156,7 @@ LOGIN_REDIRECT_URL='/'
 
 
 ACCOUNT_FORMS = {'signup': 'accounts.forms.MyCustomSignupForm'} #앱이름.forms.py,클래스 이름
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'config')
+
+MEDIA_URL = ''
