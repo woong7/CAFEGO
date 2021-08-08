@@ -58,7 +58,8 @@ def main(request):
 
 @login_required
 def home(request):
-    return render(request, 'accounts/home.html')
+    #return render(request, 'accounts/home.html')
+    return render(request,'accounts/home.html')
 
 def badge_list(request):
     return render(request, 'accounts/badge_list.html')
