@@ -1,15 +1,19 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView
 #from django.contrib.auth.models import User #회원가입을 구현하는데 있어 장고가 제공해주는 편리함
 from django.urls import reverse
 from django.contrib import auth
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
-from .models import User, Badge, VisitedCafe
+from .models import * #User
+from cafe.models import CafeList
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
 from . import forms
+from django.contrib import messages
+from django.db.models import Q
 # Create your views here.
 
 def signup(request):
@@ -118,26 +122,31 @@ def rank_list(request):
 def enroll_home(request):
     return render(request, "accounts/enroll_home.html")
 
-def enroll_new_cafe(request):
-    cafe_list = VisitedCafe.objects.all() #user id 넣어서 그 값만 가져와야 함
-    if request.method == 'POST':
-        form = forms.VisitedCafeForm(request.POST, request.FILES)
+class EnrollNewCafeListView(ListView):
+    model = CafeList
+    paginate_by = 5
+    template_name = 'accounts/enroll_new_cafe.html'
+    context_object_name = 'new_cafe_list'
 
-        if form.is_valid():
-            ##저장
-            cafe = VisitedCafe()
-            cafe.user = form.cleaned_data['user']
-            cafe.cafename = form.cleaned_data['cafename']
-            cafe.visit_count = form.cleaned_data['visit_count']
-            cafe.cafe_id = form.cleaned_data['cafe_id']
-            cafe.save()
-    else:
-        form = forms.VisitedCafeForm()
-    
-    return render(request, 'accounts/enroll_new_cafe.html', {
-        'cafe_list': cafe_list,
-        'form': form,
-    })
+    #등록기능?
+    def enroll_new_cafe(request):
+        cafe_list = VisitedCafe.objects.all() #user id 넣어서 그 값만 가져와야 함
+        if request.method == 'POST':
+            form = forms.VisitedCafeForm(request.POST, request.FILES)
 
-def enroll_visited_cafe(request):
-    return render(request, "accounts/enroll_visited_cafe.html")
+            if form.is_valid():
+                ##저장
+                cafe = VisitedCafe()
+                cafe.user = form.cleaned_data['user']
+                cafe.cafename = form.cleaned_data['cafename']
+                cafe.visit_count = form.cleaned_data['visit_count']
+                cafe.cafe_id = form.cleaned_data['cafe_id']
+                cafe.save()
+        else:
+            form = forms.VisitedCafeForm()
+        
+        return render(request, 'accounts/enroll_new_cafe.html', {
+            'cafe_list': cafe_list,
+            'form': form,
+        })
+
