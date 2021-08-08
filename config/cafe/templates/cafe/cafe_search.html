@@ -6,15 +6,20 @@
 {% endblock %}
 {% block content %}
     <h2>원하는 카페를 검색해보세요!</h2><br/>
-    {% if q %}
-    <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
-    {% endif %}
     <a href="">지도에서 찾기</a>
     <br/>
 
+    {% if q %}
+    <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
+    {% endif %}
+
     <!-- 카페 검색 -->
     <form action="" method="GET">
-        <span>카페명 :</span>
+        <select name="type">
+            <option value="name">카페</option>
+            <option value="address">주소</option>
+            <option value="all">카페+주소</option>
+        </select>
         <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
         <!-- id="search-input": input 요소 안에 있는 값을 가져와 검색하기 위해 id값을 부여 -->
         <button type="submit" id="search_btn">search</button><br/>
@@ -65,7 +70,7 @@
     <ul class="pagination">
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
         </li>
         {% else %}
         <li class="page-item disabled">
@@ -75,13 +80,13 @@
 
         {% for page in page_range %}
         <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
-            <a class="page-link" href="?q={{ q }}&page={{ page }}">{{ page }}</a>
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
         </li>
         {% endfor %}
 
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
         </li>
         {% else %}
         <li class="page-item disabled">

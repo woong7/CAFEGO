@@ -70,15 +70,19 @@ class CafeListView(ListView):
     #검색 기능
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
-        #search_type = self.request.GET.get('type', '') 
+        search_type = self.request.GET.get('type', '') 
         cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
 
         if search_keyword:
-            if len(search_keyword) >= 2:
-                #if search_type == 'name':
+            if len(search_keyword) > 1:
+                if search_type == 'name':
                 #__incontains 대소문자 구별 없이 데이터 가져온다.
-                search_cafe_list = cafe_list.filter(name__icontains=search_keyword)
-            return search_cafe_list
+                    search_cafe_list = cafe_list.filter(name__icontains=search_keyword)
+                elif search_type == 'address':
+                    search_cafe_list = cafe_list.filter(address__icontains=search_keyword)
+                elif search_type == 'all':
+                    search_cafe_list = cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
+                return search_cafe_list
         else:
             messages.error(self.request, '2글자 이상 입력해주세요.')
         return cafe_list
@@ -102,9 +106,11 @@ class CafeListView(ListView):
         context['page_range'] = page_range
 
         search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '') 
 
         if len(search_keyword) > 1:
             context['q'] = search_keyword
+        context['type'] = search_type
 
         return context
 
