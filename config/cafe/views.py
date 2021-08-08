@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core import serializers
 from django.views.generic import ListView
 from .models import CafeList, Review, ReviewPhoto, Comment
 from .forms import ReviewForm
@@ -76,8 +77,8 @@ class CafeListView(ListView):
                 elif search_type == 'all':
                     search_cafe_list = cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
                 return search_cafe_list
-        else:
-            messages.error(self.request, '2글자 이상 입력해주세요.')
+            else:
+                messages.error(self.request, '2글자 이상 입력해주세요.')
         return cafe_list
 
     #하단부에 페이징 처리
@@ -109,11 +110,24 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
-    return render(request, 'cafe/cafe_map.html')
+    with open('C:/Users/96jos/Desktop/piro/cafe_go/CAFEGO/config/cafe/csv/crawledminor.csv','r', encoding='utf-8') as f:
+        dr = csv.DictReader(f)
+        s = pd.DataFrame(dr)
+    ss = []
+    for i in range(len(s)):
+        st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i])
+        ss.append(st)
 
+
+    cafes = CafeList.objects.all()
+    cafe_list = serializers.serialize('json', cafes)
+    ctx = {
+        'data': cafe_list
+    }
+    return render(request, 'cafe/cafe_map.html', ctx)
 
 def init_data(request):
-    with open('C:/Users/rjsdnd0316/Desktop/testpy/crawledminor.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []
@@ -122,4 +136,4 @@ def init_data(request):
         ss.append(st)
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
-    return redirect('cafe:review_create')
+    return redirect('home')
