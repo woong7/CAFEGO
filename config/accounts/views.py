@@ -5,13 +5,14 @@ from django.urls import reverse
 from django.contrib import auth
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
-from .models import User
+from .models import * #User
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
 from . import forms
 # Create your views here.
 
+#없어도 될듯,,,
 def signup(request):
     if request.method == "POST":
         if request.POST["password1"] == request.POST["password2"]:
@@ -23,8 +24,6 @@ def signup(request):
         return render(request, 'accounts/signup.html')
     #실패시 안넘어감
     return render(request, 'accounts/signup.html')
-
-
 
 
 ###allauth 써서 필요없을 듯???
@@ -80,3 +79,32 @@ def rank_detail(request):
 
 def rank_list(request):
     return render(request, 'accounts/rank_list.html')
+
+
+def enroll_home(request):
+    return render(request, "accounts/enroll_home.html")
+
+def enroll_new_cafe(request):
+    cafe_list = VisitedCafe.objects.all() #user id 넣어서 그 값만 가져와야 함
+    if request.method == 'POST':
+        form = forms.VisitedCafeForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            ##저장
+            cafe = VisitedCafe()
+            cafe.user = form.cleaned_data['user']
+            cafe.cafename = form.cleaned_data['cafename']
+            cafe.visit_count = form.cleaned_data['visit_count']
+            cafe.cafe_id = form.cleaned_data['cafe_id']
+            cafe.save()
+    else:
+        form = forms.VisitedCafeForm()
+    
+    return render(request, 'accounts/enroll_new_cafe.html', {
+        'cafe_list': cafe_list,
+        'form': form,
+    })
+
+def enroll_visited_cafe(request):
+    return render(request, "accounts/enroll_visited_cafe.html")
+

@@ -17,4 +17,10 @@ urlpatterns = [
     path('detail/', views.user_detail, name='user_detail'),
     path('rank/detail/', views.rank_detail, name='rank_detail'),
     path('rank/list/', views.rank_list, name='rank_list'),
+
+    path('enroll_home/', views.enroll_home, name="enroll_home"),
+    path('enroll_new_cafe/', views.enroll_new_cafe, name="enroll_new_cafe"),
+    path('enroll_visited_cafe/', views.enroll_visited_cafe, name="enroll_visited_cafe"),
+
+
 ]

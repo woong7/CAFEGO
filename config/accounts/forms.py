@@ -1,6 +1,6 @@
 from django import forms
 from . import models
-from .models import User
+from .models import User, VisitedCafe
 from allauth.account.forms import SignupForm
 from accounts.choices import *
 
@@ -41,3 +41,8 @@ class MyCustomSignupForm(SignupForm):
         user.agree_marketing = self.cleaned_data['agree_marketing']
         user.save()
         return user
+
+class VisitedCafeForm(forms.ModelForm):
+    class Meta:
+        model = VisitedCafe
+        fields = '__all__'

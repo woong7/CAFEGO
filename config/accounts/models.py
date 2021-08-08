@@ -67,7 +67,20 @@ class User(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
-class VisitedCafe(models.model):
+#방문한 한 카페 정보
+class VisitedCafe(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
-    
+    visit_count = models.PositiveIntegerField(default=0)
     cafe_id = models.PositiveIntegerField(default=0)
+    cafename = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.cafename
+
+#방문한 카페에서 먹은 음료 정보 -> 나중에 objects.all로 가져오기
+class Drink(models.Model):
+    visited_cafe = models.ForeignKey(VisitedCafe, on_delete=CASCADE)
+    drinkname = models.CharField(max_length=50, choices=DRINK_CHOICES)
+
+    def __str__(self):
+        return self.drinkname
