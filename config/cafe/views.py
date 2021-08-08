@@ -5,6 +5,9 @@ from .forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q
 import json
+import csv
+import pandas as pd
+from cafe.models import CafeList
 
 # Create your views here.
 def review_list(request, pk):
@@ -108,11 +111,6 @@ class CafeListView(ListView):
 def cafe_map(request):
     return render(request, 'cafe/cafe_map.html')
 
-
-
-import csv
-import pandas as pd
-from cafe.models import CafeList
 
 def init_data(request):
     with open('C:/Users/rjsdnd0316/Desktop/testpy/crawledminor.csv','r', encoding='utf-8') as f:

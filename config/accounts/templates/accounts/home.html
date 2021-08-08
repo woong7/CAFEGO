@@ -7,12 +7,12 @@
         <p>{{user.username}} 님이 반가워요!</p> <!--일단 ID로,,-->
         <p>카페고에 오신 것을 환영합니다~</p>
         <br><br>
-        <h4><a href="{% url 'enroll_home' %}" >방문카페 등록하러가기</a></h4>
-        <h4><a href="{% url 'user_cafe_map' %}">나의 카페지도 보러가기</a></h4>
+        <h4><a href="{% url 'accounts:enroll_home' %}" >방문카페 등록하러가기</a></h4>
+        <h4><a href="{% url 'accounts:user_cafe_map' %}">나의 카페지도 보러가기</a></h4>
         <h4><a href="">카페 검색하기</a></h4>
-        <h4><a href="{% url 'rank_list' %}">랭킹 확인하러 가기</a></h4>
+        <h4><a href="{% url 'accounts:rank_list' %}">랭킹 확인하러 가기</a></h4>
 
-        <h4><a href="{% url 'logout' %}">로그아웃하기</a></h4>
+        <h4><a href="{% url 'accounts:logout' %}">로그아웃하기</a></h4>
     {%else%}
         <a>로그인</a>
         <a>회원가입</a>
