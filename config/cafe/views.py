@@ -136,4 +136,4 @@ def init_data(request):
         ss.append(st)
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
-    return redirect('accounts:home')
+    return redirect('home')
