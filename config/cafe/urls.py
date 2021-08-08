@@ -12,4 +12,5 @@ urlpatterns = [
     path('cafe_search/', views.CafeListView.as_view(), name='cafe_list'), #카페 검색 페이지로
     #path('cafe_search/', view=views.cafe_search, name='cafe_search'), 
     #path('cafe_search/<str:q>', views.cafe_search)
+    path('cafe_map/', views.cafe_map, name='cafe_map'), # 카카오맵 카페 지도
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

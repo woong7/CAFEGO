@@ -83,7 +83,7 @@ class VisitedCafe(models.Model):
     cafe_id = models.PositiveIntegerField(default=0)
 
 
-class Badge(models.model):
+class Badge(models.Model):
     badge_name=models.TextField(max_length=150, unique=True)
     badge_image=models.ImageField()
     

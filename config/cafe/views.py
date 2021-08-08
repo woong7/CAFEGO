@@ -104,5 +104,6 @@ class CafeListView(ListView):
 
         return context
 
-
-        
+# 카페 지도
+def cafe_map(request):
+    return render(request, 'cafe/cafe_map.html')
