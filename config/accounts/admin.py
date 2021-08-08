@@ -8,5 +8,6 @@ class UserAdmin(admin.ModelAdmin):
     pass
 admin.site.register(VisitedCafe)
 admin.site.register(Drink)
+admin.site.register(Badge)
 
 #admin.site.register(User)
