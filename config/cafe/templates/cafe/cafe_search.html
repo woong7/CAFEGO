@@ -21,9 +21,7 @@
             <option value="all">카페+주소</option>
         </select>
         <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
-        <!-- id="search-input": input 요소 안에 있는 값을 가져와 검색하기 위해 id값을 부여 -->
         <button type="submit" id="search_btn">search</button><br/>
-        <!-- onclick="searchPost();": 버튼에 있는 doit 함수 -->        
     </form>
 
 
@@ -96,43 +94,4 @@
     </ul>
     {% endif %}
 
-{% comment %}
-    <!-- <script type="text/javascript">
-        function searchPost() {
-            //************************뻘짓
-            // let all_cafe = "{{ all_cafe.name }}";
-
-            // let all_cafe = JSON.parse("{{ all_cafe_js | escapejs }}")
-            // let cafe = all_cafe.name
-            // if cafe
-
-            // let cafeId = [ //왜 장고 문법 안 먹히냐 이거?
-            //     {% for cafe in all_cafe %}
-            //         {% if  searchValue == cafe.name %}
-            //             cafeid = cafe.name.id
-            //         {% endif %}
-            //     {% endfor %}            
-            // ]
-            //************************뻘짓
-
-            //Doit!
-            // id가 search-input인 element 속의 내용을 공백 제거해서 데려온다.
-            let searchValue = document.getElementById('search-input').value.trim();
-
-            if (searchValue.length > 1){
-                location.href="/review_list/" + cafeid + "/";
-            }
-            else {
-                alert('2글자 이상 입력해주세요.');
-            }
-        };
-
-        // enter 키 눌러도 검색 기능
-        document.getElementById('search-input').addEventListener('keyup', function(evnet){
-            if(event.key === 'Enter'){
-                searchPost();
-            }
-        });
-    </script> -->
-{% endcomment %}
 {% endblock %}

@@ -49,16 +49,6 @@ def review_create(request):
         ctx = {'form': form}
         return render(request, 'cafe/review_form.html', ctx)
 
-# 일단 내가 했던거..
-# def cafe_search(request):
-#     all_cafe = CafeList.objects.all()
-#     ctx = {
-#         'all_cafe': all_cafe,
-#         # "all_cafe_js": json.dumps([cafe.json() for cafe in all_cafe])
-#     }
-
-#     return render(request, 'cafe/cafe_list.html', ctx)
-
 class CafeListView(ListView):
     model = CafeList
     #리스트 몇줄 표시
@@ -115,24 +105,4 @@ class CafeListView(ListView):
         return context
 
 
-
-    #검색어를 알려주거나 검색결과가 없음을 알려주기
-    # def get_context_data(self, **kwargs):
-    #     search_keyword = self.request.GET.get('q', '')
-
-    #     if len(search_keyword) > 1:
-    #         context['q'] = search_keyword
-    #     return context
-        
-
-#doit!
-# class cafe_search(CafeList):
-#     paginate_by = None
-
-#     def get_queryset(self):
-#         #검색으로 받아온 값을 q에 저장
-#         q = self.kwargs['q']
-#         #카페 이름에 q를 포함하는 것을 필터링, 꼭 언더바 2개 쓰기, distinct는 중복 제거
-#         cafe_list = CafeList.objects.filter(Q(name__contains=q)).distinct()
-#         return cafe_list
         
