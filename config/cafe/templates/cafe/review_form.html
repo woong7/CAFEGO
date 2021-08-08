@@ -1,19 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>리뷰 작성</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    리뷰작성
+{% endblock %}
+{% block content %}
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <table>
-            {{ form.as_table }}
+            <!-- 다른 요소들은 form에서 입력받도록 만들어둠 -->
+            {{ form.as_table }} 
+            <!-- 사진 여러개 등록  -->
+            <input type="file" name="imgs" multiple>
         </table>
 
         <input type="submit" value="작성 완료">
-    </form>
-</body>
-</html>
+    </form>    
+{% endblock %}
