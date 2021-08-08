@@ -56,6 +56,7 @@ def logout(request):
 def main(request):
     return render(request, 'accounts/main.html')
 
+@login_required
 def home(request):
     return render(request, 'accounts/home.html')
 
@@ -84,7 +85,7 @@ def rank_list(request):
     }
     return render(request, 'accounts/rank_list.html', context=ctx)
 
-
+@login_required
 def enroll_home(request):
     return render(request, "accounts/enroll_home.html")
 
