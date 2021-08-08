@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib import auth
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
-from .models import User
+from .models import User, Badge, VisitedCafe
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
@@ -63,23 +63,40 @@ def home(request):
     return render(request,'accounts/home.html')
 
 def badge_list(request):
-    return render(request, 'accounts/badge_list.html')
+    badges=Badge.objects.all()
+    ctx={'badges':badges}
+
+    return render(request, 'accounts/badge_list.html', context=ctx)
 
 import simplejson as json
 def badge_taken(request):
-    
     user=request.user
 
     jsonDec=json.decoder.JSONDecoder()
-    myList=jsonDec.decode(user.visited_cafe)
+    myList=jsonDec.decode(user.badge_taken)
+    badges=Badge.objects.all()
+    taken_badges=[]
+    for badge in badges:
+        if badge.badge_name in myList:
+            taken_badges.append(badge)   
     
 
-    ctx={}
-
+    ctx={'taken_badges':taken_badges}
     return render(request, 'accounts/badge_taken.html', context=ctx)
 
 def badge_untaken(request):
-    return render(request, 'accounts/badge_untaken.html')
+    user=request.user
+
+    jsonDec=json.decoder.JSONDecoder()
+    myList=jsonDec.decode(user.badge_taken)
+    badges=Badge.objects.all()
+    taken_badges=[]
+    for badge in badges:
+        if not badge.badge_name in myList:
+            taken_badges.append(badge) 
+
+    ctx={'taken_badges':taken_badges}
+    return render(request, 'accounts/badge_untaken.html', context=ctx)
 
 def user_cafe_map(request):
     return render(request, 'accounts/user_cafe_map.html')
@@ -93,7 +110,7 @@ def rank_detail(request):
 def rank_list(request):
     users=User.objects.order_by('-total_visit')
     ctx={
-        users:'users'
+        'users':users
     }
     return render(request, 'accounts/rank_list.html', context=ctx)
 
