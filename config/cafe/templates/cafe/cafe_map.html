@@ -14,7 +14,7 @@
         <div class="option">
             <div>
                 <form id="searchForm">
-                    키워드 : <input type="text" value="" id="keyword" size="15"> 
+                    키워드 : <input type="text" value="커피" id="keyword" size="15"> 
                     <button type="submit">검색하기</button> 
                 </form>
             </div>
@@ -24,7 +24,9 @@
     </div>
 
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbe48a94474ef23703951ea76b61e90&libraries=services"></script>
-    <script>
+    <script  type="text/javascript">
+    var a =  {{ data | safe }};
+    console.log(a[0].fields.name);
     // 액셀파일 불러오기
     let rows;
     let markers;
@@ -57,20 +59,18 @@
                     }
                     console.log(markers.length);
                     console.log('---------------------이벤트 끝-------------------');
-                    //document.getElementById("searchForm").addEventListener("submit", searchPlaces(markers));
+                    document.getElementById("searchForm").addEventListener("submit", function(){searchPlaces(markers)});
                 });
             })
         };
         reader.readAsBinaryString(input.files[0]);
     }
 
-// TODO: 여기 해야함
     // 액셀파일 장소들을 지도에 마킹하기
     function markExcelData(markers, obj, sw, ne) {
         for(var i=0; i < obj.length; i++) {
             if(obj[i].X < ne.La && obj[i].X > sw.La && obj[i].Y < ne.Ma && obj[i].Y > sw.Ma) {
                 addMarker(markers, obj[i]);
-                //displayPlaces(objPlaces, markers);
             }
         }
     }
@@ -107,7 +107,7 @@
             image : new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
         });
 
-        // 생성된 마커를 배열에 추가합니다
+        // 마커를 배열에 추가
         markers.push(marker);
 
         // 마커에 클릭이벤트를 등록합니다
@@ -122,8 +122,6 @@
             `);
             infowindow.open(map, marker);
         });
-        
-        return marker;
     }
 
     // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
@@ -140,8 +138,6 @@
     var imageSrc = "https://image.flaticon.com/icons/png/512/168/168551.png", // 마커이미지의 주소입니다    
         imageOption = {offset: new kakao.maps.Point(8, 16)};
 
-    // 키워드로 장소를 검색합니다
-    //searchPlaces();
 
     // 키워드 검색을 요청하는 함수입니다
     function searchPlaces(markers) {
@@ -156,32 +152,12 @@
         checkKeyword(keyword, markers);
     }
 
+    // 검색어를 포함한 카페만 보여주는 함수
     function checkKeyword(keyword, markers) {
         for(var i=0; i < markers.length; i++) {
-            if(markers[i].includes(keyword)) {
+            if(markers[i].Fb.includes(keyword)) {
                 console.log(markers[i].Fb);
             }
-        }
-    }
-
- // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
-    function placesSearchCB(data, status) {
-        if (status === kakao.maps.services.Status.OK) {
-
-            // 정상적으로 검색이 완료됐으면
-            // 검색 목록과 마커를 표출합니다
-            displayPlaces(data);
-
-        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
-            alert('검색 결과가 존재하지 않습니다.');
-            return;
-
-        } else if (status === kakao.maps.services.Status.ERROR) {
-
-            alert('검색 결과 중 오류가 발생했습니다.');
-            return;
-
         }
     }
 
