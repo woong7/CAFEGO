@@ -22,6 +22,6 @@ urlpatterns = [
     path('rank/list/', views.rank_list, name='rank_list'),
 
     path('enroll_home/', views.enroll_home, name="enroll_home"),
-    path('enroll_new_cafe/', views.enroll_new_cafe, name="enroll_new_cafe"),
-    path('enroll_visited_cafe/', views.enroll_visited_cafe, name="enroll_visited_cafe"),
+    path('enroll_new_cafe/', views.EnrollNewCafeListView.as_view(), name="enroll_new_cafe"),
+    path('enroll_visited_cafe/', views.EnrollVisitedCafeListView.as_view(), name="enroll_visited_cafe"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
