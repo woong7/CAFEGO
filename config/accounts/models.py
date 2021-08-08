@@ -49,9 +49,6 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     
-    visited_cafe=models.TextField(null=True, default=json.dumps([]))
-    visited_num=models.TextField(null=True, default=json.dumps([]))
-    
     total_visit=models.IntegerField(default=0)
 
     badge_taken=models.TextField(null=True, default=json.dumps([]))

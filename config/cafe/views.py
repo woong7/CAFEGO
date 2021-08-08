@@ -107,3 +107,21 @@ class CafeListView(ListView):
 # 카페 지도
 def cafe_map(request):
     return render(request, 'cafe/cafe_map.html')
+
+
+
+import csv
+import pandas as pd
+from cafe.models import CafeList
+
+def init_data(request):
+    with open('C:/Users/rjsdnd0316/Desktop/testpy/crawledminor.csv','r', encoding='utf-8') as f:
+        dr = csv.DictReader(f)
+        s = pd.DataFrame(dr)
+    ss = []
+    for i in range(len(s)):
+        st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i])
+        ss.append(st)
+    for i in range(len(s)):
+        CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
+    return redirect('cafe:review_create')

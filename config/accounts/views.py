@@ -5,14 +5,13 @@ from django.urls import reverse
 from django.contrib import auth
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
-from .models import * #User
+from .models import User
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
 from . import forms
 # Create your views here.
 
-#없어도 될듯,,,
 def signup(request):
     if request.method == "POST":
         if request.POST["password1"] == request.POST["password2"]:
@@ -24,6 +23,8 @@ def signup(request):
         return render(request, 'accounts/signup.html')
     #실패시 안넘어감
     return render(request, 'accounts/signup.html')
+
+
 
 
 ###allauth 써서 필요없을 듯???
@@ -62,8 +63,18 @@ def home(request):
 def badge_list(request):
     return render(request, 'accounts/badge_list.html')
 
+import simplejson as json
 def badge_taken(request):
-    return render(request, 'accounts/badge_taken.html')
+    
+    user=request.user
+
+    jsonDec=json.decoder.JSONDecoder()
+    myList=jsonDec.decode(user.visited_cafe)
+    
+
+    ctx={}
+
+    return render(request, 'accounts/badge_taken.html', context=ctx)
 
 def badge_untaken(request):
     return render(request, 'accounts/badge_untaken.html')
@@ -83,8 +94,6 @@ def rank_list(request):
         users:'users'
     }
     return render(request, 'accounts/rank_list.html', context=ctx)
-
-
 def enroll_home(request):
     return render(request, "accounts/enroll_home.html")
 
@@ -111,4 +120,3 @@ def enroll_new_cafe(request):
 
 def enroll_visited_cafe(request):
     return render(request, "accounts/enroll_visited_cafe.html")
-
