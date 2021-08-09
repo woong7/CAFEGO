@@ -24,23 +24,6 @@
         <button type="submit" id="search_btn">search</button><br/>
     </form>
 
-<script>
-    
-    var a = "{% url 'cafe:review_list' cafe.id %}";
-    console.log(a);
-    document.getElementById("searchForm").addEventListener("submit", function(){
-        var cafee = document.getElementById('cafee').value;
-        alert(cafee);
-        
-    });
-</script>
-
-<form id="searchForm">
-    <input type="text" value="{% url 'cafe:review_list' cafe.id %}" id="cafee" size="15">
-    <button type="submit" id="search-cafe">검색하기</button>
-</form>
-
-
     <!-- 카페 리스트  -->
     <table>
         <thead>
@@ -52,11 +35,11 @@
             </tr>
         </thead>
         <tbody>
-            {% if new_cafe_list %}
-                {% for cafe in new_cafe_list %}
+            {% if cafe_list %}
+                {% for cafe in cafe_list %}
                     <tr>
                         <td>{{ cafe.id }}</td>
-                        <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
+                        <td><a href="{% url 'cafe:review_list' cafe.cafe_id %}">{{ cafe.cafe_id }}</a></td>
                         <td>{{ cafe.address | truncatechars:10  }}</td>
                         <!-- checkbox trigger modal -->
                         <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" name="visit" value="visit"></td>
