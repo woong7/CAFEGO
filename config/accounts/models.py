@@ -1,3 +1,4 @@
+#from config.cafe.models import CafeList
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, AbstractBaseUser
 #user model 커스텀
