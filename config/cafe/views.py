@@ -79,7 +79,7 @@ class CafeListView(ListView):
                 return search_cafe_list
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
-            return cafe_list
+        return cafe_list
 
     #하단부에 페이징 처리
     def get_context_data(self, **kwargs):
