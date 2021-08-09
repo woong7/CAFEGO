@@ -15,7 +15,7 @@
         {% if user.is_authenticated %}     
             <a href="{% url 'cafe:cafe_list' %}">카페검색</a>
             <a href="{% url 'enroll_home' %}">카페등록</a>
-            <a href="">카페지도</a>
+            <a href="/cafe/cafe_map/">카페지도</a>
             <a href="{% url 'rank_list' %}">랭킹</a>
             <a href="{% url 'mypage' %}">마이페이지</a>
             <a href="{% url 'logout' %}">로그아웃</a>
