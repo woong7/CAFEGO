@@ -13,7 +13,7 @@
     <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
     {% endif %}
 
-    <!-- 카페 검색 -->
+    <!-- 카페 검색창 -->
     <form action="" method="GET">
         <select name="type">
             <option value="name">카페</option>
@@ -23,6 +23,22 @@
         <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
         <button type="submit" id="search_btn">search</button><br/>
     </form>
+
+<script>
+    
+    var a = "{% url 'cafe:review_list' cafe.id %}";
+    console.log(a);
+    document.getElementById("searchForm").addEventListener("submit", function(){
+        var cafee = document.getElementById('cafee').value;
+        alert(cafee);
+        
+    });
+</script>
+
+<form id="searchForm">
+    <input type="text" value="{% url 'cafe:review_list' cafe.id %}" id="cafee" size="15">
+    <button type="submit" id="search-cafe">검색하기</button>
+</form>
 
 
     <!-- 카페 리스트  -->
@@ -38,31 +54,66 @@
         <tbody>
             {% if new_cafe_list %}
                 {% for cafe in new_cafe_list %}
-                    <tr class="text-center">
+                    <tr>
                         <td>{{ cafe.id }}</td>
                         <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
                         <td>{{ cafe.address | truncatechars:10  }}</td>
-                        <td>체크박스</td>
+                        <!-- checkbox trigger modal -->
+                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" name="visit" value="visit"></td>
                     </tr>
                 {% endfor %}
-            {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때-->
-                {% if q %}  <!--검색어가 있어 q가 context로 넘어오면 검색 결과가 없다.-->
-                <tr class="text-center">
-                    <td colspan="5">
-                        등록된 카페가 없습니다.
-                    </td>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">{{ cafe.name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        마신 음료를 체크해주세요!<br>
+
+                        <!-- yeram: drink 모델 choice 바꾸면 적용 아니면 삭제 -->
+                        <!-- {% for drink in drinks.drinkname %}
+                            {{ drink }} <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                        {% endfor %}
+                        기타 <input type="text" id="beverage" name="beverage"> -->
+
+                        <!-- 노가다 -->
+                        아메리카노 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                        바닐라라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                        카페라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                        카라멜마끼야또 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                        초코라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                        녹차라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                        에이드 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                        허브차 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                        기타 <input type="text" id="beverage" name="beverage">
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">등록하기</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때 카페 미등록-->
+                <tr>
+                    <td>등록된 카페가 없습니다.</td>
                 </tr>
-                {% else %}  <!--q가 없으면 검색어가 아니며 카페가 존재하지 않으므로 카페 미등록-->
-                <tr class="text-center">
-                    <td colspan="5">
-                        등록된 카페가 없습니다.
-                    </td>
-                </tr>
-                {% endif %} 
             {% endif %}            
         </tbody>
     </table>
+    
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                {{ message.tags }}! {{ message.message }}
+            {% endfor %}
+        </div>
+    {% endif %}
 
+    
     <!-- 페이징 처리 -->
     {% if is_paginated %}
     <ul class="pagination">

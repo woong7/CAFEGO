@@ -1,3 +1,4 @@
+#from config.cafe.models import CafeList
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, AbstractBaseUser
 #user model 커스텀
@@ -76,6 +77,7 @@ class User(AbstractBaseUser):
 #방문한 한 카페 정보
 class VisitedCafe(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
+    #visited_cafe = models.ForeignKey(CafeList, on_delete=CASCADE)
     visit_count = models.PositiveIntegerField(default=0)
     cafe_id = models.PositiveIntegerField(default=0)
 
