@@ -66,7 +66,6 @@ class CafeListView(ListView):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
         cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
-
         if search_keyword:
             if len(search_keyword) > 1:
                 if search_type == 'name':
@@ -79,6 +78,8 @@ class CafeListView(ListView):
                 return search_cafe_list
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
+                print(search_keyword)
+                print(len(search_keyword))
         return cafe_list
 
     #하단부에 페이징 처리

@@ -32,7 +32,7 @@ SEOUL_TOWN_CHOICES = [
 DRINK_CHOICES=[
     ('americano', '아메리카노'),
     ('vanilla', '바닐라라떼'),
-    ('cafelatte', '카페라뗴'),
+    ('cafelatte', '카페라떼'),
     ('caramel', '카라멜마끼아또'),
     ('choco', '초코라뗴'),
     ('ade', '에이드'),
