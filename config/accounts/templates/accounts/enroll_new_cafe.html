@@ -43,18 +43,14 @@
                         <td>{{ cafe.address | truncatechars:10  }}</td>
                         <!-- checkbox trigger modal -->
                         <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" name="visit" value="visit"></td>
-                    </tr>
-                {% endfor %}
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">{{ cafe.name }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                        마신 음료를 체크해주세요!<br>
+                        
 
                         <!-- yeram: drink 모델 choice 바꾸면 적용 아니면 삭제 -->
                         <!-- {% for drink in drinks.drinkname %}
@@ -63,23 +59,32 @@
                         기타 <input type="text" id="beverage" name="beverage"> -->
 
                         <!-- 노가다 -->
-                        아메리카노 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        바닐라라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        카페라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        카라멜마끼야또 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        초코라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        녹차라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        에이드 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        허브차 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        기타 <input type="text" id="beverage" name="beverage">
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">등록하기</button>
+                    <form action="{% url 'visit_register' %}" method='post'>
+                        <div class="modal-body">
+                            마신 음료를 체크해주세요!<br>
+                            아메리카노 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage" id="{{post.id}}"><br>
+                            바닐라라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                            카페라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                            카라멜마끼야또 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                            초코라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                            녹차라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                            에이드 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                            허브차 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
+                            기타 <input type="text" id="beverage" name="beverage">
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <span value="{{cafe.id}}"></span>
+                            <button type="submit" id="submit_btn_{{cafe.id}}" class="btn btn-primary" onclick="onClick({{ cafe}})">등록하기</button>
+                        </form>
                         </div>
                     </div>
                     </div>
                 </div>
+                    </tr>
+                {% endfor %}
+                <!-- Modal -->
+                
             {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때 카페 미등록-->
                 <tr>
                     <td>등록된 카페가 없습니다.</td>
@@ -155,4 +160,9 @@
     <p>지도 사진</p>
     <p>지도 위에서 태그 표시, 클릭할 수 있게.</p>
 
+<script>
+    const onClick = (cafe) => { console.log(cafe) };
+
+</script>
 {% endblock %}
+

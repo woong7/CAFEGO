@@ -253,3 +253,18 @@ def mypage(request):
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
+
+from django.views.decorators.csrf import csrf_exempt
+import json
+@csrf_exempt
+def visit_register(request):
+
+    if request.method == 'POST':
+        req = json.loads(request.body)
+        print(req)
+
+
+
+
+
+    return redirect('enroll_new_cafe')
