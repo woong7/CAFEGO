@@ -150,3 +150,54 @@ class EnrollNewCafeListView(ListView):
             'form': form,
         })
 
+class EnrollVisitedCafeListView(ListView):
+    model = VisitedCafe
+    paginate_by = 5
+    template_name = 'accounts/enroll_visited_cafe.html'
+    context_object_name = 'visited_cafe_list'
+
+    #검색 기능
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '') 
+        visited_cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+
+        if search_keyword:
+            if len(search_keyword) > 1:
+                if search_type == 'name':
+                    search_cafe_list = visited_cafe_list.filter(name__icontains=search_keyword)
+                elif search_type == 'address':
+                    search_cafe_list = visited_cafe_list.filter(address__icontains=search_keyword)
+                elif search_type == 'all':
+                    search_cafe_list = visited_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
+                return search_cafe_list
+        else:
+            messages.error(self.request, '2글자 이상 입력해주세요.')
+        return visited_cafe_list
+
+    #하단부에 페이징 처리
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 5
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '') 
+
+        if len(search_keyword) > 1:
+            context['q'] = search_keyword
+        context['type'] = search_type
+
+        return context

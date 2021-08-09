@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static 
 
 
-app_name = "accounts"
+#app_name = "accounts"
 
 urlpatterns = [
     path('', views.main, name='main'),
@@ -24,4 +24,4 @@ urlpatterns = [
     path('enroll_home/', views.enroll_home, name="enroll_home"),
     path('enroll_new_cafe/', views.EnrollNewCafeListView.as_view(), name="enroll_new_cafe"),
     path('enroll_visited_cafe/', views.EnrollVisitedCafeListView.as_view(), name="enroll_visited_cafe"),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

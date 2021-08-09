@@ -77,8 +77,8 @@ class CafeListView(ListView):
                 elif search_type == 'all':
                     search_cafe_list = cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
                 return search_cafe_list
-        else:
-            messages.error(self.request, '2글자 이상 입력해주세요.')
+            else:
+                messages.error(self.request, '2글자 이상 입력해주세요.')
         return cafe_list
 
     #하단부에 페이징 처리
@@ -136,4 +136,4 @@ def init_data(request):
         ss.append(st)
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
-    return redirect('accounts:home')
+    return redirect('home')
