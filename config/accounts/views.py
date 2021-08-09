@@ -122,49 +122,15 @@ def enroll_home(request):
     return render(request, "accounts/enroll_home.html")
 
 class EnrollNewCafeListView(ListView):
-    model = CafeList
+    model = VisitedCafe
     paginate_by = 5
     template_name = 'accounts/enroll_new_cafe.html'
     context_object_name = 'new_cafe_list'
 
-    #등록기능?
-    def enroll_new_cafe(request):
-        cafe_list = VisitedCafe.objects.all() #user id 넣어서 그 값만 가져와야 함
-        if request.method == 'POST':
-            form = forms.VisitedCafeForm(request.POST, request.FILES)
-
-            if form.is_valid():
-                ##저장
-                cafe = VisitedCafe()
-                cafe.user = form.cleaned_data['user']
-                cafe.cafename = form.cleaned_data['cafename']
-                cafe.visit_count = form.cleaned_data['visit_count']
-                cafe.cafe_id = form.cleaned_data['cafe_id']
-                cafe.save()
-        else:
-            form = forms.VisitedCafeForm()
-        
-        return render(request, 'accounts/enroll_new_cafe.html', {
-            'cafe_list': cafe_list,
-            'form': form,
-        })
-
-    #검색 기능
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        new_cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
-        
-        #잘 모르겠음..
-        # visited_cafe = VisitedCafe.objects.all()
-        # for i in visited_cafe:
-        #     if i.visit_count == 0:
-        #         new_cafe_list = []
-        #         new_cafe_list.append(i)
-        #     return new_cafe_list
-        
-        #drinks = Drink.objects.all()
-        #drinks = forms.DrinkForm ###yeram: drink 모델 choice 바꾸면 적용 아니면 삭제(아래도)###
+        new_cafe_list = VisitedCafe.objects.filter(user=self.request.user).filter(visit_count=0).order_by('-id')
 
         if search_keyword:
             if len(search_keyword) > 1:
@@ -174,10 +140,10 @@ class EnrollNewCafeListView(ListView):
                     search_cafe_list = new_cafe_list.filter(address__icontains=search_keyword)
                 elif search_type == 'all':
                     search_cafe_list = new_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
-                return search_cafe_list #drinks####
+                return search_cafe_list
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
-        return new_cafe_list #drinks####
+        return new_cafe_list
 
     #하단부에 페이징 처리
     def get_context_data(self, **kwargs):
@@ -216,7 +182,7 @@ class EnrollVisitedCafeListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).filter(visit_count=0).order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
 
         if search_keyword:
             if len(search_keyword) > 1:

@@ -41,8 +41,8 @@
             {% if visited_cafe_list %}
                 {% for cafe in visited_cafe_list %}
                     <tr>
-                        <td>{{cafe.name}}</td>
-                        <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.cafe_id }}</a></td>
+                        <td>{{cafe.id}}</td>
+                        <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
                         <td>{{cafe.address}}</td>
                         <td>{{ cafe.visit_count }}</td>
                         <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" name="visit" value="visit"></td>

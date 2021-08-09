@@ -35,10 +35,10 @@
             </tr>
         </thead>
         <tbody>
-            {% if cafe_list %}
-                {% for cafe in cafe_list %}
+            {% if new_cafe_list %}
+                {% for cafe in new_cafe_list %}
                     <tr>
-                        <td>{{ cafe.id }}</td>
+                        <td>{{ cafe.cafe_id }}</td>
                         <td><a href="{% url 'cafe:review_list' cafe.cafe_id %}">{{ cafe.cafe_id }}</a></td>
                         <td>{{ cafe.address | truncatechars:10  }}</td>
                         <!-- checkbox trigger modal -->
