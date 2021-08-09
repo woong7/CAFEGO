@@ -189,7 +189,7 @@ class EnrollVisitedCafeListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).filter(visit_count=0).order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).filter(visit_check=True).order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
 
         if search_keyword:
             if len(search_keyword) > 1:

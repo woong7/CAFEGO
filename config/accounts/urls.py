@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static 
-
+import os
 
 #app_name = "accounts"
 
@@ -18,11 +18,11 @@ urlpatterns = [
     path('badge/taken/', views.badge_taken, name='badge_taken'),
     path('badge/untaken/', views.badge_untaken, name='badge_untaken'),
     path('cafemap/', views.user_cafe_map, name='user_cafe_map'),
-    path('detail/', views.user_detail, name='user_detail'),
+    #path('detail/', views.user_detail, name='user_detail'),
     path('rank/detail/', views.rank_detail, name='rank_detail'),
     path('rank/list/', views.rank_list, name='rank_list'),
 
     path('enroll_home/', views.enroll_home, name="enroll_home"),
     path('enroll_new_cafe/', views.EnrollNewCafeListView.as_view(), name="enroll_new_cafe"),
     path('enroll_visited_cafe/', views.EnrollVisitedCafeListView.as_view(), name="enroll_visited_cafe"),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
