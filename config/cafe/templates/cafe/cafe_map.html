@@ -14,14 +14,19 @@
     <div id="menu_wrap" class="bg_white">
         <div class="option">
             <div>
+                <form onsubmit="searchPlaces(); return false;">
+                    키워드 : <input type="text" value="이태원 맛집" id="key-word" size="15"> 
+                    <button type="submit">검색하기</button> 
+                </form>
                 <form id="searchForm">
                     키워드 : <input type="text" value="" id="keyword" size="15"> 
-                    <button type="submit" id="search-cafe">검색하기</button> 
+                    <input type="button" id="search-cafe">검색하기</input> 
                 </form>
             </div>
         </div>
         <hr>
-        <ul id="placesList"></ul>
+        <ul id="placesList">
+        </ul>
     </div>
     <div id="map" style="width:910px; height:910px;"></div>
 
@@ -161,15 +166,19 @@
 
             var keywordMarkers = [];
             checkKeyword(keyword, markers, keywordMarkers);
-            for(var i = 0; i < keywordMarkers.length; i++) {
-                alert(keywordMarkers[i].getTitle());
-            }
+            var one = keywordMarkers[0];
+
             $.ajax({ // Ajax 요청을 작성하고 GET 방식으로 전송함.
-                url: "cafe/cafe_map/",
-                data: { keywordMarkers : 'keywordMarkers' },
+                url: "{% url 'cafe:cafe_map' %}",
+                dataType: 'json',
+                data: {
+                    //"csrfmiddlewaretoken": "{{ csrf_token }}",
+                    //keywordMarkers : 'keywordMarkers',
+                    one: 'one',
+                },
                 method: "GET",
-                error : function() { 
-                    console.log("실행중 오류가 발생하였습니다.");
+                error : function(err) { 
+                    console.log(err);
                 },
                 success : function() {
                     alert('성공');
@@ -179,7 +188,58 @@
                         
     });
 
-    const requestKeyword = new XMLHttpRequest();
+    // 키워드로 장소를 검색합니다
+    searchPlaces();
+
+    // 키워드 검색을 요청하는 함수입니다
+    function searchPlaces() {
+        var key_word = document.getElementById('keyword').value;
+
+        if (!key_word.replace(/^\s+|\s+$/g, '')) {
+            alert('키워드를 입력해주세요!');
+            return false;
+        }
+
+        // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+        keywordSearch(key_word, placesSearchCB); 
+    }
+
+    // 검색 결과 목록과 마커를 표출하는 함수입니다
+    function displayPlaces(places) {
+
+        var listEl = document.getElementById('placesList'), 
+        menuEl = document.getElementById('menu_wrap'),
+        fragment = document.createDocumentFragment(), 
+        bounds = new kakao.maps.LatLngBounds(), 
+        listStr = '';
+        
+        // 검색 결과 목록에 추가된 항목들을 제거합니다
+        removeAllChildNods(listEl);
+
+        // 지도에 표시되고 있는 마커를 제거합니다
+        removeMarker();
+        
+        for ( var i=0; i<places.length; i++ ) {
+
+            // 마커를 생성하고 지도에 표시합니다
+            var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+                marker = addMarker(placePosition, i), 
+                itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+
+
+            fragment.appendChild(itemEl);
+        }
+
+        // 검색결과 항목들을 검색결과 목록 Elemnet에 추가합니다
+        listEl.appendChild(fragment);
+        menuEl.scrollTop = 0;
+
+        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+        map.setBounds(bounds);
+    }
+
+
+    {% comment %} const requestKeyword = new XMLHttpRequest();
 
     const keywordShow = () => {
         const url = 'cafe/cafe_map/';
@@ -227,7 +287,7 @@
         if(requestKeyword.readyState === XMLHttpRequest.DONE) {
             keywordResponse();
         }
-    };
+    }; {% endcomment %}
 
     </script>
 </body>
