@@ -12,6 +12,7 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('login/', views.LoginView.as_view(), name='login'), #views.login
     path('logout/', views.logout, name='logout'),
+    path('mypage/', views.mypage, name='mypage'),
 
     path('badge/list/', views.badge_list, name='badge_list'),
     path('badge/taken/', views.badge_taken, name='badge_taken'),
@@ -24,4 +25,4 @@ urlpatterns = [
     path('enroll_home/', views.enroll_home, name="enroll_home"),
     path('enroll_new_cafe/', views.EnrollNewCafeListView.as_view(), name="enroll_new_cafe"),
     path('enroll_visited_cafe/', views.EnrollVisitedCafeListView.as_view(), name="enroll_visited_cafe"),
-]#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

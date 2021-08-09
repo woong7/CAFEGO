@@ -112,7 +112,14 @@ def rank_detail(request):
     return render(request, 'accounts/rank_detail.html')
 
 def rank_list(request):
-    users=User.objects.order_by('-total_visit')
+    users=User.objects.all()
+    for visit_user in users:
+        visit_user.total_visit=0
+        visit_cafes=VisitedCafe.objects.filter(user=visit_user)
+        for cafe in visit_cafes:
+            visit_user.total_visit+=cafe.visit_count
+        
+    users.order_by('-total_visit')
     ctx={
         'users':users
     }
@@ -201,3 +208,23 @@ class EnrollVisitedCafeListView(ListView):
         context['type'] = search_type
 
         return context
+
+def mypage(request):
+
+    visit_cafes=VisitedCafe.objects.filter(user=request.user)
+    user=request.user
+
+    jsonDec=json.decoder.JSONDecoder()
+    myList=jsonDec.decode(user.badge_taken)
+    badges=Badge.objects.all()
+    taken_badges=[]
+    for badge in badges:
+        if not badge.badge_name in myList:
+            taken_badges.append(badge) 
+
+    ctx={
+        'taken_badges':taken_badges,
+        'visit_cafes':visit_cafes,
+    }
+
+    return render(request, 'accounts/mypage.html', context=ctx)
