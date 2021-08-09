@@ -253,3 +253,22 @@ def mypage(request):
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
+
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+from django.forms.models import model_to_dict
+@csrf_exempt
+def visit_register(request):
+
+    if request.method == 'POST':
+        req_post = request.POST
+        str_cafename = req_post.__getitem__('cafename')
+        v_cafe = VisitedCafe()
+        v_cafe.user = request.user
+        v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+        v_cafe.visit_check = True
+        v_cafe.visit_count += 1
+        v_cafe.save()
+
+    return redirect('enroll_new_cafe')
