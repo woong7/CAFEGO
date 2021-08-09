@@ -134,10 +134,13 @@ class EnrollNewCafeListView(ListView):
     template_name = 'accounts/enroll_new_cafe.html'
     context_object_name = 'new_cafe_list'
 
+
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        new_cafe_list = VisitedCafe.objects.filter(user=self.request.user).filter(visit_check=False).order_by('-id')
+        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user)
+        names_to_exclude = [o.cafe for o in visited_cafe_list] 
+        new_cafe_list = CafeList.objects.exclude(name__in=names_to_exclude).order_by('-id')
 
         if search_keyword:
             if len(search_keyword) > 1:
@@ -189,7 +192,7 @@ class EnrollVisitedCafeListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).filter(visit_check=True).order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
 
         if search_keyword:
             if len(search_keyword) > 1:
