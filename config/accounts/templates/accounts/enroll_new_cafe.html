@@ -38,9 +38,9 @@
             {% if new_cafe_list %}
                 {% for cafe in new_cafe_list %}
                     <tr>
-                        <td>{{ cafe.cafe.id }}</td>
-                        <td><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{ cafe.cafe.name }}</a></td>
-                        <td>{{ cafe.cafe.address | truncatechars:10  }}</td>
+                        <td>{{ cafe.id }}</td>
+                        <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
+                        <td>{{ cafe.address | truncatechars:10  }}</td>
                         <!-- checkbox trigger modal -->
                         <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" name="visit" value="visit"></td>
                     </tr>
