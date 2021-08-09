@@ -111,16 +111,7 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
-    # with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
-    #     dr = csv.DictReader(f)
-    #     s = pd.DataFrame(dr)
-    # ss = []
-    # for i in range(len(s)):
-    #     st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i])
-    #     ss.append(st)
-    # for i in range(len(s)):
-    #     CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
-    
+
     cafes = CafeList.objects.all()
     cafe_list = serializers.serialize('json', cafes)
     ctx = {
