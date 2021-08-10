@@ -8,7 +8,7 @@
         {{ cafe_stars }}<br/>        
     </div>
     <a href="">지도</a>
-    <a href="{% url 'cafe:review_create' %}">리뷰 작성</a>
+    <a href="{% url 'cafe:review_create' this_cafe.id %}">리뷰 작성</a>
     <hr/>
 
     <div class="review_list">
