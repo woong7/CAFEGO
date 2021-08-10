@@ -15,7 +15,7 @@ from django.contrib.auth import logout as django_logout
 from . import forms
 from django.contrib import messages
 from django.db.models import Q
-from .forms import RegisterForm
+
 # Create your views here.
 
 def signup(request):

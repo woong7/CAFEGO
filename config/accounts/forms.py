@@ -1,6 +1,6 @@
 from django import forms
 from . import models
-from .models import Drink, User, VisitedCafe, Register
+from .models import Drink, User, VisitedCafe
 from allauth.account.forms import SignupForm
 from accounts.choices import *
 
@@ -57,7 +57,3 @@ class DrinkForm(forms.ModelForm):
         fields = ['drinkname',]
 
 
-class RegisterForm(forms.ModelForm):
-    class Meta:
-        model=Register
-        fields = '__all__'

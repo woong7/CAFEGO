@@ -101,8 +101,3 @@ class Drink(models.Model):
     def __str__(self):
         return self.drinkname
 
-    
-class Register(models.Model):
-    user=models.ForeignKey(User, on_delete=CASCADE)
-    cafe = models.ForeignKey('cafe.CafeList', on_delete=CASCADE)
-    drink=models.TextField(max_length=50, choices=DRINK_CHOICES)
