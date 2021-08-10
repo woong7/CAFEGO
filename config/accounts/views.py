@@ -273,14 +273,23 @@ def mypage(request):
         if not badge.badge_name in myList:
             taken_badges.append(badge) 
 
+    total_badge_count = len(taken_badges)
+    total_visit = 0
+    for cafe in visit_cafes:
+        total_visit += cafe.visit_count
+    
     ctx={
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
         'drink_list' :total_drink,
         'drink_list_dic' :total_drink_dic,
+        'total_visit':total_visit,
+        'total_badge_count':total_badge_count,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
+
+
 
 from django.views.decorators.csrf import csrf_exempt
 import json
