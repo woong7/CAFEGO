@@ -125,7 +125,7 @@ def cafe_map(request):
     return render(request, 'cafe/cafe_map.html', ctx)
 
 def init_data(request):
-    with open('cafe/crawled.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []

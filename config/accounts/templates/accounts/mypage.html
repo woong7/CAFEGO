@@ -12,15 +12,12 @@
         {% endfor %}
     </div>
 
-    {% for cafe in visit_cafes %}
-        <p style="font-size: 20px; font-weight: bold">{{ cafe.cafe.name }} 카페  [ 방문 횟수: {{ cafe.visit_count }} ] </p>
-        <!-- {% for drink in drink_list %}
-            <p style="font-size: 20px; font-weight: bold">마신 음료 : {{ drink.drinkname }} </p>
-        {% endfor %} -->
+    {% for cafe, drinks in drink_list_dic.items %} 
+        <span style="font-size: 20px; font-weight: bold">{{cafe}} 카페</span>
+        <span> 방문 횟수: {{cafe.visit_count}}</span>
+        {% for drink in drinks %}
+            <p>마신 음료 : {{drink.drinkname}}</p>
+        {% endfor %}
     {% endfor %}
-
-
-
-
 
 {% endblock %}

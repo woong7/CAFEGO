@@ -82,6 +82,8 @@ class VisitedCafe(models.Model):
     visit_count = models.PositiveIntegerField(default=0)
     visit_check = models.BooleanField(default=False)
 
+    drink_list = models.TextField(null=True, default=json.dumps([]))
+
     def __str__(self):
         return self.cafe.name
 

@@ -247,27 +247,45 @@ def mypage(request):
 
     visit_cafes=VisitedCafe.objects.filter(user=request.user)
     user=request.user
-    print("vcafe:", visit_cafes)
-    
-    #for cafe in visit_cafes:
-        #drink = Drink().objects.all()
 
-        #drink_list = Drink.objects.get(visited_cafe=cafe)#되나?
-    
-    #print("drink", drink)
-    #print(drink_list.drinkname)
     jsonDec=json.decoder.JSONDecoder()
+
+    total_drink = []
+    total_drink_dic = {}
+
+    for v_cafe in visit_cafes:
+        
+        #내가 마신 음료들
+        my_drink = jsonDec.decode(v_cafe.drink_list) #visit_cafes가 여러개인데 가능한가??
+        drinks = Drink.objects.filter(visited_cafe=v_cafe)#그 카페에서 먹은 음료
+        print("v_cafe:", v_cafe)
+        print("drinks:", drinks)
+        drink_list = []
+
+        for drink in drinks:#각 음료들
+            if drink.drinkname not in my_drink:#내가 마신 음료에 없다면
+                drink_list.append(drink)
+        total_drink.append(drink_list)# 각각에 모든 음료 데이터들이 들어감,,,
+        total_drink_dic[v_cafe] = drink_list
+    
+    print("total drink:", total_drink)#
+    print("total drink dic:", total_drink_dic)#
+    print("total drink dic type:", type(total_drink_dic))#
+
     myList=jsonDec.decode(user.badge_taken)
     badges=Badge.objects.all()
     taken_badges=[]
     for badge in badges:
         if not badge.badge_name in myList:
             taken_badges.append(badge) 
+    print("taken badges:", taken_badges)
+    print("drink:", total_drink)
 
     ctx={
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
-        # 'drink_list' :drink_list,
+        'drink_list' :total_drink,
+        'drink_list_dic' :total_drink_dic,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
