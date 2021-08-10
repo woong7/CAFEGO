@@ -161,6 +161,8 @@
     //카페 키워드 검색 이벤트
     $(document).ready(function(){
         $("#search-cafe").click(function(){
+
+            let placeslist = "#placesList";
             var keyword = $('#keyword').val();
 
             if (!keyword.replace(/^\s+|\s+$/g, '')) {
