@@ -66,7 +66,6 @@ class CafeListView(ListView):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
         cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
-
         if search_keyword:
             if len(search_keyword) > 1:
                 if search_type == 'name':
@@ -79,6 +78,8 @@ class CafeListView(ListView):
                 return search_cafe_list
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
+                print(search_keyword)
+                print(len(search_keyword))
         return cafe_list
 
     #하단부에 페이징 처리
@@ -110,16 +111,7 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
-    # with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
-    #     dr = csv.DictReader(f)
-    #     s = pd.DataFrame(dr)
-    # ss = []
-    # for i in range(len(s)):
-    #     st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i])
-    #     ss.append(st)
-    # for i in range(len(s)):
-    #     CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
-    
+
     cafes = CafeList.objects.all()
     cafe_list = serializers.serialize('json', cafes)
     ctx = {
@@ -128,7 +120,7 @@ def cafe_map(request):
     return render(request, 'cafe/cafe_map.html', ctx)
 
 def init_data(request):
-    with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawled.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{user.nickname}}님의 마이페이지입니다.</h1>
+
+    <div>
+        {% for badge in taken_badges %}
+            <div>
+                <img src="{{badge.badge_image.url}}" style="width: 10%; height: 10%;">
+                <p>{{badge.badge_name}}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% for cafe in visit_cafes %}
+        <p style="font-size: 20px; font-weight: bold">{{ cafe.cafe.name }} 카페  [ 방문 횟수: {{ cafe.visit_count }} ] </p>
+
+    {% endfor %}
+
+{% endblock %}

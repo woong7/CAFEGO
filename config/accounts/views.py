@@ -1,3 +1,4 @@
+from django import views
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
@@ -14,6 +15,7 @@ from django.contrib.auth import logout as django_logout
 from . import forms
 from django.contrib import messages
 from django.db.models import Q
+
 # Create your views here.
 
 def signup(request):
@@ -27,8 +29,6 @@ def signup(request):
         return render(request, 'accounts/signup.html')
     #실패시 안넘어감
     return render(request, 'accounts/signup.html')
-
-
 
 
 ###allauth 써서 필요없을 듯???
@@ -112,7 +112,14 @@ def rank_detail(request):
     return render(request, 'accounts/rank_detail.html')
 
 def rank_list(request):
-    users=User.objects.order_by('-total_visit')
+    users=User.objects.all()
+    for visit_user in users:
+        visit_user.total_visit=0
+        visit_cafes=VisitedCafe.objects.filter(user=visit_user)
+        for cafe in visit_cafes:
+            visit_user.total_visit+=cafe.visit_count
+        
+    users.order_by('-total_visit')
     ctx={
         'users':users
     }
@@ -123,32 +130,58 @@ def enroll_home(request):
     return render(request, "accounts/enroll_home.html")
 
 class EnrollNewCafeListView(ListView):
-    model = CafeList
+    model = VisitedCafe
     paginate_by = 5
     template_name = 'accounts/enroll_new_cafe.html'
     context_object_name = 'new_cafe_list'
 
-    #등록기능?
-    def enroll_new_cafe(request):
-        cafe_list = VisitedCafe.objects.all() #user id 넣어서 그 값만 가져와야 함
-        if request.method == 'POST':
-            form = forms.VisitedCafeForm(request.POST, request.FILES)
 
-            if form.is_valid():
-                ##저장
-                cafe = VisitedCafe()
-                cafe.user = form.cleaned_data['user']
-                cafe.cafename = form.cleaned_data['cafename']
-                cafe.visit_count = form.cleaned_data['visit_count']
-                cafe.cafe_id = form.cleaned_data['cafe_id']
-                cafe.save()
-        else:
-            form = forms.VisitedCafeForm()
-        
-        return render(request, 'accounts/enroll_new_cafe.html', {
-            'cafe_list': cafe_list,
-            'form': form,
-        })
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '') 
+        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user)
+        names_to_exclude = [o.cafe for o in visited_cafe_list] 
+        new_cafe_list = CafeList.objects.exclude(name__in=names_to_exclude).order_by('-id')
+
+        if search_keyword:
+            if len(search_keyword) > 1:
+                if search_type == 'name':
+                    search_cafe_list = new_cafe_list.filter(name__icontains=search_keyword)
+                elif search_type == 'address':
+                    search_cafe_list = new_cafe_list.filter(address__icontains=search_keyword)
+                elif search_type == 'all':
+                    search_cafe_list = new_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
+                return search_cafe_list
+            else:
+                messages.error(self.request, '2글자 이상 입력해주세요.')
+        return new_cafe_list
+
+    #하단부에 페이징 처리
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 5
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '') 
+
+        if len(search_keyword) > 1:
+            context['q'] = search_keyword
+        context['type'] = search_type
+
+        return context
 
 class EnrollVisitedCafeListView(ListView):
     model = VisitedCafe
@@ -160,7 +193,7 @@ class EnrollVisitedCafeListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
 
         if search_keyword:
             if len(search_keyword) > 1:
@@ -171,8 +204,8 @@ class EnrollVisitedCafeListView(ListView):
                 elif search_type == 'all':
                     search_cafe_list = visited_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
                 return search_cafe_list
-        else:
-            messages.error(self.request, '2글자 이상 입력해주세요.')
+            else:
+                messages.error(self.request, '2글자 이상 입력해주세요.')
         return visited_cafe_list
 
     #하단부에 페이징 처리
@@ -201,3 +234,42 @@ class EnrollVisitedCafeListView(ListView):
         context['type'] = search_type
 
         return context
+
+def mypage(request):
+
+    visit_cafes=VisitedCafe.objects.filter(user=request.user)
+    user=request.user
+
+    jsonDec=json.decoder.JSONDecoder()
+    myList=jsonDec.decode(user.badge_taken)
+    badges=Badge.objects.all()
+    taken_badges=[]
+    for badge in badges:
+        if not badge.badge_name in myList:
+            taken_badges.append(badge) 
+
+    ctx={
+        'taken_badges':taken_badges,
+        'visit_cafes':visit_cafes,
+    }
+
+    return render(request, 'accounts/mypage.html', context=ctx)
+
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+from django.forms.models import model_to_dict
+@csrf_exempt
+def visit_register(request):
+
+    if request.method == 'POST':
+        req_post = request.POST
+        str_cafename = req_post.__getitem__('cafename')
+        v_cafe = VisitedCafe()
+        v_cafe.user = request.user
+        v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+        v_cafe.visit_check = True
+        v_cafe.visit_count += 1
+        v_cafe.save()
+
+    return redirect('enroll_new_cafe')
