@@ -70,7 +70,7 @@
         // 마커 데이터 추가
         markData(markers, cafeList, swLatlng, neLatlng);
         for(var i = 0; i < markers.length; i++) {
-            console.log(markers[i].Fb);
+           // console.log(markers[i].Fb);
         }
         console.log(markers.length);
     });
@@ -83,36 +83,41 @@
 
         while(low<=high)
         {
-            middle=(low+high)/2;
-            if(cafeList[middle]<sw.La) low=middle+1;
-            else if(cafeList[middle]>sw.La) high=middle-1;
+            middle=Math.floor((low+high)/2);
+            if(cafeList[middle].fields.location_x<sw.La) 
+            {
+                low=middle+1;
+            }
+            else if(cafeList[middle].fields.location_x>sw.La) high=middle-1;
             else{
-                left_bound = cafeList[middle];
+                left_bound = middle;
                 find=true;
                 break;
             }
         }
-        if(!find) left_bound=array[high];
+        if(!find) left_bound=high;
 
         middle=0, low=0, high=cafeList.length-1;
         find=false;
         while(low<=high)
         {
-            middle=(low+high)/2;
-            if(cafeList[middle]<sw.La) low=middle+1;
-            else if(cafeList[middle]>sw.La) high=middle-1;
+            middle=Math.floor((low+high)/2);
+            if(cafeList[middle].fields.location_x<ne.La) low=middle+1;
+            else if(cafeList[middle].fields.location_x>ne.La) high=middle-1;
             else{
-                right_bound = cafeList[middle];
+                right_bound = middle;
                 find=true;
                 break;
             }
         }
-        if(!find) right_bound=array[low];
+        if(!find) right_bound=low;
+        console.log(left_bound);
+        console.log(right_bound);
 
         for(var i=left_bound; i <=right_bound; i++) {
-            
+            if(cafeList[i].fields.location_y < ne.Ma && cafeList[i].fields.location_y > sw.Ma){
                 addMarker(markers, cafeList[i].fields);
-    
+            }
         }
     }
 
