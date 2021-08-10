@@ -31,10 +31,10 @@ def review_create(request, pk):
         #사진 제외한 review 요소들 저장
         form = ReviewForm(request.POST)
         if form.is_valid():
-            myreview = form.save(commit=False) #content만 저장됨
-            myreview.username = request.user.nickname
+            myreview = form.save(commit=False)
+            myreview.username = request.user
             myreview.cafe = CafeList.objects.get(pk=pk)
-            myreview = form.save() 
+            myreview = form.save()
 
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
         for img in request.FILES.getlist('imgs'):
@@ -55,8 +55,8 @@ def review_create(request, pk):
     else:
         form = ReviewForm()
         cafe_name = CafeList.objects.get(pk=pk)
-        reviewer = request.user.nickname
-        ctx = {'form': form, 'cafe_name': cafe_name,}
+        reviewer = request.user
+        ctx = {'form': form, 'cafe_name': cafe_name, 'reviewer': reviewer}
         return render(request, 'cafe/review_form.html', ctx)
 
 class CafeListView(ListView):
@@ -117,7 +117,6 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
-
     cafes = CafeList.objects.all()
     cafe_list = serializers.serialize('json', cafes)
     ctx = {
@@ -126,7 +125,7 @@ def cafe_map(request):
     return render(request, 'cafe/cafe_map.html', ctx)
 
 def init_data(request):
-    with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawled.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []
