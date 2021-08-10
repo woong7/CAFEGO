@@ -117,7 +117,7 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
-    cafes = CafeList.objects.all()
+    cafes = CafeList.objects.all().order_by('location_x')
     cafe_list = serializers.serialize('json', cafes)
     ctx = {
         'data': cafe_list
