@@ -82,11 +82,14 @@ class VisitedCafe(models.Model):
     visit_count = models.PositiveIntegerField(default=0)
     visit_check = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.cafe.name
+
 
 class Badge(models.Model):
     badge_name=models.TextField(max_length=150, unique=True)
     badge_image=models.ImageField()
-
+    
 
 #방문한 카페에서 먹은 음료 정보 -> 나중에 objects.all로 가져오기
 class Drink(models.Model):
@@ -95,4 +98,3 @@ class Drink(models.Model):
 
     def __str__(self):
         return self.drinkname
-

@@ -131,7 +131,7 @@ def enroll_home(request):
 
 class EnrollNewCafeListView(ListView):
     model = VisitedCafe
-    paginate_by = 5
+    paginate_by = 15
     template_name = 'accounts/enroll_new_cafe.html'
     context_object_name = 'new_cafe_list'
 
@@ -139,9 +139,10 @@ class EnrollNewCafeListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user)
+        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).order_by('-id')
+        
         names_to_exclude = [o.cafe for o in visited_cafe_list] 
-        new_cafe_list = CafeList.objects.exclude(name__in=names_to_exclude).order_by('-id')
+        new_cafe_list = CafeList.objects.exclude(name__in=names_to_exclude)
 
         if search_keyword:
             if len(search_keyword) > 1:
@@ -157,10 +158,16 @@ class EnrollNewCafeListView(ListView):
         return new_cafe_list
 
     #하단부에 페이징 처리
+    #Django Paginator를 사용하여 간단하게 페이징처리를 구현할 수 있지만 
+    #하단부의 페이지 숫자 범위를 커스텀하기 위해 
+    #get_context_data 메소드로 페이지 숫자 범위 Context를 생성하여 템플릿에 전달한다.
     def get_context_data(self, **kwargs):
+        #pk값 얻어옴, *kwargs는 키워드된 n개의 변수들을 함수의 인자로 보낼 때 사용
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
-        page_numbers_range = 5
+        #10번째 버튼?
+        page_numbers_range = 10
+        #page_range():(1부터 시작하는)페이지 리스트 반환 
         max_index = len(paginator.page_range)
 
         page = self.request.GET.get('page')
@@ -174,6 +181,7 @@ class EnrollNewCafeListView(ListView):
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
 
+        ##
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
 
@@ -239,7 +247,15 @@ def mypage(request):
 
     visit_cafes=VisitedCafe.objects.filter(user=request.user)
     user=request.user
+    print("vcafe:", visit_cafes)
+    
+    #for cafe in visit_cafes:
+        #drink = Drink().objects.all()
 
+        #drink_list = Drink.objects.get(visited_cafe=cafe)#되나?
+    
+    #print("drink", drink)
+    #print(drink_list.drinkname)
     jsonDec=json.decoder.JSONDecoder()
     myList=jsonDec.decode(user.badge_taken)
     badges=Badge.objects.all()
@@ -251,6 +267,7 @@ def mypage(request):
     ctx={
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
+        # 'drink_list' :drink_list,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
@@ -265,11 +282,18 @@ def visit_register(request):
     if request.method == 'POST':
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
+        str_drinkname = req_post.__getitem__('beverage')
+        print("drink:", str_drinkname)
         v_cafe = VisitedCafe()
         v_cafe.user = request.user
         v_cafe.cafe = CafeList.objects.get(name=str_cafename)
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
         v_cafe.save()
+
+        drink = Drink()
+        drink.visited_cafe = v_cafe
+        drink.drinkname = str_drinkname # 음료 등록부분 기존꺼에 다가 추가되도록 수정필요!
+        drink.save()
 
     return redirect('enroll_new_cafe')

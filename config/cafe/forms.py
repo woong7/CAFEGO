@@ -6,7 +6,7 @@ from .models import Review
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['cafe', 'username', 'review_stars', 'content',]
+        fields = ['username', 'review_stars', 'content',]
 
 
 #리뷰 포토 따로 기입 폼
