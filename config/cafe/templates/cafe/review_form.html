@@ -8,10 +8,13 @@
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <table>
+            <!-- 카페이름과 유저 이름은 지정해줘야함 -->
+            <div name=cafe >{{ cafe_name.name }}</div> 
+            <!-- <input type="text" name = cafe value={{cafe_name.id}} style="display: none"> -->
+            <!-- <label for="cafe_name">cafe: </label>
+            <input id="cafe_name" type="text" name="cafe_name" maxlength="100" value="{{ cafe_name.id }}"> -->
+
             <!-- 다른 요소들은 form에서 입력받도록 만들어둠 -->
-            <!-- <div name=cafe >{{ cafe_name.id }}</div>  -->
-            <div>{{ cafe_name.name }}</div>
-            <input type="text" name = cafe value={{cafe_name.id}} style="display: none">
             {{ form.as_table }} 
             <!-- 사진 여러개 등록  -->
             <input type="file" name="imgs" multiple>

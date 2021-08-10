@@ -29,12 +29,12 @@ def review_list(request, pk):
 def review_create(request, pk):
     if request.method == 'POST':
         #사진 제외한 review 요소들 저장
-        cafe_id = request.get('cafe')
-        this_cafe = CafeList.objects.get(pk=int(cafe_id))
-        this_cafe.save()
         form = ReviewForm(request.POST)
         if form.is_valid():
-            myreview = form.save()
+            myreview = form.save(commit=False) #content만 저장됨
+            myreview.username = request.user.nickname
+            myreview.cafe = CafeList.objects.get(pk=pk)
+            myreview = form.save() 
 
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
         for img in request.FILES.getlist('imgs'):
