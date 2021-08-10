@@ -152,6 +152,8 @@
     //카페 키워드 검색 이벤트
     $(document).ready(function(){
         $("#search-cafe").click(function(){
+
+            let placeslist = "#placesList";
             var keyword = $('#keyword').val();
 
             if (!keyword.replace(/^\s+|\s+$/g, '')) {
@@ -163,6 +165,7 @@
             checkKeyword(keyword, markers, keywordMarkers);
             for(var i = 0; i < keywordMarkers.length; i++) {
                 alert(keywordMarkers[i].getTitle());
+                placeslist.inner
             }
             $.ajax({ // Ajax 요청을 작성하고 GET 방식으로 전송함.
                 url: "cafe/cafe_map/",

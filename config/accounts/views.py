@@ -238,7 +238,15 @@ def mypage(request):
 
     visit_cafes=VisitedCafe.objects.filter(user=request.user)
     user=request.user
+    print("vcafe:", visit_cafes)
+    
+    #for cafe in visit_cafes:
+        #drink = Drink().objects.all()
 
+        #drink_list = Drink.objects.get(visited_cafe=cafe)#되나?
+    
+    #print("drink", drink)
+    #print(drink_list.drinkname)
     jsonDec=json.decoder.JSONDecoder()
     myList=jsonDec.decode(user.badge_taken)
     badges=Badge.objects.all()
@@ -250,6 +258,7 @@ def mypage(request):
     ctx={
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
+        # 'drink_list' :drink_list,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
@@ -264,11 +273,18 @@ def visit_register(request):
     if request.method == 'POST':
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
+        str_drinkname = req_post.__getitem__('beverage')
+        print("drink:", str_drinkname)
         v_cafe = VisitedCafe()
         v_cafe.user = request.user
         v_cafe.cafe = CafeList.objects.get(name=str_cafename)
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
         v_cafe.save()
+
+        drink = Drink()
+        drink.visited_cafe = v_cafe
+        drink.drinkname = str_drinkname # 음료 등록부분 기존꺼에 다가 추가되도록 수정필요!
+        drink.save()
 
     return redirect('enroll_new_cafe')
