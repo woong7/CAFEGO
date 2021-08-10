@@ -61,7 +61,7 @@ def logout(request):
 def main(request):
     return render(request, 'accounts/main.html')
 
-@login_required
+
 def home(request):
     #return render(request, 'accounts/home.html')
     return render(request,'accounts/home.html')
@@ -85,7 +85,7 @@ def badge_taken(request):
             taken_badges.append(badge)   
     
 
-    ctx={'taken_badges':taken_badges}
+    ctx={'taken_badges':taken_badges,'user':user,}
     return render(request, 'accounts/badge_taken.html', context=ctx)
 
 def badge_untaken(request):
@@ -99,7 +99,7 @@ def badge_untaken(request):
         if not badge.badge_name in myList:
             taken_badges.append(badge) 
 
-    ctx={'taken_badges':taken_badges}
+    ctx={'taken_badges':taken_badges, 'user':user,}
     return render(request, 'accounts/badge_untaken.html', context=ctx)
 
 def user_cafe_map(request):
