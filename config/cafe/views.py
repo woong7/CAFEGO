@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.generic import ListView
 from .models import CafeList, Review, ReviewPhoto, Comment
+from accounts.models import User
 from .forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q
@@ -20,14 +21,17 @@ def review_list(request, pk):
     for i  in range(int(this_cafe.cafe_stars)): 
         cafe_stars += '⭐'
 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'cafe_stars':cafe_stars, 'review_photo': review_photo}
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'cafe_stars': cafe_stars, 'review_photo': review_photo}
 
     return render(request, 'cafe/review_list.html', ctx)
 
 
-def review_create(request):
+def review_create(request, pk):
     if request.method == 'POST':
         #사진 제외한 review 요소들 저장
+        cafe_id = request.get('cafe')
+        this_cafe = CafeList.objects.get(pk=int(cafe_id))
+        this_cafe.save()
         form = ReviewForm(request.POST)
         if form.is_valid():
             myreview = form.save()
@@ -50,7 +54,9 @@ def review_create(request):
         return redirect('cafe:review_list', cafe.id)
     else:
         form = ReviewForm()
-        ctx = {'form': form}
+        cafe_name = CafeList.objects.get(pk=pk)
+        reviewer = request.user.nickname
+        ctx = {'form': form, 'cafe_name': cafe_name,}
         return render(request, 'cafe/review_form.html', ctx)
 
 class CafeListView(ListView):
