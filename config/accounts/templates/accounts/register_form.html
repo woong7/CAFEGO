@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    카페등록
+{% endblock %}
+{% block content %}
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            <!-- 다른 요소들은 form에서 입력받도록 만들어둠 -->
+            {{ form.as_table }} 
+            <!-- 사진 여러개 등록  -->
+            
+        </table>
+
+        <input type="submit" value="작성 완료">
+    </form>    
+{% endblock %}

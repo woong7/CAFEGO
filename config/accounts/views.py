@@ -15,6 +15,7 @@ from django.contrib.auth import logout as django_logout
 from . import forms
 from django.contrib import messages
 from django.db.models import Q
+from .forms import RegisterForm
 # Create your views here.
 
 def signup(request):
@@ -255,16 +256,15 @@ def mypage(request):
     return render(request, 'accounts/mypage.html', context=ctx)
 
 from django.views.decorators.csrf import csrf_exempt
-import json
 @csrf_exempt
 def visit_register(request):
-
     if request.method == 'POST':
-        req = json.loads(request.body)
-        print(req)
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
 
-
-
-
-
-    return redirect('enroll_new_cafe')
+        return redirect('enroll_new_cafe')
+    else:
+        form = RegisterForm()
+        ctx = {'form': form}
+        return render(request, 'accounts/register_form.html', ctx)

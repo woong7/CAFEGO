@@ -75,7 +75,7 @@
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <span value="{{cafe.id}}"></span>
-                            <button type="submit" id="submit_btn_{{cafe.id}}" class="btn btn-primary" onclick="onClick({{ cafe}})">등록하기</button>
+                            <a href="{% url 'visit_register' %}">등록하기</a>
                         </form>
                         </div>
                     </div>
