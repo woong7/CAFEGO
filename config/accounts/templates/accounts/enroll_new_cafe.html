@@ -36,6 +36,7 @@
         </thead>
         <tbody>
             {% if new_cafe_list %}
+                검색 결과: {{page_obj.paginator.count}}개
                 {% for cafe in new_cafe_list %}
                     <tr>
                         <td>{{ cafe.id }}</td>
@@ -135,6 +136,7 @@
             <a class="page-link" href="#">다음</a>
         </li>
         {% endif %}
+        <span>{{page_obj}}</span>
     </ul>
     {% endif %}
 
