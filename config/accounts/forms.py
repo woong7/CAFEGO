@@ -55,3 +55,5 @@ class DrinkForm(forms.ModelForm):
     class Meta:
         model = Drink
         fields = ['drinkname',]
+
+
