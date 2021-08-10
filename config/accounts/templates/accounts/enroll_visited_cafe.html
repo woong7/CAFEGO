@@ -46,36 +46,41 @@
                         <td><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{ cafe.cafe.name }}</a></td>
                         <td>{{cafe.cafe.address}}</td>
                         <td>{{ cafe.visit_count }}</td>
-                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" name="visit" value="visit"></td>
+                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.cafe.id }}" name="visit" value="visit"></td>
+                                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal_{{ cafe.cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form action="{% url 'visited_register' %}" method='post'>
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">
+                                                <input type="text" name="cafename" value="{{ cafe.cafe.name }}">
+                                                <input type="text" name="cafeid" value="{{ cafe.cafe.id }}">
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            마신 음료를 체크해주세요!<br>
+                                                아메리카노 <input type="checkbox" class="btn btn-primary" name="beverage" value="americano"><br>
+                                                바닐라라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="vanillalatte"><br>
+                                                카페라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="cafelatte"><br>
+                                                카라멜마끼야또 <input type="checkbox" class="btn btn-primary" name="beverage" value="caramel"><br>
+                                                초코라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="choco"><br>
+                                                녹차라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="greentea"><br>
+                                                에이드 <input type="checkbox" class="btn btn-primary" name="beverage" value="ade"><br>
+                                                허브차 <input type="checkbox" class="btn btn-primary" name="beverage" value="herb"><br>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">등록하기</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </tr>
                 {% endfor %}
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{ cafe.name }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                        마신 음료를 체크해주세요!<br>
-                        아메리카노 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        바닐라라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        카페라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        카라멜마끼야또 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        초코라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        녹차라떼 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        에이드 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        허브차 <input type="checkbox" class="btn btn-primary" name="beverage" value="beverage"><br>
-                        기타 <input type="text" id="beverage" name="beverage">
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">등록하기</button>
-                        </div>
-                    </div>
-                    </div>
-                </div>
+
             {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때-->
                 {% if q %}  <!--검색어가 있어 q가 context로 넘어오면 검색 결과가 없다.-->
                 <tr class="text-center">

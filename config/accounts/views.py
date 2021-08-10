@@ -256,30 +256,22 @@ def mypage(request):
     for v_cafe in visit_cafes:
         
         #내가 마신 음료들
-        my_drink = jsonDec.decode(v_cafe.drink_list) #visit_cafes가 여러개인데 가능한가??
-        drinks = Drink.objects.filter(visited_cafe=v_cafe)#그 카페에서 먹은 음료
-        print("v_cafe:", v_cafe)
-        print("drinks:", drinks)
+        my_drinks = jsonDec.decode(v_cafe.drink_list) #visit_cafes가 여러개인데 가능한가??
+        
         drink_list = []
 
-        for drink in drinks:#각 음료들
-            if drink.drinkname not in my_drink:#내가 마신 음료에 없다면
-                drink_list.append(drink)
+        for drink in my_drinks:#각 음료들
+            #if drink.drinkname not in my_drink:#내가 마신 음료에 없다면
+            drink_list.append(drink)
         total_drink.append(drink_list)# 각각에 모든 음료 데이터들이 들어감,,,
         total_drink_dic[v_cafe] = drink_list
     
-    print("total drink:", total_drink)#
-    print("total drink dic:", total_drink_dic)#
-    print("total drink dic type:", type(total_drink_dic))#
-
     myList=jsonDec.decode(user.badge_taken)
     badges=Badge.objects.all()
     taken_badges=[]
     for badge in badges:
         if not badge.badge_name in myList:
             taken_badges.append(badge) 
-    print("taken badges:", taken_badges)
-    print("drink:", total_drink)
 
     ctx={
         'taken_badges':taken_badges,
@@ -293,7 +285,6 @@ def mypage(request):
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-from django.forms.models import model_to_dict
 @csrf_exempt
 def visit_register(request):
 
@@ -301,17 +292,50 @@ def visit_register(request):
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
         str_drinkname = req_post.__getitem__('beverage')
-        print("drink:", str_drinkname)
+
         v_cafe = VisitedCafe()
         v_cafe.user = request.user
         v_cafe.cafe = CafeList.objects.get(name=str_cafename)
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
-        v_cafe.save()
 
         drink = Drink()
         drink.visited_cafe = v_cafe
-        drink.drinkname = str_drinkname # 음료 등록부분 기존꺼에 다가 추가되도록 수정필요!
+        drink.drinkname = str_drinkname
+        
+        jsonDec=json.decoder.JSONDecoder()
+        drinkList=jsonDec.decode(v_cafe.drink_list)
+        drinkList.append(str_drinkname)
+        v_cafe.drink_list=json.dumps(drinkList)
+        
+        v_cafe.save()
         drink.save()
 
     return redirect('enroll_new_cafe')
+
+
+@csrf_exempt
+def visited_register(request):
+
+    if request.method == 'POST':
+        req_post = request.POST
+        str_cafename = req_post.__getitem__('cafename')
+        str_drinkname = req_post.__getitem__('beverage')
+
+        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        v_cafe = VisitedCafe.objects.get(cafe=this_cafe)
+        
+        v_cafe.visit_count += 1
+
+        drink = Drink.objects.get(visited_cafe=v_cafe)#이전에 등록된 것 근데 이제 필요없을듯,,,
+
+        jsonDec=json.decoder.JSONDecoder()
+        drinkList=jsonDec.decode(v_cafe.drink_list)
+
+        drinkList.append(str_drinkname)
+        v_cafe.drink_list=json.dumps(drinkList)
+
+        v_cafe.save()
+        drink.save()
+
+    return redirect('enroll_visited_cafe')

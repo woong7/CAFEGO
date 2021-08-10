@@ -41,7 +41,7 @@
                     <tr>
                         <td>{{ cafe.id }}</td>
                         <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
-                        <td>{{ cafe.address | truncatechars:10  }}</td>
+                        <td>{{ cafe.address }}</td> <!-- | truncatechars:10-->
                         <!-- checkbox trigger modal -->
                         <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="visit"></td>
                         <div class="modal fade" id="exampleModal_{{ cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -140,28 +140,7 @@
     </ul>
     {% endif %}
 
-    <!-- 카페 등록 -->
-    <div>
-        유저 : {{cafe.user}}
-        {% for cafe in cafe_list %}
-            <div>    
-                카페명 : {{cafe.cafename}}
-                방문횟수 : {{cafe.visit_count}}
-                카페id : {{cafe.cafe_id}}
-            </div>
-        {% endfor %}
 
-        카페등록하기
-        <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-            {% csrf_token %}
-
-            <table>
-                {{ form.as_table }}
-            </table>
-            
-            <input type="submit" value="SUBMIT" />
-        </form>        
-    </div>
 
 
     <p>지도 사진</p>
