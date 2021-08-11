@@ -5,9 +5,9 @@
     <div class="cafe_info">
         {{ this_cafe.name }}<br/>
         {{ this_cafe.address }}<br/>
-        {{ cafe_stars }}<br/>        
+        {{ cafe_stars_avg }}<br/>        
     </div>
-    <a href="">지도</a>
+    <a href="{% url 'cafe:cafe_map' %}">지도</a>
     <a href="{% url 'cafe:review_create' this_cafe.id %}">리뷰 작성</a>
     <hr/>
 
@@ -15,7 +15,20 @@
         <div>정렬 | 방문 순 | 총 방문 순 | 리뷰 순 | 최신 순</div>
         {% for reviews in each_reviews %}
             {{ reviews.username }}
-            {{ reviews.review_stars }}<br/> 
+            {% if reviews.review_stars == '1.0' %}
+                <span>⭐</span>
+            {% elif reviews.review_stars == '2.0' %}
+                <span>⭐⭐</span>
+            {% elif reviews.review_stars == '3.0' %}
+                <span>⭐⭐⭐</span>
+            {% elif reviews.review_stars == '4.0' %}
+                <span>⭐⭐⭐⭐</span>
+            {% elif reviews.review_stars == '5.0' %}
+                <span>⭐⭐⭐⭐⭐</span>
+            {% endif %}
+
+            <br/>
+            <!-- {{ reviews.review_stars }}<br/>  -->
             {{ reviews.content }}<br/>
 
             {% if review_photo %}

@@ -13,15 +13,53 @@ from cafe.models import CafeList
 
 # Create your views here.
 def review_list(request, pk):
-    this_cafe = CafeList.objects.get(pk=pk) #해당 카페 정보 불러옴
-    each_reviews = Review.objects.filter(cafe=this_cafe) #해당 카페 리뷰만 불러옴
-    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    this_cafe = CafeList.objects.get(pk=pk) #해당 카페 /<CafeList: 90도씨> 이렇게 나오지
+    each_reviews = Review.objects.filter(cafe=this_cafe) #해당 카페 리뷰/ <QuerySet [<Review: 3>, <Review: 두번째 리뷰 내용>]> 리뷰내용만 출력됨...
+    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) #해당 카페 리뷰의 모든 사진(템플릿에서 분류)
     
-    cafe_stars = ''
-    for i  in range(int(this_cafe.cafe_stars)): 
-        cafe_stars += '⭐'
 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'cafe_stars': cafe_stars, 'review_photo': review_photo}
+    print('!!!!1')
+    print(this_cafe.cafe_stars)
+
+    if len(each_reviews) == 0:
+        cafe_stars_avg = 0.0
+    else:
+        cafe_stars_sum = 0
+        for review_star in each_reviews:
+            cafe_stars_sum += int(float(review_star.review_stars))
+        
+        cafe_stars_avg = cafe_stars_sum/len(each_reviews)
+    
+    this_cafe.cafe_stars = cafe_stars_avg
+    print(this_cafe.cafe_stars)
+    # this_cafe.cafe_stars.save()
+
+
+    #뭐 이거 일단 평균 구하려는 시도임
+    # star_sum = 0
+    # for i in each_reviews:
+    #     #one_review = id
+    #     review_star = i.review_stars
+    #     star_sum += review_star
+    # star_avg = star_sum / len(each_reviews)
+
+    #all_stars = Review.objects.all()
+    #all_stars = each_reviews.review_stars #리뷰가 많으니까 가져오질 못함..
+    
+    # cafe_stars = 0.0
+    # for j in all_stars:
+    #     if j == '⭐':
+    #         j = 1.0
+    #         cafe_stars + j / 
+
+
+    #카페 자체의 별점(초기에 야매로 한 거임)
+    # cafe_stars_avg = ''
+    # for cafe_stars in range(int(this_cafe.cafe_stars)): 
+    #     cafe_stars_avg += '⭐'
+    
+
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_stars_avg': cafe_stars_avg}
 
     return render(request, 'cafe/review_list.html', ctx)
 
@@ -62,7 +100,7 @@ def review_create(request, pk):
 class CafeListView(ListView):
     model = CafeList
     #리스트 몇줄 표시
-    paginate_by = 5
+    paginate_by = 10
     template_name = 'cafe/cafe_search.html'
     #변수 이름을 바꿈
     context_object_name = 'cafe_list'
@@ -84,15 +122,13 @@ class CafeListView(ListView):
                 return search_cafe_list
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
-                print(search_keyword)
-                print(len(search_keyword))
         return cafe_list
 
     #하단부에 페이징 처리
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
-        page_numbers_range = 5
+        page_numbers_range = 10
         max_index = len(paginator.page_range)
 
         page = self.request.GET.get('page')
@@ -125,7 +161,7 @@ def cafe_map(request):
     return render(request, 'cafe/cafe_map.html', ctx)
 
 def init_data(request):
-    with open('cafe/crawled.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []

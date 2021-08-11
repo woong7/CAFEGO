@@ -8,13 +8,13 @@
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <table>
-            <!-- 다른 요소들은 form에서 입력받도록 만들어둠 -->
-            <!-- <div name=cafe >{{ cafe_name.id }}</div>  -->
             <div>{{ cafe_name.name }}</div>
             <div>작성자: {{ reviewer }}</div>
-            <!-- <input type="text" name = cafe value={{cafe_name.id}} style="display: none"> -->
+            
+            <!-- 다른 요소들은 form에서 입력받음 -->
             {{ form.as_table }} 
-            <!-- 사진 여러개 등록  -->
+
+            <!-- 사진은 여러 개라서 따로 등록  -->
             <input type="file" name="imgs" multiple>
         </table>
 
