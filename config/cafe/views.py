@@ -26,10 +26,10 @@ def review_list(request, pk):
             cafe_stars_sum += int(float(review_star.review_stars))
         
         cafe_stars_avg = cafe_stars_sum/len(each_reviews)
-        #카페 평균 별점에 저장하기-저장이 안 되..나??
+        #카페 평균 별점 db에 저장하기
+        #this_cafe.cafe_stars.save() 이렇게 모델 필드 하나만 저장 nono, this_cafe.save()이렇게 전체 모델로 저장하기
         this_cafe.cafe_stars = cafe_stars_avg
-        print('!!!!!!!one')
-        print(this_cafe.cafe_stars)
+        this_cafe.save()
 
     
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,}
