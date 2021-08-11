@@ -12,43 +12,54 @@
     <hr/>
 
     <div class="review_list">
-        <div>정렬 | 방문 순 | 총 방문 순 | 리뷰 순 | 최신 순</div>
-        {% for reviews in each_reviews %}
-            {{ reviews.username }}
-            {% if reviews.review_stars == '1.0' %}
-                <span>⭐</span>
-            {% elif reviews.review_stars == '2.0' %}
-                <span>⭐⭐</span>
-            {% elif reviews.review_stars == '3.0' %}
-                <span>⭐⭐⭐</span>
-            {% elif reviews.review_stars == '4.0' %}
-                <span>⭐⭐⭐⭐</span>
-            {% elif reviews.review_stars == '5.0' %}
-                <span>⭐⭐⭐⭐⭐</span>
-            {% endif %}
+        <div>
+            <div>정렬</div>
+            <button>최신 순</button> 
+            <button>방문 순</button>
+            <button>총 방문 순</button>
+            <button>리뷰 순</button>           
+        </div>
 
-            <br/>
-            {{ reviews.content }}<br/>
+        <article class="each_review">
+            {% for reviews in each_reviews %}
+                {{ reviews.username }}
 
-            {% if review_photo %}
-                {% for img in review_photo %}
-                    {% if img.review.id == reviews.id %}
-                        <img src="{{img.image.url}}" style="width: 5%; height: 5%;">         
-                    {% endif %}
-                {% endfor %}   
-            {% endif %}
-                
-            <br/>
-            {{ reviews.created_at }}
-            <br/> 
-            {% comment %}    
-            <!-- {% for comment in review_comments %}
-                {{ comment.username }}
-                {{ comment.content }}
-            {% endfor %} 
-            <input type="text" value="댓글 입력"><button>답글 달기</button>-->
-            {% endcomment %}
-            <hr/>
-        {% endfor %}
+                {% if reviews.review_stars == '1.0' %}
+                    <span>⭐</span>
+                {% elif reviews.review_stars == '2.0' %}
+                    <span>⭐⭐</span>
+                {% elif reviews.review_stars == '3.0' %}
+                    <span>⭐⭐⭐</span>
+                {% elif reviews.review_stars == '4.0' %}
+                    <span>⭐⭐⭐⭐</span>
+                {% elif reviews.review_stars == '5.0' %}
+                    <span>⭐⭐⭐⭐⭐</span>
+                {% endif %}
+                <div>{{ this_cafe.name }} 방문 횟수: {{ visited_this_cafe.visit_count }}</div>
+                <div>총 카페 방문 횟수: {{ reviews.username.total_visit }}</div>
+                <br/>
+
+                {{ reviews.content }}<br/>
+
+                {% if review_photo %}
+                    {% for img in review_photo %}
+                        {% if img.review.id == reviews.id %}
+                            <img src="{{img.image.url}}" style="width: 5%; height: 5%;">         
+                        {% endif %}
+                    {% endfor %}   
+                {% endif %}
+                <br/>
+                {{ reviews.created_at }}
+
+                {% comment %}    
+                <!-- {% for comment in review_comments %}
+                    {{ comment.username }}
+                    {{ comment.content }}
+                {% endfor %} 
+                <input type="text" value="댓글 입력"><button>답글 달기</button>-->
+                {% endcomment %}
+                <hr/>
+            {% endfor %}
+        </article>
     </div>
 {% endblock %}

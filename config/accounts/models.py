@@ -82,6 +82,9 @@ class VisitedCafe(models.Model):
     visit_count = models.PositiveIntegerField(default=0)
     visit_check = models.BooleanField(default=False)
 
+    def __str__(self):
+        template = '{0.cafe} {0.user} {0.visit_count}'
+        return template.format(self)
 
 class Badge(models.Model):
     badge_name=models.TextField(max_length=150, unique=True)

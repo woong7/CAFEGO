@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.generic import ListView
 from .models import CafeList, Review, ReviewPhoto, Comment
-from accounts.models import User
+from accounts.models import User, VisitedCafe
 from .forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q
@@ -13,9 +13,20 @@ from cafe.models import CafeList
 
 # Create your views here.
 def review_list(request, pk):
-    this_cafe = CafeList.objects.get(pk=pk) #해당 카페 /<CafeList: 90도씨> 이렇게 나온다
-    each_reviews = Review.objects.filter(cafe=this_cafe) #해당 카페 리뷰/ <QuerySet [<Review: 3>, <Review: 두번째 리뷰 내용>]> 리뷰내용만 출력됨...
-    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) #해당 카페 리뷰의 모든 사진(템플릿에서 분류)
+    #해당 카페 /<CafeList: 90도씨> 이렇게 나온다
+    this_cafe = CafeList.objects.get(pk=pk) 
+    #해당 카페 리뷰/ <QuerySet [<Review: 3>, <Review: 두번째 리뷰 내용>]> 리뷰내용만 출력됨...
+    each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
+    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    visited_this_cafe = VisitedCafe.objects.get(user=request.user, cafe=this_cafe)
+    #정렬기능 조금 이따가...
+    # #방문 순-필자가 이 카페 얼마나 옴?
+    # each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username.total_visit')????
+    # #총 방문 순-필자가 카페 얼마나 자주 다님?
+    # each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username.total_visit')
+    # #리뷰 순-필자가 리뷰 얼마나 씀?
+    # each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username.total_visit')???
+    #해당 카페 리뷰의 모든 사진(템플릿에서 분류)
     
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
@@ -30,9 +41,8 @@ def review_list(request, pk):
         #this_cafe.cafe_stars.save() 이렇게 모델 필드 하나만 저장 nono, this_cafe.save()이렇게 전체 모델로 저장하기
         this_cafe.cafe_stars = cafe_stars_avg
         this_cafe.save()
-
     
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,}
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'visited_this_cafe': visited_this_cafe}
 
     return render(request, 'cafe/review_list.html', ctx)
 
@@ -41,10 +51,19 @@ def review_create(request, pk):
     if request.method == 'POST':
         #사진 제외한 review 요소들 저장
         form = ReviewForm(request.POST)
+        this_cafe = CafeList.objects.get(pk=pk) 
+        visited_this_cafe = VisitedCafe.objects.get(user=request.user, cafe=this_cafe) #<<QuerySet [<VisitedCafe: 라떼는말이야 공덕점 yr 1>]>
         if form.is_valid():
             myreview = form.save(commit=False)
             myreview.username = request.user
             myreview.cafe = CafeList.objects.get(pk=pk)
+            #리뷰 저장하면 유저 총 방문 늘리기
+            request.user.total_visit += 1
+            request.user.save()
+            #리뷰 저장하면 유저 해당 카페 방문 늘리기
+            #filter는 여러 객체, get은 하나의 객체니까 각 객체의 정보를 얻으려면 get 써야한다.
+            visited_this_cafe.visit_count += 1 
+            visited_this_cafe.save()
             myreview = form.save()
 
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
