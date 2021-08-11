@@ -26,12 +26,13 @@ class CafeList(models.Model):
 class Review(models.Model):
     cafe = models.ForeignKey(CafeList, on_delete=models.CASCADE, related_name='this_cafe')
     username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_person')
+    #앞은 DB저장 값, 뒤는 admin이나 폼에서 표시하는 값
     STARS_CHOICES = [
-        ('⭐', '⭐'),
-        ('⭐⭐', '⭐⭐'),
-        ('⭐⭐⭐', '⭐⭐⭐'),
-        ('⭐⭐⭐⭐', '⭐⭐⭐⭐'),
-        ('⭐⭐⭐⭐⭐', '⭐⭐⭐⭐⭐'),
+        ('1.0', '⭐'),
+        ('2.0', '⭐⭐'),
+        ('3.0', '⭐⭐⭐'),
+        ('4.0', '⭐⭐⭐⭐'),
+        ('5.0', '⭐⭐⭐⭐⭐'),
     ]
     review_stars = models.CharField(verbose_name='리뷰 별점', default='⭐⭐⭐⭐⭐', choices=STARS_CHOICES, max_length=20)
     content = models.TextField(verbose_name='리뷰 내용')

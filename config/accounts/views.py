@@ -135,7 +135,7 @@ class EnrollNewCafeListView(ListView):
     template_name = 'accounts/enroll_new_cafe.html'
     context_object_name = 'new_cafe_list'
 
-
+    #검색기능
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
