@@ -34,9 +34,9 @@
             level: 2 // 지도의 확대 레벨
         };
     
-    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
 
-    var imageSrc = "https://image.flaticon.com/icons/png/512/168/168551.png", // 마커이미지의 주소입니다    
+    var imageSrc = "https://image.flaticon.com/icons/png/512/168/168551.png", // 마커이미지의 주소    
         imageOption = {offset: new kakao.maps.Point(8, 16)};
     
     // 카페 목록들을 json 형식으로 받아옴
@@ -51,7 +51,7 @@
     var neLatlng = bounds.getNorthEast();
     markData(markers, cafeList, swLatlng, neLatlng);
 
-    // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
+    // 마커를 클릭하면 장소명을 표출할 인포윈도우
     var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable : true}); 
 
     // 지도가 움직일 때 발생하는 이벤트
@@ -70,18 +70,18 @@
         // 마커 데이터 추가
         markData(markers, cafeList, swLatlng, neLatlng);
         for(var i = 0; i < markers.length; i++) {
-           // console.log(markers[i].Fb);
+            //console.log(markers[i].Fb);
         }
         console.log(markers.length);
     });
 
-    // 카페들을 지도에 마킹하기
+    // 카페들을 지도에 마킹하는 함수
     function markData(markers, cafeList, sw, ne) {
         let left_bound=0, right_bound=0;
         let middle=0, low=0, high=cafeList.length-1;
         let find=false;
 
-        while(low<=high)
+        while(low<high)
         {
             middle=Math.floor((low+high)/2);
             if(cafeList[middle].fields.location_x<sw.La) 
@@ -99,7 +99,7 @@
 
         middle=0, low=0, high=cafeList.length-1;
         find=false;
-        while(low<=high)
+        while(low<high)
         {
             middle=Math.floor((low+high)/2);
             if(cafeList[middle].fields.location_x<ne.La) low=middle+1;
@@ -111,12 +111,12 @@
             }
         }
         if(!find) right_bound=low;
-        console.log(left_bound);
-        console.log(right_bound);
+       // console.log(left_bound);
+       // console.log(right_bound);
 
         for(var i=left_bound; i <=right_bound; i++) {
             if(cafeList[i].fields.location_y < ne.Ma && cafeList[i].fields.location_y > sw.Ma){
-                addMarker(markers, cafeList[i].fields);
+                addMarker(markers, cafeList[i]);
             }
         }
     }
@@ -125,7 +125,7 @@
     function addMarker(markers, place) {
         // 마커 아이콘 크기 조정
         // 별점에 따라 크기 조정
-        var markerIconSize = place.cafe_stars;
+        var markerIconSize = place.fields.cafe_stars;
         switch(markerIconSize) {
             case 0:
                 var imageSize = new kakao.maps.Size(16, 16); // 마커이미지의 크기입니다
@@ -152,29 +152,30 @@
         // 마커 생성
         var marker = new kakao.maps.Marker({
             map: map,
-            title: place.name,
-            position: new kakao.maps.LatLng(place.location_y, place.location_x),
+            title: place.fields.name,
+            position: new kakao.maps.LatLng(place.fields.location_y, place.fields.location_x),
             image : new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
         });
 
         // 마커를 배열에 추가
         markers.push(marker);
 
-        // 마커에 클릭이벤트를 등록합니다
+        // 마커에 클릭이벤트 등록
         kakao.maps.event.addListener(marker, 'click', function() {
-            // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+            // 마커를 클릭하면 장소명이 인포윈도우에 표출
+            // TODO: 여기 url 에러 잡아야해요
             infowindow.setContent(`
-                <div style="padding:5px;font-size:12px;">${place.name}</div>
-                <div style="padding:5px;font-size:10px;">${place.id}</div>
+                <div style="padding:5px;font-size:12px;">${place.fields.name}</div>
+                <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
                 <div style="padding:5px;font-size:10px;">
-                    <a href="">${place.address}</a>
+                    <a href="{% url 'cafe:review_list' 180 %}">${place.pk} 리뷰 작성</a>
                 </div>
             `);
             infowindow.open(map, marker);
         });
     }
 
-    // markers에 있는 마커를 모두 제거
+    // markers에 있는 마커를 모두 제거하는 함수
     function removeMarker() {
         for ( var i = 0; i < markers.length; i++ ) {
             markers[i].setMap(null);
@@ -182,14 +183,18 @@
         markers = [];
     }
 
-    // 검색어를 포함한 카페만 보여주는 함수
+    // keyword를 포함한 카페만 보여주는 함수
     function checkKeyword(keyword, markers, keywordMarkers) {
         for(var i=0; i < markers.length; i++) {
+            // keyword를 포함한 카페가 있는 경우에 keywordMarkers 배열에 해당 카페 객체를 추가
             if(markers[i].Fb.includes(keyword)) {
+                // 검색된 카페를 지도에 보이기 위한 함수
                 markers[i].setVisible(true);
+                // keywordMarkers에 keyword를 포함한 마커 추가
                 keywordMarkers.push(markers[i]);
             }
             else {
+                // 검색되지 않은 카페를 지도에서 안보이도록 설정
                 markers[i].setVisible(false);
             }
         }
@@ -198,76 +203,94 @@
     //카페 키워드 검색 이벤트
     $(document).ready(function(){
         $("#search-cafe").click(function(){
-
-            let placeslist = "#placesList";
+            // html의 id가 keyword인 태그 안에 들어있는 값을 들고옴
             var keyword = $('#keyword').val();
 
+            // 빈 값을 넘겼을 때 에러 설정
             if (!keyword.replace(/^\s+|\s+$/g, '')) {
                 alert('키워드를 입력해주세요!!!!!!');
                 return false;
             }
+
+            // placeList라는 id값을 가진 태그를 불러옴
             var $placesList = document.getElementById('placesList');
+            // placeList 태그 빈 값으로 초기화
             $placesList.innerHTML = '';
+            // keywordMarkers 배열 초기화
             var keywordMarkers = [];
+            // keyword 필터링
             checkKeyword(keyword, markers, keywordMarkers);
+            // html에 검색된 카페 표시
             for(var i = 0; i < keywordMarkers.length; i++) {
-                console.log(keywordMarkers[i].Fb);
+                //console.log(keywordMarkers[i].Fb);
                 $placesList = document.getElementById('placesList');
-                $placesList.innerHTML += '<li>'+keywordMarkers[i].Fb+'</li>';
+                $placesList.innerHTML += '<li class="search-result-'+i+'">'+keywordMarkers[i].Fb+'</li>';
             }
+
+            // 마커와 검색결과 항목에 mouseover 했을때
+            // 해당 장소에 인포윈도우에 장소명을 표시합니다
+            // mouseout 했을 때는 인포윈도우를 닫습니다
+            // TODO: 여기 hover 이벤트 처리
+            var listEl = document.getElementById('placesList')
+            (function(marker, title) {
+                itemEl.onmouseover =  function () {
+                    displayInfowindow(marker, title);
+                };
+
+                itemEl.onmouseout =  function () {
+                    infowindow.close();
+                };
+            })(marker, places[i].place_name);
         });
     });
 
-    {% comment %} const requestKeyword = new XMLHttpRequest();
+    // HTML5의 geolocation으로 사용할 수 있는지 확인
+    if (navigator.geolocation) {
+        // GeoLocation을 이용해서 접속 위치 얻어오기
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude, // 위도
+                lon = position.coords.longitude; // 경도
 
-    const keywordShow = () => {
-        const url = 'cafe/cafe_map/';
-        const keyword = document.querySelector('#keyword').value;
+            var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 현재 위치로 설정
+                message = '<div style="padding:5px;">현재 위치</div>'; // 인포윈도우에 표시될 내용
+            
+            // 마커와 인포윈도우를 표시
+            displayMarker(locPosition, message);
+        });
+        
+    }
+    
+    else { // 에러메시지 설정
+        alert('현재 위치를 받아올 수 없어요. 임의의 위치로 설정합니다.')
+        var locPosition = new kakao.maps.LatLng(37.540, 126.940),    
+            message = 'geolocation을 사용할수 없어요..'
+        // 개발자가 설정한 위치에 마커 생성
+        displayMarker(locPosition, message);
+    }
 
-        if (!keyword.replace(/^\s+|\s+$/g, '')) {
-                alert('키워드를 입력해주세요!');
-                return false;
-        }
+    // 지도에 마커와 인포윈도우를 표시하는 함수
+    function displayMarker(locPosition, message) {
+        // 현재 위치 마커 생성
+        var marker_here = new kakao.maps.Marker({  
+            map: map, 
+            position: locPosition
+        }); 
+        
+        var iwContent = message, // 인포윈도우에 표시할 내용
+            iwRemoveable = true;
 
-        var keywordMarkers = [];
-        checkKeyword(keyword, markers, keywordMarkers);
-        for(var i = 0; i < keywordMarkers.length; i++) {
-            alert(keywordMarkers[i].getTitle());
-        }
-
-        requestKeyword.open('POST', url, true);
-        requestKeyword.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-
-        requestKeyword.send(JSON.stringify({keywordMarkers: keywordMarkers}));
-    };
-
-    const keywordResponse = () => {
-        if(requestKeyword.status < 400) {
-            const {post_id, content, comment_id} = JSON.parse(requestWrite.response);
-            const comments = document.querySelector(`.comments-${post_id}`)
-            const element = document.querySelector(`.input-${post_id}`);
-            comments.innerHTML += `
-                <div class="comment-${comment_id} container my-1">
-                    <div class="row">
-                        <div class="col">${content}</div>
-                        <div class="col">
-                            <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
-                        </div>
-                    </div<
-                </div>
-            `;
-        }
-    };
-
-    requestKeyword.onreadystatechange = () => {
-        if(requestKeyword.readyState === XMLHttpRequest.DONE) {
-            keywordResponse();
-        }
-    }; {% endcomment %}
-
+        // 인포윈도우를 생성
+        var infowindow_here = new kakao.maps.InfoWindow({
+            content : iwContent,
+            removable : iwRemoveable
+        });
+        
+        // 인포윈도우를 마커위에 표시
+        infowindow_here.open(map, marker_here);
+        
+        // 지도 중심좌표를 접속위치로 변경
+        map.setCenter(locPosition);      
+    }    
     </script>
 </body>
 </html>
