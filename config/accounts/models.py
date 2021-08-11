@@ -54,6 +54,7 @@ class User(AbstractBaseUser):
     total_visit=models.IntegerField(default=0)
 
     badge_taken=models.TextField(null=True, default=json.dumps([]))
+    friends=models.TextField(null=True, default=json.dumps([]))
     
     
 

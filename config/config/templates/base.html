@@ -17,8 +17,9 @@
             <a href="{% url 'enroll_home' %}">카페등록</a>
             <a href="/cafe/cafe_map/">카페지도</a>
             <a href="{% url 'rank_list' %}">랭킹</a>
-            <a href="{% url 'mypage' %}">마이페이지</a>
+            <a href="{% url 'mypage' user.pk%}">마이페이지</a>
             <a href="{% url 'logout' %}">로그아웃</a>
+            {{user.nickname}}님 안녕하세요!
         {% else %}
             <a href="/account/login">로그인</a> 
             <a href="/account/signup">회원가입</a>

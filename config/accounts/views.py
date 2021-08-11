@@ -243,7 +243,7 @@ class EnrollVisitedCafeListView(ListView):
 
         return context
 
-def mypage(request):
+def mypage(request, pk):
 
     visit_cafes=VisitedCafe.objects.filter(user=request.user)
     user=request.user
@@ -265,12 +265,31 @@ def mypage(request):
             drink_list.append(drink)
         total_drink.append(drink_list)# 각각에 모든 음료 데이터들이 들어감,,,
         total_drink_dic[v_cafe] = drink_list
+    owner=User.objects.get(id=pk)
+    print("vcafe:", visit_cafes)
     
+    print("total drink:", total_drink)#
+    print("total drink dic:", total_drink_dic)#
+    print("total drink dic type:", type(total_drink_dic))#
+
+        #drink_list = Drink.objects.get(visited_cafe=cafe)#되나?
+    
+    #print("drink", drink)
+    #print(drink_list.drinkname)
+    jsonDec=json.decoder.JSONDecoder()
+    badgeList=jsonDec.decode(owner.badge_taken)
+    friendsList=jsonDec.decode(owner.friends)
+    users=User.objects.all()
+    friends=[]
+    for user in users:
+        if user.nickname in friendsList:
+            friends.append(user)
+        
     myList=jsonDec.decode(user.badge_taken)
     badges=Badge.objects.all()
     taken_badges=[]
     for badge in badges:
-        if not badge.badge_name in myList:
+        if badge.badge_name in badgeList:
             taken_badges.append(badge) 
 
     total_badge_count = len(taken_badges)
@@ -279,8 +298,11 @@ def mypage(request):
         total_visit += cafe.visit_count
     
     ctx={
+        'owner':owner,
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
+        'friends':friends,
+        # 'drink_list' :drink_list,
         'drink_list' :total_drink,
         'drink_list_dic' :total_drink_dic,
         'total_visit':total_visit,
@@ -349,3 +371,15 @@ def visited_register(request):
         drink.save()
 
     return redirect('enroll_visited_cafe')
+
+def addfriend(request, pk):
+    user=request.user
+    jsonDec=json.decoder.JSONDecoder()
+    friendsList=jsonDec.decode(user.friends)
+    target=User.objects.get(id=pk)
+    friendsList.append(target.nickname)
+
+    user.friends=json.dumps(friendsList)
+    user.save()
+
+    return redirect('mypage',pk)

@@ -18,7 +18,7 @@ def review_list(request, pk):
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
     
     cafe_stars = ''
-    for i  in range(int(this_cafe.cafe_stars)): 
+    for i in range(int(this_cafe.cafe_stars)): 
         cafe_stars += '⭐'
 
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'cafe_stars': cafe_stars, 'review_photo': review_photo}
@@ -117,10 +117,10 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
-    cafes = CafeList.objects.all()
+    cafes = CafeList.objects.all().order_by('location_x')
     cafe_list = serializers.serialize('json', cafes)
     ctx = {
-        'data': cafe_list
+        'data': cafe_list,
     }
     return render(request, 'cafe/cafe_map.html', ctx)
 
