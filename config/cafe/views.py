@@ -13,15 +13,12 @@ from cafe.models import CafeList
 
 # Create your views here.
 def review_list(request, pk):
-    this_cafe = CafeList.objects.get(pk=pk) #해당 카페 /<CafeList: 90도씨> 이렇게 나오지
+    this_cafe = CafeList.objects.get(pk=pk) #해당 카페 /<CafeList: 90도씨> 이렇게 나온다
     each_reviews = Review.objects.filter(cafe=this_cafe) #해당 카페 리뷰/ <QuerySet [<Review: 3>, <Review: 두번째 리뷰 내용>]> 리뷰내용만 출력됨...
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) #해당 카페 리뷰의 모든 사진(템플릿에서 분류)
     
-
-    print('!!!!1')
-    print(this_cafe.cafe_stars)
-
-    if len(each_reviews) == 0:
+    #카페 평균 별점 구하기
+    if len(each_reviews) == 0: #division zero 에러 피하기
         cafe_stars_avg = 0.0
     else:
         cafe_stars_sum = 0
@@ -29,37 +26,13 @@ def review_list(request, pk):
             cafe_stars_sum += int(float(review_star.review_stars))
         
         cafe_stars_avg = cafe_stars_sum/len(each_reviews)
+        #카페 평균 별점에 저장하기-저장이 안 되..나??
+        this_cafe.cafe_stars = cafe_stars_avg
+        print('!!!!!!!one')
+        print(this_cafe.cafe_stars)
+
     
-    this_cafe.cafe_stars = cafe_stars_avg
-    print(this_cafe.cafe_stars)
-    # this_cafe.cafe_stars.save()
-
-
-    #뭐 이거 일단 평균 구하려는 시도임
-    # star_sum = 0
-    # for i in each_reviews:
-    #     #one_review = id
-    #     review_star = i.review_stars
-    #     star_sum += review_star
-    # star_avg = star_sum / len(each_reviews)
-
-    #all_stars = Review.objects.all()
-    #all_stars = each_reviews.review_stars #리뷰가 많으니까 가져오질 못함..
-    
-    # cafe_stars = 0.0
-    # for j in all_stars:
-    #     if j == '⭐':
-    #         j = 1.0
-    #         cafe_stars + j / 
-
-
-    #카페 자체의 별점(초기에 야매로 한 거임)
-    # cafe_stars_avg = ''
-    # for cafe_stars in range(int(this_cafe.cafe_stars)): 
-    #     cafe_stars_avg += '⭐'
-    
-
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_stars_avg': cafe_stars_avg}
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,}
 
     return render(request, 'cafe/review_list.html', ctx)
 
@@ -78,7 +51,7 @@ def review_create(request, pk):
         for img in request.FILES.getlist('imgs'):
             #photo 객체 하나 생성
             photo = ReviewPhoto()
-            #외래키로 현재 생성한 review의 기본키 참조(지금 다루는 사진의 리뷰가 위에서 가져온 리뷰, 카페도 지정)
+            #외래키로 현재 생성한 review의 기본키 참조(지금 다루는 사진의 리뷰와 카페가 어딘지 지정)
             photo.review = myreview
             photo.review_cafe = myreview.cafe
             #imgs에서 가져온 이미지 파일 하나를 저장

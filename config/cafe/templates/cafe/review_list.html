@@ -5,7 +5,7 @@
     <div class="cafe_info">
         {{ this_cafe.name }}<br/>
         {{ this_cafe.address }}<br/>
-        {{ cafe_stars_avg }}<br/>        
+        {{ this_cafe.cafe_stars }}<br/>        
     </div>
     <a href="{% url 'cafe:cafe_map' %}">지도</a>
     <a href="{% url 'cafe:review_create' this_cafe.id %}">리뷰 작성</a>

@@ -41,7 +41,7 @@ class Review(models.Model):
     updated_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.content, self.review_stars
+        return self.content
 
 class ReviewPhoto(models.Model):
     review_cafe = models.ForeignKey(CafeList, on_delete=models.CASCADE, related_name='review_cafe')
