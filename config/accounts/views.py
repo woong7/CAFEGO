@@ -279,6 +279,11 @@ def mypage(request, pk):
     jsonDec=json.decoder.JSONDecoder()
     badgeList=jsonDec.decode(owner.badge_taken)
     friendsList=jsonDec.decode(owner.friends)
+
+    excludesList=jsonDec.decode(user.friends)
+    names_to_exclude = [o for o in excludesList]
+    names_to_exclude.append(user.nickname)
+
     users=User.objects.all()
     friends=[]
     for user in users:
@@ -296,7 +301,7 @@ def mypage(request, pk):
     total_visit = 0
     for cafe in visit_cafes:
         total_visit += cafe.visit_count
-    
+
     ctx={
         'owner':owner,
         'taken_badges':taken_badges,
@@ -307,6 +312,7 @@ def mypage(request, pk):
         'drink_list_dic' :total_drink_dic,
         'total_visit':total_visit,
         'total_badge_count':total_badge_count,
+        'names_to_exclude':names_to_exclude,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
@@ -383,3 +389,105 @@ def addfriend(request, pk):
     user.save()
 
     return redirect('mypage',pk)
+
+def deletefriend(request, pk):
+    user=request.user
+    jsonDec=json.decoder.JSONDecoder()
+    friendsList=jsonDec.decode(user.friends)
+    target=User.objects.get(id=pk)
+    friendsList.remove(target.nickname)
+
+    user.friends=json.dumps(friendsList)
+    user.save()
+
+    return redirect('mypage',pk)
+
+def friend_search(request):
+
+    return render(request, 'accounts/friend_search')
+
+
+class FriendSearchListView(ListView):
+    model = User
+    paginate_by = 15
+    template_name = 'accounts/friend_search.html'
+    context_object_name = 'user_list'
+
+    #검색기능
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '') 
+        user=self.request.user
+        jsonDec=json.decoder.JSONDecoder()
+        friendsList=jsonDec.decode(user.friends)
+        user_list=User.objects.all()
+        
+        names_to_exclude = [o for o in friendsList]
+        names_to_exclude.append(user.nickname)
+        user_list = User.objects.exclude(nickname__in=names_to_exclude)
+        search_user_list=[]
+
+        if search_keyword:
+            if len(search_keyword) > 1:
+                if search_type == 'nickname':
+                    search_user_list = user_list.filter(nickname__icontains=search_keyword)
+                elif search_type == 'town':
+                    search_user_list = user_list.filter(town__icontains=search_keyword)
+                elif search_type == 'all':
+                    search_user_list = user_list.filter(Q(nickname__icontains=search_keyword) | Q(town__icontains=search_keyword))
+                return search_user_list
+            else:
+                messages.error(self.request, '2글자 이상 입력해주세요.')
+        return user_list
+
+    #하단부에 페이징 처리
+    #Django Paginator를 사용하여 간단하게 페이징처리를 구현할 수 있지만 
+    #하단부의 페이지 숫자 범위를 커스텀하기 위해 
+    #get_context_data 메소드로 페이지 숫자 범위 Context를 생성하여 템플릿에 전달한다.
+    def get_context_data(self, **kwargs):
+        #pk값 얻어옴, *kwargs는 키워드된 n개의 변수들을 함수의 인자로 보낼 때 사용
+        context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        #10번째 버튼?
+        page_numbers_range = 10
+        #page_range():(1부터 시작하는)페이지 리스트 반환 
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        ##
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '') 
+
+        if len(search_keyword) > 1:
+            context['q'] = search_keyword
+        context['type'] = search_type
+
+        return context
+
+@csrf_exempt
+def friend_register(request):
+
+    if request.method == 'POST':
+        # 프렌드리스트 해체 및 추가 / 저장
+        req_post = request.POST
+        str_friendname = req_post.__getitem__('friendname')
+
+        user=request.user
+
+        jsonDec=json.decoder.JSONDecoder()
+        friendsList=jsonDec.decode(user.friends)
+        friendsList.append(str_friendname)
+        user.friends=json.dumps(friendsList)
+        user.save()
+
+    return redirect('friend_search')

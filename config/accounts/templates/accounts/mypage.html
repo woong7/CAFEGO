@@ -4,7 +4,11 @@
     <h1>{{owner.nickname}}님의 마이페이지입니다.</h1>
 
     <div>
-        {% if owner != request.user %}
+        {% if owner.nickname in names_to_exclude %}
+            {% if not owner.id == user.id %}
+                <a href="{% url 'deletefriend' owner.pk%}">UnFollow</a>
+            {% endif %}
+        {% else %}
             <a href="{% url 'addfriend' owner.pk%}">Follow</a>
         {% endif %}
     </div>
@@ -17,8 +21,8 @@
     <div>
         {% for badge in taken_badges %}
             <div>
-                <img src="{{badge.badge_image.url}}" style="width: 10%; height: 10%;">
-                <p>배지 이름 : {{badge.badge_name}}</p>
+                <img src="{{badge.badge_image.url}}" style="width: 5%; height: 5%;">
+                <p>{{badge.badge_name}}</p>
             </div>
         {% endfor %}
     </div>
@@ -45,7 +49,15 @@
             <br/><br/><br/>
         </div>
     {% endfor %}
-    </div>
+
+    {% if user.id == owner.id %}
+        </div>
+
+        <a href="{% url 'friend_search' %}">유저 검색</a>
+
+        <br/><br/><br/>
+
+    {% endif %}
 
 
 
