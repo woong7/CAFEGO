@@ -41,7 +41,9 @@
     
     // 카페 목록들을 json 형식으로 받아옴
     var cafeList =  {{ data | safe }};
-    // markers: marker 객체를 저장하기 위한 배열
+    // 현재 지도에 보이는 장소들의 정보를 저장하기 위한 배열
+    let places = [];
+    // marker 객체를 저장하기 위한 배열
     let markers = [];
     // 지도 영역정보
     var bounds = map.getBounds();
@@ -49,10 +51,13 @@
     var swLatlng = bounds.getSouthWest();
     // 영역정보의 북동쪽 정보
     var neLatlng = bounds.getNorthEast();
+
     markData(markers, cafeList, swLatlng, neLatlng);
 
     // 마커를 클릭하면 장소명을 표출할 인포윈도우
-    var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable : true}); 
+    var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable : true});
+    // 검색 목록을 hover하면 장소명을 표출할 인포윈도우
+    var infowindow_search = new kakao.maps.InfoWindow({zIndex:0}); 
 
     // 지도가 움직일 때 발생하는 이벤트
     // 지도가 움직일때마다 map의 정보들을 초기화
@@ -66,7 +71,8 @@
 
         // marker 초기화
         removeMarker();
-
+        // places 초기화
+        places = [];
         // 마커 데이터 추가
         markData(markers, cafeList, swLatlng, neLatlng);
         for(var i = 0; i < markers.length; i++) {
@@ -163,12 +169,11 @@
         // 마커에 클릭이벤트 등록
         kakao.maps.event.addListener(marker, 'click', function() {
             // 마커를 클릭하면 장소명이 인포윈도우에 표출
-            // TODO: 여기 url 에러 잡아야해요
             infowindow.setContent(`
                 <div style="padding:5px;font-size:12px;">${place.fields.name}</div>
                 <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
                 <div style="padding:5px;font-size:10px;">
-                    <a href="{% url 'cafe:review_list' 180 %}">${place.pk} 리뷰 작성</a>
+                    <a href="../review_list/${place.pk}">리뷰 작성</a>
                 </div>
             `);
             infowindow.open(map, marker);
@@ -184,7 +189,7 @@
     }
 
     // keyword를 포함한 카페만 보여주는 함수
-    function checkKeyword(keyword, markers, keywordMarkers) {
+    function checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces) {
         for(var i=0; i < markers.length; i++) {
             // keyword를 포함한 카페가 있는 경우에 keywordMarkers 배열에 해당 카페 객체를 추가
             if(markers[i].Fb.includes(keyword)) {
@@ -192,6 +197,8 @@
                 markers[i].setVisible(true);
                 // keywordMarkers에 keyword를 포함한 마커 추가
                 keywordMarkers.push(markers[i]);
+                // keywordPlaces에 장소 정보 추가
+                keywordPlaces.push(places[i]);
             }
             else {
                 // 검색되지 않은 카페를 지도에서 안보이도록 설정
@@ -203,6 +210,8 @@
     //카페 키워드 검색 이벤트
     $(document).ready(function(){
         $("#search-cafe").click(function(){
+
+            let placeslist = "#placesList";
             // html의 id가 keyword인 태그 안에 들어있는 값을 들고옴
             var keyword = $('#keyword').val();
 
@@ -217,32 +226,87 @@
             // placeList 태그 빈 값으로 초기화
             $placesList.innerHTML = '';
             // keywordMarkers 배열 초기화
-            var keywordMarkers = [];
+            let keywordMarkers = [];
+            // keywordPlaces 배열 초기화
+            let keywordPlaces = [];
             // keyword 필터링
-            checkKeyword(keyword, markers, keywordMarkers);
+            checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces);
             // html에 검색된 카페 표시
             for(var i = 0; i < keywordMarkers.length; i++) {
-                //console.log(keywordMarkers[i].Fb);
+                console.log(keywordPlaces[i].fields.name);
                 $placesList = document.getElementById('placesList');
                 $placesList.innerHTML += '<li class="search-result-'+i+'">'+keywordMarkers[i].Fb+'</li>';
             }
 
-            // 마커와 검색결과 항목에 mouseover 했을때
-            // 해당 장소에 인포윈도우에 장소명을 표시합니다
-            // mouseout 했을 때는 인포윈도우를 닫습니다
-            // TODO: 여기 hover 이벤트 처리
-            var listEl = document.getElementById('placesList')
-            (function(marker, title) {
-                itemEl.onmouseover =  function () {
-                    displayInfowindow(marker, title);
-                };
+            // 마커와 검색결과 항목에 mouseover 했을때 해당 장소의 인포윈도우에 장소명 표시
+            // mouseout 했을 때는 인포윈도우 닫음
+            var listEl = document.getElementById('placesList'),
+            fragment = document.createDocumentFragment(),
+            listStr = '';
 
-                itemEl.onmouseout =  function () {
-                    infowindow.close();
-                };
-            })(marker, places[i].place_name);
+            // 검색 결과 목록에 추가된 항목들을 제거
+            removeAllChildNods(listEl);
+
+            for(var i = 0; i < keywordMarkers.length; i++) {
+                var itemEl = getListItem(i, keywordMarkers[i]);
+                (function(marker, place) {
+                    itemEl.onmouseover =  function () {
+                        displayInfowindow(marker, place.fields.name);
+                    };
+
+                    itemEl.onmouseout =  function () {
+                        infowindow_search.close();
+                    };
+
+                    itemEl.onclick = function () {
+                        infowindow_search.close();
+                        infowindow.setContent(`
+                            <div style="padding:5px;font-size:12px;">${place.fields.name}</div>
+                            <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
+                            <div style="padding:5px;font-size:10px;">
+                                <a href="../review_list/${place.pk}">리뷰 작성</a>
+                            </div>
+                        `);
+                        infowindow.open(map, marker);
+                    };
+                })(keywordMarkers[i], keywordPlaces[i]);
+
+                fragment.appendChild(itemEl);
+            }
+            // 검색결과 항목들을 검색결과 목록 Elemnet에 추가
+            listEl.appendChild(fragment);
         });
     });
+
+    // 검색결과 항목을 Element로 반환하는 함수
+    function getListItem(index, keywordMarker) {
+        var el = document.createElement('li'),
+        itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+                    '<div class="info">' +
+                    '   <h5>' + keywordMarker.Fb + '</h5>' +
+                    '</div>';         
+
+        el.innerHTML = itemStr;
+        el.className = 'item';
+
+        return el;
+    }
+
+    // 검색결과 목록을 클릭했을 때 호출되는 함수
+    // 인포윈도우에 장소명 표시
+    function displayInfowindow(marker, title) {
+        var content = '<div style="padding:5px;z-index:0;">' + title + '</div>';
+
+        infowindow_search.setContent(content);
+        infowindow_search.open(map, marker);
+    }
+
+    // 검색결과 목록의 자식 Element를 제거하는 함수
+    function removeAllChildNods(el) {   
+        while (el.hasChildNodes()) {
+            el.removeChild (el.lastChild);
+        }
+    }
 
     // HTML5의 geolocation으로 사용할 수 있는지 확인
     if (navigator.geolocation) {
