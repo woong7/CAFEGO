@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{%load static}
+
+{% block title %}
+    {{ request.user }}님의 리뷰
+{% endblock %}
+
+{% block content %}
+    <!-- 나의 카페리스트 -->
+    <table>
+    <thead>
+        <tr>
+            <th>카페명</th>
+            <th>나의 별점</th> 
+            <th>내용</th> 
+            <th>작성 날짜</th>      
+            <th>리뷰 수정</th>          
+        </tr>
+    </thead>
+    <tbody>
+        {% for review in my_all_review %}
+            <tr>
+                <td><a href="{% url 'cafe:review_list' review.cafe.id %}">{{ review.cafe }}</a></td>
+                <td>{{ review.review_stars }}</td>
+                <td>{{ review.content }}</td>
+                <td>{{ review.created_at }}</td> 
+                <td><a href="">리뷰 수정</a></td>        
+            </tr>
+        {% endfor %}    
+    </tbody>
+    </table>
+
+<!-- 페이징 처리 -->
+{% if is_paginated %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">이전</a>
+        </li>
+        {% endif %}
+
+        {% for page in page_range %}
+        <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">다음</a>
+        </li>
+        {% endif %}
+        <span>{{page_obj}}</span>
+    </ul>
+{% endif %}
+{% endblock %}
+
+

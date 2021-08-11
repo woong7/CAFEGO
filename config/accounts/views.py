@@ -8,7 +8,7 @@ from django.contrib import auth
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from .models import * #User
-from cafe.models import CafeList
+from cafe.models import CafeList, Review
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
@@ -296,6 +296,9 @@ def mypage(request, pk):
     total_visit = 0
     for cafe in visit_cafes:
         total_visit += cafe.visit_count
+
+    my_all_review = Review.objects.filter(username=request.user)
+    all_review_count = len(my_all_review)
     
     ctx={
         'owner':owner,
@@ -307,10 +310,50 @@ def mypage(request, pk):
         'drink_list_dic' :total_drink_dic,
         'total_visit':total_visit,
         'total_badge_count':total_badge_count,
+        'all_review_count': all_review_count,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
 
+class MyCafeReviewListView(ListView):
+    model = Review
+    #리스트 몇줄 표시
+    paginate_by = 5
+    template_name = 'accounts/myreview_list.html'
+    #변수 이름을 바꿈
+    context_object_name = 'my_all_review'
+
+# def myreview_list(request):
+#     my_all_review = Review.objects.filter(username=request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 10
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '') 
+
+        if len(search_keyword) > 1:
+            context['q'] = search_keyword
+        context['type'] = search_type
+
+        return context
+
+    # ctx = {'my_all_review': my_all_review, }
+    # return render(request, 'accounts/myreview_list.html', context=ctx)
 
 
 from django.views.decorators.csrf import csrf_exempt
