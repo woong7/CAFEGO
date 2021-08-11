@@ -315,13 +315,16 @@ def mypage(request, pk):
 
     return render(request, 'accounts/mypage.html', context=ctx)
 
+
 class MyCafeReviewListView(ListView):
     model = Review
-    #리스트 몇줄 표시
     paginate_by = 5
     template_name = 'accounts/myreview_list.html'
-    #변수 이름을 바꿈
     context_object_name = 'my_all_review'
+
+    def get_queryset(self):
+        #여기서 위에서 지정한 모델을 필터링하는 것. 어떤 객체를 보낼지 최종적으로 보낸다.
+        return Review.objects.filter(username=self.request.user)
 
     # paginate
     def get_context_data(self, **kwargs):
@@ -371,6 +374,7 @@ def review_update(request, pk):
         cafe = CafeList.objects.get(pk=myreview.cafe.id)
         return redirect('cafe:review_list', cafe.id)
     else:
+        #instance=myreview: 원래 속에 있던 데이터를 넣은 채 가져다 두기
         form = ReviewForm(instance=myreview)
         cafe_name = CafeList.objects.get(pk=pk)
         reviewer = request.user
