@@ -8,11 +8,12 @@ from django.contrib import auth
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from .models import * #User
-from cafe.models import CafeList
+from cafe.models import CafeList, Review, ReviewPhoto
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
 from . import forms
+from cafe.forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q
 
@@ -60,7 +61,6 @@ def logout(request):
 
 def main(request):
     return render(request, 'accounts/main.html')
-
 
 def home(request):
     #return render(request, 'accounts/home.html')
@@ -112,6 +112,7 @@ def rank_detail(request):
     return render(request, 'accounts/rank_detail.html')
 
 def rank_list(request):
+    ##총 방문 랭킹
     users=User.objects.all()
     for visit_user in users:
         visit_user.total_visit=0
@@ -123,6 +124,7 @@ def rank_list(request):
     ctx={
         'users':users
     }
+
     return render(request, 'accounts/rank_list.html', context=ctx)
 
 @login_required
@@ -254,17 +256,17 @@ def mypage(request, pk):
     total_drink_dic = {}
 
     for v_cafe in visit_cafes:
-        
         #내가 마신 음료들
         my_drinks = jsonDec.decode(v_cafe.drink_list) #visit_cafes가 여러개인데 가능한가??
         
         drink_list = []
-
         for drink in my_drinks:#각 음료들
             #if drink.drinkname not in my_drink:#내가 마신 음료에 없다면
             drink_list.append(drink)
+
         total_drink.append(drink_list)# 각각에 모든 음료 데이터들이 들어감,,,
         total_drink_dic[v_cafe] = drink_list
+
     owner=User.objects.get(id=pk)
     print("vcafe:", visit_cafes)
     
@@ -302,6 +304,9 @@ def mypage(request, pk):
     for cafe in visit_cafes:
         total_visit += cafe.visit_count
 
+    my_all_review = Review.objects.filter(username=request.user)
+    all_review_count = len(my_all_review)
+    
     ctx={
         'owner':owner,
         'taken_badges':taken_badges,
@@ -313,11 +318,75 @@ def mypage(request, pk):
         'total_visit':total_visit,
         'total_badge_count':total_badge_count,
         'names_to_exclude':names_to_exclude,
+        'all_review_count': all_review_count,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
 
+class MyCafeReviewListView(ListView):
+    model = Review
+    paginate_by = 5
+    template_name = 'accounts/myreview_list.html'
+    context_object_name = 'my_all_review'
 
+    def get_queryset(self):
+        #여기서 위에서 지정한 모델을 필터링하는 것. 어떤 객체를 보낼지 최종적으로 보낸다.
+        return Review.objects.filter(username=self.request.user)
+
+    # paginate
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 10
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '') 
+
+        if len(search_keyword) > 1:
+            context['q'] = search_keyword
+        context['type'] = search_type
+
+        return context
+
+def review_update(request, pk):
+    myreview = get_object_or_404(Review, id=pk)
+    
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=myreview)
+        if form.is_valid():
+            myreview = form.save(commit=False)
+            myreview.username = request.user
+            myreview.cafe = CafeList.objects.get(pk=pk)
+            myreview = form.save()
+
+        for img in request.FILES.getlist('imgs'):
+            photo = ReviewPhoto()
+            photo.review = myreview
+            photo.review_cafe = myreview.cafe
+            photo.image = img
+            photo.save()
+        
+        cafe = CafeList.objects.get(pk=myreview.cafe.id)
+        return redirect('cafe:review_list', cafe.id)
+    else:
+        #instance=myreview: 원래 속에 있던 데이터를 넣은 채 가져다 두기
+        form = ReviewForm(instance=myreview)
+        cafe_name = CafeList.objects.get(pk=pk)
+        reviewer = request.user
+        ctx = {'form': form, 'cafe_name': cafe_name, 'reviewer': reviewer}
+        return render(request, 'cafe/review_form.html', ctx)
 
 from django.views.decorators.csrf import csrf_exempt
 import json
