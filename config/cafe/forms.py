@@ -6,7 +6,4 @@ from .models import Review
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['username', 'review_stars', 'content',]
-
-
-#리뷰 포토 따로 기입 폼
+        exclude = ('username', 'cafe',  'updated_at')
