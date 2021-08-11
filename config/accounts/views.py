@@ -243,10 +243,10 @@ class EnrollVisitedCafeListView(ListView):
 
         return context
 
-def mypage(request):
+def mypage(request, pk):
 
     visit_cafes=VisitedCafe.objects.filter(user=request.user)
-    user=request.user
+    owner=User.objects.get(id=pk)
     print("vcafe:", visit_cafes)
     
     #for cafe in visit_cafes:
@@ -257,16 +257,25 @@ def mypage(request):
     #print("drink", drink)
     #print(drink_list.drinkname)
     jsonDec=json.decoder.JSONDecoder()
-    myList=jsonDec.decode(user.badge_taken)
+    badgeList=jsonDec.decode(owner.badge_taken)
+    friendsList=jsonDec.decode(owner.friends)
+    users=User.objects.all()
+    friends=[]
+    for user in users:
+        if user.nickname in friendsList:
+            friends.append(user)
+        
     badges=Badge.objects.all()
     taken_badges=[]
     for badge in badges:
-        if not badge.badge_name in myList:
+        if badge.badge_name in badgeList:
             taken_badges.append(badge) 
 
     ctx={
+        'owner':owner,
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
+        'friends':friends,
         # 'drink_list' :drink_list,
     }
 
@@ -297,3 +306,15 @@ def visit_register(request):
         drink.save()
 
     return redirect('enroll_new_cafe')
+
+def addfriend(request, pk):
+    user=request.user
+    jsonDec=json.decoder.JSONDecoder()
+    friendsList=jsonDec.decode(user.friends)
+    target=User.objects.get(id=pk)
+    friendsList.append(target.nickname)
+
+    user.friends=json.dumps(friendsList)
+    user.save()
+
+    return redirect('mypage',pk)

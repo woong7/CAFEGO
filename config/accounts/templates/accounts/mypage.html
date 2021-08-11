@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{user.nickname}}님의 마이페이지입니다.</h1>
+    <h1>{{owner.nickname}}님의 마이페이지입니다.</h1>
+
+    <div>
+        {% if owner != request.user %}
+            <a href="{% url 'addfriend' owner.pk%}">Follow</a>
+        {% endif %}
+    </div>
 
     <div>
         {% for badge in taken_badges %}
@@ -19,7 +25,16 @@
         {% endfor %} -->
     {% endfor %}
 
-
+    <div>
+    <h5>{{owner.nickname}}님의 친구 목록</h5>
+    {% for friend in friends %}
+        <div>
+            <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
+            => <a href="{% url 'mypage' friend.pk%}">{{friend.nickname}}님의 마이페이지로 이동</a>
+            <br/><br/><br/>
+        </div>
+    {% endfor %}
+    </div>
 
 
 
