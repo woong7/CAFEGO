@@ -25,6 +25,7 @@ urlpatterns = [
 
     path('enroll_home/', views.enroll_home, name="enroll_home"),
     path('visit_register/', views.visit_register, name="visit_register"),
+    path('visited_register/', views.visited_register, name="visited_register"),
     path('enroll_new_cafe/', views.EnrollNewCafeListView.as_view(), name="enroll_new_cafe"),
     path('enroll_visited_cafe/', views.EnrollVisitedCafeListView.as_view(), name="enroll_visited_cafe"),
     
