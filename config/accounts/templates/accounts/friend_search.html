@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    새로운 친구 등록
+{% endblock %}
+{% block content %}
+    <h1>새로운 친구를 등록하는 페이지입니다.</h1>
+    <p>새로운 친구 등록하기</p>
+    <p>다른 유저를 검색해보세요!</p>
+
+    {% if q %}
+    <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
+    {% endif %}
+
+    <!-- 카페 검색창 -->
+    <form action="" method="GET">
+        <select name="type">
+            <option value="nickname">닉네임</option>
+            <option value="town">동네</option>
+            <option value="all">닉네임+동네</option>
+        </select>
+        <input type="text" name="q" value="{{ q }}" placeholder="유저 닉네임 검색">
+        <button type="submit" id="search_btn">search</button><br/>
+    </form>
+
+    <!-- 카페 리스트  -->
+    <table>
+        <thead>
+            <tr>
+                <th> </th>
+                <th>닉네임</th>
+                <th>동네</th>
+                <th>친구여부</th>             
+            </tr>
+        </thead>
+        <tbody>
+            {% if user_list %}
+                검색 결과: {{page_obj.paginator.count}}개
+                {% for user in user_list %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td><a href="{% url 'mypage' user.id %}">{{ user.nickname }}</a></td>
+                        <td>{{ user.town }}</td> <!-- | truncatechars:10-->
+                        <!-- checkbox trigger modal -->
+                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ user.id }}" name="visit" value="visit"></td>
+                        <div class="modal fade" id="exampleModal_{{ user.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            
+                            <div class="modal-dialog">
+                                <form action="{% url 'friend_register' %}" method='post'>
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel" name="friendname2">
+                                                <input type="text" name="friendname" value="{{ user.nickname }}">
+                                                <input type="text" name="friendid" value="{{ user.id }}">
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>                                    
+    
+                                        
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" id="submit_btn_{{user.id}}" class="btn btn-primary" onclick="onClick({{ user }})">Follow</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </tr>
+                {% endfor %}
+                <!-- Modal -->
+                
+            {% else %}     
+                <tr>
+                    <td>등록된 유저가 없습니다.</td>
+                </tr>
+            {% endif %}            
+        </tbody>
+    </table>
+    
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                {{ message.tags }}! {{ message.message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    
+    <!-- 페이징 처리 -->
+    {% if is_paginated %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">이전</a>
+        </li>
+        {% endif %}
+
+        {% for page in page_range %}
+        <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">다음</a>
+        </li>
+        {% endif %}
+        <span>{{page_obj}}</span>
+    </ul>
+    {% endif %}
+
+
+{% endblock %}
+

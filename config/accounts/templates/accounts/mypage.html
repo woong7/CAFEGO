@@ -4,10 +4,19 @@
     <h1>{{owner.nickname}}님의 마이페이지입니다.</h1>
 
     <div>
-        {% if owner != request.user %}
+        {% if owner.nickname in names_to_exclude %}
+            {% if not owner.id == user.id %}
+                <a href="{% url 'deletefriend' owner.pk%}">UnFollow</a>
+            {% endif %}
+        {% else %}
             <a href="{% url 'addfriend' owner.pk%}">Follow</a>
         {% endif %}
     </div>
+
+    <h3>획득한 배지</h3><!--if문 쓰기-->
+    <h4>획득한 배지 개수: {{ total_badge_count }} 개 </h4>
+    <p>작성한 리뷰 수 : </p>
+    <a href="">작성한 리뷰 보러가기 </a>
 
     <div>
         {% for badge in taken_badges %}
@@ -18,12 +27,17 @@
         {% endfor %}
     </div>
 
+    <h3>총 방문 카페 수 : {{visit_cafes.count }} 개</h3>
+    <h3>총 카페 방문 횟수 : {{ total_visit }} 회</h3>
+
     {% for cafe, drinks in drink_list_dic.items %} 
-        <span style="font-size: 20px; font-weight: bold">{{cafe}} 카페</span>
-        <span> 방문 횟수: {{cafe.visit_count}}</span>
+        <span style="font-size: 20px; font-weight: bold">카페명 : {{cafe}}</span>
+        <p> 방문 횟수: {{cafe.visit_count}}</p>
+        <span> 마신음료 : </span>
         {% for drink in drinks %}
-            <p>마신 음료 : {{drink.drinkname}}</p>
+            <span>{{drink}}</span>
         {% endfor %}
+    </br>
     {% endfor %}
 
     <div>
@@ -35,7 +49,15 @@
             <br/><br/><br/>
         </div>
     {% endfor %}
-    </div>
+
+    {% if user.id == owner.id %}
+        </div>
+
+        <a href="{% url 'friend_search' %}">유저 검색</a>
+
+        <br/><br/><br/>
+
+    {% endif %}
 
 
 
