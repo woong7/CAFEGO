@@ -123,6 +123,7 @@
         for(var i=left_bound; i <=right_bound; i++) {
             if(cafeList[i].fields.location_y < ne.Ma && cafeList[i].fields.location_y > sw.Ma){
                 addMarker(markers, cafeList[i]);
+                places.push(cafeList[i]);
             }
         }
     }

@@ -27,23 +27,23 @@
     <script  type="text/javascript">
 
     let cafeList = {{ data | safe }};
-    console.log(cafeList);
     let mainCafePk = {{ main_cafe | safe }};
     let allPlaces = {{ cafe_list | safe }}
-
+    console.log(cafeList);
+    console.log(mainCafePk);
     let userCafeList = [];
     let mainCafe;
     for(var i = 0; i < allPlaces.length; i++) {
         for(var j = 0; j < cafeList.length; j++) {
             if(allPlaces[i].pk === cafeList[j].fields.cafe) {
                 userCafeList.push(allPlaces[i]);
-                if(cafeList[j].fields.cafe === mainCafePk) {
+                if(cafeList[j].pk === mainCafePk) {
                     mainCafe = allPlaces[i];
                 }
             }
         }
     }
-
+    console.log(mainCafe);
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
         mapOption = {
             center: new kakao.maps.LatLng(mainCafe.fields.location_y, mainCafe.fields.location_x), // 지도의 중심좌표
@@ -89,49 +89,55 @@
         places = [];
         // 마커 데이터 추가
         markData(markers, userCafeList, swLatlng, neLatlng);
-        console.log(places);
     });
 
     // 카페들을 지도에 마킹하는 함수
     function markData(markers, userCafeList, sw, ne) {
-        let left_bound=0, right_bound=0;
-        let middle=0, low=0, high=userCafeList.length-1;
-        let find=false;
+        // let left_bound=0, right_bound=0;
+        // let middle=0, low=0, high=userCafeList.length-1;
+        // let find=false;
 
-        while(low<high)
-        {
-            middle=Math.floor((low+high)/2);
-            if(userCafeList[middle].fields.location_x<sw.La) 
-            {
-                low=middle+1;
-            }
-            else if(userCafeList[middle].fields.location_x>sw.La) high=middle-1;
-            else{
-                left_bound = middle;
-                find=true;
-                break;
-            }
-        }
-        if(!find) left_bound=high;
+        // while(low<high)
+        // {
+        //     middle=Math.floor((low+high)/2);
+        //     if(userCafeList[middle].fields.location_x<sw.La) 
+        //     {
+        //         low=middle+1;
+        //     }
+        //     else if(userCafeList[middle].fields.location_x>sw.La) high=middle-1;
+        //     else{
+        //         left_bound = middle;
+        //         find=true;
+        //         break;
+        //     }
+        // }
+        // if(!find) left_bound=high;
 
-        middle=0, low=0, high=userCafeList.length-1;
-        find=false;
-        while(low<high)
-        {
-            middle=Math.floor((low+high)/2);
-            if(userCafeList[middle].fields.location_x<ne.La) low=middle+1;
-            else if(userCafeList[middle].fields.location_x>ne.La) high=middle-1;
-            else{
-                right_bound = middle;
-                find=true;
-                break;
-            }
-        }
-        if(!find) right_bound=low;
-
-        for(var i=left_bound; i <=right_bound; i++) {
-            if(userCafeList[i].fields.location_y < ne.Ma && userCafeList[i].fields.location_y > sw.Ma){
+        // middle=0, low=0, high=userCafeList.length-1;
+        // find=false;
+        // while(low<high)
+        // {
+        //     middle=Math.floor((low+high)/2);
+        //     if(userCafeList[middle].fields.location_x<ne.La) low=middle+1;
+        //     else if(userCafeList[middle].fields.location_x>ne.La) high=middle-1;
+        //     else{
+        //         right_bound = middle;
+        //         find=true;
+        //         break;
+        //     }
+        // }
+        // if(!find) right_bound=low;
+        // for(var i=left_bound; i <=right_bound; i++) {
+        //     console.log(i);
+        //     if(userCafeList[i].fields.location_y < ne.Ma && userCafeList[i].fields.location_y > sw.Ma){
+        //         addMarker(markers, userCafeList[i], cafeList);
+        //         places.push(userCafeList[i]);
+        //     }
+        // }
+        for(var i=0; i < userCafeList.length; i++) {
+            if(userCafeList[i].fields.location_x < ne.La && userCafeList[i].fields.location_x > sw.La && userCafeList[i].fields.location_y < ne.Ma && userCafeList[i].fields.location_y > sw.Ma) {
                 addMarker(markers, userCafeList[i], cafeList);
+                places.push(userCafeList[i]);
             }
         }
     }
@@ -146,7 +152,7 @@
             }
         }
         // 마커 아이콘 크기 조정
-        var imageSize = new kakao.maps.Size(iconSize * 10, iconSize * 10);
+        var imageSize = new kakao.maps.Size(12 + iconSize * 6, 12 + iconSize * 6);
 
         // 마커 생성
         var marker = new kakao.maps.Marker({
@@ -222,12 +228,10 @@
             let keywordMarkers = [];
             // keywordPlaces 배열 초기화
             let keywordPlaces = [];
-            console.log(places);
             // keyword 필터링
             checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces);
             // html에 검색된 카페 표시
             for(var i = 0; i < keywordMarkers.length; i++) {
-                console.log(keywordPlaces);
                 $placesList = document.getElementById('placesList');
                 $placesList.innerHTML += '<li class="search-result-'+i+'">'+keywordMarkers[i].Fb+'</li>';
             }
