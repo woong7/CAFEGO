@@ -330,6 +330,7 @@ def visited_register(request):
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
         str_drinkname = req_post.__getitem__('beverage')
+        print("drinkname:", str_drinkname)
 
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
         v_cafe = VisitedCafe.objects.get(cafe=this_cafe)
