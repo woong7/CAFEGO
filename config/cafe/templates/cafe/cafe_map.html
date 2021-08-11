@@ -133,12 +133,11 @@
         // 마커에 클릭이벤트 등록
         kakao.maps.event.addListener(marker, 'click', function() {
             // 마커를 클릭하면 장소명이 인포윈도우에 표출
-            // TODO: 여기 url 에러 잡아야해요
             infowindow.setContent(`
                 <div style="padding:5px;font-size:12px;">${place.fields.name}</div>
                 <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
                 <div style="padding:5px;font-size:10px;">
-                    <a href="{% url 'cafe:review_list' 180 %}">${place.pk} 리뷰 작성</a>
+                    <a href="../review_list/${place.pk}">리뷰 작성</a>
                 </div>
             `);
             infowindow.open(map, marker);
@@ -221,16 +220,15 @@
                         infowindow_search.close();
                     };
 
-                    // TODO: url 링크 처리
                     itemEl.onclick = function () {
                         infowindow_search.close();
-                        infowindow.setContent(
-                            "<div style='padding:5px;font-size:12px;'>"+place.fields.name+"</div>" +
-                            "<div style='padding:5px;font-size:10px;'>"+place.fields.address+"</div>" +
-                            "<div style='padding:5px;font-size:10px;'>" +
-                                `<a href="{% url 'cafe:review_list' `+place.pk+` %}">`+place.pk+`리뷰 작성</a>` +
-                            "</div>"
-                        );
+                        infowindow.setContent(`
+                            <div style="padding:5px;font-size:12px;">${place.fields.name}</div>
+                            <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
+                            <div style="padding:5px;font-size:10px;">
+                                <a href="../review_list/${place.pk}">리뷰 작성</a>
+                            </div>
+                        `);
                         infowindow.open(map, marker);
                     };
                 })(keywordMarkers[i], keywordPlaces[i]);
