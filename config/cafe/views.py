@@ -18,16 +18,31 @@ def review_list(request, pk):
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-
+    print("each_reviews:", each_reviews)
+    print("each_reviews user:", each_reviews.filter(username=request.user))
     #유저가 이 카페에 방문했었는지 체크
     #TODO 아직 만지는 중
-    if this_cafe in VisitedCafe.objects.all():
-        visited_this_cafe = VisitedCafe.objects.get(user=request.user, cafe=this_cafe)
-        visit_this_count = visited_this_cafe.visit_count
-        return visit_this_count
-    else: 
-        pass
-    
+    # try:
+    #     #로그인한 유저가 방문한 그 카페 / 존재안할 수도 있음.
+    #     user_visited_this_cafe = VisitedCafe.objects.get(user=request.user,cafe=this_cafe) # 
+    #     print("uvtc: ", user_visited_this_cafe)
+    #     print("2: ", user_visited_this_cafe.user)
+    #     print("3: ", user_visited_this_cafe.visit_count)
+    #     user_visit_this_count = user_visited_this_cafe.visit_count
+    #     user_visited_this_cafe.save()
+
+    # except: 
+    #     user_visited_this_cafe = 0
+    #     user_visit_this_count = 0
+    # #v = each_reviews.filter(visit_cafe=visited_this_cafe, username=request.user) #지금 로그인한 유저,,
+    # #print("each_reviews visited_cafe:", each_reviews.filter(visit_cafe=visited_this_cafe))
+    # #print("v:", v)
+    # #print("v:", v.visit_count)
+    for review in each_reviews:
+        
+        print("??", review.username)
+        print("review visit_cafe", review.visit_cafe)
+
 
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
@@ -43,7 +58,8 @@ def review_list(request, pk):
         this_cafe.cafe_stars = cafe_stars_avg
         this_cafe.save()
     
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,} # 'visit_this_count': visit_this_count
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    } 
 
     return render(request, 'cafe/review_list.html', ctx)
 
@@ -57,6 +73,7 @@ def review_create(request, pk):
             myreview = form.save(commit=False)
             myreview.username = request.user
             myreview.cafe = CafeList.objects.get(pk=pk)
+            myreview.visit_cafe = VisitedCafe.objects.get(cafe=myreview.cafe)
             #리뷰 저장하면 유저 해당 카페 방문 늘리기
             #filter는 여러 객체, get은 하나의 객체니까 각 객체의 정보를 얻으려면 get 써야한다.
             # visited_this_cafe.visit_count += 1 

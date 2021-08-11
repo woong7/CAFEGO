@@ -35,10 +35,18 @@
                 {% elif reviews.review_stars == '5.0' %}
                     <span>⭐⭐⭐⭐⭐</span>
                 {% endif %}
-                <div>{{ this_cafe.name }} 방문 횟수: </div>
+                <div>{{ this_cafe.name }} 방문 횟수: 
+                    유저이름 :{{reviews.username}}
+                    유저 :{{reviews.visit_cafe.user}}
+                    {% if reviews.username == reviews.visit_cafe.user %}
+                        {{reviews.visit_cafe.visit_count}}
+                    {% else %}
+                        0
+                    {% endif %}
+                </div>
+
                 <div>총 카페 방문 횟수: {{ reviews.username.total_visit }}</div>
                 <br/>
-
                 {{ reviews.content }}<br/>
 
                 {% if review_photo %}
