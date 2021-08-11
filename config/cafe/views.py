@@ -23,25 +23,15 @@ def review_list(request, pk):
     #유저가 이 카페에 방문했었는지 체크
     #TODO 아직 만지는 중
     # try:
-    #     #로그인한 유저가 방문한 그 카페 / 존재안할 수도 있음.
-    #     user_visited_this_cafe = VisitedCafe.objects.get(user=request.user,cafe=this_cafe) # 
-    #     print("uvtc: ", user_visited_this_cafe)
-    #     print("2: ", user_visited_this_cafe.user)
-    #     print("3: ", user_visited_this_cafe.visit_count)
-    #     user_visit_this_count = user_visited_this_cafe.visit_count
-    #     user_visited_this_cafe.save()
 
-    # except: 
-    #     user_visited_this_cafe = 0
-    #     user_visit_this_count = 0
-    # #v = each_reviews.filter(visit_cafe=visited_this_cafe, username=request.user) #지금 로그인한 유저,,
-    # #print("each_reviews visited_cafe:", each_reviews.filter(visit_cafe=visited_this_cafe))
-    # #print("v:", v)
-    # #print("v:", v.visit_count)
     for review in each_reviews:
         
-        print("??", review.username)
-        print("review visit_cafe", review.visit_cafe)
+        print("리뷰 쓴 유저이름", review.username)
+        print("review visit_cafe ", review.visit_cafe)
+        print("review visit_cafe user", review.visit_cafe.user)
+        # for user in review.visit_cafe.user:
+        #     print("user:", user)
+        print("review cafe", review.cafe)
 
 
     #카페 평균 별점 구하기
@@ -73,11 +63,11 @@ def review_create(request, pk):
             myreview = form.save(commit=False)
             myreview.username = request.user
             myreview.cafe = CafeList.objects.get(pk=pk)
-            myreview.visit_cafe = VisitedCafe.objects.get(cafe=myreview.cafe)
-            #리뷰 저장하면 유저 해당 카페 방문 늘리기
-            #filter는 여러 객체, get은 하나의 객체니까 각 객체의 정보를 얻으려면 get 써야한다.
-            # visited_this_cafe.visit_count += 1 
-            # visited_this_cafe.save()
+            visit_cafes = VisitedCafe.objects.filter(cafe=myreview.cafe)
+            get_user_visit_cafe = visit_cafes.get(user=request.user)
+
+            myreview.visit_cafe = get_user_visit_cafe ####
+
             myreview = form.save()
 
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
