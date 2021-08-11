@@ -18,7 +18,7 @@ def review_list(request, pk):
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
     
     cafe_stars = ''
-    for i  in range(int(this_cafe.cafe_stars)): 
+    for i in range(int(this_cafe.cafe_stars)): 
         cafe_stars += '⭐'
 
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'cafe_stars': cafe_stars, 'review_photo': review_photo}
