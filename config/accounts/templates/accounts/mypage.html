@@ -1,20 +1,52 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{user.nickname}}님의 마이페이지입니다.</h1>
+    <h1>{{owner.nickname}}님의 마이페이지입니다.</h1>
+
+    <div>
+        {% if owner != request.user %}
+            <a href="{% url 'addfriend' owner.pk%}">Follow</a>
+        {% endif %}
+    </div>
+
+    <h3>획득한 배지</h3><!--if문 쓰기-->
+    <h4>획득한 배지 개수: {{ total_badge_count }} 개 </h4>
+    <p>작성한 리뷰 수 : </p>
+    <a href="">작성한 리뷰 보러가기 </a>
 
     <div>
         {% for badge in taken_badges %}
             <div>
                 <img src="{{badge.badge_image.url}}" style="width: 10%; height: 10%;">
-                <p>{{badge.badge_name}}</p>
+                <p>배지 이름 : {{badge.badge_name}}</p>
             </div>
         {% endfor %}
     </div>
 
-    {% for cafe in visit_cafes %}
-        <p style="font-size: 20px; font-weight: bold">{{ cafe.cafe.name }} 카페  [ 방문 횟수: {{ cafe.visit_count }} ] </p>
+    <h3>총 방문 카페 수 : {{visit_cafes.count }} 개</h3>
+    <h3>총 카페 방문 횟수 : {{ total_visit }} 회</h3>
 
+    {% for cafe, drinks in drink_list_dic.items %} 
+        <span style="font-size: 20px; font-weight: bold">카페명 : {{cafe}}</span>
+        <p> 방문 횟수: {{cafe.visit_count}}</p>
+        <span> 마신음료 : </span>
+        {% for drink in drinks %}
+            <span>{{drink}}</span>
+        {% endfor %}
+    </br>
     {% endfor %}
+
+    <div>
+    <h5>{{owner.nickname}}님의 친구 목록</h5>
+    {% for friend in friends %}
+        <div>
+            <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
+            => <a href="{% url 'mypage' friend.pk%}">{{friend.nickname}}님의 마이페이지로 이동</a>
+            <br/><br/><br/>
+        </div>
+    {% endfor %}
+    </div>
+
+
 
 {% endblock %}

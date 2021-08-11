@@ -38,6 +38,8 @@
         </thead>
         <tbody>
             {% if cafe_list %}
+                검색 결과: {{page_obj.paginator.count}}개
+                
                 {% for cafe in cafe_list %}
                     <tr class="text-center">
                         <td>{{ cafe.id }}</td>
@@ -101,6 +103,7 @@
             <a class="page-link" href="#">다음</a>
         </li>
         {% endif %}
+        <span>{{page_obj}}</span>
     </ul>
     {% endif %}
 

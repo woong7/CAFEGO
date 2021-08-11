@@ -61,7 +61,7 @@ def logout(request):
 def main(request):
     return render(request, 'accounts/main.html')
 
-@login_required
+
 def home(request):
     #return render(request, 'accounts/home.html')
     return render(request,'accounts/home.html')
@@ -85,7 +85,7 @@ def badge_taken(request):
             taken_badges.append(badge)   
     
 
-    ctx={'taken_badges':taken_badges}
+    ctx={'taken_badges':taken_badges,'user':user,}
     return render(request, 'accounts/badge_taken.html', context=ctx)
 
 def badge_untaken(request):
@@ -99,7 +99,7 @@ def badge_untaken(request):
         if not badge.badge_name in myList:
             taken_badges.append(badge) 
 
-    ctx={'taken_badges':taken_badges}
+    ctx={'taken_badges':taken_badges, 'user':user,}
     return render(request, 'accounts/badge_untaken.html', context=ctx)
 
 def user_cafe_map(request):
@@ -131,17 +131,18 @@ def enroll_home(request):
 
 class EnrollNewCafeListView(ListView):
     model = VisitedCafe
-    paginate_by = 5
+    paginate_by = 15
     template_name = 'accounts/enroll_new_cafe.html'
     context_object_name = 'new_cafe_list'
 
-
+    #검색기능
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user)
+        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).order_by('-id')
+        
         names_to_exclude = [o.cafe for o in visited_cafe_list] 
-        new_cafe_list = CafeList.objects.exclude(name__in=names_to_exclude).order_by('-id')
+        new_cafe_list = CafeList.objects.exclude(name__in=names_to_exclude)
 
         if search_keyword:
             if len(search_keyword) > 1:
@@ -157,10 +158,16 @@ class EnrollNewCafeListView(ListView):
         return new_cafe_list
 
     #하단부에 페이징 처리
+    #Django Paginator를 사용하여 간단하게 페이징처리를 구현할 수 있지만 
+    #하단부의 페이지 숫자 범위를 커스텀하기 위해 
+    #get_context_data 메소드로 페이지 숫자 범위 Context를 생성하여 템플릿에 전달한다.
     def get_context_data(self, **kwargs):
+        #pk값 얻어옴, *kwargs는 키워드된 n개의 변수들을 함수의 인자로 보낼 때 사용
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
-        page_numbers_range = 5
+        #10번째 버튼?
+        page_numbers_range = 10
+        #page_range():(1부터 시작하는)페이지 리스트 반환 
         max_index = len(paginator.page_range)
 
         page = self.request.GET.get('page')
@@ -174,6 +181,7 @@ class EnrollNewCafeListView(ListView):
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
 
+        ##
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
 
@@ -235,41 +243,143 @@ class EnrollVisitedCafeListView(ListView):
 
         return context
 
-def mypage(request):
+def mypage(request, pk):
 
     visit_cafes=VisitedCafe.objects.filter(user=request.user)
     user=request.user
 
     jsonDec=json.decoder.JSONDecoder()
+
+    total_drink = []
+    total_drink_dic = {}
+
+    for v_cafe in visit_cafes:
+        
+        #내가 마신 음료들
+        my_drinks = jsonDec.decode(v_cafe.drink_list) #visit_cafes가 여러개인데 가능한가??
+        
+        drink_list = []
+
+        for drink in my_drinks:#각 음료들
+            #if drink.drinkname not in my_drink:#내가 마신 음료에 없다면
+            drink_list.append(drink)
+        total_drink.append(drink_list)# 각각에 모든 음료 데이터들이 들어감,,,
+        total_drink_dic[v_cafe] = drink_list
+    owner=User.objects.get(id=pk)
+    print("vcafe:", visit_cafes)
+    
+    print("total drink:", total_drink)#
+    print("total drink dic:", total_drink_dic)#
+    print("total drink dic type:", type(total_drink_dic))#
+
+        #drink_list = Drink.objects.get(visited_cafe=cafe)#되나?
+    
+    #print("drink", drink)
+    #print(drink_list.drinkname)
+    jsonDec=json.decoder.JSONDecoder()
+    badgeList=jsonDec.decode(owner.badge_taken)
+    friendsList=jsonDec.decode(owner.friends)
+    users=User.objects.all()
+    friends=[]
+    for user in users:
+        if user.nickname in friendsList:
+            friends.append(user)
+        
     myList=jsonDec.decode(user.badge_taken)
     badges=Badge.objects.all()
     taken_badges=[]
     for badge in badges:
-        if not badge.badge_name in myList:
+        if badge.badge_name in badgeList:
             taken_badges.append(badge) 
 
+    total_badge_count = len(taken_badges)
+    total_visit = 0
+    for cafe in visit_cafes:
+        total_visit += cafe.visit_count
+    
     ctx={
+        'owner':owner,
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
+        'friends':friends,
+        # 'drink_list' :drink_list,
+        'drink_list' :total_drink,
+        'drink_list_dic' :total_drink_dic,
+        'total_visit':total_visit,
+        'total_badge_count':total_badge_count,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
 
+
+
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-from django.forms.models import model_to_dict
 @csrf_exempt
 def visit_register(request):
 
     if request.method == 'POST':
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
+        str_drinkname = req_post.__getitem__('beverage')
+
         v_cafe = VisitedCafe()
         v_cafe.user = request.user
         v_cafe.cafe = CafeList.objects.get(name=str_cafename)
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
+
+        drink = Drink()
+        drink.visited_cafe = v_cafe
+        drink.drinkname = str_drinkname
+        
+        jsonDec=json.decoder.JSONDecoder()
+        drinkList=jsonDec.decode(v_cafe.drink_list)
+        drinkList.append(str_drinkname)
+        v_cafe.drink_list=json.dumps(drinkList)
+        
         v_cafe.save()
+        drink.save()
 
     return redirect('enroll_new_cafe')
+
+
+@csrf_exempt
+def visited_register(request):
+
+    if request.method == 'POST':
+        req_post = request.POST
+        str_cafename = req_post.__getitem__('cafename')
+        str_drinkname = req_post.__getitem__('beverage')
+        print("drinkname:", str_drinkname)
+
+        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        v_cafe = VisitedCafe.objects.get(cafe=this_cafe)
+        
+        v_cafe.visit_count += 1
+
+        drink = Drink.objects.get(visited_cafe=v_cafe)#이전에 등록된 것 근데 이제 필요없을듯,,,
+
+        jsonDec=json.decoder.JSONDecoder()
+        drinkList=jsonDec.decode(v_cafe.drink_list)
+
+        drinkList.append(str_drinkname)
+        v_cafe.drink_list=json.dumps(drinkList)
+
+        v_cafe.save()
+        drink.save()
+
+    return redirect('enroll_visited_cafe')
+
+def addfriend(request, pk):
+    user=request.user
+    jsonDec=json.decoder.JSONDecoder()
+    friendsList=jsonDec.decode(user.friends)
+    target=User.objects.get(id=pk)
+    friendsList.append(target.nickname)
+
+    user.friends=json.dumps(friendsList)
+    user.save()
+
+    return redirect('mypage',pk)
