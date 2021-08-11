@@ -18,6 +18,7 @@ urlpatterns = [
     path('badge/list/', views.badge_list, name='badge_list'),
     path('badge/taken/', views.badge_taken, name='badge_taken'),
     path('myreview_list/', views.MyCafeReviewListView.as_view(), name='myreview_list'),
+    path('review_update/<int:pk>/', views.review_update, name='review_update'),
     path('badge/untaken/', views.badge_untaken, name='badge_untaken'),
     path('cafemap/', views.user_cafe_map, name='user_cafe_map'),
     #path('detail/', views.user_detail, name='user_detail'),

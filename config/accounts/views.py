@@ -8,11 +8,12 @@ from django.contrib import auth
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from .models import * #User
-from cafe.models import CafeList, Review
+from cafe.models import CafeList, Review, ReviewPhoto
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
 from . import forms
+from cafe.forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q
 
@@ -60,7 +61,6 @@ def logout(request):
 
 def main(request):
     return render(request, 'accounts/main.html')
-
 
 def home(request):
     #return render(request, 'accounts/home.html')
@@ -323,9 +323,7 @@ class MyCafeReviewListView(ListView):
     #변수 이름을 바꿈
     context_object_name = 'my_all_review'
 
-# def myreview_list(request):
-#     my_all_review = Review.objects.filter(username=request.user)
-
+    # paginate
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
@@ -352,9 +350,32 @@ class MyCafeReviewListView(ListView):
 
         return context
 
-    # ctx = {'my_all_review': my_all_review, }
-    # return render(request, 'accounts/myreview_list.html', context=ctx)
+def review_update(request, pk):
+    myreview = get_object_or_404(Review, id=pk)
+    
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=myreview)
+        if form.is_valid():
+            myreview = form.save(commit=False)
+            myreview.username = request.user
+            myreview.cafe = CafeList.objects.get(pk=pk)
+            myreview = form.save()
 
+        for img in request.FILES.getlist('imgs'):
+            photo = ReviewPhoto()
+            photo.review = myreview
+            photo.review_cafe = myreview.cafe
+            photo.image = img
+            photo.save()
+        
+        cafe = CafeList.objects.get(pk=myreview.cafe.id)
+        return redirect('cafe:review_list', cafe.id)
+    else:
+        form = ReviewForm(instance=myreview)
+        cafe_name = CafeList.objects.get(pk=pk)
+        reviewer = request.user
+        ctx = {'form': form, 'cafe_name': cafe_name, 'reviewer': reviewer}
+        return render(request, 'cafe/review_form.html', ctx)
 
 from django.views.decorators.csrf import csrf_exempt
 import json
