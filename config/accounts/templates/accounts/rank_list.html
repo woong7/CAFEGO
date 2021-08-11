@@ -5,9 +5,9 @@
 
     {% for user in users %}
         {% if forloop.counter == 1 %}
-            <p style="font-size: 25px; color: #FF0000; font-weight: bold">{{ user.nickname}} 님 !  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
+            <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
         {% else %}
-            <p style="font-size: 20px; font-weight: bold">{{ user.nickname}} 님 !  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
+            <p style="font-size: 20px; font-weight: bold">{{forloop.counter}}등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
         {% endif %}
     {% endfor %}
 

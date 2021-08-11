@@ -112,6 +112,7 @@ def rank_detail(request):
     return render(request, 'accounts/rank_detail.html')
 
 def rank_list(request):
+    ##총 방문 랭킹
     users=User.objects.all()
     for visit_user in users:
         visit_user.total_visit=0
@@ -123,6 +124,7 @@ def rank_list(request):
     ctx={
         'users':users
     }
+
     return render(request, 'accounts/rank_list.html', context=ctx)
 
 @login_required
@@ -254,17 +256,17 @@ def mypage(request, pk):
     total_drink_dic = {}
 
     for v_cafe in visit_cafes:
-        
         #내가 마신 음료들
         my_drinks = jsonDec.decode(v_cafe.drink_list) #visit_cafes가 여러개인데 가능한가??
         
         drink_list = []
-
         for drink in my_drinks:#각 음료들
             #if drink.drinkname not in my_drink:#내가 마신 음료에 없다면
             drink_list.append(drink)
+
         total_drink.append(drink_list)# 각각에 모든 음료 데이터들이 들어감,,,
         total_drink_dic[v_cafe] = drink_list
+
     owner=User.objects.get(id=pk)
     print("vcafe:", visit_cafes)
     
@@ -314,7 +316,6 @@ def mypage(request, pk):
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
-
 
 class MyCafeReviewListView(ListView):
     model = Review

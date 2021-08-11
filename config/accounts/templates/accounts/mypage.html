@@ -30,7 +30,7 @@
     <br>
 
     {% for cafe, drinks in drink_list_dic.items %} 
-        <span style="font-size: 20px; font-weight: bold">카페명 : {{cafe}}</span>
+        <span style="font-size: 20px; font-weight: bold">카페명 : <a href="">{{cafe}}</a></span>
         <p> 방문 횟수: {{cafe.visit_count}}</p>
         <span> 마신음료 : </span>
         {% for drink in drinks %}
@@ -49,7 +49,5 @@
         </div>
     {% endfor %}
     </div>
-
-
 
 {% endblock %}

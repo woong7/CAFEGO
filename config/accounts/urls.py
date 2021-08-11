@@ -17,13 +17,13 @@ urlpatterns = [
 
     path('badge/list/', views.badge_list, name='badge_list'),
     path('badge/taken/', views.badge_taken, name='badge_taken'),
+    path('badge/untaken/', views.badge_untaken, name='badge_untaken'),
     path('myreview_list/', views.MyCafeReviewListView.as_view(), name='myreview_list'),
     path('review_update/<int:pk>/', views.review_update, name='review_update'),
-    path('badge/untaken/', views.badge_untaken, name='badge_untaken'),
+    path('rank/list/', views.rank_list, name='rank_list'),
+    path('rank/detail/', views.rank_detail, name='rank_detail'),
     path('cafemap/', views.user_cafe_map, name='user_cafe_map'),
     #path('detail/', views.user_detail, name='user_detail'),
-    path('rank/detail/', views.rank_detail, name='rank_detail'),
-    path('rank/list/', views.rank_list, name='rank_list'),
 
     path('enroll_home/', views.enroll_home, name="enroll_home"),
     path('visit_register/', views.visit_register, name="visit_register"),
