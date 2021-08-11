@@ -130,30 +130,7 @@
     // 마커를 생성하고 지도위에 표시하는 함수
     function addMarker(markers, place) {
         // 마커 아이콘 크기 조정
-        // 별점에 따라 크기 조정
-        var markerIconSize = place.fields.cafe_stars;
-        switch(markerIconSize) {
-            case 0:
-                var imageSize = new kakao.maps.Size(16, 16); // 마커이미지의 크기입니다
-                break;
-            case 1:
-                var imageSize = new kakao.maps.Size(20, 20); // 마커이미지의 크기입니다
-                break;
-            case 2:
-                var imageSize = new kakao.maps.Size(24, 24); // 마커이미지의 크기입니다
-                break;
-            case 3:
-                var imageSize = new kakao.maps.Size(28, 28); // 마커이미지의 크기입니다
-                break;
-            case 4:
-                var imageSize = new kakao.maps.Size(32, 32); // 마커이미지의 크기입니다
-                break;
-            case 5:
-                var imageSize = new kakao.maps.Size(36, 36); // 마커이미지의 크기입니다
-                break;
-            default:
-                alert('파악 불가');
-        }
+        var imageSize = new kakao.maps.Size(16, 16);
 
         // 마커 생성
         var marker = new kakao.maps.Marker({

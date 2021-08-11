@@ -1,4 +1,5 @@
 from django import views
+from django.core import serializers
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
@@ -102,8 +103,27 @@ def badge_untaken(request):
     ctx={'taken_badges':taken_badges, 'user':user,}
     return render(request, 'accounts/badge_untaken.html', context=ctx)
 
+import math
 def user_cafe_map(request):
-    return render(request, 'accounts/user_cafe_map.html')
+    visited_cafes = VisitedCafe.objects.all()
+    visited_cafe_list = serializers.serialize('json', visited_cafes)
+
+    main_cafe = None
+    if len(visited_cafes) >= 0:
+        main_cafe = visited_cafes[0]
+        for i in range(1, len(visited_cafes)):
+            if visited_cafes[i-1].visit_count < visited_cafes[i].visit_count:
+                main_cafe = visited_cafes[i]
+    
+    cafes = CafeList.objects.all().order_by('location_x')
+    cafe_list = serializers.serialize('json', cafes)
+
+    ctx = {
+        'data': visited_cafe_list,
+        'main_cafe': main_cafe.pk,
+        'cafe_list': cafe_list
+    }
+    return render(request, 'accounts/user_cafe_map.html', ctx)
 
 def user_detail(request):
     return render(request, 'accounts/detail.html')
