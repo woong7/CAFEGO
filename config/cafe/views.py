@@ -20,6 +20,7 @@ def review_list(request, pk):
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
 
     #유저가 이 카페에 방문했었는지 체크
+    #TODO 아직 만지는 중
     if this_cafe in VisitedCafe.objects.all():
         visited_this_cafe = VisitedCafe.objects.get(user=request.user, cafe=this_cafe)
         visit_this_count = visited_this_cafe.visit_count
@@ -52,14 +53,10 @@ def review_create(request, pk):
         #사진 제외한 review 요소들 저장
         form = ReviewForm(request.POST)
         this_cafe = CafeList.objects.get(pk=pk) 
-        # visited_this_cafe = VisitedCafe.objects.get(cafe=this_cafe) #<<QuerySet [<VisitedCafe: 라떼는말이야 공덕점 yr 1>]>
         if form.is_valid():
             myreview = form.save(commit=False)
             myreview.username = request.user
             myreview.cafe = CafeList.objects.get(pk=pk)
-            # #리뷰 저장하면 유저 총 방문 늘리기
-            # request.user.total_visit += 1
-            # request.user.save()
             #리뷰 저장하면 유저 해당 카페 방문 늘리기
             #filter는 여러 객체, get은 하나의 객체니까 각 객체의 정보를 얻으려면 get 써야한다.
             # visited_this_cafe.visit_count += 1 
