@@ -14,12 +14,6 @@
     </div>
 
     <h4>획득한 배지</h3><!--if문 쓰기-->
-    <h4>획득한 배지 개수: {{ total_badge_count }}개 </h4>
-    <br>
-    <h4>작성한 리뷰 수 : {{all_review_count}}개 </h4>
-    <h4><a href="{% url 'myreview_list' %}">작성한 리뷰 보러가기 </a></h4>
-    <br>
-
     <div>
         {% for badge in taken_badges %}
             <div>
@@ -28,6 +22,13 @@
             </div>
         {% endfor %}
     </div>
+    <h4>획득한 배지 개수: {{ total_badge_count }}개 </h4>
+    <a href="{% url 'badge_list' owner.pk %}">배지 리스트 보기</a>
+    <br>
+    <h4>작성한 리뷰 수 : {{all_review_count}}개 </h4>
+    <h4><a href="{% url 'myreview_list' %}">작성한 리뷰 보러가기 </a></h4>
+    <br>
+
 
     <h4>총 방문 카페 수 : {{visit_cafes.count }}개</h4>
     <h4>총 카페 방문 횟수 : {{ total_visit }}회</h4>
@@ -44,18 +45,20 @@
     {% endfor %}
 
     <div>
-    <h5>{{owner.nickname}}님의 친구 목록</h5>
-    {% for friend in friends %}
-        <div>
-            <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
-            => <a href="{% url 'mypage' friend.pk%}">{{friend.nickname}}님의 마이페이지로 이동</a>
-            <br/><br/><br/>
-        </div>
-    {% endfor %}
+        <a href="{% url 'user_cafe_map' %}">나의 카페 지도</a>
+    </div>
 
+    <div>
+        <h5>{{owner.nickname}}님의 친구 목록</h5>
+        {% for friend in friends %}
+            <div>
+                <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
+                => <a href="{% url 'mypage' friend.pk%}">{{friend.nickname}}님의 마이페이지로 이동</a>
+                <br/><br/><br/>
+            </div>
+        {% endfor %}
+    </div>
     {% if user.id == owner.id %}
-        </div>
-
         <a href="{% url 'friend_search' %}">유저 검색</a>
 
         <br/><br/><br/>

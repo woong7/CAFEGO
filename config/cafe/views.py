@@ -11,6 +11,8 @@ import csv
 import pandas as pd
 from cafe.models import CafeList
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.http.response import JsonResponse
 
 # Create your views here.
 def review_list(request, pk):
@@ -39,10 +41,32 @@ def review_list(request, pk):
         this_cafe.cafe_stars = cafe_stars_avg
         this_cafe.save()
     
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={
+        'this_cafe': this_cafe,
+        'each_reviews': each_reviews,
+        'review_photo': review_photo,
     } 
 
     return render(request, 'cafe/review_list.html', ctx)
+
+@csrf_exempt
+def comment_write(request):
+    req = json.loads(request.body)
+    review_id = req['review_id']
+    content = req['content']
+    review = Review.objects.get(id=review_id)
+    username = review.username
+    comment = Comment.objects.create(post=review_id, username=username, content=content)
+    comment.save()
+    return JsonResponse({'review_id':review_id, 'content':content, 'comment':comment})
+
+@csrf_exempt
+def comment_delete(request):
+    req = json.loads(request.body)
+    comment_id = req['comment_id']
+    comment = Comment.objects.get(id=comment_id)
+    comment.delete()
+    return JsonResponse({'comment_id':comment_id})
 
 
 def review_create(request, pk):
@@ -99,7 +123,7 @@ class CafeListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+        cafe_list = CafeList.objects.order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
         if search_keyword:
             if len(search_keyword) > 1:
                 if search_type == 'name':

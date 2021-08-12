@@ -16,7 +16,9 @@ from django.contrib.auth import logout as django_logout
 from . import forms
 from cafe.forms import ReviewForm
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Count
+from datetime import datetime, timedelta
+from dateutil import relativedelta
 
 # Create your views here.
 
@@ -67,9 +69,16 @@ def home(request):
     #return render(request, 'accounts/home.html')
     return render(request,'accounts/home.html')
 
-def badge_list(request):
+def badge_list(request, pk):
+    user=User.objects.get(id=pk)
     badges=Badge.objects.all()
-    ctx={'badges':badges}
+    jsonDec=json.decoder.JSONDecoder()
+    myList=jsonDec.decode(user.badge_taken)
+    taken_badges=[]
+    for badge in badges:
+        if badge.badge_name in myList:
+            taken_badges.append(badge)   
+    ctx={'badges':badges, 'taken_badges':taken_badges, 'owner':user, 'taken_num':len(taken_badges), 'total_num':len(badges)-2,}
 
     return render(request, 'accounts/badge_list.html', context=ctx)
 
@@ -132,17 +141,40 @@ def rank_detail(request):
     return render(request, 'accounts/rank_detail.html')
 
 def rank_list(request):
-    ##총 방문 랭킹
-    users=User.objects.all()
-    for visit_user in users:
-        visit_user.total_visit=0
-        visit_cafes=VisitedCafe.objects.filter(user=visit_user)
-        for cafe in visit_cafes:
-            visit_user.total_visit+=cafe.visit_count
-        
-    users.order_by('-total_visit')
+    now = datetime.today() #오늘
+    this_month_first = datetime(now.year, now.month, 1) #오늘을 기준으로 이번달 첫 시간
+    next_mnoth_first = this_month_first + relativedelta.relativedelta(months=1)
+    this_month_last = next_mnoth_first - timedelta(seconds=1) #오늘을 기준으로 이번달 막 시간
+
+    # print(this_month_first, this_month_last)
+    
+    ####################  A_총 방문 랭킹  ####################
+    A_users=User.objects.all().order_by('-total_visit')
+    
+
+    ####################  B_한 달 방문 랭킹  ####################
+    B_users=User.objects.all().order_by('-total_visit')
+
+
+
+    ####################  C_리뷰 랭킹  ####################
+    #annotate를 통해 review_count라는 새로운 필드를 만든다.(모델 속의 필드가 아닌 다른 정렬기준을 새로 만드는 것!)
+    #review_count는 Count함수를 이용한 계산 필드
+    #review_person은 Review 모델에서 User를 참조하는 username의 related_name이다. 
+    #그니까 review_person을 통해 해당 유저의 리뷰를 세고 그 숫자로 정렬
+    C_each_users_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('-review_count')
+    
+    for i in C_each_users_review:
+        user_review = i.review_person.all() #<QuerySet [<Review: 1st 3stars>, <Review: 2nd 2stars>, <Review: 3rd 5stars>]>
+        C_user_review_count = len(user_review)#리뷰 개수 나옴
+
+
     ctx={
-        'users':users
+        ##### A_총 방문 랭킹 #####
+        'A_users':A_users,
+        ##### C_리뷰 랭킹 #####
+        'C_each_users_review': C_each_users_review,
+
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
@@ -223,9 +255,11 @@ class EnrollVisitedCafeListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
-        #visited_cafe_list에 name, address가 없음!ㅠㅠ
-
+        visited_cafe_list = VisitedCafe.objects.filter(user = self.request.user).order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+        
+        names_to_include = [o.cafe for o in visited_cafe_list] 
+        visited_cafe_list = CafeList.objects.filter(name__in=names_to_include)
+        
         if search_keyword:
             if len(search_keyword) > 1:
                 if search_type == 'name':
@@ -267,7 +301,7 @@ class EnrollVisitedCafeListView(ListView):
         return context
 
 def mypage(request, pk):
-
+    #내가 방문한 카페들
     visit_cafes=VisitedCafe.objects.filter(user=request.user)
     user=request.user
 
@@ -313,7 +347,32 @@ def mypage(request, pk):
         if user.nickname in friendsList:
             friends.append(user)
         
-    myList=jsonDec.decode(user.badge_taken)
+
+    my_all_review = Review.objects.filter(username=request.user)
+    all_review_count = len(my_all_review)
+
+        
+    users=users.order_by('-total_visit')
+    
+    badgeList=[]
+
+    #배지 획득조건
+    if owner.total_visit>=1:
+        badgeList.append("카페홀릭")
+    if all_review_count>=1:
+        badgeList.append("파워블로거")
+    if len(friends)>=1:
+        badgeList.append("사교왕")
+    if len(visit_cafes)>=1:
+        badgeList.append("개척자")
+    
+    if len(users)>=1 and users[0]==owner : 
+        badgeList.append("랭킹 1위")
+    elif len(users)>=2 and users[1]==owner:
+        badgeList.append("랭킹 2위")
+    elif len(users)>=3 and users[2]==owner:
+        badgeList.append("랭킹 3위")
+
     badges=Badge.objects.all()
     taken_badges=[]
     for badge in badges:
@@ -321,19 +380,10 @@ def mypage(request, pk):
             taken_badges.append(badge) 
 
     total_badge_count = len(taken_badges)
-    
-    total_visit = 0
-    for cafe in visit_cafes:
-        total_visit += cafe.visit_count
-
-    my_all_review = Review.objects.filter(username=request.user)
-    all_review_count = len(my_all_review)
-    
 
     #user에 총 카페 방문횟수 저장
-    this_user = User.objects.get(username=request.user)
-    this_user.total_visit = total_visit
-    this_user.save()
+    owner.badge_taken=json.dumps(badgeList)
+    owner.save()
     #print("!!!!", this_user.total_visit)
 
     ctx={
@@ -343,7 +393,7 @@ def mypage(request, pk):
         'friends':friends,
         'drink_list' :total_drink,
         'drink_list_dic' :total_drink_dic,
-        'total_visit':total_visit,
+        'total_visit':owner.total_visit,
         'total_badge_count':total_badge_count,
         'names_to_exclude':names_to_exclude,
         'all_review_count': all_review_count,
