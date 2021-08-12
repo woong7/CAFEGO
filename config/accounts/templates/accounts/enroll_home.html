@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>카페 등록 홈 페이지입니다.</h1>
-<p>닉네임 {{user.nickname}} 님 반가워요!</p>
-<p>방문했던 카페를 등록해보아요!</p>
 
-<a href="{% url 'enroll_new_cafe' %}">새로운 카페 등록하기</a>
-<a href="{% url 'enroll_visited_cafe' %}">방문한 카페 등록하기</a>
+<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 10rem;">
+    <p id="header-logo-image"></p>
+    <h1></h1>
+    <p class="font-weight-bold">{{user.username}} 님 반가워요!</p> <!--일단 ID로,,  fontweight이 안 맞음;;-->
+    <p>카페를 추가하세요!</p>
+    <button class="btn btn-outline-primary" onClick="location.href='{% url 'enroll_new_cafe' %}'">새로 방문한 카페 추가하기</button>
+    <button class="btn btn-outline-primary" onClick="location.href='{% url 'enroll_visited_cafe' %}'">이전에 방문했던 카페 추가하기</button>
+</div>
 
 {% endblock %}
