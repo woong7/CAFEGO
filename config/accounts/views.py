@@ -16,7 +16,9 @@ from django.contrib.auth import logout as django_logout
 from . import forms
 from cafe.forms import ReviewForm
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Count
+from datetime import datetime, timedelta
+from dateutil import relativedelta
 
 # Create your views here.
 
@@ -132,17 +134,49 @@ def rank_detail(request):
     return render(request, 'accounts/rank_detail.html')
 
 def rank_list(request):
-    ##총 방문 랭킹
-    users=User.objects.all()
-    for visit_user in users:
-        visit_user.total_visit=0
-        visit_cafes=VisitedCafe.objects.filter(user=visit_user)
-        for cafe in visit_cafes:
-            visit_user.total_visit+=cafe.visit_count
-        
-    users.order_by('-total_visit')
+    ####################  A_총 방문 랭킹  ####################
+    A_users=User.objects.all().order_by('-total_visit')
+    # for visit_user in A_users:
+    #     #각 유저들 총 방문 0으로 만들기
+    #     visit_user.total_visit=0
+    #     #각 유저가 방문한 카페들 가져오기
+    #     visit_cafes=VisitedCafe.objects.filter(user=visit_user)
+    #     for cafe in visit_cafes:
+    #         #각 유저의 방문수에 첫 방문한 카페의 총 방문 수를 더한다. 
+    #         visit_user.total_visit += cafe.visit_count
+    #A_users.order_by('-total_visit')
+    
+
+    ####################  B_한 달 방문 랭킹  ####################
+    B_users=User.objects.all().order_by('-total_visit')
+
+    now = datetime.today() #오늘
+    this_month_first = datetime(now.year, now.month, 1) #오늘을 기준으로 이번달 첫 시간
+    next_mnoth_first = this_month_first + relativedelta.relativedelta(months=1)
+    this_month_last = next_mnoth_first - timedelta(seconds=1) #오늘을 기준으로 이번달 막 시간
+
+    print(this_month_first, this_month_last)
+
+
+
+    ####################  C_리뷰 랭킹  ####################
+    #annotate를 통해 review_count라는 새로운 필드를 만든다.(모델 속의 필드가 아닌 다른 정렬기준을 새로 만드는 것!)
+    #review_count는 Count함수를 이용한 계산 필드
+    #review_person은 Review 모델에서 User를 참조하는 username의 related_name이다. 
+    #그니까 review_person을 통해 해당 유저의 리뷰를 세고 그 숫자로 정렬
+    C_each_users_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('-review_count')
+    
+    for i in C_each_users_review:
+        user_review = i.review_person.all() #<QuerySet [<Review: 1st 3stars>, <Review: 2nd 2stars>, <Review: 3rd 5stars>]>
+        C_user_review_count = len(user_review)#리뷰 개수 나옴
+
+
     ctx={
-        'users':users
+        ##### A_총 방문 랭킹 #####
+        'A_users':A_users,
+        ##### C_리뷰 랭킹 #####
+        'C_each_users_review': C_each_users_review,
+
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
@@ -266,7 +300,7 @@ class EnrollVisitedCafeListView(ListView):
         return context
 
 def mypage(request, pk):
-
+    #내가 방문한 카페들
     visit_cafes=VisitedCafe.objects.filter(user=request.user)
     user=request.user
 
