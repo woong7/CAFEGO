@@ -45,18 +45,20 @@
     {% endfor %}
 
     <div>
-    <h5>{{owner.nickname}}님의 친구 목록</h5>
-    {% for friend in friends %}
-        <div>
-            <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
-            => <a href="{% url 'mypage' friend.pk%}">{{friend.nickname}}님의 마이페이지로 이동</a>
-            <br/><br/><br/>
-        </div>
-    {% endfor %}
+        <a href="{% url 'user_cafe_map' %}">나의 카페 지도</a>
+    </div>
 
+    <div>
+        <h5>{{owner.nickname}}님의 친구 목록</h5>
+        {% for friend in friends %}
+            <div>
+                <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
+                => <a href="{% url 'mypage' friend.pk%}">{{friend.nickname}}님의 마이페이지로 이동</a>
+                <br/><br/><br/>
+            </div>
+        {% endfor %}
+    </div>
     {% if user.id == owner.id %}
-        </div>
-
         <a href="{% url 'friend_search' %}">유저 검색</a>
 
         <br/><br/><br/>
