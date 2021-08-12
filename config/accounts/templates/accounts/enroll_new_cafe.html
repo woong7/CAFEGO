@@ -4,137 +4,139 @@
 {% block title %}
     새로운 카페 등록
 {% endblock %}
+
 {% block content %}
-
-
-<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 10rem;">
+<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 5rem;">
     <h4>새로운 카페 등록하기</h4>
-    <p class="font-weight-bold">{{user.username}} 님 반가워요!</p> <!--일단 ID로,,  fontweight이 안 맞음;;-->
     <p>방문한 카페를 검색해보세요!</p>
-    <button class="btn btn-outline-primary" onClick="location.href='{% url 'enroll_new_cafe' %}'">새로 방문한 카페 추가하기</button>
-    <button class="btn btn-outline-primary" onClick="location.href='{% url 'enroll_visited_cafe' %}'">이전에 방문했던 카페 추가하기</button>
-</div>
+    <!-- 카페 검색창 -->
+    <form action="" method="GET">
+        <select name="type">
+            <option value="name">카페</option>
+            <option value="address">주소</option>
+            <option value="all">카페+주소</option>
+        </select>
+        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
+        <button type="submit" id="search_btn">검색</button><br/>
+    </form>
 
-{% if q %}
-<h5>'{{ q }}' 검색 결과입니다.</h5><br/>
-{% endif %}
-
-<!-- 카페 검색창 -->
-<form action="" method="GET">
-    <select name="type">
-        <option value="name">카페</option>
-        <option value="address">주소</option>
-        <option value="all">카페+주소</option>
-    </select>
-    <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
-    <button type="submit" id="search_btn">search</button><br/>
-</form>
-
-<!-- 카페 리스트  -->
-<table>
-    <thead>
-        <tr>
-            <th> </th>
-            <th>카페명</th>
-            <th>위치</th>
-            <th>방문여부</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% if new_cafe_list %}
-            검색 결과: {{page_obj.paginator.count}}개
-            {% for cafe in new_cafe_list %}
-                <tr>
-                    <td>{{ cafe.id }}</td>
-                    <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
-                    <td>{{ cafe.address }}</td> <!-- | truncatechars:10-->
-                    <!-- checkbox trigger modal -->
-                    <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="visit"></td>
-                    <div class="modal fade" id="exampleModal_{{ cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        
-                        <div class="modal-dialog">
-                            <form action="{% url 'visit_register' %}" method='post'>
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel" name="cafename2">
-                                            <input type="text" name="cafename" value="{{ cafe.name }}">
-                                            <input type="text" name="cafeid" value="{{ cafe.id }}">
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                
-                                    <div class="modal-body">
-                                        마신 음료를 체크해주세요!<br>
-                                        아메리카노 <input type="radio" class="btn btn-primary" name="beverage" value="아메리카노"><br>
-                                        바닐라라떼 <input type="radio" class="btn btn-primary" name="beverage" value="바닐라라떼"><br>
-                                        카페라떼 <input type="radio" class="btn btn-primary" name="beverage" value="카페라떼"><br>
-                                        카라멜마끼야또 <input type="radio" class="btn btn-primary" name="beverage" value="카라멜마끼야또"><br>
-                                        초코라떼 <input type="radio" class="btn btn-primary" name="beverage" value="초코라떼"><br>
-                                        녹차라떼 <input type="radio" class="btn btn-primary" name="beverage" value="녹차라떼"><br>
-                                        에이드 <input type="radio" class="btn btn-primary" name="beverage" value="에이드"><br>
-                                        허브차 <input type="radio" class="btn btn-primary" name="beverage" value="허브차"><br>
-                                        기타 <input type="text" name="etc" value="">
-                                    </div>
-                                    
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <span value="{{cafe.id}}"></span>
-                                        <button type="submit" id="submit_btn_{{cafe.id}}" class="btn btn-primary">등록하기</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </tr>
-            {% endfor %}
-            <!-- Modal -->
-        {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때 카페 미등록-->
+    <!-- 카페 리스트  -->
+    <table>
+        <thead>
             <tr>
-                <td>등록된 카페가 없습니다.</td>
+                <th> </th>
+                <th>카페명</th>
+                <th>위치</th>
+                <th>방문여부</th>
             </tr>
-        {% endif %}            
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% if q %}
+            <p>'{{ q }}' 검색 결과입니다.</p>
+            <!-- {% endif %} -->
+            {% if new_cafe_list %}
+                검색 결과: {{page_obj.paginator.count}}개
+                {% for cafe in new_cafe_list %}
+                    <tr>
+                        <td>{{ cafe.id }}</td>
+                        <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
+                        <td>{{ cafe.address }}</td> <!-- | truncatechars:10-->
+                        <!-- checkbox trigger modal -->
+                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="visit"></td>
+                        <div class="modal fade" id="exampleModal_{{ cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            
+                            <div class="modal-dialog">
+                                <form action="{% url 'visit_register' %}" method='post'>
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel" name="cafename2">
+                                                <input type="text" name="cafename" value="{{ cafe.name }}">
+                                                <input type="text" name="cafeid" value="{{ cafe.id }}">
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                    
+                                        <div class="modal-body" style="text-align: left;">
+                                            마신 음료를 체크해주세요!<br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="아메리카노"> 아메리카노 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="바닐라라떼"> 바닐라라떼 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="카페라떼"> 카페라떼 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="카라멜마끼야또"> 카라멜마끼야또 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="초코라떼"> 초코라떼 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="녹차라떼"> 녹차라떼 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="에이드"> 에이드 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="허브차"> 허브차 <br>
+                                            기타 <input type="text" name="etc" value="">
+                                        </div>
+                                        
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" id="submit_btn_{{cafe.id}}" class="btn btn-primary">등록하기</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </tr>
+                {% endfor %}
+                <!-- Modal -->
+            {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때 카페 미등록-->
+                <tr>
+                    <td>등록된 카페가 없습니다.</td>
+                </tr>
+            {% endif %}            
+        </tbody>
+    </table>
 
-{% if messages %}
+    {% if messages %}
     <div>
         {% for message in messages %}
             {{ message.tags }}! {{ message.message }}
         {% endfor %}
     </div>
-{% endif %}
-
-<!-- 페이징 처리 -->
-{% if is_paginated %}
-<ul class="pagination">
-    {% if page_obj.has_previous %}
-    <li class="page-item">
-        <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
-    </li>
-    {% else %}
-    <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1">이전</a>
-    </li>
     {% endif %}
 
-    {% for page in page_range %}
-    <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
-        <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
-    </li>
-    {% endfor %}
+    <br>
+    <!-- 페이징 처리 -->
+    {% if is_paginated %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">이전</a>
+        </li>
+        {% endif %}
 
-    {% if page_obj.has_next %}
-    <li class="page-item">
-        <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
-    </li>
-    {% else %}
-    <li class="page-item disabled">
-        <a class="page-link" href="#">다음</a>
-    </li>
+        {% for page in page_range %}
+        <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">다음</a>
+        </li>
+        {% endif %}
+        <span>{{page_obj}}</span>
+    </ul>
     {% endif %}
-    <span>{{page_obj}}</span>
-</ul>
-{% endif %}
+
+
+</div>
+
+
+
+
+
+
 
 <p>지도 사진</p>
 <p>지도 위에서 태그 표시, 클릭할 수 있게.</p>

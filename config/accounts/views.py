@@ -215,7 +215,7 @@ class EnrollNewCafeListView(ListView):
 
 class EnrollVisitedCafeListView(ListView):
     model = VisitedCafe
-    paginate_by = 5
+    paginate_by = 15
     template_name = 'accounts/enroll_visited_cafe.html'
     context_object_name = 'visited_cafe_list'
 
@@ -224,6 +224,7 @@ class EnrollVisitedCafeListView(ListView):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
         visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+        #visited_cafe_list에 name, address가 없음!ㅠㅠ
 
         if search_keyword:
             if len(search_keyword) > 1:
