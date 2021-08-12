@@ -14,10 +14,11 @@
     <div class="review_list">
         <div>
             <div>정렬</div>
-            <button>최신 순</button> 
+            <button type="button" onclick="location.href='{% url 'cafe:sort_latest' this_cafe.id %}'">최신 순</button>
+            
             <button>방문 순</button>
             <button>총 방문 순</button>
-            <button>리뷰 순</button>           
+            <button>리뷰 순</button>
         </div>
 
         <article class="each_review">
@@ -35,7 +36,7 @@
                 {% elif reviews.review_stars == '5.0' %}
                     <span>⭐⭐⭐⭐⭐</span>
                 {% endif %}
-                <div>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11뻘짓-->
+                <div>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11삽질노트-->
 
                 </div>
 

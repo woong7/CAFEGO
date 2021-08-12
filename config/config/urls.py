@@ -21,6 +21,6 @@ urlpatterns = [
     path('cafe/', include('cafe.urls')),
 
     path('', include('accounts.urls')),
-    path('account/', include('allauth.urls')), #accounts.urls
+    path('account/', include('allauth.urls')), #account.urls
     path('enroll/', include('enroll.urls')),
 ]

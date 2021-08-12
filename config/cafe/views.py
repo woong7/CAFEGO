@@ -10,6 +10,7 @@ import json
 import csv
 import pandas as pd
 from cafe.models import CafeList
+from django.urls import reverse
 
 # Create your views here.
 def review_list(request, pk):
@@ -23,16 +24,6 @@ def review_list(request, pk):
     #유저가 이 카페에 방문했었는지 체크
     #TODO 아직 만지는 중
     # try:
-
-    for review in each_reviews:
-        
-        print("리뷰 쓴 유저이름", review.username)
-        print("review visit_cafe ", review.visit_cafe)
-        print("review visit_cafe user", review.visit_cafe.user)
-        # for user in review.visit_cafe.user:
-        #     print("user:", user)
-        print("review cafe", review.cafe)
-
 
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
@@ -167,3 +158,12 @@ def init_data(request):
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
     return redirect('home')
+
+def sort_latest(request, pk):
+    print("here!")
+    this_cafe = CafeList.objects.get(pk=pk) 
+    each_reviews = Review.objects.filter(cafe=this_cafe).order_by('created_at')
+    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    } 
+    return render(request, 'cafe/review_list.html', ctx)
