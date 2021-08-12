@@ -89,6 +89,8 @@ class VisitedCafe(models.Model):
     visit_count_lastmonth = models.IntegerField(default=0) #지난 한달간 방문한 횟수 센다, 매월 초기화해준다.
 
     drink_list = models.TextField(null=True, default=json.dumps([]))
+    
+    
     def __str__(self):
         template = '{0.cafe} {0.user} {0.visit_count}'
         return template.format(self)
@@ -100,6 +102,7 @@ class VisitedCafe(models.Model):
 class Badge(models.Model):
     badge_name=models.TextField(max_length=150, unique=True)
     badge_image=models.ImageField()
+    badge_get=models.TextField(default=0)
     
 
 #방문한 카페에서 먹은 음료 정보 -> 나중에 objects.all로 가져오기
