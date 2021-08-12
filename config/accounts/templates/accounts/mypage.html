@@ -14,12 +14,6 @@
     </div>
 
     <h4>획득한 배지</h3><!--if문 쓰기-->
-    <h4>획득한 배지 개수: {{ total_badge_count }}개 </h4>
-    <br>
-    <h4>작성한 리뷰 수 : {{all_review_count}}개 </h4>
-    <h4><a href="{% url 'myreview_list' %}">작성한 리뷰 보러가기 </a></h4>
-    <br>
-
     <div>
         {% for badge in taken_badges %}
             <div>
@@ -28,6 +22,13 @@
             </div>
         {% endfor %}
     </div>
+    <h4>획득한 배지 개수: {{ total_badge_count }}개 </h4>
+    <a href="{% url 'badge_list' owner.pk %}">배지 리스트 보기</a>
+    <br>
+    <h4>작성한 리뷰 수 : {{all_review_count}}개 </h4>
+    <h4><a href="{% url 'myreview_list' %}">작성한 리뷰 보러가기 </a></h4>
+    <br>
+
 
     <h4>총 방문 카페 수 : {{visit_cafes.count }}개</h4>
     <h4>총 카페 방문 횟수 : {{ total_visit }}회</h4>

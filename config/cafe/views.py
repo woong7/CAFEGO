@@ -84,6 +84,9 @@ def review_create(request, pk):
             myreview.visit_cafe = get_user_visit_cafe ####
 
             myreview = form.save()
+            user = User.objects.get(username=request.user)
+            user.total_review += 1
+            user.save()
 
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
         for img in request.FILES.getlist('imgs'):
@@ -120,7 +123,7 @@ class CafeListView(ListView):
     def get_queryset(self):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
-        cafe_list = CafeList.objects.order_by('-id')#나중에 ㄱㄴㄷ 순으로 바꿀?
+        cafe_list = CafeList.objects.order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
         if search_keyword:
             if len(search_keyword) > 1:
                 if search_type == 'name':
@@ -184,9 +187,33 @@ def init_data(request):
     return redirect('home')
 
 def sort_latest(request, pk):
-    print("here!")
     this_cafe = CafeList.objects.get(pk=pk) 
-    each_reviews = Review.objects.filter(cafe=this_cafe).order_by('created_at')
+    each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
+    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    } 
+    return render(request, 'cafe/review_list.html', ctx)
+
+#리뷰를 쓴 유저가 그 카페를 얼마나 방문했는지에 따라서. 내림차순으로.
+def sort_visit(request, pk):
+    this_cafe = CafeList.objects.get(pk=pk) 
+    each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-visit_cafe__visit_count', '-created_at') #해당카페의 리뷰들
+    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    } 
+    return render(request, 'cafe/review_list.html', ctx)
+
+def sort_total_visit(request, pk):
+    this_cafe = CafeList.objects.get(pk=pk) 
+    each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username__total_visit', '-created_at')
+    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    } 
+    return render(request, 'cafe/review_list.html', ctx)
+
+def sort_review(request, pk):
+    this_cafe = CafeList.objects.get(pk=pk) 
+    each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username__total_review', '-created_at')#이름 순으로 정렬
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
     } 
