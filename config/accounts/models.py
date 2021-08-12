@@ -52,12 +52,11 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     
     total_visit=models.IntegerField(default=0)
+    total_review=models.IntegerField(default=0)
 
     badge_taken=models.TextField(null=True, default=json.dumps([]))
     friends=models.TextField(null=True, default=json.dumps([]))
     
-    
-
     objects = UserManager()
 
     USERNAME_FIELD ='username'
@@ -84,6 +83,8 @@ class VisitedCafe(models.Model):
     visit_check = models.BooleanField(default=False)
 
     drink_list = models.TextField(null=True, default=json.dumps([]))
+    
+    
     def __str__(self):
         template = '{0.cafe} {0.user} {0.visit_count}'
         return template.format(self)

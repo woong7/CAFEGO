@@ -215,7 +215,7 @@ class EnrollNewCafeListView(ListView):
 
 class EnrollVisitedCafeListView(ListView):
     model = VisitedCafe
-    paginate_by = 5
+    paginate_by = 15
     template_name = 'accounts/enroll_visited_cafe.html'
     context_object_name = 'visited_cafe_list'
 

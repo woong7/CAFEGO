@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    {% block css %}{% endblock %}
     <title>CAFE GO! - {% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -27,14 +28,12 @@
                 <a href="{% url 'mypage' user.pk%}">마이페이지</a>
                 <a href="{% url 'logout' %}">로그아웃</a>
             </ul>
-            {{user.nickname}}님 안녕하세요!
+            {{user.username}}님 안녕하세요!
         {% else %}
             <a href="/account/login">로그인</a>
             <a href="/account/signup">회원가입</a>
         {% endif %}
     </nav>
-    <hr/>
-
     {% block content %}
     {% endblock %}
 </body>
