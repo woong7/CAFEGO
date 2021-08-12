@@ -57,15 +57,19 @@
                 <br/>
                 {{ reviews.created_at }}
 
-                {% comment %}    
-                <!-- {% for comment in review_comments %}
+                {% for comment in review_comments %}
                     {{ comment.username }}
                     {{ comment.content }}
-                {% endfor %} 
-                <input type="text" value="댓글 입력"><button>답글 달기</button>-->
-                {% endcomment %}
+                <!--{% endfor %}
+                    <input class="input-{{post.id}}" type="text" placeholder="댓글 달기..."/>
+                    <button class="btn btn-sm btn-primary" onclick="commentWrite('{{post.id}}');">게시</button>
+                -->
                 <hr/>
             {% endfor %}
         </article>
     </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+
+    </script>
 {% endblock %}
