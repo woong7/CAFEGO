@@ -134,28 +134,19 @@ def rank_detail(request):
     return render(request, 'accounts/rank_detail.html')
 
 def rank_list(request):
-    ####################  A_총 방문 랭킹  ####################
-    A_users=User.objects.all().order_by('-total_visit')
-    # for visit_user in A_users:
-    #     #각 유저들 총 방문 0으로 만들기
-    #     visit_user.total_visit=0
-    #     #각 유저가 방문한 카페들 가져오기
-    #     visit_cafes=VisitedCafe.objects.filter(user=visit_user)
-    #     for cafe in visit_cafes:
-    #         #각 유저의 방문수에 첫 방문한 카페의 총 방문 수를 더한다. 
-    #         visit_user.total_visit += cafe.visit_count
-    #A_users.order_by('-total_visit')
-    
-
-    ####################  B_한 달 방문 랭킹  ####################
-    B_users=User.objects.all().order_by('-total_visit')
-
     now = datetime.today() #오늘
     this_month_first = datetime(now.year, now.month, 1) #오늘을 기준으로 이번달 첫 시간
     next_mnoth_first = this_month_first + relativedelta.relativedelta(months=1)
     this_month_last = next_mnoth_first - timedelta(seconds=1) #오늘을 기준으로 이번달 막 시간
 
-    print(this_month_first, this_month_last)
+    # print(this_month_first, this_month_last)
+    
+    ####################  A_총 방문 랭킹  ####################
+    A_users=User.objects.all().order_by('-total_visit')
+    
+
+    ####################  B_한 달 방문 랭킹  ####################
+    B_users=User.objects.all().order_by('-total_visit')
 
 
 

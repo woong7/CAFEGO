@@ -6,6 +6,7 @@ from typing import Any, Collection, Optional, Set, Tuple, Type, TypeVar, Union
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db.models.deletion import CASCADE
 from accounts.choices import *
+from django.utils import timezone
 
 #user.username 원래 있는 이름
 class UserManager(BaseUserManager):
@@ -48,6 +49,7 @@ class User(AbstractBaseUser):
     town = models.CharField(max_length=20, choices=SEOUL_TOWN_CHOICES)
     agree_terms = models.BooleanField(default=False)
     agree_marketing = models.BooleanField(default=False)
+
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     
@@ -56,8 +58,6 @@ class User(AbstractBaseUser):
 
     badge_taken=models.TextField(null=True, default=json.dumps([]))
     friends=models.TextField(null=True, default=json.dumps([]))
-    
-    
 
     objects = UserManager()
 
@@ -83,6 +83,10 @@ class VisitedCafe(models.Model):
     cafe = models.ForeignKey('cafe.CafeList', on_delete=CASCADE)
     visit_count = models.PositiveIntegerField(default=0)
     visit_check = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True) #카페 등록 시간
+    updated_at = models.DateTimeField(auto_now=True) #갔던 카페 다시 등록 
+    visit_count_lastmonth = models.IntegerField(default=0) #지난 한달간 방문한 횟수 센다, 매월 초기화해준다.
 
     drink_list = models.TextField(null=True, default=json.dumps([]))
     def __str__(self):
