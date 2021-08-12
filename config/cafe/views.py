@@ -10,6 +10,7 @@ import json
 import csv
 import pandas as pd
 from cafe.models import CafeList
+from django.urls import reverse
 
 # Create your views here.
 def review_list(request, pk):
@@ -18,16 +19,11 @@ def review_list(request, pk):
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-
+    print("each_reviews:", each_reviews)
+    print("each_reviews user:", each_reviews.filter(username=request.user))
     #유저가 이 카페에 방문했었는지 체크
     #TODO 아직 만지는 중
-    if this_cafe in VisitedCafe.objects.all():
-        visited_this_cafe = VisitedCafe.objects.get(user=request.user, cafe=this_cafe)
-        visit_this_count = visited_this_cafe.visit_count
-        return visit_this_count
-    else: 
-        pass
-    
+    # try:
 
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
@@ -43,7 +39,8 @@ def review_list(request, pk):
         this_cafe.cafe_stars = cafe_stars_avg
         this_cafe.save()
     
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,} # 'visit_this_count': visit_this_count
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    } 
 
     return render(request, 'cafe/review_list.html', ctx)
 
@@ -57,10 +54,11 @@ def review_create(request, pk):
             myreview = form.save(commit=False)
             myreview.username = request.user
             myreview.cafe = CafeList.objects.get(pk=pk)
-            #리뷰 저장하면 유저 해당 카페 방문 늘리기
-            #filter는 여러 객체, get은 하나의 객체니까 각 객체의 정보를 얻으려면 get 써야한다.
-            # visited_this_cafe.visit_count += 1 
-            # visited_this_cafe.save()
+            visit_cafes = VisitedCafe.objects.filter(cafe=myreview.cafe)
+            get_user_visit_cafe = visit_cafes.get(user=request.user)
+
+            myreview.visit_cafe = get_user_visit_cafe ####
+
             myreview = form.save()
 
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
@@ -160,3 +158,12 @@ def init_data(request):
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
     return redirect('home')
+
+def sort_latest(request, pk):
+    print("here!")
+    this_cafe = CafeList.objects.get(pk=pk) 
+    each_reviews = Review.objects.filter(cafe=this_cafe).order_by('created_at')
+    review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    } 
+    return render(request, 'cafe/review_list.html', ctx)

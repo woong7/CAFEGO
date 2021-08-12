@@ -277,7 +277,7 @@ def mypage(request, pk):
 
     for v_cafe in visit_cafes:
         #내가 마신 음료들
-        my_drinks = jsonDec.decode(v_cafe.drink_list) #visit_cafes가 여러개인데 가능한가??
+        my_drinks = jsonDec.decode(v_cafe.drink_list)
         
         drink_list = []
         for drink in my_drinks:#각 음료들
@@ -320,6 +320,7 @@ def mypage(request, pk):
             taken_badges.append(badge) 
 
     total_badge_count = len(taken_badges)
+    
     total_visit = 0
     for cafe in visit_cafes:
         total_visit += cafe.visit_count
@@ -327,12 +328,18 @@ def mypage(request, pk):
     my_all_review = Review.objects.filter(username=request.user)
     all_review_count = len(my_all_review)
     
+
+    #user에 총 카페 방문횟수 저장
+    this_user = User.objects.get(username=request.user)
+    this_user.total_visit = total_visit
+    this_user.save()
+    #print("!!!!", this_user.total_visit)
+
     ctx={
         'owner':owner,
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
         'friends':friends,
-        # 'drink_list' :drink_list,
         'drink_list' :total_drink,
         'drink_list_dic' :total_drink_dic,
         'total_visit':total_visit,
@@ -416,9 +423,15 @@ def visit_register(request):
 
     if request.method == 'POST':
         req_post = request.POST
-        str_cafename = req_post.__getitem__('cafename')
-        str_drinkname = req_post.__getitem__('beverage')
+        #print("req_post:", req_post)
+        try:
+            str_cafename = req_post.__getitem__('cafename')
+            str_new_drinkname = req_post.__getitem__('etc')
+            str_drinkname = req_post.__getitem__('beverage')
 
+        except:
+            print("존재하지 않습니다!")
+        
         v_cafe = VisitedCafe()
         v_cafe.user = request.user
         v_cafe.cafe = CafeList.objects.get(name=str_cafename)
@@ -427,13 +440,23 @@ def visit_register(request):
 
         drink = Drink()
         drink.visited_cafe = v_cafe
-        drink.drinkname = str_drinkname
-        
+        user = User.objects.get(username=request.user)
+        user.total_visit += 1
+
         jsonDec=json.decoder.JSONDecoder()
         drinkList=jsonDec.decode(v_cafe.drink_list)
-        drinkList.append(str_drinkname)
+        #TODO:에러처리 필요,,,! 기타에 뭐 적으면 선택 못하도록, 선택 하면 기타에 못 적도록.
+        if str_new_drinkname != "":#8개 중 선택시 etc에는 항상 빈값이 들어간다. 무조건. 기타를 선택시
+            drink.drinkname = str_new_drinkname
+            drinkList.append(str_new_drinkname)
+
+        else: # 8개 중 선택시.
+            drink.drinkname = str_drinkname
+            drinkList.append(str_drinkname)
+            
         v_cafe.drink_list=json.dumps(drinkList)
-        
+
+        user.save()
         v_cafe.save()
         drink.save()
 
@@ -445,23 +468,32 @@ def visited_register(request):
 
     if request.method == 'POST':
         req_post = request.POST
-        str_cafename = req_post.__getitem__('cafename')
-        str_drinkname = req_post.__getitem__('beverage')
-        print("drinkname:", str_drinkname)
-
+        try:
+            str_cafename = req_post.__getitem__('cafename')
+            str_new_drinkname = req_post.__getitem__('etc')
+            str_drinkname = req_post.__getitem__('beverage')
+        #print("drinkname:", str_drinkname)
+        except:
+            print("존재하지 않습니다!")
+        user = User.objects.get(username=request.user)
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
-        v_cafe = VisitedCafe.objects.get(cafe=this_cafe)
+        v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
         
         v_cafe.visit_count += 1
-
+        user.total_visit += 1
         drink = Drink.objects.get(visited_cafe=v_cafe)#이전에 등록된 것 근데 이제 필요없을듯,,,
 
         jsonDec=json.decoder.JSONDecoder()
         drinkList=jsonDec.decode(v_cafe.drink_list)
 
-        drinkList.append(str_drinkname)
+        if str_new_drinkname != "":
+            drinkList.append(str_new_drinkname)
+        else:
+            drinkList.append(str_drinkname)
+        
         v_cafe.drink_list=json.dumps(drinkList)
 
+        user.save()
         v_cafe.save()
         drink.save()
 
