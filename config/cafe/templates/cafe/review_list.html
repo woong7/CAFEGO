@@ -18,10 +18,9 @@
         <div>
             <div>정렬</div>
             <button type="button" onclick="location.href='{% url 'cafe:sort_latest' this_cafe.id %}'">최신 순</button>
-            
-            <button>방문 순</button>
-            <button>총 방문 순</button>
-            <button>리뷰 순</button>
+            <button type="button" onclick="location.href='{% url 'cafe:sort_visit' this_cafe.id %}'">{{this_cafe.name}} 방문 순</button>
+            <button type="button" onclick="location.href='{% url 'cafe:sort_total_visit' this_cafe.id %}'">총 방문 순</button>
+            <button type="button" onclick="location.href='{% url 'cafe:sort_review' this_cafe.id %}'">리뷰 순</button>
         </div>
 
         <article class="each_review">
@@ -40,10 +39,9 @@
                     <span>⭐⭐⭐⭐⭐</span>
                 {% endif %}
                 <div>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11삽질노트-->
-
                 </div>
-
                 <div>총 카페 방문 횟수: {{ reviews.username.total_visit }}</div>
+                <div>총 작성 리뷰 수: {{ reviews.username.total_review }}</div>
                 <br/>
                 {{ reviews.content }}<br/>
 
@@ -57,15 +55,19 @@
                 <br/>
                 {{ reviews.created_at }}
 
-                {% comment %}    
-                <!-- {% for comment in review_comments %}
+                {% for comment in review_comments %}
                     {{ comment.username }}
                     {{ comment.content }}
-                {% endfor %} 
-                <input type="text" value="댓글 입력"><button>답글 달기</button>-->
-                {% endcomment %}
+                <!--{% endfor %}
+                    <input class="input-{{post.id}}" type="text" placeholder="댓글 달기..."/>
+                    <button class="btn btn-sm btn-primary" onclick="commentWrite('{{post.id}}');">게시</button>
+                -->
                 <hr/>
             {% endfor %}
         </article>
     </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+
+    </script>
 {% endblock %}

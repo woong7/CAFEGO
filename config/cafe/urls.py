@@ -13,4 +13,7 @@ urlpatterns = [
     path('cafe_map/', views.cafe_map, name='cafe_map'), # 카카오맵 카페 지도
     path('init_data/', views.init_data, name='init_data'),
     path('sort_latest/<int:pk>/', views.sort_latest, name='sort_latest'),
+    path('sort_visit/<int:pk>/', views.sort_visit, name='sort_visit'),
+    path('sort_total_visit/<int:pk>/', views.sort_total_visit, name='sort_total_visit'),
+    path('sort_review/<int:pk>/', views.sort_review, name='sort_review'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

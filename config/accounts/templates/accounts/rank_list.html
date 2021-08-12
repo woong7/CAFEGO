@@ -3,12 +3,42 @@
 {% block content %}
     <h1>랭킹 리스트 페이지입니다.</h1>
 
-    {% for user in users %}
-        {% if forloop.counter == 1 %}
-            <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
-        {% else %}
-            <p style="font-size: 20px; font-weight: bold">{{forloop.counter}}등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
-        {% endif %}
-    {% endfor %}
+    <!-- 총 방문 랭킹 -->
+    <section>
+        <span>총 방문 랭킹</span>
+        {% for user in A_users %}
+            {% if forloop.counter == 1 %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{forloop.counter}}등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
+            {% endif %}
+        {% endfor %}
+    </section>
+    <hr>
+
+    <!-- 한달 방문 랭킹 -->
+    <section>
+        <span>한달 방문 랭킹</span>
+    </section>
+    <hr>
+
+    <!-- 리뷰 개수 랭킹 -->
+    <section>
+        <span>리뷰 개수 랭킹</span>
+        {% for user in C_each_users_review %}
+            {% if forloop.counter == 1 %}
+                <span style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님!</span>  
+                {% comment %}
+                <!-- {% for i in user.review_person_set.all() %}
+                    <span>[ 총 리뷰 개수: {{ i }} ] </span>
+                {% endfor %} -->
+                {% endcomment %}
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user }} ] </p>
+            {% endif %}
+        {% endfor %}
+    </section>
+    <hr>
+
 
 {% endblock %}
