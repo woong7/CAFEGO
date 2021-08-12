@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
-from accounts.models import User 
+from accounts.models import User, VisitedCafe
 
 # Create your models here.
 class CafeList(models.Model):
@@ -25,6 +25,8 @@ class CafeList(models.Model):
 
 class Review(models.Model):
     cafe = models.ForeignKey(CafeList, on_delete=models.CASCADE, related_name='this_cafe')
+    visit_cafe = models.ForeignKey(VisitedCafe, on_delete=models.CASCADE, related_name='this_cafe')
+    
     username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_person')
     #앞은 DB저장 값, 뒤는 admin이나 폼에서 표시하는 값
     STARS_CHOICES = [
