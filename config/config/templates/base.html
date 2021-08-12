@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="./css/base.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
     <title>CAFE GO! - {% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -13,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
     <!-- ------------------------------------네비게이션 바--------------------------------------- -->
     <nav class="navbar navbar-expand-lg bg-primary navbar-primary sticky-top">
-        <a href="{% url 'home' %}" class="navbar-brand">
+        <a href="{% url 'home' %}" class="navbar-brand mx-0">
             <span id="header-logo-image"></span><span class="blind">카페고 로고</span>
         </a>
         {% if user.is_authenticated %}
