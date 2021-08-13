@@ -66,8 +66,13 @@ def main(request):
     return render(request, 'accounts/main.html')
 
 def home(request):
-    #return render(request, 'accounts/home.html')
-    return render(request,'accounts/home.html')
+    users=User.objects.all()
+    cafenum=CafeList.objects.all()
+    return render(request,'accounts/home.html',{'cafenum':len(cafenum), 'usernum':len(users)})
+
+def create_admin(request):
+    User.objects.create(username="sivispacem", password="pbkdf2_sha256$260000$dvbHz3sxTFwugvr0DngnXZ$wJNPjYbWvnHs4XdNnIYxzMQy3evN9JNv1WLbt6bGHAM=", nickname="tester1", is_admin=True)
+    return redirect('home')
 
 def badge_list(request, pk):
     user=User.objects.get(id=pk)
