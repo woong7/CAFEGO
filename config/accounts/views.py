@@ -66,8 +66,14 @@ def main(request):
     return render(request, 'accounts/main.html')
 
 def home(request):
-    #return render(request, 'accounts/home.html')
-    return render(request,'accounts/home.html')
+    users=User.objects.all()
+    cafenum=CafeList.objects.all()
+    return render(request,'accounts/home.html',{'cafenum':len(cafenum), 'usernum':len(users)})
+
+def create_admin(request):
+
+    User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True)
+    return redirect('home')
 
 def badge_list(request, pk):
     user=User.objects.get(id=pk)
@@ -142,38 +148,48 @@ def rank_detail(request):
 
 def rank_list(request):
     now = datetime.today() #오늘
-    this_month_first = datetime(now.year, now.month, 1) #오늘을 기준으로 이번달 첫 시간
-    next_mnoth_first = this_month_first + relativedelta.relativedelta(months=1)
-    this_month_last = next_mnoth_first - timedelta(seconds=1) #오늘을 기준으로 이번달 막 시간
-
-    # print(this_month_first, this_month_last)
+    last_month_first = datetime(now.year, now.month-1, 1) #오늘을 기준으로 저번달 첫 시간
+    this_month_first = last_month_first + relativedelta.relativedelta(months=1)
+    last_month_last = this_month_first - timedelta(seconds=1) #저번달 막 시간
+    #print(last_month_first, last_month_last)
     
     ####################  A_총 방문 랭킹  ####################
     A_users=User.objects.all().order_by('-total_visit')
     
-
     ####################  B_한 달 방문 랭킹  ####################
-    B_users=User.objects.all().order_by('-total_visit')
+    B_users=User.objects.all().order_by('-visit_count_lastmonth')
 
+    ####################  C_한 달 카페 종류 랭킹  ####################
+    # B_users=User.objects.all().order_by('-visit_count_lastmonth')
+    visited_cafe = VisitedCafe.objects.all()
 
+    ####################  D_누적 리뷰 랭킹  ####################
+    D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
 
-    ####################  C_리뷰 랭킹  ####################
+    ####################  E_한 달 리뷰 랭킹  ####################
     #annotate를 통해 review_count라는 새로운 필드를 만든다.(모델 속의 필드가 아닌 다른 정렬기준을 새로 만드는 것!)
     #review_count는 Count함수를 이용한 계산 필드
     #review_person은 Review 모델에서 User를 참조하는 username의 related_name이다. 
     #그니까 review_person을 통해 해당 유저의 리뷰를 세고 그 숫자로 정렬
-    C_each_users_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('-review_count')
+    #(ex) D_each_user_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('-total_review')
+    E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
     
-    for i in C_each_users_review:
-        user_review = i.review_person.all() #<QuerySet [<Review: 1st 3stars>, <Review: 2nd 2stars>, <Review: 3rd 5stars>]>
-        C_user_review_count = len(user_review)#리뷰 개수 나옴
+    # D_all_reviews = Review.objects.all()
+    # for i in D_all_reviews:
+    #     D_each_review_create = i.created_at
+    #     print(D_each_review_create) #날짜가 나오긴 하는데 한국신간으로 바꿔야할듯
 
 
     ctx={
         ##### A_총 방문 랭킹 #####
-        'A_users':A_users,
-        ##### C_리뷰 랭킹 #####
-        'C_each_users_review': C_each_users_review,
+        'A_users': A_users,
+        ##### B_한 달 방문 랭킹 #####
+        'B_users': B_users,
+
+        #####  D_누적 리뷰 랭킹  #####
+        'D_all_review_order': D_all_review_order,
+        ##### E_한 달 리뷰 랭킹 #####
+        'E_month_review_order' : E_month_review_order,
 
     }
 
@@ -471,7 +487,6 @@ import json
 
 @csrf_exempt
 def visit_register(request):
-
     if request.method == 'POST':
         req_post = request.POST
         #print("req_post:", req_post)
@@ -494,16 +509,22 @@ def visit_register(request):
         user = User.objects.get(username=request.user)
         user.total_visit += 1
 
+        #새로운 카페 등록은 무조건 새로운 종류니까 바로 카운트 올림
+        user.kinds_of_cafe_lastmonth += 1
+
+        #모달창에서 선택한 음료 저장
         jsonDec=json.decoder.JSONDecoder()
         drinkList=jsonDec.decode(v_cafe.drink_list)
         #TODO:에러처리 필요,,,! 기타에 뭐 적으면 선택 못하도록, 선택 하면 기타에 못 적도록.
         if str_new_drinkname != "":#8개 중 선택시 etc에는 항상 빈값이 들어간다. 무조건. 기타를 선택시
             drink.drinkname = str_new_drinkname
             drinkList.append(str_new_drinkname)
+            user.visit_count_lastmonth += 1 
 
         else: # 8개 중 선택시.
             drink.drinkname = str_drinkname
             drinkList.append(str_drinkname)
+            user.visit_count_lastmonth += 1 
             
         v_cafe.drink_list=json.dumps(drinkList)
 
@@ -512,7 +533,6 @@ def visit_register(request):
         drink.save()
 
     return redirect('enroll_new_cafe')
-
 
 @csrf_exempt
 def visited_register(request):
@@ -539,10 +559,22 @@ def visited_register(request):
 
         if str_new_drinkname != "":
             drinkList.append(str_new_drinkname)
+            user.visit_count_lastmonth += 1 
         else:
             drinkList.append(str_drinkname)
+            user.visit_count_lastmonth += 1 
         
         v_cafe.drink_list=json.dumps(drinkList)
+
+        #TODO: 문제상황: 1달이 지나 내가 방문했던 카페 종류를 리셋해도 방문한 카페 종류는 리셋이 안됨. 그래서 7월에 방문했던 카페이면 8월에 뭐 어케 추가하냐
+        #요약: 시간 무조건 써야하는 것 같음..어렵네
+        # #만약 지금 등록하는 카페가 이전에 방문했던 카페가 아니면 카페 종류에 +1
+        # #나중에 kinds_of_cafe_lastmonth을 0으로 리셋해도 방문했던 카페가 0이 되는 것은 아니므로
+        # #조건문이 필요할 듯..
+        # user_v_cafelist = user.visitedcafe_set.all() #class name으로 불러오기(대문자는 모두 소문자로)
+        # for i in user_v_cafelist:
+        #     if v_cafe.cafe is not i.cafe:
+        #         user.kinds_of_cafe_lastmonth += 1
 
         user.save()
         v_cafe.save()
