@@ -120,7 +120,7 @@ def badge_untaken(request):
 
 import math
 def user_cafe_map(request):
-    visited_cafes = VisitedCafe.objects.all()
+    visited_cafes = VisitedCafe.objects.filter(user=request.user)
     visited_cafe_list = serializers.serialize('json', visited_cafes)
 
     main_cafe = None
