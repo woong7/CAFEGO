@@ -22,7 +22,7 @@ def review_list(request, pk):
     print("each_reviews:", each_reviews)
     print("each_reviews user:", each_reviews.filter(username=request.user))
     #유저가 이 카페에 방문했었는지 체크
-    #TODO 아직 만지는 중
+    #TODO: 아직 만지는 중
     # try:
 
     #카페 평균 별점 구하기
@@ -35,7 +35,8 @@ def review_list(request, pk):
         
         cafe_stars_avg = cafe_stars_sum/len(each_reviews)
         #카페 평균 별점 db에 저장하기
-        #this_cafe.cafe_stars.save() 이렇게 모델 필드 하나만 저장 nono, this_cafe.save()이렇게 전체 모델로 저장하기
+        #this_cafe.cafe_stars.save() 이렇게 모델 필드 하나만 저장 nono
+        #this_cafe.save()이렇게 전체 모델로 저장하기
         this_cafe.cafe_stars = cafe_stars_avg
         this_cafe.save()
     
@@ -43,7 +44,6 @@ def review_list(request, pk):
     } 
 
     return render(request, 'cafe/review_list.html', ctx)
-
 
 def review_create(request, pk):
     if request.method == 'POST':
@@ -62,6 +62,7 @@ def review_create(request, pk):
             myreview = form.save()
             user = User.objects.get(username=request.user)
             user.total_review += 1
+            user.review_count_lastmonth += 1
             user.save()
 
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.

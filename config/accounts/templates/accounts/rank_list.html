@@ -16,25 +16,56 @@
     </section>
     <hr>
 
-    <!-- 한달 방문 랭킹 -->
+    <!-- 한 달 방문 랭킹 -->
     <section>
         <span>한달 방문 랭킹</span>
+        {% for user in B_users %}
+            {% if forloop.counter == 1 %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.visit_count_lastmonth }} ] </p>
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{forloop.counter}}등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.visit_count_lastmonth }} ] </p>
+            {% endif %}
+        {% endfor %}
     </section>
     <hr>
 
-    <!-- 리뷰 개수 랭킹 -->
+    <!-- 한 달 카페 종류 랭킹 -->
     <section>
-        <span>리뷰 개수 랭킹</span>
-        {% for user in C_each_users_review %}
+        <span>한 달 카페 종류 랭킹</span>
+        {{ v_cafe.created_at }}
+        {% comment %}
+        {% for user in _each_users_review %}
             {% if forloop.counter == 1 %}
-                <span style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님!</span>  
-                {% comment %}
-                <!-- {% for i in user.review_person_set.all() %}
-                    <span>[ 총 리뷰 개수: {{ i }} ] </span>
-                {% endfor %} -->
-                {% endcomment %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님! [ 총 리뷰 개수: {{ user.total_review }} ]</p>  
             {% else %}
-                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user }} ] </p>
+                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user.total_review }} ] </p>
+            {% endif %}
+        {% endfor %}
+        {% endcomment %}
+    </section>
+    <hr>
+
+    <!-- 누적 리뷰 개수 랭킹 -->
+    <section>
+        <span>한 달 리뷰 개수 랭킹</span>
+        {% for user in D_all_review_order %}
+            {% if forloop.counter == 1 %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님! [ 총 리뷰 개수: {{ user.total_review }} ]</p>  
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user.total_review }} ] </p>
+            {% endif %}
+        {% endfor %}
+    </section>
+    <hr>
+
+    <!-- 한 달 리뷰 개수 랭킹 -->
+    <section>
+        <span>한 달 리뷰 개수 랭킹</span>
+        {% for user in E_month_review_order %}
+            {% if forloop.counter == 1 %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님! [ 총 리뷰 개수: {{ user.review_count_lastmonth }} ]</p>  
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user.review_count_lastmonth }} ] </p>
             {% endif %}
         {% endfor %}
     </section>
