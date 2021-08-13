@@ -100,6 +100,9 @@
     <!-- 페이징 처리 -->
     {% if is_paginated %}
     <ul class="pagination" style="justify-content: space-around;">
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}">처음</a>
+        </li>
         {% if page_obj.has_previous %}
         <li class="page-item">
             <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
@@ -125,6 +128,9 @@
             <a class="page-link" href="#">다음</a>
         </li>
         {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.paginator.num_pages }}">마지막</a>
+        </li>
         <span style="display: inline-block; margin-top:7px;">{{page_obj}}</span>
     </ul>
     {% endif %}
