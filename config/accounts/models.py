@@ -55,6 +55,10 @@ class User(AbstractBaseUser):
     
     total_visit=models.IntegerField(default=0)
     total_review=models.IntegerField(default=0)
+    #한달마다 초기화
+    visit_count_lastmonth = models.IntegerField(default=0) #지난 한달간 방문한 횟수 센다, 매월 초기화해준다.
+    review_count_lastmonth = models.IntegerField(default=0)
+    kinds_of_cafe_lastmonth = models.IntegerField(default=0)
 
     badge_taken=models.TextField(null=True, default=json.dumps([]))
     friends=models.TextField(null=True, default=json.dumps([]))
@@ -80,13 +84,12 @@ class User(AbstractBaseUser):
 #방문한 한 카페 정보
 class VisitedCafe(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
-    cafe = models.ForeignKey('cafe.CafeList', on_delete=CASCADE)
+    cafe = models.ForeignKey('cafe.CafeList', on_delete=CASCADE, related_name='visited_cafe_list')
     visit_count = models.PositiveIntegerField(default=0)
     visit_check = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True) #카페 등록 시간
     updated_at = models.DateTimeField(auto_now=True) #갔던 카페 다시 등록 
-    visit_count_lastmonth = models.IntegerField(default=0) #지난 한달간 방문한 횟수 센다, 매월 초기화해준다.
 
     drink_list = models.TextField(null=True, default=json.dumps([]))
     
