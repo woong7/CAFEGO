@@ -12,7 +12,9 @@
         <h3> 평점 : {{ this_cafe.cafe_stars }}</h3>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:cafe_map' %}'">지도 보기</button>
-            <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:review_create' this_cafe.id %}'">리뷰 작성</button>
+            {% if is_visit %}
+                <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:review_create' this_cafe.id %}'">리뷰 작성</button>
+            {% endif %}
         </div>
     </div>
 </div>
