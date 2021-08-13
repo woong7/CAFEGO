@@ -21,12 +21,20 @@ def review_list(request, pk):
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    print("each_reviews:", each_reviews)
-    print("each_reviews user:", each_reviews.filter(username=request.user))
-    #유저가 이 카페에 방문했었는지 체크
-    #TODO 아직 만지는 중
-    # try:
+    comments = Comment.objects.all()
+    #print("each_reviews:", each_reviews)
+    #print("each_reviews user:", each_reviews.filter(username=request.user))
 
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+
+    #방문했는지 체크 -> 리뷰 작성할 수 있음!
+    is_visit = False
+
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
         cafe_stars_avg = 0.0
@@ -37,7 +45,8 @@ def review_list(request, pk):
         
         cafe_stars_avg = cafe_stars_sum/len(each_reviews)
         #카페 평균 별점 db에 저장하기
-        #this_cafe.cafe_stars.save() 이렇게 모델 필드 하나만 저장 nono, this_cafe.save()이렇게 전체 모델로 저장하기
+        #this_cafe.cafe_stars.save() 이렇게 모델 필드 하나만 저장 nono
+        #this_cafe.save()이렇게 전체 모델로 저장하기
         this_cafe.cafe_stars = cafe_stars_avg
         this_cafe.save()
     
@@ -45,6 +54,8 @@ def review_list(request, pk):
         'this_cafe': this_cafe,
         'each_reviews': each_reviews,
         'review_photo': review_photo,
+        'comments': comments,
+        'is_visit': is_visit,
     } 
 
     return render(request, 'cafe/review_list.html', ctx)
@@ -56,9 +67,9 @@ def comment_write(request):
     content = req['content']
     review = Review.objects.get(id=review_id)
     username = review.username
-    comment = Comment.objects.create(post=review_id, username=username, content=content)
+    comment = Comment.objects.create(post=review, username=username, content=content)
     comment.save()
-    return JsonResponse({'review_id':review_id, 'content':content, 'comment':comment})
+    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'comment_user':comment.username, 'comment_time':comment.created_at})
 
 @csrf_exempt
 def comment_delete(request):
@@ -86,6 +97,7 @@ def review_create(request, pk):
             myreview = form.save()
             user = User.objects.get(username=request.user)
             user.total_review += 1
+            user.review_count_lastmonth += 1
             user.save()
 
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
@@ -163,6 +175,7 @@ class CafeListView(ListView):
             context['q'] = search_keyword
         context['type'] = search_type
 
+        user_visited_cafes = VisitedCafe.objects.filter(user=self.request.user)
         return context
 
 # 카페 지도

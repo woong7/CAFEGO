@@ -1,73 +1,163 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/review_list.css' %}">
+{% endblock %}
 {% block title %}
     리뷰리스트
 {% endblock %}
 {% block content %}
-    <div class="cafe_info">
-        {{ this_cafe.name }}<br/>
-        {{ this_cafe.address }}<br/>
-        {{ this_cafe.cafe_stars }}<br/>        
+<div class="px-4 py-3 my-5 text-center">
+    <h1 class="display-5 fw-bold">{{ this_cafe.name }}</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">{{ this_cafe.address }}</p>
+        <h3> 평점 : {{ this_cafe.cafe_stars }}</h3>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:cafe_map' %}'">지도 보기</button>
+            {% if is_visit %}
+                <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:review_create' this_cafe.id %}'">리뷰 작성</button>
+            {% endif %}
+        </div>
     </div>
-    <a href="{% url 'cafe:cafe_map' %}">지도</a>
-    <a href="{% url 'cafe:review_create' this_cafe.id %}">리뷰 작성</a>
+</div>
+
+<div class="cafe_info position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
+    <hr/>
+    <div class="review_list">
+        <span>정렬</span><!--선택했을 때 색깔 바뀌게!-->
+        <button type="button" onclick="location.href='{% url 'cafe:sort_latest' this_cafe.id %}'">최신 순</button>
+        <button type="button" onclick="location.href='{% url 'cafe:sort_visit' this_cafe.id %}'">{{this_cafe.name}} 방문 순</button>
+        <button type="button" onclick="location.href='{% url 'cafe:sort_total_visit' this_cafe.id %}'">총 방문 순</button>
+        <button type="button" onclick="location.href='{% url 'cafe:sort_review' this_cafe.id %}'">리뷰 순</button>
+    </div>
     <hr/>
 
-    <div class="review_list">
-        <div>
-            <div>정렬</div>
-            <button type="button" onclick="location.href='{% url 'cafe:sort_latest' this_cafe.id %}'">최신 순</button>
-            <button type="button" onclick="location.href='{% url 'cafe:sort_visit' this_cafe.id %}'">{{this_cafe.name}} 방문 순</button>
-            <button type="button" onclick="location.href='{% url 'cafe:sort_total_visit' this_cafe.id %}'">총 방문 순</button>
-            <button type="button" onclick="location.href='{% url 'cafe:sort_review' this_cafe.id %}'">리뷰 순</button>
-        </div>
+    <article class="each_review">
+        {% for reviews in each_reviews %}
+            {{ reviews.username }} 
 
-        <article class="each_review">
-            {% for reviews in each_reviews %}
-                {{ reviews.username }}
+            {% if reviews.review_stars == '1.0' %}
+                <span>⭐</span>
+            {% elif reviews.review_stars == '2.0' %}
+                <span>⭐⭐</span>
+            {% elif reviews.review_stars == '3.0' %}
+                <span>⭐⭐⭐</span>
+            {% elif reviews.review_stars == '4.0' %}
+                <span>⭐⭐⭐⭐</span>
+            {% elif reviews.review_stars == '5.0' %}
+                <span>⭐⭐⭐⭐⭐</span>
+            {% endif %}
+            {{ reviews.created_at }}
+            <br/>
+            <span>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11삽질노트-->
+            </span>
+            <span>총 카페 방문 횟수: {{ reviews.username.total_visit }}</span>
+            <span>총 작성 리뷰 수: {{ reviews.username.total_review }}</span>
+            <br/>
+            {{ reviews.content }}<br/>
 
-                {% if reviews.review_stars == '1.0' %}
-                    <span>⭐</span>
-                {% elif reviews.review_stars == '2.0' %}
-                    <span>⭐⭐</span>
-                {% elif reviews.review_stars == '3.0' %}
-                    <span>⭐⭐⭐</span>
-                {% elif reviews.review_stars == '4.0' %}
-                    <span>⭐⭐⭐⭐</span>
-                {% elif reviews.review_stars == '5.0' %}
-                    <span>⭐⭐⭐⭐⭐</span>
-                {% endif %}
-                <div>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11삽질노트-->
+            {% if review_photo %}
+                {% for img in review_photo %}
+                    {% if img.review.id == reviews.id %}
+                        <img src="{{img.image.url}}" style="width: 5%; height: 5%;">         
+                    {% endif %}
+                {% endfor %}   
+            {% endif %}
+            <br/>
+            
+
+                <div class="comments-{{reviews.id}}">
+                    <ul>
+                        {% for comment in comments %}
+                            {% if comment.post == reviews %}
+                                <li>
+                                    <div class="comment-{{comment.id}} container">
+                                        <div class="row">
+                                            <div class="col">{{comment.content}}</div>
+                                            <div class="col">{{comment.username}}</div>
+                                            <div class="col">{{comment.created_at}}</div>
+                                            <div class="col">
+                                                <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
                 </div>
-                <div>총 카페 방문 횟수: {{ reviews.username.total_visit }}</div>
-                <div>총 작성 리뷰 수: {{ reviews.username.total_review }}</div>
-                <br/>
-                {{ reviews.content }}<br/>
-
-                {% if review_photo %}
-                    {% for img in review_photo %}
-                        {% if img.review.id == reviews.id %}
-                            <img src="{{img.image.url}}" style="width: 5%; height: 5%;">         
-                        {% endif %}
-                    {% endfor %}   
-                {% endif %}
-                <br/>
-                {{ reviews.created_at }}
-
-                {% for comment in review_comments %}
-                    {{ comment.username }}
-                    {{ comment.content }}
-                <!--{% endfor %}
-                    <input class="input-{{post.id}}" type="text" placeholder="댓글 달기..."/>
-                    <button class="btn btn-sm btn-primary" onclick="commentWrite('{{post.id}}');">게시</button>
-                -->
+                <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
+                <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
                 <hr/>
             {% endfor %}
         </article>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script>
+    // 댓글 작성
+    const requestWrite = new XMLHttpRequest();
 
+    const commentWrite = (review_id) => {
+        const url = '/cafe/comment_write/';
+        const content = document.querySelector(`.input-${review_id}`).value;
+        requestWrite.open('POST', url, true);
+        requestWrite.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestWrite.send(JSON.stringify({review_id: review_id, content:content}));
+    };
+
+    const writeResponse = () => {
+        if(requestWrite.status < 400) {
+            const {review_id, content, comment_id} = JSON.parse(requestWrite.response);
+            const comments = document.querySelector(`.comments-${review_id}`);
+            const element = document.querySelector(`.input-${review_id}`);
+            comments.innerHTML += `
+                <div class="comment-${comment_id} container-fluid my-1">
+                    <div class="row">
+                        <div class="col">${content}</div>
+                        <div class="col">
+                            <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
+                        </div>
+                    </div<
+                </div>
+            `;
+        }
+    };
+
+    requestWrite.onreadystatechange = () => {
+        if(requestWrite.readyState === XMLHttpRequest.DONE) {
+            writeResponse();
+        }
+    };
+
+    //댓글 삭제
+    const requestDelete = new XMLHttpRequest();
+
+    const commentDelete = (comment_id) => {
+        const url = '/cafe/comment_delete/';
+        requestDelete.open('POST', url, true);
+        requestDelete.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestDelete.send(JSON.stringify({comment_id: comment_id}));
+    };
+
+    const deleteResponse = () => {
+        if(requestDelete.status < 400) {
+            const {comment_id} = JSON.parse(requestDelete.response);
+            const element = document.querySelector(`.comment-${comment_id}`);
+            element.remove();
+        }
+    };
+
+    requestDelete.onreadystatechange = () => {
+        if(requestDelete.readyState === XMLHttpRequest.DONE) {
+            deleteResponse();
+        }
+    };
     </script>
 {% endblock %}

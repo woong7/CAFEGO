@@ -6,7 +6,10 @@ from .models import *
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     pass
-admin.site.register(VisitedCafe)
+class VisitedCafeAdmin(admin.ModelAdmin):
+    readonly_fields = ('created_at', 'updated_at',)
+    admin.site.register(VisitedCafe)
+
 admin.site.register(Drink)
 admin.site.register(Badge)
 
