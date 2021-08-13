@@ -21,6 +21,7 @@ def review_list(request, pk):
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    comments = Comment.objects.all()
     #print("each_reviews:", each_reviews)
     #print("each_reviews user:", each_reviews.filter(username=request.user))
 
@@ -53,6 +54,7 @@ def review_list(request, pk):
         'this_cafe': this_cafe,
         'each_reviews': each_reviews,
         'review_photo': review_photo,
+        'comments': comments,
         'is_visit': is_visit,
     } 
 
@@ -65,9 +67,9 @@ def comment_write(request):
     content = req['content']
     review = Review.objects.get(id=review_id)
     username = review.username
-    comment = Comment.objects.create(post=review_id, username=username, content=content)
+    comment = Comment.objects.create(post=review, username=username, content=content)
     comment.save()
-    return JsonResponse({'review_id':review_id, 'content':content, 'comment':comment})
+    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'comment_user':comment.username, 'comment_time':comment.created_at})
 
 @csrf_exempt
 def comment_delete(request):
