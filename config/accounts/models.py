@@ -104,7 +104,7 @@ class VisitedCafe(models.Model):
 
 class Badge(models.Model):
     badge_name=models.TextField(max_length=150, unique=True)
-    badge_image=models.ImageField(upload_to='static/image/')
+    badge_image=models.ImageField(upload_to='../media/static/image/')
     badge_get=models.TextField(default=0)
     
 

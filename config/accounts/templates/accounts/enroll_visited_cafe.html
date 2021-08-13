@@ -41,20 +41,20 @@
             검색 결과: {{page_obj.paginator.count}}개
                 {% for cafe in visited_cafe_list %}
                     <tr>
-                        <td>{{cafe.id}}</td>
-                        <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
-                        <td>{{cafe.address}}</td>
+                        <td>{{cafe.cafe.id}}</td>
+                        <td><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{ cafe.cafe.name }}</a></td>
+                        <td>{{cafe.cafe.address}}</td>
                         <td>{{ cafe.visit_count }}</td>
-                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="visit"></td>
+                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.cafe.id }}" name="visit" value="visit"></td>
                                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModal_{{ cafe.id }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="exampleModal_{{ cafe.cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <form action="{% url 'visited_register' %}" method='post'>
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel">
-                                                <input type="text" name="cafename" value="{{ cafe.name }}">
-                                                <input type="text" name="cafeid" value="{{ cafe.id }}">
+                                                <input type="text" name="cafename" value="{{ cafe.cafe.name }}">
+                                                <input type="text" name="cafeid" value="{{ cafe.cafe.id }}">
                                             </h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
@@ -111,6 +111,9 @@
     <!-- 페이징 처리 -->
     {% if is_paginated %}
     <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}">처음</a>
+        </li>
         {% if page_obj.has_previous %}
         <li class="page-item">
             <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
@@ -136,6 +139,9 @@
             <a class="page-link" href="#">다음</a>
         </li>
         {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.paginator.num_pages }}">마지막</a>
+        </li>
         <span>{{page_obj}}</span>
     </ul>
     {% endif %}

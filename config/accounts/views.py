@@ -120,7 +120,7 @@ def badge_untaken(request):
 
 import math
 def user_cafe_map(request):
-    visited_cafes = VisitedCafe.objects.all()
+    visited_cafes = VisitedCafe.objects.filter(user=request.user)
     visited_cafe_list = serializers.serialize('json', visited_cafes)
 
     main_cafe = None
@@ -274,17 +274,18 @@ class EnrollVisitedCafeListView(ListView):
         visited_cafe_list = VisitedCafe.objects.filter(user = self.request.user).order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
         
         names_to_include = [o.cafe for o in visited_cafe_list] 
-        visited_cafe_list = CafeList.objects.filter(name__in=names_to_include)
+        cafe_list = CafeList.objects.filter(name__in=names_to_include)
         
         if search_keyword:
             if len(search_keyword) > 1:
                 if search_type == 'name':
-                    search_cafe_list = visited_cafe_list.filter(name__icontains=search_keyword)
+                    search_cafe_list = cafe_list.filter(name__icontains=search_keyword)
                 elif search_type == 'address':
-                    search_cafe_list = visited_cafe_list.filter(address__icontains=search_keyword)
+                    search_cafe_list = cafe_list.filter(address__icontains=search_keyword)
                 elif search_type == 'all':
-                    search_cafe_list = visited_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
-                return search_cafe_list
+                    search_cafe_list = cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
+                cafes_to_include = [o for o in search_cafe_list] 
+                return VisitedCafe.objects.filter(cafe__in=cafes_to_include)
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
         return visited_cafe_list
@@ -318,8 +319,10 @@ class EnrollVisitedCafeListView(ListView):
 
 def mypage(request, pk):
     #내가 방문한 카페들
-    visit_cafes=VisitedCafe.objects.filter(user=request.user)
+    
     user=request.user
+    owner=User.objects.get(id=pk)
+    visit_cafes=VisitedCafe.objects.filter(user=owner)
 
     jsonDec=json.decoder.JSONDecoder()
 
@@ -338,7 +341,7 @@ def mypage(request, pk):
         total_drink.append(drink_list)# 각각에 모든 음료 데이터들이 들어감,,,
         total_drink_dic[v_cafe] = drink_list
 
-    owner=User.objects.get(id=pk)
+    
     print("vcafe:", visit_cafes)
     
     print("total drink:", total_drink)#
@@ -409,7 +412,7 @@ def mypage(request, pk):
         'friends':friends,
         'drink_list' :total_drink,
         'drink_list_dic' :total_drink_dic,
-        'total_visit':owner.total_visit,
+        'total_visit': owner.total_visit,
         'total_badge_count':total_badge_count,
         'names_to_exclude':names_to_exclude,
         'all_review_count': all_review_count,
