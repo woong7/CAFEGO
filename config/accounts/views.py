@@ -71,7 +71,8 @@ def home(request):
     return render(request,'accounts/home.html',{'cafenum':len(cafenum), 'usernum':len(users)})
 
 def create_admin(request):
-    User.objects.create(username="sivispacem", password="pbkdf2_sha256$260000$dvbHz3sxTFwugvr0DngnXZ$wJNPjYbWvnHs4XdNnIYxzMQy3evN9JNv1WLbt6bGHAM=", nickname="tester1", is_admin=True)
+
+    User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True)
     return redirect('home')
 
 def badge_list(request, pk):
