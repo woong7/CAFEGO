@@ -319,8 +319,10 @@ class EnrollVisitedCafeListView(ListView):
 
 def mypage(request, pk):
     #내가 방문한 카페들
-    visit_cafes=VisitedCafe.objects.filter(user=request.user)
+    
     user=request.user
+    owner=User.objects.get(id=pk)
+    visit_cafes=VisitedCafe.objects.filter(user=owner)
 
     jsonDec=json.decoder.JSONDecoder()
 
@@ -339,7 +341,7 @@ def mypage(request, pk):
         total_drink.append(drink_list)# 각각에 모든 음료 데이터들이 들어감,,,
         total_drink_dic[v_cafe] = drink_list
 
-    owner=User.objects.get(id=pk)
+    
     print("vcafe:", visit_cafes)
     
     print("total drink:", total_drink)#
@@ -410,7 +412,7 @@ def mypage(request, pk):
         'friends':friends,
         'drink_list' :total_drink,
         'drink_list_dic' :total_drink_dic,
-        'total_visit':owner.total_visit,
+        'total_visit': owner.total_visit,
         'total_badge_count':total_badge_count,
         'names_to_exclude':names_to_exclude,
         'all_review_count': all_review_count,
