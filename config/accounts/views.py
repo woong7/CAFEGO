@@ -284,8 +284,8 @@ class EnrollVisitedCafeListView(ListView):
                     search_cafe_list = cafe_list.filter(address__icontains=search_keyword)
                 elif search_type == 'all':
                     search_cafe_list = cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
-                names_to_include = [o.cafe for o in visited_cafe_list] 
-                return search_cafe_list
+                cafes_to_include = [o for o in search_cafe_list] 
+                return VisitedCafe.objects.filter(cafe__in=cafes_to_include)
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
         return visited_cafe_list
