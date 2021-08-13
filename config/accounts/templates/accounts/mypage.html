@@ -1,20 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{owner.nickname}}님의 마이페이지입니다.</h1>
+<h1>{{owner.nickname}}님의 마이페이지입니다.</h1>
+<span>획득한 배지 개수: {{ total_badge_count }}개 </span>
+<a href="{% url 'badge_list' owner.pk %}">배지 리스트 보기</a>
+<br>
+<span>작성한 리뷰 수 : {{all_review_count}}개 </span>
+<a href="{% url 'myreview_list' %}">작성한 리뷰 보러가기 </a>
+<br>
 
-    <div>
-        {% if owner.nickname in names_to_exclude %}
-            {% if not owner.id == user.id %}
-                <a href="{% url 'deletefriend' owner.pk%}">UnFollow</a>
-            {% endif %}
-        {% else %}
-            <a href="{% url 'addfriend' owner.pk%}">Follow</a>
-        {% endif %}
-    </div>
 
-    <h4>획득한 배지</h3><!--if문 쓰기-->
-    <div>
+<span>총 방문 카페 수 : {{visit_cafes.count }} 곳</span><br>
+<span>총 카페 방문 횟수 : {{ total_visit }} 회</span>
+<br>
+
+<p>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
+        획득한 배지
+    </button>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">
+        방문한 카페
+    </button>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample">
+        작성한 리뷰
+    </button>
+</p>
+<div class="collapse" id="collapseExample1">
+    <div class="card card-body">
         {% for badge in taken_badges %}
             <div>
                 <img src="{{badge.badge_image.url}}" style="width: 5%; height: 5%;">
@@ -22,47 +34,55 @@
             </div>
         {% endfor %}
     </div>
-    <h4>획득한 배지 개수: {{ total_badge_count }}개 </h4>
-    <a href="{% url 'badge_list' owner.pk %}">배지 리스트 보기</a>
-    <br>
-    <h4>작성한 리뷰 수 : {{all_review_count}}개 </h4>
-    <h4><a href="{% url 'myreview_list' %}">작성한 리뷰 보러가기 </a></h4>
-    <br>
-
-
-    <h4>총 방문 카페 수 : {{visit_cafes.count }}개</h4>
-    <h4>총 카페 방문 횟수 : {{ total_visit }}회</h4>
-    <br>
-
-    {% for cafe, drinks in drink_list_dic.items %} 
-        <span style="font-size: 20px; font-weight: bold">카페명 : <a href="">{{cafe}}</a></span>
-        <p> 방문 횟수: {{cafe.visit_count}}</p>
-        <span> 마신음료 : </span>
-        {% for drink in drinks %}
-            <span>{{drink}}</span>
-        {% endfor %}
-    </br>
-    {% endfor %}
-
-    <div>
-        <a href="{% url 'user_cafe_map' %}">나의 카페 지도</a>
-    </div>
-
-    <div>
-        <h5>{{owner.nickname}}님의 친구 목록</h5>
-        {% for friend in friends %}
-            <div>
-                <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
-                => <a href="{% url 'mypage' friend.pk%}">{{friend.nickname}}님의 마이페이지로 이동</a>
-                <br/><br/><br/>
-            </div>
+</div>
+<div class="collapse" id="collapseExample2">
+    <div class="card card-body">
+        {% for cafe, drinks in drink_list_dic.items %} 
+            <span style="font-size: 20px; font-weight: bold">카페명 : <a href="">{{cafe}}</a></span>
+            <span> 방문 횟수: {{cafe.visit_count}}</span>
+            <span> 마신음료 : </span>
+            {% for drink in drinks %}
+                <span>{{drink}}</span>
+            {% endfor %}
         {% endfor %}
     </div>
-    {% if user.id == owner.id %}
-        <a href="{% url 'friend_search' %}">유저 검색</a>
+</div>
+<div class="collapse" id="collapseExample3">
+    <div class="card card-body">
+        작성한 리뷰 내용
+    </div>
+</div>
 
-        <br/><br/><br/>
 
+<div>
+    {% if owner.nickname in names_to_exclude %}
+        {% if not owner.id == user.id %}
+            <a href="{% url 'deletefriend' owner.pk%}">UnFollow</a>
+        {% endif %}
+    {% else %}
+        <a href="{% url 'addfriend' owner.pk%}">Follow</a>
     {% endif %}
+</div>
+
+<div>
+    <a href="{% url 'user_cafe_map' %}">나의 카페 지도 보러가기</a>
+</div>
+
+<div>
+    <h5>{{owner.nickname}}님의 친구 목록</h5>
+    {% for friend in friends %}
+        <div>
+            <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
+            => <a href="{% url 'mypage' friend.pk%}">{{friend.nickname}}님의 마이페이지로 이동</a>
+            <br/><br/><br/>
+        </div>
+    {% endfor %}
+</div>
+{% if user.id == owner.id %}
+    <a href="{% url 'friend_search' %}">유저 검색</a>
+
+    <br/><br/><br/>
+
+{% endif %}
 
 {% endblock %}

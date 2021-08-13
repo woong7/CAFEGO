@@ -9,8 +9,14 @@
 
 <div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 12rem;">
     <p id="header-logo-image"></p>
-    <h1></h1>
-    <button class="btn btn-outline-primary" onClick="location.href='{% url 'home' %}'">시작하기</button>
+    {% if user.is_authenticated %}
+        <p>{{user.nickname}} 님이 로그인 중</p>
+        <button class="btn btn-outline-primary" onClick="location.href='{% url 'home' %}'">시작하기</button>
+    {% else %}
+        <h1></h1>
+        <button class="btn btn-outline-primary" onClick="location.href='/account/login'">시작하기</button>
+    {% endif %}
+    
 </div>
 
 <div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
@@ -38,17 +44,17 @@
 
 <div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
     <h1 class="font-weight-bold text-light" style="font-weight: bold;">지도기반 카페 방문기록 웹서비스</h1>
-    <button class="btn btn-white bg-white" onClick="location.href='{% url 'home' %}'">시작하기</button>
+    <button class="btn btn-white bg-white" onClick="location.href='/account/login'">시작하기</button>
 </div>
 
-{% if user.is_authenticated %}
+<!-- {% if user.is_authenticated %}
     <p>닉네임 {{user.nickname}} 님이 로그인 중</p>
     <h4><a href="{% url 'home' %}">홈페이지로 가기</a></h4>
     <h4><a href="{% url 'logout' %}">로그아웃하기</a></h4>
 
-{%else%}
+{%else%} -->
     <!-- <div class="d-grid gap-2 col-6 mx-auto" style="width: 226px;">
         <a class="btn btn-outline-primary" href="{% url 'home' %}" role="button" >시작하기</a>
     </div> -->
-{%endif %}
+<!-- {%endif %} -->
 {% endblock %}

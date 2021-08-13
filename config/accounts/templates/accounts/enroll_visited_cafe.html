@@ -23,7 +23,7 @@
     </form>
 
     <!-- 카페 리스트  -->
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th> </th>
@@ -36,7 +36,7 @@
         <tbody>
             {% if q %}
             <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
-            <!-- {% endif %}         -->
+            {% endif %}
             {% if visited_cafe_list %}
             검색 결과: {{page_obj.paginator.count}}개
                 {% for cafe in visited_cafe_list %}
@@ -44,10 +44,10 @@
                         <td>{{cafe.id}}</td>
                         <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
                         <td>{{cafe.address}}</td>
-                        <td>{{ visit_count }}</td>
+                        <td>{{ cafe.visit_count }}</td>
                         <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="visit"></td>
                                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModal_{{ cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="exampleModal_{{ cafe.id }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <form action="{% url 'visited_register' %}" method='post'>
                                     <div class="modal-content">
