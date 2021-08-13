@@ -9,59 +9,73 @@
         </div>
     </header>
 
-    <main>
-        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-            <div class="col">
-                <div class="card mb-4 rounded-3 shadow-sm border-primary">
-                    <div class="card-header py-3 text-white bg-primary border-primary">
-                        <h4 class="my-0 fw-normal">카페 총 방문 횟수</h4>
-                    </div>
-                    <div class="card-body">
-                        {% for user in A_users %}
-                            {% if forloop.counter == 1 %}
-                                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
-                            {% else %}
-                                <p style="font-size: 20px; font-weight: bold">{{forloop.counter}}등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
-                            {% endif %}
-                        {% endfor %}
-                        <button type="button" class="w-100 btn btn-lg btn-outline-primary">전체 랭킹 확인하러 가기</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card mb-4 rounded-3 shadow-sm border-primary">
-                    <div class="card-header py-3 text-white bg-primary border-primary">
-                    <h4 class="my-0 fw-normal">여러 카페 방문 수</h4>
-                    </div>
-                    <div class="card-body">
-                        랭킹내용
-                        <button type="button" class="w-100 btn btn-lg btn-outline-primary">전체 랭킹 확인하러 가기</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card mb-4 rounded-3 shadow-sm border-primary">
-                    <div class="card-header py-3 text-white bg-primary border-primary">
-                        <h4 class="my-0 fw-normal">작성한 총 리뷰 수</h4>
-                    </div>
-                    <div class="card-body">
-                        {% for user in C_each_users_review %}
-                            {% if forloop.counter == 1 %}
-                                <span style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님!</span>  
-                                {% comment %}
-                                <!-- {% for i in user.review_person_set.all() %}
-                                    <span>[ 총 리뷰 개수: {{ i }} ] </span>
-                                {% endfor %} -->
-                                {% endcomment %}
-                            {% else %}
-                                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user }} ] </p>
-                            {% endif %}
-                        {% endfor %}
-                        <button type="button" class="w-100 btn btn-lg btn-outline-primary">전체 랭킹 확인하러 가기</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-</div>
+    <!-- 총 방문 랭킹 -->
+    <section>
+        <span>총 방문 랭킹</span>
+        {% for user in A_users %}
+            {% if forloop.counter == 1 %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{forloop.counter}}등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.total_visit }} ] </p>
+            {% endif %}
+        {% endfor %}
+    </section>
+    <hr>
+
+    <!-- 한 달 방문 랭킹 -->
+    <section>
+        <span>한달 방문 랭킹</span>
+        {% for user in B_users %}
+            {% if forloop.counter == 1 %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.visit_count_lastmonth }} ] </p>
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{forloop.counter}}등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.visit_count_lastmonth }} ] </p>
+            {% endif %}
+        {% endfor %}
+    </section>
+    <hr>
+
+    <!-- 한 달 카페 종류 랭킹 -->
+    <section>
+        <span>한 달 카페 종류 랭킹</span>
+        {{ v_cafe.created_at }}
+        {% comment %}
+        {% for user in _each_users_review %}
+            {% if forloop.counter == 1 %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님! [ 총 리뷰 개수: {{ user.total_review }} ]</p>  
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user.total_review }} ] </p>
+            {% endif %}
+        {% endfor %}
+        {% endcomment %}
+    </section>
+    <hr>
+
+    <!-- 누적 리뷰 개수 랭킹 -->
+    <section>
+        <span>한 달 리뷰 개수 랭킹</span>
+        {% for user in D_all_review_order %}
+            {% if forloop.counter == 1 %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님! [ 총 리뷰 개수: {{ user.total_review }} ]</p>  
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user.total_review }} ] </p>
+            {% endif %}
+        {% endfor %}
+    </section>
+    <hr>
+
+    <!-- 한 달 리뷰 개수 랭킹 -->
+    <section>
+        <span>한 달 리뷰 개수 랭킹</span>
+        {% for user in E_month_review_order %}
+            {% if forloop.counter == 1 %}
+                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님! [ 총 리뷰 개수: {{ user.review_count_lastmonth }} ]</p>  
+            {% else %}
+                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user.review_count_lastmonth }} ] </p>
+            {% endif %}
+        {% endfor %}
+    </section>
+    <hr>
+
+
 {% endblock %}

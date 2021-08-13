@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/review_list.css' %}">
+{% endblock %}
 {% block title %}
     리뷰리스트
 {% endblock %}
@@ -64,19 +67,97 @@
             <br/>
             
 
-            {% for comment in review_comments %}
-                {{ comment.username }}
-                {{ comment.content }}
-            <!--{% endfor %}
-                <input class="input-{{post.id}}" type="text" placeholder="댓글 달기..."/>
-                <button class="btn btn-sm btn-primary" onclick="commentWrite('{{post.id}}');">게시</button>
-            -->
-            <hr/>
-        {% endfor %}
-    </article>
-</div>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-<script>
+                <div class="comments-{{reviews.id}}">
+                    <ul>
+                        {% for comment in comments %}
+                            {% if comment.post == reviews %}
+                                <li>
+                                    <div class="comment-{{comment.id}} container">
+                                        <div class="row">
+                                            <div class="col">{{comment.content}}</div>
+                                            <div class="col">{{comment.username}}</div>
+                                            <div class="col">{{comment.created_at}}</div>
+                                            <div class="col">
+                                                <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
+                <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
+                <hr/>
+            {% endfor %}
+        </article>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+    // 댓글 작성
+    const requestWrite = new XMLHttpRequest();
 
-</script>
+    const commentWrite = (review_id) => {
+        const url = '/cafe/comment_write/';
+        const content = document.querySelector(`.input-${review_id}`).value;
+        requestWrite.open('POST', url, true);
+        requestWrite.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestWrite.send(JSON.stringify({review_id: review_id, content:content}));
+    };
+
+    const writeResponse = () => {
+        if(requestWrite.status < 400) {
+            const {review_id, content, comment_id} = JSON.parse(requestWrite.response);
+            const comments = document.querySelector(`.comments-${review_id}`);
+            const element = document.querySelector(`.input-${review_id}`);
+            comments.innerHTML += `
+                <div class="comment-${comment_id} container-fluid my-1">
+                    <div class="row">
+                        <div class="col">${content}</div>
+                        <div class="col">
+                            <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
+                        </div>
+                    </div<
+                </div>
+            `;
+        }
+    };
+
+    requestWrite.onreadystatechange = () => {
+        if(requestWrite.readyState === XMLHttpRequest.DONE) {
+            writeResponse();
+        }
+    };
+
+    //댓글 삭제
+    const requestDelete = new XMLHttpRequest();
+
+    const commentDelete = (comment_id) => {
+        const url = '/cafe/comment_delete/';
+        requestDelete.open('POST', url, true);
+        requestDelete.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestDelete.send(JSON.stringify({comment_id: comment_id}));
+    };
+
+    const deleteResponse = () => {
+        if(requestDelete.status < 400) {
+            const {comment_id} = JSON.parse(requestDelete.response);
+            const element = document.querySelector(`.comment-${comment_id}`);
+            element.remove();
+        }
+    };
+
+    requestDelete.onreadystatechange = () => {
+        if(requestDelete.readyState === XMLHttpRequest.DONE) {
+            deleteResponse();
+        }
+    };
+    </script>
 {% endblock %}
