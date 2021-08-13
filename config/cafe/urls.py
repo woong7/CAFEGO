@@ -16,4 +16,6 @@ urlpatterns = [
     path('sort_visit/<int:pk>/', views.sort_visit, name='sort_visit'),
     path('sort_total_visit/<int:pk>/', views.sort_total_visit, name='sort_total_visit'),
     path('sort_review/<int:pk>/', views.sort_review, name='sort_review'),
+    path('comment_write/', views.comment_write, name='comment_write'),
+    path('comment_delete/', views.comment_delete, name='comment_delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

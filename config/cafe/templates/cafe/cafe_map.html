@@ -1,31 +1,37 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 {% load static %}
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>카테고리로 장소 검색하기</title>
+{% block title %}
+    카페 지도
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_map.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="cafe_map-container">
+        <div>
+            <div id="keyword-search" class="bg-lightgray">
+                <div class="option">
+                    <div class="bg-cafego-blue">
+                        <form id="searchForm">
+                            <input type="text" value="" placeholder="키워드 입력" id="keyword"> 
+                            <input type="button" id="search-cafe" value="검색하기"></input> 
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <ul id="placesList">
+                </ul>
+            </div>
+            <div id="map"></div>
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
-</head>
-<body>
-    <div id="menu_wrap" class="bg_white">
-        <div class="option">
-            <div>
-                <form id="searchForm">
-                    키워드 : <input type="text" value="" id="keyword" size="15"> 
-                    <input type="button" id="search-cafe" value="검색하기"></input> 
-                </form>
-            </div>
-        </div>
-        <hr>
-        <ul id="placesList">
-        </ul>
-    </div>
-    <div id="map" style="width:700px; height:700px;"></div>
-
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbe48a94474ef23703951ea76b61e90&libraries=services"></script>
     <script  type="text/javascript"> 
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
@@ -78,7 +84,7 @@
         for(var i = 0; i < markers.length; i++) {
             //console.log(markers[i].Fb);
         }
-        console.log(markers.length);
+        //console.log(markers.length);
     });
 
     // 카페들을 지도에 마킹하는 함수
@@ -131,7 +137,7 @@
     // 마커를 생성하고 지도위에 표시하는 함수
     function addMarker(markers, place) {
         // 마커 아이콘 크기 조정
-        var imageSize = new kakao.maps.Size(16, 16);
+        var imageSize = new kakao.maps.Size(24, 24);
 
         // 마커 생성
         var marker = new kakao.maps.Marker({
@@ -334,5 +340,4 @@
         map.setCenter(locPosition);      
     }    
     </script>
-</body>
-</html>
+{% endblock %}

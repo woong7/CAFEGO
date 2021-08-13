@@ -66,8 +66,14 @@ def main(request):
     return render(request, 'accounts/main.html')
 
 def home(request):
-    #return render(request, 'accounts/home.html')
-    return render(request,'accounts/home.html')
+    users=User.objects.all()
+    cafenum=CafeList.objects.all()
+    return render(request,'accounts/home.html',{'cafenum':len(cafenum), 'usernum':len(users)})
+
+def create_admin(request):
+
+    User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True)
+    return redirect('home')
 
 def badge_list(request, pk):
     user=User.objects.get(id=pk)
@@ -268,17 +274,18 @@ class EnrollVisitedCafeListView(ListView):
         visited_cafe_list = VisitedCafe.objects.filter(user = self.request.user).order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
         
         names_to_include = [o.cafe for o in visited_cafe_list] 
-        visited_cafe_list = CafeList.objects.filter(name__in=names_to_include)
+        cafe_list = CafeList.objects.filter(name__in=names_to_include)
         
         if search_keyword:
             if len(search_keyword) > 1:
                 if search_type == 'name':
-                    search_cafe_list = visited_cafe_list.filter(name__icontains=search_keyword)
+                    search_cafe_list = cafe_list.filter(name__icontains=search_keyword)
                 elif search_type == 'address':
-                    search_cafe_list = visited_cafe_list.filter(address__icontains=search_keyword)
+                    search_cafe_list = cafe_list.filter(address__icontains=search_keyword)
                 elif search_type == 'all':
-                    search_cafe_list = visited_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
-                return search_cafe_list
+                    search_cafe_list = cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
+                cafes_to_include = [o for o in search_cafe_list] 
+                return VisitedCafe.objects.filter(cafe__in=cafes_to_include)
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
         return visited_cafe_list

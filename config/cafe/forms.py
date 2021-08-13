@@ -6,4 +6,4 @@ from .models import Review
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        exclude = ('username', 'cafe',  'updated_at', 'visit_cafe')
+        exclude = ('username', 'cafe',  'updated_at', 'visit_cafe', 'created_at')

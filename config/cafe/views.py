@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.generic import ListView
 from .models import CafeList, Review, ReviewPhoto, Comment
-from accounts.models import User, VisitedCafe
+from accounts.models import User, VisitedCafe, Badge
 from .forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q
@@ -11,6 +11,8 @@ import csv
 import pandas as pd
 from cafe.models import CafeList
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.http.response import JsonResponse
 
 # Create your views here.
 def review_list(request, pk):
@@ -19,12 +21,20 @@ def review_list(request, pk):
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    print("each_reviews:", each_reviews)
-    print("each_reviews user:", each_reviews.filter(username=request.user))
-    #유저가 이 카페에 방문했었는지 체크
-    #TODO: 아직 만지는 중
-    # try:
+    comments = Comment.objects.all()
+    #print("each_reviews:", each_reviews)
+    #print("each_reviews user:", each_reviews.filter(username=request.user))
 
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+
+    #방문했는지 체크 -> 리뷰 작성할 수 있음!
+    is_visit = False
+
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
         cafe_stars_avg = 0.0
@@ -40,10 +50,35 @@ def review_list(request, pk):
         this_cafe.cafe_stars = cafe_stars_avg
         this_cafe.save()
     
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={
+        'this_cafe': this_cafe,
+        'each_reviews': each_reviews,
+        'review_photo': review_photo,
+        'comments': comments,
+        'is_visit': is_visit,
     } 
 
     return render(request, 'cafe/review_list.html', ctx)
+
+@csrf_exempt
+def comment_write(request):
+    req = json.loads(request.body)
+    review_id = req['review_id']
+    content = req['content']
+    review = Review.objects.get(id=review_id)
+    username = review.username
+    comment = Comment.objects.create(post=review, username=username, content=content)
+    comment.save()
+    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'comment_user':comment.username, 'comment_time':comment.created_at})
+
+@csrf_exempt
+def comment_delete(request):
+    req = json.loads(request.body)
+    comment_id = req['comment_id']
+    comment = Comment.objects.get(id=comment_id)
+    comment.delete()
+    return JsonResponse({'comment_id':comment_id})
+
 
 def review_create(request, pk):
     if request.method == 'POST':
@@ -140,6 +175,7 @@ class CafeListView(ListView):
             context['q'] = search_keyword
         context['type'] = search_type
 
+        user_visited_cafes = VisitedCafe.objects.filter(user=self.request.user)
         return context
 
 # 카페 지도
@@ -151,6 +187,9 @@ def cafe_map(request):
     }
     return render(request, 'cafe/cafe_map.html', ctx)
 
+from django.conf import settings
+from django.conf.urls.static import static
+import os
 def init_data(request):
     with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
@@ -161,6 +200,16 @@ def init_data(request):
         ss.append(st)
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
+
+    Badge.objects.create(badge_name="카페홀릭", badge_image="static/image/CafeHolic_badge.png", badge_get="카페 총 누적 방문횟수 X회 이상") 
+    Badge.objects.create(badge_name="사교왕", badge_image="static/image/AmericanoLover.png", badge_get="친구 수 X명 이상")    
+    Badge.objects.create(badge_name="개척자", badge_image="static/image/CafeHolic_badge.png", badge_get="X개 이상의 카페 방문")    
+    Badge.objects.create(badge_name="파워블로거", badge_image="static/image/AmericanoLover.png", badge_get="X개 이상의 리뷰 작성")    
+    Badge.objects.create(badge_name="랭킹 1위", badge_image="static/image/금메달.jfif", badge_get="누적 방문 랭킹 1위")    
+    Badge.objects.create(badge_name="랭킹 2위", badge_image="static/image/은메달.jfif", badge_get="누적 방문 랭킹 2위")    
+    Badge.objects.create(badge_name="랭킹 3위", badge_image="static/image/동메달.jfif", badge_get="누적 방문 랭킹 3위")    
+
+    
     return redirect('home')
 
 def sort_latest(request, pk):

@@ -1,17 +1,43 @@
 #header-logo-image {
     display: inline-block;
-    width: 240px;
-    height: 78px;
+    width: 120px;
+    height: 39px;
     background: url(../image/logo.png) no-repeat;
-    background-size: 240px;
+    background-size: 120px;
     vertical-align: middle;
 }
 
-.blind {
+.blind-logo {
     position: absolute;
     overflow: hidden;
     clip: rect(0 0 0 0);
     margin: -1px;
     width: 1px;
     height: 1px;
+}
+
+.bg-lightgray {
+    background-color: #E3EBE7;
+}
+
+.nickname-font {
+    font-size: 20px;
+    font-weight: bold;
+    color: slategray;
+}
+
+a {
+    text-decoration: none;
+}
+
+.nav-item-hover:hover {
+    color: slategray;
+}
+
+.bg-cafego-blue {
+    background-color: #386ABB;
+}
+
+.bg-cafego-yellow {
+    background-color: #FFCC03;
 }
