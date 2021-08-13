@@ -5,19 +5,24 @@
     리뷰작성
 {% endblock %}
 {% block content %}
-    <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <table>
-            <div>{{ cafe_name.name }}</div>
-            <div>작성자: {{ reviewer }}</div>
-            
-            <!-- 다른 요소들은 form에서 입력받음 -->
-            {{ form.as_table }} 
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">{{ cafe_name.name }}</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">{{cafe_name.address}}</p>
+        <div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- 다른 요소들은 form에서 입력받음 -->
+                <p>별점 : {{ form.review_stars}}</p>
+                <p>{{ form.content }}</p>
+                <!-- 사진은 여러 개라서 따로 등록  -->
+                <p>사진 등록 <input type="file" name="imgs" multiple></p>
 
-            <!-- 사진은 여러 개라서 따로 등록  -->
-            <input type="file" name="imgs" multiple>
-        </table>
-
-        <input type="submit" value="작성 완료">
-    </form>    
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <button type="submit" class="btn btn-outline-primary px-4 gap-3">작성완료</button>
+                </div>
+            </form> 
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -3,7 +3,6 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-<p>로그인 후 화면!!</p>
 {% if user.is_admin %}
     {% if cafenum == 0%}
         <p><a href="{% url 'cafe:init_data' %}" >카페 데이터 받기(리셋 후 한번만 실행해 주세요!)</a></p>

@@ -21,12 +21,19 @@ def review_list(request, pk):
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    print("each_reviews:", each_reviews)
-    print("each_reviews user:", each_reviews.filter(username=request.user))
-    #유저가 이 카페에 방문했었는지 체크
-    #TODO 아직 만지는 중
-    # try:
+    #print("each_reviews:", each_reviews)
+    #print("each_reviews user:", each_reviews.filter(username=request.user))
 
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+
+    #방문했는지 체크 -> 리뷰 작성할 수 있음!
+    is_visit = False
+
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
         cafe_stars_avg = 0.0
@@ -45,6 +52,7 @@ def review_list(request, pk):
         'this_cafe': this_cafe,
         'each_reviews': each_reviews,
         'review_photo': review_photo,
+        'is_visit': is_visit,
     } 
 
     return render(request, 'cafe/review_list.html', ctx)
@@ -163,6 +171,7 @@ class CafeListView(ListView):
             context['q'] = search_keyword
         context['type'] = search_type
 
+        user_visited_cafes = VisitedCafe.objects.filter(user=self.request.user)
         return context
 
 # 카페 지도
