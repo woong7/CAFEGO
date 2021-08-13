@@ -274,16 +274,17 @@ class EnrollVisitedCafeListView(ListView):
         visited_cafe_list = VisitedCafe.objects.filter(user = self.request.user).order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
         
         names_to_include = [o.cafe for o in visited_cafe_list] 
-        visited_cafe_list = CafeList.objects.filter(name__in=names_to_include)
+        cafe_list = CafeList.objects.filter(name__in=names_to_include)
         
         if search_keyword:
             if len(search_keyword) > 1:
                 if search_type == 'name':
-                    search_cafe_list = visited_cafe_list.filter(name__icontains=search_keyword)
+                    search_cafe_list = cafe_list.filter(name__icontains=search_keyword)
                 elif search_type == 'address':
-                    search_cafe_list = visited_cafe_list.filter(address__icontains=search_keyword)
+                    search_cafe_list = cafe_list.filter(address__icontains=search_keyword)
                 elif search_type == 'all':
-                    search_cafe_list = visited_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
+                    search_cafe_list = cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
+                names_to_include = [o.cafe for o in visited_cafe_list] 
                 return search_cafe_list
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
