@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.generic import ListView
 from .models import CafeList, Review, ReviewPhoto, Comment
-from accounts.models import User, VisitedCafe
+from accounts.models import User, VisitedCafe, Badge
 from .forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q
@@ -174,6 +174,9 @@ def cafe_map(request):
     }
     return render(request, 'cafe/cafe_map.html', ctx)
 
+from django.conf import settings
+from django.conf.urls.static import static
+import os
 def init_data(request):
     with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
@@ -184,6 +187,16 @@ def init_data(request):
         ss.append(st)
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
+
+    Badge.objects.create(badge_name="카페홀릭", badge_image="static/image/CafeHolic_badge.png", badge_get="카페 총 누적 방문횟수 X회 이상") 
+    Badge.objects.create(badge_name="사교왕", badge_image="static/image/AmericanoLover.png", badge_get="친구 수 X명 이상")    
+    Badge.objects.create(badge_name="개척자", badge_image="static/image/CafeHolic_badge.png", badge_get="X개 이상의 카페 방문")    
+    Badge.objects.create(badge_name="파워블로거", badge_image="static/image/AmericanoLover.png", badge_get="X개 이상의 리뷰 작성")    
+    Badge.objects.create(badge_name="랭킹 1위", badge_image="static/image/금메달.jfif", badge_get="누적 방문 랭킹 1위")    
+    Badge.objects.create(badge_name="랭킹 2위", badge_image="static/image/은메달.jfif", badge_get="누적 방문 랭킹 2위")    
+    Badge.objects.create(badge_name="랭킹 3위", badge_image="static/image/동메달.jfif", badge_get="누적 방문 랭킹 3위")    
+
+    
     return redirect('home')
 
 def sort_latest(request, pk):

@@ -4,7 +4,11 @@
 
 {% if user.is_authenticated %}
 <p>로그인 후 화면!!</p>
-<p><a href="{% url 'cafe:init_data' %}" >카페 데이터 받기(리셋 후 한번만 실행해 주세요!)</a></p>
+{% if user.is_admin %}
+    {% if cafenum == 0%}
+        <p><a href="{% url 'cafe:init_data' %}" >카페 데이터 받기(리셋 후 한번만 실행해 주세요!)</a></p>
+    {% endif %}
+{% endif %}
     <div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 10rem;">
         <p id="header-logo-image"></p>
         <h1></h1>
@@ -18,7 +22,11 @@
     
 {%else%}
     <p>메인 페이지로 돌아가도록 설정</p>
-    <h4><a href="/account/login">로그인하기</a></h4>
+    {% if usernum == 0 %}
+        <h4><a href="{%url 'create_admin' %}">슈퍼유저 생성</a></h4>
+    {% else %}
+        <h4><a href="/account/login">로그인하기</a></h4>
+    {% endif %}
     <h4><a href="/account/signup">회원가입</a></h4>
 {%endif %}
 
