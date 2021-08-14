@@ -9,7 +9,7 @@ import os
 urlpatterns = [
     path('', views.main, name='main'),
     path('home/', views.home, name='home'),
-    path('signup/', views.signup, name='signup'),
+    # path('signup/', views.signup, name='signup'),
     path('login/', views.LoginView.as_view(), name='login'), #views.login
     path('logout/', views.logout, name='logout'),
     path('mypage/<int:pk>', views.mypage, name='mypage'),

@@ -10,13 +10,14 @@ from django.utils import timezone
 
 #user.username 원래 있는 이름
 class UserManager(BaseUserManager):
-    def create_user(self, username, nickname, district, town, agree_terms, agree_marketing,  password=None):
+    def create_user(self, username, nickname, city, gu, dong, agree_terms, agree_marketing,  password=None):
 
         user = self.model(
             username = username,
             nickname = nickname,
-            district = district,
-            town = town,
+            city = city,
+            gu = gu,
+            dong = dong,
             agree_terms=agree_terms,
             agree_marketing=agree_marketing,
         )
@@ -30,8 +31,9 @@ class UserManager(BaseUserManager):
             username,
             nickname,
             password=password,
-            district="default district",
-            town = "default town",
+            city="default city",
+            gu = "default gu",
+            dong = "default dong",
             agree_terms=agree_terms,
             agree_marketing=agree_marketing,
         )
@@ -45,8 +47,11 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=150, unique=True) ##########
     email = models.EmailField(blank=True)
     nickname = models.CharField(max_length=150)
-    district = models.CharField(max_length=10, choices=SEOUL_DISTRICT_CHOICES)
-    town = models.CharField(max_length=20, choices=SEOUL_TOWN_CHOICES)
+
+    city = models.CharField(max_length=10)
+    gu = models.CharField(max_length=10)
+    dong = models.CharField(max_length=10)
+
     agree_terms = models.BooleanField(default=False)
     agree_marketing = models.BooleanField(default=False)
 
