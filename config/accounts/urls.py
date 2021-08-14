@@ -27,6 +27,7 @@ urlpatterns = [
     path('rank/list/', views.rank_list, name='rank_list'),
     path('rank/detail/', views.rank_detail, name='rank_detail'),
     path('cafemap/', views.user_cafe_map, name='user_cafe_map'),
+    path('this_cafe_map/', views.this_cafe_map, name='this_cafe_map'),
     #path('detail/', views.user_detail, name='user_detail'),
 
     path('enroll_home/', views.enroll_home, name="enroll_home"),

@@ -118,7 +118,6 @@ def badge_untaken(request):
     ctx={'taken_badges':taken_badges, 'user':user,}
     return render(request, 'accounts/badge_untaken.html', context=ctx)
 
-import math
 def user_cafe_map(request):
     visited_cafes = VisitedCafe.objects.filter(user=request.user)
     visited_cafe_list = serializers.serialize('json', visited_cafes)
@@ -698,3 +697,16 @@ def friend_register(request):
         user.save()
 
     return redirect('friend_search')
+
+@csrf_exempt
+def this_cafe_map(request):
+    #cafeId = request.POST['cafe_id'];
+    cafeId = request.GET.get('cafe_id')
+    cafes = CafeList.objects.all().order_by('location_x')
+    cafe_list = serializers.serialize('json', cafes)
+    ctx = {
+        'data': cafe_list,
+        'cafe_id': cafeId,
+    }
+    print(cafeId);
+    return render(request, 'accounts/cafe_map.html', ctx)
