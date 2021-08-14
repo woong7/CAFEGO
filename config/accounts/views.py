@@ -19,8 +19,7 @@ from django.contrib import messages
 from django.db.models import Q, Count
 from datetime import datetime, timedelta
 from dateutil import relativedelta
-
-# Create your views here.
+import operator
 
 def signup(request):
     if request.method == "POST":
@@ -71,7 +70,6 @@ def home(request):
     return render(request,'accounts/home.html',{'cafenum':len(cafenum), 'usernum':len(users)})
 
 def create_admin(request):
-
     User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True)
     return redirect('home')
 
@@ -151,6 +149,11 @@ def rank_list(request):
     last_month_first = datetime(now.year, now.month-1, 1) #오늘을 기준으로 저번달 첫 시간
     this_month_first = last_month_first + relativedelta.relativedelta(months=1)
     last_month_last = this_month_first - timedelta(seconds=1) #저번달 막 시간
+    
+    #test용
+    August = datetime(now.year, now.month, 1)
+    September = August + relativedelta.relativedelta(months=1)
+    August_fin = September - timedelta(seconds=1)
     #print(last_month_first, last_month_last)
     
     ####################  A_총 방문 랭킹  ####################
@@ -161,8 +164,48 @@ def rank_list(request):
 
     ####################  C_한 달 카페 종류 랭킹  ####################
     # B_users=User.objects.all().order_by('-visit_count_lastmonth')
-    visited_cafe = VisitedCafe.objects.all()
+    # drink = Drink.objects.filter(created_at = last_month_first)
+    # drink = Drink.objects.filter{'date_time_field__range': (datetime.created_at.combine(last_month_first, datetime.time.min),
+    #                                                         datetime.created_at.combine(last_month_last, datetime.time.max))}
+    # new_cafe = VisitedCafe.objects.filter(created_at__date__range=(datetime.date(August), datetime.date(August_fin))) 
+    #created_at을 저장하는 순간 updated_at도 저장하기 때문에 그냥 updated_at 기준으로만 데이터를 불러도 된다.
+    # C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin))).order_by(len(''))
+    # C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin))).annotate(cafe_count = Count('user')).order_by('cafe_count')
+    C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin)))
+    C_monthly_kinds_dict = {}
+    a = []
+    for i in C_monthly_visited_cafe:
+        # i = 뉴오리진 마포점 이렇게 나옴
+        if i.user not in C_monthly_kinds_dict.keys():#키 리스트
+            a = [] #리스트 비우기
+            a.append(i.cafe)
+            C_monthly_kinds_dict[i.user] = a
+            C_monthly_kinds_dict[i.user] = len(a)
+        else:
+            a.append(i.cafe)
+            C_monthly_kinds_dict[i.user] = a
+            C_monthly_kinds_dict[i.user] = len(a)
+    
+    #TODO: value 값 기준으로 내림차순 정렬/ 텔플릿 딕셔너리 활용
+    # C_monthly_kinds_order = sorted(C_monthly_kinds_dict.items(), key=operator.itemgetter(1), reverse=True)
+    C_monthly_kinds_order = C_monthly_kinds_dict
+    print(C_monthly_kinds_order) 
+    #{<User: ye1>: [<CafeList: 뉴오리진 마포점>, <CafeList: 스타벅스 마포용강동점>, <CafeList: 개혁커피>], <User: ye2>: [<CafeList: 뉴오리진 마포점>]}
+    #{<User: ye1>: 3, <User: ye2>: 1}
+    #딕셔너리 성공!!ㅇ리히ㅣㅣ히히ㅣ리리힣 신낭
 
+
+        # if i.user.id == a:
+        #     print(i.user.id)
+        #     print(i.cafe)
+    # C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin))).order_by('user')
+    #(ex) D_each_user_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('review_count')
+
+    # for user_cafe in C_monthly_visited_cafe:
+    # print(C_monthly_visited_cafe)
+    #Drink로 하면 <QuerySet [<Drink: 초코라떼>, <Drink: 카페라떼>]> 나옴. created_at은 무조건 새로운 종류니까 이 개수가 카페 종류 개수임
+
+    
     ####################  D_누적 리뷰 랭킹  ####################
     D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
 
@@ -173,19 +216,16 @@ def rank_list(request):
     #그니까 review_person을 통해 해당 유저의 리뷰를 세고 그 숫자로 정렬
     #(ex) D_each_user_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('-total_review')
     E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
-    
-    # D_all_reviews = Review.objects.all()
-    # for i in D_all_reviews:
-    #     D_each_review_create = i.created_at
-    #     print(D_each_review_create) #날짜가 나오긴 하는데 한국신간으로 바꿔야할듯
-
 
     ctx={
+        'last_month_first': last_month_first,
+        'last_month_last': last_month_last,
         ##### A_총 방문 랭킹 #####
         'A_users': A_users,
         ##### B_한 달 방문 랭킹 #####
         'B_users': B_users,
-
+        #####  C_한 달 카페 종류 랭킹  #####
+        'C_monthly_kinds_order': C_monthly_kinds_order,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
         ##### E_한 달 리뷰 랭킹 #####
@@ -490,23 +530,27 @@ import json
 def visit_register(request):
     if request.method == 'POST':
         req_post = request.POST
-        #print("req_post:", req_post)
+        #음료 내용 받아온다.
         try:
             str_cafename = req_post.__getitem__('cafename')
             str_new_drinkname = req_post.__getitem__('etc')
             str_drinkname = req_post.__getitem__('beverage')
-
         except:
             print("존재하지 않습니다!")
         
+        #카페를 방문한 유저와 그 유저의 방문 횟수 +1
         v_cafe = VisitedCafe()
         v_cafe.user = request.user
         v_cafe.cafe = CafeList.objects.get(name=str_cafename)
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
 
+        #음료를 저장할 카페, 날짜 저장
+        now = datetime.today() ##@@
         drink = Drink()
         drink.visited_cafe = v_cafe
+        # v_cafe.created_at = now ##@@
+        # print('!!!!!!!', v_cafe.created_at) ##@@
         user = User.objects.get(username=request.user)
         user.total_visit += 1
 
@@ -537,16 +581,15 @@ def visit_register(request):
 
 @csrf_exempt
 def visited_register(request):
-
     if request.method == 'POST':
         req_post = request.POST
         try:
             str_cafename = req_post.__getitem__('cafename')
             str_new_drinkname = req_post.__getitem__('etc')
             str_drinkname = req_post.__getitem__('beverage')
-        #print("drinkname:", str_drinkname)
         except:
             print("존재하지 않습니다!")
+
         user = User.objects.get(username=request.user)
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
         v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
@@ -576,6 +619,10 @@ def visited_register(request):
         # for i in user_v_cafelist:
         #     if v_cafe.cafe is not i.cafe:
         #         user.kinds_of_cafe_lastmonth += 1
+
+        now = datetime.today()
+        # v_cafe.updated_at = now ##@@2021-08-14 11:14:20.326741
+        print(v_cafe.updated_at)
 
         user.save()
         v_cafe.save()

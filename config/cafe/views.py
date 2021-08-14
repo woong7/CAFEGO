@@ -14,7 +14,6 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 
-# Create your views here.
 def review_list(request, pk):
     #해당 카페 /<CafeList: 90도씨> 이렇게 나온다
     this_cafe = CafeList.objects.get(pk=pk) 
@@ -35,6 +34,7 @@ def review_list(request, pk):
             is_visit = True
         else:
             pass
+        
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
         cafe_stars_avg = 0.0

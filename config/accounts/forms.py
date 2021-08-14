@@ -54,6 +54,7 @@ class DrinkForm(forms.ModelForm):
 
     class Meta:
         model = Drink
+        exclude = ('visited_cafe', 'created_at', 'updated_at') #
         fields = ['drinkname',]
 
 
