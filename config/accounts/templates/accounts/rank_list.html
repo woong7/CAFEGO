@@ -56,14 +56,12 @@
                     <h4 class="my-0 fw-normal">한달 카페 종류 랭킹</h4>
                     </div>
                     <div class="card-body">
-                        {% for i in C_monthly_kinds_order %}
-                            {% for key, value in i.items %}
-                                {% if forloop.counter == 1 %}
-                                    <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ key }} 님! [ 총 리뷰 개수: {{ value }} ]</p>  
-                                {% else %}
-                                    <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ key }} 님!  [ 총 리뷰 개수: {{ value }} ] </p>
-                                {% endif %}
-                            {% endfor %}
+                        {% for key, value in C_monthly_kinds_order.items %}
+                            {% if forloop.counter == 1 %}
+                                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ key }} 님! [ 이번 달  방문 카페 종류: {{ value }} ]</p>  
+                            {% else %}
+                                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ key }} 님!  [ 이번 달  방문 카페 종류: {{ value }} ] </p>
+                            {% endif %}
                         {% endfor %}
                         <button type="button" class="w-100 btn btn-lg btn-outline-primary">전체 랭킹 확인하러 가기</button>
                     </div>

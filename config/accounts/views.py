@@ -163,48 +163,30 @@ def rank_list(request):
     B_users=User.objects.all().order_by('-visit_count_lastmonth')
 
     ####################  C_한 달 카페 종류 랭킹  ####################
-    # B_users=User.objects.all().order_by('-visit_count_lastmonth')
-    # drink = Drink.objects.filter(created_at = last_month_first)
-    # drink = Drink.objects.filter{'date_time_field__range': (datetime.created_at.combine(last_month_first, datetime.time.min),
-    #                                                         datetime.created_at.combine(last_month_last, datetime.time.max))}
-    # new_cafe = VisitedCafe.objects.filter(created_at__date__range=(datetime.date(August), datetime.date(August_fin))) 
-    #created_at을 저장하는 순간 updated_at도 저장하기 때문에 그냥 updated_at 기준으로만 데이터를 불러도 된다.
-    # C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin))).order_by(len(''))
-    # C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin))).annotate(cafe_count = Count('user')).order_by('cafe_count')
     C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin)))
     C_monthly_kinds_dict = {}
-    a = []
     for i in C_monthly_visited_cafe:
         # i = 뉴오리진 마포점 이렇게 나옴
         if i.user not in C_monthly_kinds_dict.keys():#키 리스트
-            a = [] #리스트 비우기
-            a.append(i.cafe)
-            C_monthly_kinds_dict[i.user] = a
-            C_monthly_kinds_dict[i.user] = len(a)
+            C_monthly_kinds_dict[i.user] = [i.cafe]
         else:
-            a.append(i.cafe)
-            C_monthly_kinds_dict[i.user] = a
-            C_monthly_kinds_dict[i.user] = len(a)
+            C_monthly_kinds_dict[i.user].append(i.cafe)
+    #여기까지 {user이름:[카페리스트]}이렇게 내가 원하는 대로 나옴!!
+    # {<User: ye1>: [<CafeList: 뉴오리진 마포점>, <CafeList: 스타벅스 마포용강동점>, <CafeList: 개혁커피>], <User: ye2>: [<CafeList: 뉴오리진 마포점>]}
     
-    #TODO: value 값 기준으로 내림차순 정렬/ 텔플릿 딕셔너리 활용
-    # C_monthly_kinds_order = sorted(C_monthly_kinds_dict.items(), key=operator.itemgetter(1), reverse=True)
-    C_monthly_kinds_order = C_monthly_kinds_dict
-    print(C_monthly_kinds_order) 
-    #{<User: ye1>: [<CafeList: 뉴오리진 마포점>, <CafeList: 스타벅스 마포용강동점>, <CafeList: 개혁커피>], <User: ye2>: [<CafeList: 뉴오리진 마포점>]}
-    #{<User: ye1>: 3, <User: ye2>: 1}
-    #딕셔너리 성공!!ㅇ리히ㅣㅣ히히ㅣ리리힣 신낭
+    # 카페 종류 **개수**를 넣어주기
+    for i in C_monthly_kinds_dict:
+        y = len(C_monthly_kinds_dict.get(i))
+        C_monthly_kinds_dict[i] = y
+        # {<User: ye1>: 3, <User: ye2>: 1}
 
+    user_nick = User.objects.all()
 
-        # if i.user.id == a:
-        #     print(i.user.id)
-        #     print(i.cafe)
-    # C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin))).order_by('user')
-    #(ex) D_each_user_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('review_count')
-
-    # for user_cafe in C_monthly_visited_cafe:
-    # print(C_monthly_visited_cafe)
-    #Drink로 하면 <QuerySet [<Drink: 초코라떼>, <Drink: 카페라떼>]> 나옴. created_at은 무조건 새로운 종류니까 이 개수가 카페 종류 개수임
-
+    #value 값 기준으로 내림차순 정렬
+    #[(<User: ye1>, 3), (<User: ye2>, 1)] 이렇게 튜플로 나옴...
+    C_monthly_kinds_tuple = sorted(C_monthly_kinds_dict.items(), key=lambda x: x[1], reverse=True)
+    #튜플 딕셔너리로 바꿈
+    C_monthly_kinds_order = dict(C_monthly_kinds_tuple)
     
     ####################  D_누적 리뷰 랭킹  ####################
     D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
