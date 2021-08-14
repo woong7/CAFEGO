@@ -14,7 +14,10 @@
         <p class="lead mb-4">{{ this_cafe.address }}</p>
         <h3> 평점 : {{ this_cafe.cafe_stars }}</h3>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:cafe_map' %}'">지도 보기</button>
+            <form id="to-map" action="/this_cafe_map/" method="post">
+                <input id='mapbtn' type="submit" value="지도 보기" onclick="goToMap()">
+                <!--<button id="mapbtn" class="btn btn-outline-primary" value="{{ this_cafe.id }}" onclick="goToMap('{{this_cafe.id}}');">지도 보기</button> --> <!--location.href='{% url 'cafe:cafe_map' %}'-->
+            </form>
             {% if is_visit %}
                 <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:review_create' this_cafe.id %}'">리뷰 작성</button>
             {% endif %}
@@ -68,24 +71,20 @@
             
 
                 <div class="comments-{{reviews.id}}">
-                    <ul>
-                        {% for comment in comments %}
-                            {% if comment.post == reviews %}
-                                <li>
-                                    <div class="comment-{{comment.id}} container">
-                                        <div class="row">
-                                            <div class="col">{{comment.content}}</div>
-                                            <div class="col">{{comment.username}}</div>
-                                            <div class="col">{{comment.created_at}}</div>
-                                            <div class="col">
-                                                <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
-                                            </div>
+                    {% for comment in comments %}
+                        {% if comment.post == reviews %}
+                                <div class="comment-{{comment.id}} container my-1">
+                                    <div class="row">
+                                        <div class="col">{{comment.content}}</div>
+                                        <div class="col">{{comment.username}}</div>
+                                        <div class="col">{{comment.created_at}}</div>
+                                        <div class="col">
+                                            <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
                                         </div>
                                     </div>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
+                                </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
                 <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
                 <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
@@ -93,8 +92,12 @@
             {% endfor %}
         </article>
     </div>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
+    <script type="text/javascript">
     // 댓글 작성
     const requestWrite = new XMLHttpRequest();
 
@@ -106,22 +109,25 @@
             'Content-Type',
             'application/x-www-form-urlencoded'
         );
-        requestWrite.send(JSON.stringify({review_id: review_id, content:content}));
+        requestWrite.send(JSON.stringify({'review_id': review_id, 'content': content}));
     };
 
     const writeResponse = () => {
         if(requestWrite.status < 400) {
-            const {review_id, content, comment_id} = JSON.parse(requestWrite.response);
+            const {review_id, content, comment_id, username, comment_time} = JSON.parse(requestWrite.response);
+            console.log(content);
             const comments = document.querySelector(`.comments-${review_id}`);
             const element = document.querySelector(`.input-${review_id}`);
             comments.innerHTML += `
-                <div class="comment-${comment_id} container-fluid my-1">
+                <div class="comment-${comment_id} container my-1">
                     <div class="row">
                         <div class="col">${content}</div>
+                        <div class="col">${username}</div>
+                        <div class="col">${comment_time}</div>
                         <div class="col">
                             <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
                         </div>
-                    </div<
+                    </div>
                 </div>
             `;
         }
@@ -159,5 +165,44 @@
             deleteResponse();
         }
     };
+
+    {% comment %} const goToMap = (cafe_id) => {
+        console.log(cafe_id);
+        const url = '/this_cafe_map/';
+        const data = {'cafe_id' : cafe_id};
+        $.post(url, data);
+    }; {% endcomment %}
+
+    function goToMap() {
+        var cafe_id = {{ cafe_id | safe }};
+        $.ajax({
+            url: "/this_cafe_map/",
+            data : {
+                'cafe_id': cafe_id,
+            },
+            success: function () {
+                alert('gigigi');
+            }
+        })
+    };
+
+    {% comment %} $(document).ready(function () {
+        $('#mapbtn').on('click', function () {
+            var cafe_id = $(this).attr("value");
+            var url = "/this_cafe_map/";
+            console.log(cafe_id);
+            $.ajax({
+                url : "/this_cafe_map/",
+                type : "POST",
+                data : {cafe_id : cafe_id},
+                success : function () {
+                    window.location.href = url;
+                }
+                error : function () {
+                    alert("123123");
+                }
+            });
+        })
+    }); {% endcomment %}
     </script>
 {% endblock %}
