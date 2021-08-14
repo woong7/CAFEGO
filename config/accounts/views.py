@@ -22,17 +22,17 @@ from dateutil import relativedelta
 
 # Create your views here.
 
-def signup(request):
-    if request.method == "POST":
-        if request.POST["password1"] == request.POST["password2"]:
-            user = User.objects.create_user(
-                username=request.POST["username"], password=request.POST["password1"])
-            auth.login(request, user)
-            print("회원가입 성공!")
-            return redirect('/accounts/') #home 페이지 따로 만들어야 댐! url 이름이 home 이어야 댐!
-        return render(request, 'accounts/signup.html')
-    #실패시 안넘어감
-    return render(request, 'accounts/signup.html')
+# def signup(request):
+#     if request.method == "POST":
+#         if request.POST["password1"] == request.POST["password2"]:
+#             user = User.objects.create_user(
+#                 username=request.POST["username"], password=request.POST["password1"])
+#             auth.login(request, user)
+#             print("회원가입 성공!")
+#             return redirect('/accounts/') #home 페이지 따로 만들어야 댐! url 이름이 home 이어야 댐!
+#         return render(request, 'accounts/signup.html')
+#     #실패시 안넘어감
+#     return render(request, 'accounts/signup.html')
 
 
 ###allauth 써서 필요없을 듯???
