@@ -34,8 +34,6 @@
             {% if q %}
             <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
             {% endif %}
-            <!-- {{user_visited_cafes}} -->
-            {{ user_visited_cafes }}
             {% if cafe_list %}
                 검색 결과: {{page_obj.paginator.count}}개
                 {% for cafe in cafe_list %}

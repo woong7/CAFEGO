@@ -137,7 +137,6 @@ class CafeListView(ListView):
         search_type = self.request.GET.get('type', '') 
         cafe_list = CafeList.objects.order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
         
-        
         if search_keyword: #검색결과가 있을 때
             if len(search_keyword) > 1:
                 if search_type == 'name':
@@ -155,17 +154,12 @@ class CafeListView(ListView):
     #하단부에 페이징 처리
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print("context:", context)
-        print("cafelist:", context['object_list'])
-        cafelist = context['object_list']
         user_visited_cafes = VisitedCafe.objects.filter(user=self.request.user)
-        # for cafe in cafelist:
-        #     print("cafe name:", cafe.name)
+
         user_visit_list = []
         for v_cafe in user_visited_cafes:
             user_visit_list.append(v_cafe.cafe)
         context['user_visited_cafes'] = user_visit_list
-        print("uvl:", user_visit_list)
 
         paginator = context['paginator']
         page_numbers_range = 10
