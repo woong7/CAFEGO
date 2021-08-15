@@ -146,7 +146,8 @@ class CafeListView(ListView):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
         cafe_list = CafeList.objects.order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
-        if search_keyword:
+        
+        if search_keyword: #검색결과가 있을 때
             if len(search_keyword) > 1:
                 if search_type == 'name':
                 #__incontains 대소문자 구별 없이 데이터 가져온다.
@@ -163,6 +164,13 @@ class CafeListView(ListView):
     #하단부에 페이징 처리
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user_visited_cafes = VisitedCafe.objects.filter(user=self.request.user)
+
+        user_visit_list = []
+        for v_cafe in user_visited_cafes:
+            user_visit_list.append(v_cafe.cafe)
+        context['user_visited_cafes'] = user_visit_list
+
         paginator = context['paginator']
         page_numbers_range = 10
         max_index = len(paginator.page_range)
@@ -185,7 +193,6 @@ class CafeListView(ListView):
             context['q'] = search_keyword
         context['type'] = search_type
 
-        user_visited_cafes = VisitedCafe.objects.filter(user=self.request.user)
         return context
 
 # 카페 지도

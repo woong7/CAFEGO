@@ -13,6 +13,7 @@
     <div class="col-lg-6 mx-auto">
         <p class="lead mb-4">{{ this_cafe.address }}</p>
         <h3> 평점 : {{ this_cafe.cafe_stars }}</h3>
+        {{this_cafe.pk}}
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <button class="btn btn-outline-primary" onclick="location.href= '{% url 'this_cafe_map' this_cafe.id %}'">지도 보기</button>
             {% if is_visit %}

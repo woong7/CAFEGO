@@ -26,6 +26,7 @@
                 <th> </th>
                 <th>카페명</th>
                 <th>위치</th>
+                <th>방문여부</th>
                 <th>별점</th>             
             </tr>
         </thead>
@@ -33,7 +34,6 @@
             {% if q %}
             <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
             {% endif %}
-            <!-- {{user_visited_cafes}} -->
             {% if cafe_list %}
                 검색 결과: {{page_obj.paginator.count}}개
                 {% for cafe in cafe_list %}
@@ -45,6 +45,13 @@
                         <td>
                             <a href="{% url 'this_cafe_map' cafe.id %}">{{ cafe.address }}</a>
                         </td><!--| truncatechars:10-->
+                        <td>
+                            {% if cafe in user_visited_cafes %}
+                                O
+                            {% else %}
+                                
+                            {% endif %}
+                        </td>
                         <td>
                             {%if cafe.cafe_stars == 0.0 %}
                                 
