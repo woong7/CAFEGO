@@ -1,36 +1,39 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block title %}
+    {{ nickname }}님의 카페 지도
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_map.css' %}">
+{% endblock %}
 {% block content %}
-    <h1>유저 카페 지도 확인 페이지입니다</h1>
+    <div class="cafe_map-container">
+        <div id="keyword-search">
+            <div class="bg-search-area">
+                <div>
+                    <span>원하는 카페를 검색해보세요!</span>
+                </div>
+                <form id="searchForm">
+                    <input type="text" value="" placeholder="키워드 입력" id="keyword"> 
+                    <input type="button" id="search-cafe" value="검색하기"></input> 
+                </form>
+            </div>
+            <ul id="placesList">
+            </ul>
+        </div>
+        <div id="map"></div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
-    
-    <div id="menu_wrap" class="bg_white">
-        <div class="option bg-warning">
-            <div>
-                <form id="searchForm">
-                    키워드 : <input type="text" value="" id="keyword" size="15"> 
-                    <input type="button" id="search-cafe" value="검색하기"></input> 
-                </form>
-            </div>
-        </div>
-        <hr>
-        <ul id="placesList">
-        </ul>
-    </div>
-    <div id="map" style="width:700px; height:700px;"></div>
-    
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbe48a94474ef23703951ea76b61e90&libraries=services"></script>
     <script  type="text/javascript">
 
     let cafeList = {{ data | safe }};
     let mainCafePk = {{ main_cafe | safe }};
     let allPlaces = {{ cafe_list | safe }}
-    console.log(cafeList);
-    console.log(mainCafePk);
     let userCafeList = [];
     let mainCafe;
     for(var i = 0; i < allPlaces.length; i++) {
@@ -52,7 +55,7 @@
     
     var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
 
-    var imageSrc = "https://image.flaticon.com/icons/png/512/168/168551.png", // 마커이미지의 주소    
+    var imageSrc = "https://image.flaticon.com/icons/png/512/3127/3127450.png", // 마커이미지의 주소    
         imageOption = {offset: new kakao.maps.Point(8, 16)};
 
     // 현재 지도에 보이는 장소들의 정보를 저장하기 위한 배열

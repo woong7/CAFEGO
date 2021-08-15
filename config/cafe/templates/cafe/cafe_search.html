@@ -42,7 +42,9 @@
                         <td>
                             <a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a>
                         </td>
-                        <td>{{ cafe.address  }}</td><!--| truncatechars:10-->
+                        <td>
+                            <a href="{% url 'this_cafe_map' cafe.id %}">{{ cafe.address }}</a>
+                        </td><!--| truncatechars:10-->
                         <td>
                             {%if cafe.cafe_stars == 0.0 %}
                                 

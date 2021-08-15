@@ -67,8 +67,15 @@ def main(request):
 
 def home(request):
     users=User.objects.all()
+    user=request.user
+    visit_cafe_num=user.total_visit
     cafenum=CafeList.objects.all()
-    return render(request,'accounts/home.html',{'cafenum':len(cafenum), 'usernum':len(users)})
+    ctx = {
+        'cafenum':len(cafenum), 
+        'usernum':len(users), 
+        'mycafe':visit_cafe_num
+    }
+    return render(request,'accounts/home.html', ctx)
 
 def create_admin(request):
 
@@ -119,7 +126,8 @@ def badge_untaken(request):
     return render(request, 'accounts/badge_untaken.html', context=ctx)
 
 def user_cafe_map(request):
-    visited_cafes = VisitedCafe.objects.filter(user=request.user)
+    user = request.user
+    visited_cafes = VisitedCafe.objects.filter(user=user)
     visited_cafe_list = serializers.serialize('json', visited_cafes)
 
     main_cafe = None
@@ -133,6 +141,7 @@ def user_cafe_map(request):
     cafe_list = serializers.serialize('json', cafes)
 
     ctx = {
+        'nickname': user.nickname,
         'data': visited_cafe_list,
         'main_cafe': main_cafe.pk,
         'cafe_list': cafe_list
@@ -319,6 +328,7 @@ class EnrollVisitedCafeListView(ListView):
 def mypage(request, pk):
     #내가 방문한 카페들
     visit_cafes=VisitedCafe.objects.filter(user=request.user)
+
     user=request.user
 
     jsonDec=json.decoder.JSONDecoder()
@@ -696,15 +706,16 @@ def friend_register(request):
 
     return redirect('friend_search')
 
-@csrf_exempt
-def this_cafe_map(request):
-    #cafeId = request.POST['cafe_id'];
-    cafeId = request.GET.get('cafe_id')
-    cafes = CafeList.objects.all().order_by('location_x')
-    cafe_list = serializers.serialize('json', cafes)
+def this_cafe_map(request, pk):
+    cafe = CafeList.objects.get(pk=pk)
+    #cafes = CafeList.objects.all().order_by('location_x')
+    #cafe_list = serializers.serialize('json', cafes)
     ctx = {
-        'data': cafe_list,
-        'cafe_id': cafeId,
+        #'data': cafe_list,
+        'cafe_id': cafe.id,
+        'cafe_name': cafe.name,
+        'cafe_x':cafe.location_x,
+        'cafe_y':cafe.location_y,
+        'cafe_address':cafe.address,
     }
-    print(cafeId);
     return render(request, 'accounts/cafe_map.html', ctx)
