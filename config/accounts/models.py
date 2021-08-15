@@ -125,11 +125,11 @@ class Drink(models.Model):
 
 
 class Notification(models.Model):
-    #1 = Like, 2 = Comment, 3 = Follow
+    #1 = Like - post, 2 = Comment, 3 = Follow
     notification_type = models.IntegerField()
-    to_user = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, null=True)
-    from_user = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)
+    to_user = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, null=True)#follow
+    from_user = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)#follow
     #post - like
     comment = models.ForeignKey('cafe.Comment', on_delete=models.CASCADE, related_name='+', blank=True, null=True)
     date = models.DateTimeField(default=timezone.now)
-    user_has_seen = models.BooleanField(default=False)
+    user_has_seen = models.BooleanField(default=False)#봤는지 안 봤는지 체크

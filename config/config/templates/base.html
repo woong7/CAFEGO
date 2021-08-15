@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -55,6 +56,9 @@
                         </ul>
                     </div>
                     <span class="nickname-font mx-3">{{user.nickname}}님 안녕하세요!</span>
+                    <div class="nav-item">
+                        {% show_notifications %}
+                    </div>
                 </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -79,5 +83,6 @@
 
     {% block content %}
     {% endblock %}
+    <script type="text/javascript" src="{% static 'js/social.js' %}"></script>
 </body>
 </html>
