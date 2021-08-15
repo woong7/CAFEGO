@@ -235,33 +235,69 @@ def init_data(request):
 
 def sort_latest(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
+    comments = Comment.objects.all()
+    is_visit = False
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
 #리뷰를 쓴 유저가 그 카페를 얼마나 방문했는지에 따라서. 내림차순으로.
 def sort_visit(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
+    comments = Comment.objects.all()
+    is_visit = False
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-visit_cafe__visit_count', '-created_at') #해당카페의 리뷰들
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
 def sort_total_visit(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
+    comments = Comment.objects.all()
+    is_visit = False
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username__total_visit', '-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
 def sort_review(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
+    comments = Comment.objects.all()
+    is_visit = False
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username__total_review', '-created_at')#이름 순으로 정렬
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
