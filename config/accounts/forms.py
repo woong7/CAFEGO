@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from . import models
 from .models import Drink, User, VisitedCafe
 from allauth.account.forms import SignupForm
@@ -41,6 +42,14 @@ class MyCustomSignupForm(SignupForm):
         user.agree_marketing = self.cleaned_data['agree_marketing']
         user.save()
         return user
+
+from django.contrib.auth.forms import UserCreationForm
+class UserRegistrationForm(UserCreationForm):
+    
+    class Meta:
+        model = get_user_model()
+        fields = ('email', 'username', 'nickname', 'city', 'gu', 'dong')
+
 
 class VisitedCafeForm(forms.ModelForm):
     class Meta:

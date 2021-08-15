@@ -33,20 +33,20 @@
 
     let cafeList = {{ data | safe }};
     let mainCafePk = {{ main_cafe | safe }};
-    let allPlaces = {{ cafe_list | safe }}
+    let allPlaces = {{ cafe_list | safe }};
     let userCafeList = [];
     let mainCafe;
     for(var i = 0; i < allPlaces.length; i++) {
         for(var j = 0; j < cafeList.length; j++) {
             if(allPlaces[i].pk === cafeList[j].fields.cafe) {
-                userCafeList.push(allPlaces[i]);
+                userCafeList.push([allPlaces[i], cafeList[j].fields.visit_count]);
                 if(cafeList[j].pk === mainCafePk) {
                     mainCafe = allPlaces[i];
                 }
             }
         }
     }
-    console.log(mainCafe);
+
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
         mapOption = {
             center: new kakao.maps.LatLng(mainCafe.fields.location_y, mainCafe.fields.location_x), // 지도의 중심좌표
@@ -138,7 +138,7 @@
         //     }
         // }
         for(var i=0; i < userCafeList.length; i++) {
-            if(userCafeList[i].fields.location_x < ne.La && userCafeList[i].fields.location_x > sw.La && userCafeList[i].fields.location_y < ne.Ma && userCafeList[i].fields.location_y > sw.Ma) {
+            if(userCafeList[i][0].fields.location_x < ne.La && userCafeList[i][0].fields.location_x > sw.La && userCafeList[i][0].fields.location_y < ne.Ma && userCafeList[i][0].fields.location_y > sw.Ma) {
                 addMarker(markers, userCafeList[i], cafeList);
                 places.push(userCafeList[i]);
             }
@@ -150,7 +150,7 @@
         let iconSize;
         // 현재 지도에 찍힌 cafeList 원소들만 필터링
         for(var i = 0; i < cafeList.length; i++) {
-            if(place.pk === cafeList[i].fields.cafe) {
+            if(place[0].pk === cafeList[i].fields.cafe) {
                 iconSize = cafeList[i].fields.visit_count;
             }
         }
@@ -160,8 +160,8 @@
         // 마커 생성
         var marker = new kakao.maps.Marker({
             map: map,
-            title: place.fields.name,
-            position: new kakao.maps.LatLng(place.fields.location_y, place.fields.location_x),
+            title: place[0].fields.name,
+            position: new kakao.maps.LatLng(place[0].fields.location_y, place[0].fields.location_x),
             image : new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
         });
 
@@ -172,10 +172,10 @@
         kakao.maps.event.addListener(marker, 'click', function() {
             // 마커를 클릭하면 장소명이 인포윈도우에 표출
             infowindow.setContent(`
-                <div style="padding:5px;font-size:12px;">${place.fields.name}</div>
-                <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
+                <div style="padding:5px;font-size:12px;">${place[0].fields.name}</div>
+                <div style="padding:5px;font-size:10px;">${place[0].fields.address}</div>
                 <div style="padding:5px;font-size:10px;">
-                    <a href="../review_list/${place.pk}">리뷰 작성</a>
+                    <a href="../review_list/${place[0].pk}">리뷰 작성</a>
                 </div>
             `);
             infowindow.open(map, marker);
@@ -189,6 +189,69 @@
         }   
         markers = [];
     }
+
+    //카페 키워드 검색 이벤트
+    $(document).ready(function(){
+        $("#search-cafe").click(function(){
+
+            let placeslist = "#placesList";
+
+            // html의 id가 keyword인 태그 안에 들어있는 값을 들고옴
+            var keyword = $('#keyword').val();
+
+            // 빈 값을 넘겼을 때 에러 설정
+            if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                alert('키워드를 입력해주세요!!!!!!');
+                return false;
+            }
+
+            // keywordMarkers 배열 초기화
+            let keywordMarkers = [];
+            // keywordPlaces 배열 초기화
+            let keywordPlaces = [];
+            // keyword 필터링
+            checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces);
+            console.log(keywordPlaces);
+
+            // 마커와 검색결과 항목에 mouseover 했을때 해당 장소의 인포윈도우에 장소명 표시
+            // mouseout 했을 때는 인포윈도우 닫음
+            var listEl = document.getElementById('placesList'),
+            fragment = document.createDocumentFragment(),
+            listStr = '';
+
+            // 검색 결과 목록에 추가된 항목들을 제거
+            removeAllChildNods(listEl);
+
+            for(var i = 0; i < keywordMarkers.length; i++) {
+                var itemEl = getListItem(i, keywordPlaces[i]);
+                (function(marker, place) {
+                    itemEl.onmouseover =  function () {
+                        displayInfowindow(marker, place[0].fields.name);
+                    };
+
+                    itemEl.onmouseout =  function () {
+                        infowindow_search.close();
+                    };
+
+                    itemEl.onclick = function () {
+                        infowindow_search.close();
+                        infowindow.setContent(`
+                            <div style="padding:5px;font-size:12px;">${place[0].fields.name}</div>
+                            <div style="padding:5px;font-size:10px;">${place[0].fields.address}</div>
+                            <div style="padding:5px;font-size:10px;">
+                                <a href="../review_list/${place[0].pk}">리뷰 작성</a>
+                            </div>
+                        `);
+                        infowindow.open(map, marker);
+                    };
+                })(keywordMarkers[i], keywordPlaces[i]);
+
+                fragment.appendChild(itemEl);
+            }
+            // 검색결과 항목들을 검색결과 목록 Elemnet에 추가
+            listEl.appendChild(fragment);
+        });
+    });
 
     // keyword를 포함한 카페만 보여주는 함수
     function checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces) {
@@ -209,82 +272,13 @@
         }
     }
 
-    //카페 키워드 검색 이벤트
-    $(document).ready(function(){
-        $("#search-cafe").click(function(){
-
-            let placeslist = "#placesList";
-            // html의 id가 keyword인 태그 안에 들어있는 값을 들고옴
-            var keyword = $('#keyword').val();
-
-            // 빈 값을 넘겼을 때 에러 설정
-            if (!keyword.replace(/^\s+|\s+$/g, '')) {
-                alert('키워드를 입력해주세요!!!!!!');
-                return false;
-            }
-
-            // placeList라는 id값을 가진 태그를 불러옴
-            var $placesList = document.getElementById('placesList');
-            // placeList 태그 빈 값으로 초기화
-            $placesList.innerHTML = '';
-            // keywordMarkers 배열 초기화
-            let keywordMarkers = [];
-            // keywordPlaces 배열 초기화
-            let keywordPlaces = [];
-            // keyword 필터링
-            checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces);
-            // html에 검색된 카페 표시
-            for(var i = 0; i < keywordMarkers.length; i++) {
-                $placesList = document.getElementById('placesList');
-                $placesList.innerHTML += '<li class="search-result-'+i+'">'+keywordMarkers[i].Fb+'</li>';
-            }
-
-            // 마커와 검색결과 항목에 mouseover 했을때 해당 장소의 인포윈도우에 장소명 표시
-            // mouseout 했을 때는 인포윈도우 닫음
-            var listEl = document.getElementById('placesList'),
-            fragment = document.createDocumentFragment(),
-            listStr = '';
-
-            // 검색 결과 목록에 추가된 항목들을 제거
-            removeAllChildNods(listEl);
-
-            for(var i = 0; i < keywordMarkers.length; i++) {
-                var itemEl = getListItem(i, keywordMarkers[i]);
-                (function(marker, place) {
-                    itemEl.onmouseover =  function () {
-                        displayInfowindow(marker, place.fields.name);
-                    };
-
-                    itemEl.onmouseout =  function () {
-                        infowindow_search.close();
-                    };
-
-                    itemEl.onclick = function () {
-                        infowindow_search.close();
-                        infowindow.setContent(`
-                            <div style="padding:5px;font-size:12px;">${place.fields.name}</div>
-                            <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
-                            <div style="padding:5px;font-size:10px;">
-                                <a href="../review_list/${place.pk}">리뷰 작성</a>
-                            </div>
-                        `);
-                        infowindow.open(map, marker);
-                    };
-                })(keywordMarkers[i], keywordPlaces[i]);
-
-                fragment.appendChild(itemEl);
-            }
-            // 검색결과 항목들을 검색결과 목록 Elemnet에 추가
-            listEl.appendChild(fragment);
-        });
-    });
-
     // 검색결과 항목을 Element로 반환하는 함수
-    function getListItem(index, keywordMarker) {
+    function getListItem(index, keywordPlace) {
         var el = document.createElement('li'),
         itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                     '<div class="info">' +
-                    '   <h5 style="cursor: pointer;">' + keywordMarker.Fb + '</h5>' +
+                    '   <h5 style="cursor: pointer;">' + keywordPlace[0].fields.name + '</h5>' +
+                    '   <h5> 방문 횟수 : ' + keywordPlace[1] + ' </h5>'
                     '</div>';         
 
         el.innerHTML = itemStr;
