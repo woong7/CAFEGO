@@ -24,45 +24,40 @@
                 <a href="{% url 'home' %}" class="navbar-brand">
                     <span id="header-logo-image"></span><span class="blind-logo">카페고 로고</span>
                 </a>
-                <div class="d-flex">
-                    <div class="collapse navbar-collapse" id="navbarText">
-                        <ul class="navbar-nav">
-                            <li class="nav-item mx-2">
-                                <a class="text-dark fw-bold nav-item-hover" href="{% url 'cafe:cafe_list' %}">카페검색</a>
-                            </li>
-                            <li>
-                                <div class="dropdown">
-                                    <a class="text-dark fw-bold nav-item-hover dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                        카페추가
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <li><a class="dropdown-item" href="{% url 'enroll_home' %}">카페 추가 홈</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'enroll_new_cafe' %}">새로 방문한 카페 추가</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'enroll_visited_cafe' %}">이전에 방문했던 카페 추가</a></li>
-                                </div>
-                            </li>
-                            <li class="nav-item mx-2">
-                                <a class="text-dark fw-bold nav-item-hover" href="{% url 'cafe:cafe_map' %}">카페지도</a>
-                            </li>
-                            <li class="nav-item mx-2">
-                                <a class="text-dark fw-bold nav-item-hover" href="{% url 'rank_list' %}">랭킹</a>
-                            </li>
-                            <li class="nav-item mx-2">
-                                <a class="text-dark fw-bold nav-item-hover" href="{% url 'mypage' user.pk%}">마이페이지</a>
-                            </li>
-                            <li class="nav-item mx-2">
-                                <a class="text-dark fw-bold nav-item-hover" href="{% url 'logout' %}" class="">로그아웃</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <span class="nickname-font mx-3">{{user.nickname}}님 안녕하세요!</span>
-                    <div class="nav-item">
-                        {% show_notifications %}
-                    </div>
-                </div>
+                <span class="nickname-font mx-3">{{user.nickname}}님 안녕하세요!</span>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+                    <ul class="navbar-nav">
+                        <li class="nav-item mx-2">
+                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'cafe:cafe_list' %}">카페검색</a>
+                        </li>
+                        <li>
+                            <div class="dropdown">
+                                <a class="text-dark fw-bold nav-item-hover dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    카페추가
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="{% url 'enroll_home' %}">카페 추가 홈</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'enroll_new_cafe' %}">새로 방문한 카페 추가</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'enroll_visited_cafe' %}">이전에 방문했던 카페 추가</a></li>
+                            </div>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'cafe:cafe_map' %}">카페지도</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'rank_list' %}">랭킹</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'mypage' user.pk%}">마이페이지</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'logout' %}" class="">로그아웃</a>
+                        </li>
+                    </ul>
+                </div>
             {% else %}
                 <a href="{% url 'main' %}" class="navbar-brand">
                     <span id="header-logo-image"></span><span class="blind-logo">카페고 로고</span>
