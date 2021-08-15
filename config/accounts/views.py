@@ -757,19 +757,52 @@ def this_cafe_map(request, pk):
 
 ##알림 기능
 class CommentNotification(View):
-    def get(self, request, notification_pk, comment_pk, *args, **kwargs):
+    def get(self, request, notification_pk, review_pk, *args, **kwargs):
+        # print("self:", self)
+        # print("request:", request)
+        # print("notification pk:", notification_pk)
+        # print("self request get:", self.args)
+        # print("self request get:", self.kwargs['review_pk'])
+        # print("review_pk:", review_pk)
         notification = Notification.objects.get(pk=notification_pk)
         #체크 필요!!!
-        comment = Comment.objects.get(pk=comment_pk)
+
+        comment = Comment.objects.get(pk=review_pk)
         #comment가 속해잇는 리뷰 객체  리뷰는 또 카페 디테일 페이지
         comment.post #review 객체임
-        print("review??:", comment.post)
-        print("review pk??:", comment.post.pk)
+        #해당하는 카페 객체도 받아와야 함!
+        this_cafe = comment.post.cafe #cafelist 객체임
+        cafe_id = this_cafe.id
+        each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
+        review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+        comments = Comment.objects.all()
+        user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+            #방문했는지 체크 -> 리뷰 작성할 수 있음!
+        is_visit = False
+
+        for cafe in user_visited_cafes:
+            if cafe.cafe == this_cafe:
+                is_visit = True
+            else:
+                pass
+
+        print("review??:", comment.post)##???
+        print("review pk??:", comment.post.pk)###???
         notification.user_has_seen = True
         notification.save()
 
         #!!!
-        return redirect('review_list', pk=comment.post.pk)#comment pk가 아니라 review pk로,,,!!
+
+        ctx={
+        'this_cafe': this_cafe,
+        'cafe_id': cafe_id,
+        'each_reviews': each_reviews,
+        'review_photo': review_photo,
+        'comments': comments,
+        'is_visit': is_visit,
+        } 
+        return render(request, 'cafe/review_list.html', ctx)
+        #return redirect('review_list', pk=comment.post.pk)#comment pk가 아니라 review pk로,,,!!
 
 class FollowNotification(View):
     def get(self, request, notification_pk, user_pk, *args, **kwargs):

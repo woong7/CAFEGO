@@ -34,8 +34,8 @@ urlpatterns = [
     path('enroll_new_cafe/', views.EnrollNewCafeListView.as_view(), name="enroll_new_cafe"),
     path('enroll_visited_cafe/', views.EnrollVisitedCafeListView.as_view(), name="enroll_visited_cafe"),
     
-    path('notification/<int:notification_pk>/comment/<int:post_pk>', views.CommentNotification.as_view(), name='comment-notification'),
-    path('notification/<int:notification_pk>/profile/<int:profile_pk>', views.FollowNotification.as_view(), name='follow-notification'),
+    path('notification/<int:notification_pk>/comment/<int:review_pk>', views.CommentNotification.as_view(), name='comment-notification'),
+    path('notification/<int:notification_pk>/profile/<int:user_pk>', views.FollowNotification.as_view(), name='follow-notification'),
     path('notification/delete/<int:notification_pk>', views.RemoveNotification.as_view(), name='notification-delete'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
