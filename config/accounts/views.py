@@ -65,15 +65,15 @@ def main(request):
     return render(request, 'accounts/main.html')
 
 def home(request):
-    users=User.objects.all()
-    user=request.user
-    visit_cafe_num=user.total_visit
+    users = User.objects.all()
+    user = request.user
     cafenum=CafeList.objects.all()
     ctx = {
         'cafenum':len(cafenum), 
         'usernum':len(users), 
-        'mycafe':visit_cafe_num
     }
+    if user.is_authenticated:
+        ctx['total_visit'] = user.total_visit
     return render(request,'accounts/home.html', ctx)
 
 def create_admin(request):
