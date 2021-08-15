@@ -7,16 +7,18 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db.models.deletion import CASCADE
 from accounts.choices import *
 from django.utils import timezone
+#from django.dispatch import receiver
 
 #user.username 원래 있는 이름
 class UserManager(BaseUserManager):
-    def create_user(self, username, nickname, district, town, agree_terms, agree_marketing,  password=None):
+    def create_user(self, username, nickname, city, gu, dong, agree_terms, agree_marketing,  password=None):
 
         user = self.model(
             username = username,
             nickname = nickname,
-            district = district,
-            town = town,
+            city = city,
+            gu = gu,
+            dong = dong,
             agree_terms=agree_terms,
             agree_marketing=agree_marketing,
         )
@@ -30,8 +32,9 @@ class UserManager(BaseUserManager):
             username,
             nickname,
             password=password,
-            district="default district",
-            town = "default town",
+            city="default city",
+            gu = "default gu",
+            dong = "default dong",
             agree_terms=agree_terms,
             agree_marketing=agree_marketing,
         )
@@ -45,8 +48,11 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=150, unique=True) ##########
     email = models.EmailField(blank=True)
     nickname = models.CharField(max_length=150)
-    district = models.CharField(max_length=10, choices=SEOUL_DISTRICT_CHOICES)
-    town = models.CharField(max_length=20, choices=SEOUL_TOWN_CHOICES)
+
+    city = models.CharField(max_length=10)
+    gu = models.CharField(max_length=10)
+    dong = models.CharField(max_length=10)
+
     agree_terms = models.BooleanField(default=False)
     agree_marketing = models.BooleanField(default=False)
 
@@ -89,18 +95,16 @@ class VisitedCafe(models.Model):
     visit_check = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True) #카페 등록 시간
-    updated_at = models.DateTimeField(auto_now=True) #갔던 카페 다시 등록 
+    updated_at = models.DateTimeField(auto_now=True) #갔던 카페 다시 등록
 
     drink_list = models.TextField(null=True, default=json.dumps([]))
-    
-    
+
     def __str__(self):
         template = '{0.cafe} {0.user} {0.visit_count}'
         return template.format(self)
 
     def __str__(self):
         return self.cafe.name
-
 
 class Badge(models.Model):
     badge_name=models.TextField(max_length=150, unique=True)
@@ -113,5 +117,19 @@ class Drink(models.Model):
     visited_cafe = models.ForeignKey(VisitedCafe, on_delete=CASCADE)
     drinkname = models.CharField(max_length=50, choices=DRINK_CHOICES)
 
+    created_at = models.DateTimeField(auto_now_add=True) #카페 등록 시간
+    updated_at = models.DateTimeField(auto_now=True) #갔던 카페 다시 등록 
+
     def __str__(self):
         return self.drinkname
+
+
+class Notification(models.Model):
+    #1 = Like, 2 = Comment, 3 = Follow
+    notification_type = models.IntegerField()
+    to_user = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, null=True)
+    from_user = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)
+    #post - like
+    comment = models.ForeignKey('cafe.Comment', on_delete=models.CASCADE, related_name='+', blank=True, null=True)
+    date = models.DateTimeField(default=timezone.now)
+    user_has_seen = models.BooleanField(default=False)

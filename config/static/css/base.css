@@ -2,7 +2,7 @@
     display: inline-block;
     width: 120px;
     height: 39px;
-    background: url(../image/logo.png) no-repeat;
+    background: url(../../media/static/image/logo.png) no-repeat;
     background-size: 120px;
     vertical-align: middle;
 }
