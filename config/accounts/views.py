@@ -632,9 +632,6 @@ def addfriend(request, pk):
     user.friends=json.dumps(friendsList)
     user.save()
 
-    notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
-    notification.save()
-
     return redirect('mypage',pk)
 
 def deletefriend(request, pk):
@@ -736,6 +733,11 @@ def friend_register(request):
         friendsList.append(str_friendname)
         user.friends=json.dumps(friendsList)
         user.save()
+
+        target =User.objects.get(nickname=str_friendname)
+        print("target:", target) #user objects가 맞는지
+        notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
+        notification.save()
 
     return redirect('friend_search')
 

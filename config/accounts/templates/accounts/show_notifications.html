@@ -7,13 +7,13 @@
 			{% if notification.comment %}
 				{% if notification.notification_type == 2 %}
 				<div class="dropdown-item-parent">
-					<a href="{% url 'comment-notification' notification.pk notification.comment.post.pk %}">@{{ notification.from_user }} replied to your comment</a>
+					<a href="{% url 'comment-notification' notification.pk notification.comment.post.pk %}">@{{ notification.from_user }}님이 내 리뷰에 댓글을 달았습니다!</a>
 					<span class="dropdown-item-close" onclick="removeNotification(`{% url 'notification-delete' notification.pk %}`, `{{ request.path }}`)">&times;</span>
 				</div>
 				{% endif %}
 			{% else %}
 				<div class="dropdown-item-parent">
-					<a href="{% url 'follow-notification' notification.pk notification.from_user.profile.pk %}">@{{ notification.from_user }} has started following you</a>
+					<a href="{% url 'follow-notification' notification.pk notification.from_user.pk %}">@{{ notification.from_user }}님이 나를 팔로우 시작했습니다!</a>
 					<span class="dropdown-item-close" onclick="removeNotification(`{% url 'notification-delete' notification.pk %}`, `{{ request.path }}`)">&times;</span>
 				</div>
 			{% endif %}
