@@ -168,19 +168,17 @@ def rank_list(request):
     for i in C_monthly_visited_cafe:
         # i = 뉴오리진 마포점 이렇게 나옴
         if i.user not in C_monthly_kinds_dict.keys():#키 리스트
-            C_monthly_kinds_dict[i.user] = [i.cafe]
+            C_monthly_kinds_dict[i.user.nickname] = [i.cafe]
         else:
-            C_monthly_kinds_dict[i.user].append(i.cafe)
+            C_monthly_kinds_dict[i.user.nickname].append(i.cafe)
     #여기까지 {user이름:[카페리스트]}이렇게 내가 원하는 대로 나옴!!
     # {<User: ye1>: [<CafeList: 뉴오리진 마포점>, <CafeList: 스타벅스 마포용강동점>, <CafeList: 개혁커피>], <User: ye2>: [<CafeList: 뉴오리진 마포점>]}
-    
+    print(C_monthly_kinds_dict)
     # 카페 종류 **개수**를 넣어주기
     for i in C_monthly_kinds_dict:
         y = len(C_monthly_kinds_dict.get(i))
         C_monthly_kinds_dict[i] = y
         # {<User: ye1>: 3, <User: ye2>: 1}
-
-    user_nick = User.objects.all()
 
     #value 값 기준으로 내림차순 정렬
     #[(<User: ye1>, 3), (<User: ye2>, 1)] 이렇게 튜플로 나옴...
