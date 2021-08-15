@@ -68,16 +68,19 @@
             <br/>
             
 
-            <div class="comments-{{reviews.id}}">
-                {% for comment in comments %}
-                    {% if comment.post == reviews %}
-                            <div class="comment-{{comment.id}} container my-1">
-                                <div class="row">
-                                    <div class="col">{{comment.content}}</div>
-                                    <div class="col">{{comment.username}}</div>
-                                    <div class="col">{{comment.created_at}}</div>
-                                    <div class="col">
-                                        <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
+                <div class="comments-{{reviews.id}}">
+                    {% for comment in comments %}
+                        {% if comment.post == reviews %}
+                                <div class="comment-{{comment.id}} container my-1">
+                                    <div class="row">
+                                        <div class="col">{{comment.content}}</div>
+                                        <div class="col">{{comment.username}}</div>
+                                        <div class="col">{{comment.created_at}}</div>
+                                        {% if comment.username == user%}
+                                        <div class="col">
+                                            <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
