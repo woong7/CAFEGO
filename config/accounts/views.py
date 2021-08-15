@@ -19,6 +19,41 @@ from django.contrib import messages
 from django.db.models import Q, Count
 from datetime import datetime, timedelta
 from dateutil import relativedelta
+import operator
+
+def signup(request):
+    if request.method == "POST":
+        if request.POST["password1"] == request.POST["password2"]:
+            user = User.objects.create_user(
+                username=request.POST["username"], password=request.POST["password1"])
+            auth.login(request, user)
+            print("회원가입 성공!")
+            return redirect('/accounts/') #home 페이지 따로 만들어야 댐! url 이름이 home 이어야 댐!
+        return render(request, 'accounts/signup.html')
+    #실패시 안넘어감
+    return render(request, 'accounts/signup.html')
+
+
+###allauth 써서 필요없을 듯???
+class LoginView(View):
+    def get(self, request):
+        form = forms.LoginForm()
+        ctx = {
+            "form": form,
+        }
+        return render(request, "accounts/login.html", ctx)
+
+    def post(self, request):
+        form = forms.LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return render(request, "accounts/home.html")
+
+        return render(request, "accounts/login.html", {"form": form})
 
 ##allauth 써서 필요 없나??
 @login_required
@@ -31,11 +66,17 @@ def main(request):
 
 def home(request):
     users=User.objects.all()
+    user=request.user
+    visit_cafe_num=user.total_visit
     cafenum=CafeList.objects.all()
-    return render(request,'accounts/home.html',{'cafenum':len(cafenum), 'usernum':len(users)})
+    ctx = {
+        'cafenum':len(cafenum), 
+        'usernum':len(users), 
+        'mycafe':visit_cafe_num
+    }
+    return render(request,'accounts/home.html', ctx)
 
 def create_admin(request):
-
     User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True)
     return redirect('home')
 
@@ -82,9 +123,9 @@ def badge_untaken(request):
     ctx={'taken_badges':taken_badges, 'user':user,}
     return render(request, 'accounts/badge_untaken.html', context=ctx)
 
-import math
 def user_cafe_map(request):
-    visited_cafes = VisitedCafe.objects.filter(user=request.user)
+    user = request.user
+    visited_cafes = VisitedCafe.objects.filter(user=user)
     visited_cafe_list = serializers.serialize('json', visited_cafes)
 
     main_cafe = None
@@ -98,6 +139,7 @@ def user_cafe_map(request):
     cafe_list = serializers.serialize('json', cafes)
 
     ctx = {
+        'nickname': user.nickname,
         'data': visited_cafe_list,
         'main_cafe': main_cafe.pk,
         'cafe_list': cafe_list
@@ -115,6 +157,11 @@ def rank_list(request):
     last_month_first = datetime(now.year, now.month-1, 1) #오늘을 기준으로 저번달 첫 시간
     this_month_first = last_month_first + relativedelta.relativedelta(months=1)
     last_month_last = this_month_first - timedelta(seconds=1) #저번달 막 시간
+    
+    #test용
+    August = datetime(now.year, now.month, 1)
+    September = August + relativedelta.relativedelta(months=1)
+    August_fin = September - timedelta(seconds=1)
     #print(last_month_first, last_month_last)
     
     ####################  A_총 방문 랭킹  ####################
@@ -124,9 +171,29 @@ def rank_list(request):
     B_users=User.objects.all().order_by('-visit_count_lastmonth')
 
     ####################  C_한 달 카페 종류 랭킹  ####################
-    # B_users=User.objects.all().order_by('-visit_count_lastmonth')
-    visited_cafe = VisitedCafe.objects.all()
+    C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin)))
+    C_monthly_kinds_dict = {}
+    for i in C_monthly_visited_cafe:
+        # i = 뉴오리진 마포점 이렇게 나옴
+        if i.user not in C_monthly_kinds_dict.keys():#키 리스트
+            C_monthly_kinds_dict[i.user.nickname] = [i.cafe]
+        else:
+            C_monthly_kinds_dict[i.user.nickname].append(i.cafe)
+    #여기까지 {user이름:[카페리스트]}이렇게 내가 원하는 대로 나옴!!
+    # {<User: ye1>: [<CafeList: 뉴오리진 마포점>, <CafeList: 스타벅스 마포용강동점>, <CafeList: 개혁커피>], <User: ye2>: [<CafeList: 뉴오리진 마포점>]}
+    print(C_monthly_kinds_dict)
+    # 카페 종류 **개수**를 넣어주기
+    for i in C_monthly_kinds_dict:
+        y = len(C_monthly_kinds_dict.get(i))
+        C_monthly_kinds_dict[i] = y
+        # {<User: ye1>: 3, <User: ye2>: 1}
 
+    #value 값 기준으로 내림차순 정렬
+    #[(<User: ye1>, 3), (<User: ye2>, 1)] 이렇게 튜플로 나옴...
+    C_monthly_kinds_tuple = sorted(C_monthly_kinds_dict.items(), key=lambda x: x[1], reverse=True)
+    #튜플 딕셔너리로 바꿈
+    C_monthly_kinds_order = dict(C_monthly_kinds_tuple)
+    
     ####################  D_누적 리뷰 랭킹  ####################
     D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
 
@@ -137,19 +204,16 @@ def rank_list(request):
     #그니까 review_person을 통해 해당 유저의 리뷰를 세고 그 숫자로 정렬
     #(ex) D_each_user_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('-total_review')
     E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
-    
-    # D_all_reviews = Review.objects.all()
-    # for i in D_all_reviews:
-    #     D_each_review_create = i.created_at
-    #     print(D_each_review_create) #날짜가 나오긴 하는데 한국신간으로 바꿔야할듯
-
 
     ctx={
+        'last_month_first': last_month_first,
+        'last_month_last': last_month_last,
         ##### A_총 방문 랭킹 #####
         'A_users': A_users,
         ##### B_한 달 방문 랭킹 #####
         'B_users': B_users,
-
+        #####  C_한 달 카페 종류 랭킹  #####
+        'C_monthly_kinds_order': C_monthly_kinds_order,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
         ##### E_한 달 리뷰 랭킹 #####
@@ -456,23 +520,27 @@ import json
 def visit_register(request):
     if request.method == 'POST':
         req_post = request.POST
-        #print("req_post:", req_post)
+        #음료 내용 받아온다.
         try:
             str_cafename = req_post.__getitem__('cafename')
             str_new_drinkname = req_post.__getitem__('etc')
             str_drinkname = req_post.__getitem__('beverage')
-
         except:
             print("존재하지 않습니다!")
         
+        #카페를 방문한 유저와 그 유저의 방문 횟수 +1
         v_cafe = VisitedCafe()
         v_cafe.user = request.user
         v_cafe.cafe = CafeList.objects.get(name=str_cafename)
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
 
+        #음료를 저장할 카페, 날짜 저장
+        now = datetime.today() ##@@
         drink = Drink()
         drink.visited_cafe = v_cafe
+        # v_cafe.created_at = now ##@@
+        # print('!!!!!!!', v_cafe.created_at) ##@@
         user = User.objects.get(username=request.user)
         user.total_visit += 1
 
@@ -503,16 +571,15 @@ def visit_register(request):
 
 @csrf_exempt
 def visited_register(request):
-
     if request.method == 'POST':
         req_post = request.POST
         try:
             str_cafename = req_post.__getitem__('cafename')
             str_new_drinkname = req_post.__getitem__('etc')
             str_drinkname = req_post.__getitem__('beverage')
-        #print("drinkname:", str_drinkname)
         except:
             print("존재하지 않습니다!")
+
         user = User.objects.get(username=request.user)
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
         v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
@@ -542,6 +609,10 @@ def visited_register(request):
         # for i in user_v_cafelist:
         #     if v_cafe.cafe is not i.cafe:
         #         user.kinds_of_cafe_lastmonth += 1
+
+        now = datetime.today()
+        # v_cafe.updated_at = now ##@@2021-08-14 11:14:20.326741
+        print(v_cafe.updated_at)
 
         user.save()
         v_cafe.save()
@@ -662,3 +733,17 @@ def friend_register(request):
         user.save()
 
     return redirect('friend_search')
+
+def this_cafe_map(request, pk):
+    cafe = CafeList.objects.get(pk=pk)
+    #cafes = CafeList.objects.all().order_by('location_x')
+    #cafe_list = serializers.serialize('json', cafes)
+    ctx = {
+        #'data': cafe_list,
+        'cafe_id': cafe.id,
+        'cafe_name': cafe.name,
+        'cafe_x':cafe.location_x,
+        'cafe_y':cafe.location_y,
+        'cafe_address':cafe.address,
+    }
+    return render(request, 'accounts/cafe_map.html', ctx)

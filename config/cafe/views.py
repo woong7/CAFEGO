@@ -14,10 +14,10 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 
-# Create your views here.
 def review_list(request, pk):
     #해당 카페 /<CafeList: 90도씨> 이렇게 나온다
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
@@ -26,7 +26,6 @@ def review_list(request, pk):
     #print("each_reviews user:", each_reviews.filter(username=request.user))
 
     user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
-
     #방문했는지 체크 -> 리뷰 작성할 수 있음!
     is_visit = False
 
@@ -35,6 +34,7 @@ def review_list(request, pk):
             is_visit = True
         else:
             pass
+        
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
         cafe_stars_avg = 0.0
@@ -52,6 +52,7 @@ def review_list(request, pk):
     
     ctx={
         'this_cafe': this_cafe,
+        'cafe_id': cafe_id,
         'each_reviews': each_reviews,
         'review_photo': review_photo,
         'comments': comments,
@@ -60,16 +61,25 @@ def review_list(request, pk):
 
     return render(request, 'cafe/review_list.html', ctx)
 
+import datetime
 @csrf_exempt
 def comment_write(request):
     req = json.loads(request.body)
     review_id = req['review_id']
     content = req['content']
     review = Review.objects.get(id=review_id)
-    username = review.username
-    comment = Comment.objects.create(post=review, username=username, content=content)
+    user = User.objects.get(username=request.user)
+    comment = Comment.objects.create(post=review, username=user, content=content)
     comment.save()
-    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'comment_user':comment.username, 'comment_time':comment.created_at})
+    now = datetime.datetime.now()
+    dayOrNight = now.strftime('%p')
+    boolDayOrNight = None
+    if dayOrNight == 'PM':
+        boolDayOrNight = '오후'
+    else:
+        boolDayOrNight = '오전'   
+    timeString = now.strftime('%Y년 %#m월 %#d일 %#I:%M '+boolDayOrNight)
+    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString})
 
 @csrf_exempt
 def comment_delete(request):

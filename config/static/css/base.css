@@ -30,6 +30,10 @@ a {
     text-decoration: none;
 }
 
+ul {
+    list-style: none;
+}
+
 .nav-item-hover:hover {
     color: slategray;
 }

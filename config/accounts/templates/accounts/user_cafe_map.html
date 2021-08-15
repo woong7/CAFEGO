@@ -1,36 +1,39 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block title %}
+    {{ nickname }}님의 카페 지도
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_map.css' %}">
+{% endblock %}
 {% block content %}
-    <h1>유저 카페 지도 확인 페이지입니다</h1>
+    <div class="cafe_map-container">
+        <div id="keyword-search">
+            <div class="bg-search-area">
+                <div>
+                    <span>원하는 카페를 검색해보세요!</span>
+                </div>
+                <form id="searchForm">
+                    <input type="text" value="" placeholder="키워드 입력" id="keyword"> 
+                    <input type="button" id="search-cafe" value="검색하기"></input> 
+                </form>
+            </div>
+            <ul id="placesList">
+            </ul>
+        </div>
+        <div id="map"></div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
-    
-    <div id="menu_wrap" class="bg_white">
-        <div class="option bg-warning">
-            <div>
-                <form id="searchForm">
-                    키워드 : <input type="text" value="" id="keyword" size="15"> 
-                    <input type="button" id="search-cafe" value="검색하기"></input> 
-                </form>
-            </div>
-        </div>
-        <hr>
-        <ul id="placesList">
-        </ul>
-    </div>
-    <div id="map" style="width:700px; height:700px;"></div>
-    
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbe48a94474ef23703951ea76b61e90&libraries=services"></script>
     <script  type="text/javascript">
 
     let cafeList = {{ data | safe }};
     let mainCafePk = {{ main_cafe | safe }};
     let allPlaces = {{ cafe_list | safe }}
-    console.log(cafeList);
-    console.log(mainCafePk);
     let userCafeList = [];
     let mainCafe;
     for(var i = 0; i < allPlaces.length; i++) {
@@ -52,7 +55,7 @@
     
     var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
 
-    var imageSrc = "https://image.flaticon.com/icons/png/512/168/168551.png", // 마커이미지의 주소    
+    var imageSrc = "https://image.flaticon.com/icons/png/512/3127/3127450.png", // 마커이미지의 주소    
         imageOption = {offset: new kakao.maps.Point(8, 16)};
 
     // 현재 지도에 보이는 장소들의 정보를 저장하기 위한 배열
@@ -281,7 +284,7 @@
         var el = document.createElement('li'),
         itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                     '<div class="info">' +
-                    '   <h5>' + keywordMarker.Fb + '</h5>' +
+                    '   <h5 style="cursor: pointer;">' + keywordMarker.Fb + '</h5>' +
                     '</div>';         
 
         el.innerHTML = itemStr;
@@ -305,53 +308,5 @@
             el.removeChild (el.lastChild);
         }
     }
-
-    // HTML5의 geolocation으로 사용할 수 있는지 확인
-    if (navigator.geolocation) {
-        // GeoLocation을 이용해서 접속 위치 얻어오기
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var lat = position.coords.latitude, // 위도
-                lon = position.coords.longitude; // 경도
-
-            var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 현재 위치로 설정
-                message = '<div style="padding:5px;">현재 위치</div>'; // 인포윈도우에 표시될 내용
-            
-            // 마커와 인포윈도우를 표시
-            displayMarker(locPosition, message);
-        });
-        
-    }
-    
-    else { // 에러메시지 설정
-        alert('현재 위치를 받아올 수 없어요. 임의의 위치로 설정합니다.')
-        var locPosition = new kakao.maps.LatLng(37.540, 126.940),    
-            message = 'geolocation을 사용할수 없어요..'
-        // 개발자가 설정한 위치에 마커 생성
-        displayMarker(locPosition, message);
-    }
-
-    // 지도에 마커와 인포윈도우를 표시하는 함수
-    function displayMarker(locPosition, message) {
-        // 현재 위치 마커 생성
-        var marker_here = new kakao.maps.Marker({  
-            map: map, 
-            position: locPosition
-        }); 
-        
-        var iwContent = message, // 인포윈도우에 표시할 내용
-            iwRemoveable = true;
-
-        // 인포윈도우를 생성
-        var infowindow_here = new kakao.maps.InfoWindow({
-            content : iwContent,
-            removable : iwRemoveable
-        });
-        
-        // 인포윈도우를 마커위에 표시
-        infowindow_here.open(map, marker_here);
-        
-        // 지도 중심좌표를 접속위치로 변경
-        map.setCenter(locPosition);      
-    }    
     </script>
 {% endblock %}

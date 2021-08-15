@@ -4,15 +4,17 @@
     <header>
         <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
             <h1 class="display-4 fw-normal">Ranking</h1>
-            <p class="fs-5 text-muted">랭킹 산정 기간 : 2021.08.01 00:00 ~ 2021.08.31 24:00</p>
+            <p class="fs-5 text-muted">랭킹 산정 기간 : {{last_month_first}} ~ {{last_month_last}}</p>
         </div>
     </header>
 
     <main>
         <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+            <!-- 총 방문 랭킹 -->
             <div class="col">
                 <div class="card mb-4 rounded-3 shadow-sm border-primary">
                     <div class="card-header py-3 text-white bg-primary border-primary">
+                        
                         <h4 class="my-0 fw-normal">카페 총 방문 횟수</h4>
                     </div>
                     <div class="card-body">
@@ -27,33 +29,76 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 한 달 방문 랭킹 -->
             <div class="col">
                 <div class="card mb-4 rounded-3 shadow-sm border-primary">
                     <div class="card-header py-3 text-white bg-primary border-primary">
-                    <h4 class="my-0 fw-normal">여러 카페 방문 수</h4>
+                    <h4 class="my-0 fw-normal">한달 방문 랭킹</h4>
                     </div>
                     <div class="card-body">
-                        랭킹내용
+                        {% for user in B_users %}
+                            {% if forloop.counter == 1 %}
+                                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.visit_count_lastmonth }} ] </p>
+                            {% else %}
+                                <p style="font-size: 20px; font-weight: bold">{{forloop.counter}}등: {{ user.nickname}} 님!  [ 총 방문 횟수: {{ user.visit_count_lastmonth }} ] </p>
+                            {% endif %}
+                        {% endfor %}
                         <button type="button" class="w-100 btn btn-lg btn-outline-primary">전체 랭킹 확인하러 가기</button>
                     </div>
                 </div>
             </div>
+
+            <!-- 한달 카페 종류 랭킹 -->
             <div class="col">
                 <div class="card mb-4 rounded-3 shadow-sm border-primary">
                     <div class="card-header py-3 text-white bg-primary border-primary">
-                        <h4 class="my-0 fw-normal">작성한 총 리뷰 수</h4>
+                    <h4 class="my-0 fw-normal">한달 카페 종류 랭킹</h4>
                     </div>
                     <div class="card-body">
-                        {% for user in C_each_users_review %}
+                        {% for key, value in C_monthly_kinds_order.items %}
                             {% if forloop.counter == 1 %}
-                                <span style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님!</span>  
-                                {% comment %}
-                                <!-- {% for i in user.review_person_set.all() %}
-                                    <span>[ 총 리뷰 개수: {{ i }} ] </span>
-                                {% endfor %} -->
-                                {% endcomment %}
+                                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ key }} 님! [ 이번 달  방문 카페 종류: {{ value }} ]</p>  
                             {% else %}
-                                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user }} ] </p>
+                                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ key }} 님!  [ 이번 달  방문 카페 종류: {{ value }} ] </p>
+                            {% endif %}
+                        {% endfor %}
+                        <button type="button" class="w-100 btn btn-lg btn-outline-primary">전체 랭킹 확인하러 가기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 누적 리뷰 개수 랭킹 -->
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm border-primary">
+                    <div class="card-header py-3 text-white bg-primary border-primary">
+                        <h4 class="my-0 fw-normal">누적 리뷰 개수 랭킹</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for user in D_all_review_order %}
+                            {% if forloop.counter == 1 %}
+                                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님! [ 총 리뷰 개수: {{ user.total_review }} ]</p>  
+                            {% else %}
+                                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user.total_review }} ] </p>
+                            {% endif %}
+                        {% endfor %}
+                        <button type="button" class="w-100 btn btn-lg btn-outline-primary">전체 랭킹 확인하러 가기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 한 달 리뷰 개수 랭킹 -->
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm border-primary">
+                    <div class="card-header py-3 text-white bg-primary border-primary">
+                        <h4 class="my-0 fw-normal">한 달 리뷰 개수 랭킹</h4>
+                    </div>
+                    <div class="card-body">
+                        {% for user in E_month_review_order %}
+                            {% if forloop.counter == 1 %}
+                                <p style="font-size: 25px; color: #FF0000; font-weight: bold">1등: {{ user.nickname }} 님! [ 총 리뷰 개수: {{ user.review_count_lastmonth }} ]</p>  
+                            {% else %}
+                                <p style="font-size: 20px; font-weight: bold">{{ forloop.counter }}등: {{ user.nickname }} 님!  [ 총 리뷰 개수: {{ user.review_count_lastmonth }} ] </p>
                             {% endif %}
                         {% endfor %}
                         <button type="button" class="w-100 btn btn-lg btn-outline-primary">전체 랭킹 확인하러 가기</button>
