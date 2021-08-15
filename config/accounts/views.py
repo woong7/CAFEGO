@@ -9,7 +9,7 @@ from django.contrib import auth
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from .models import * #User
-from cafe.models import CafeList, Review, ReviewPhoto
+from cafe.models import CafeList, Review, ReviewPhoto, Comment
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
@@ -20,6 +20,7 @@ from django.db.models import Q, Count
 from datetime import datetime, timedelta
 from dateutil import relativedelta
 import operator
+from django.http import HttpResponseRedirect, HttpResponse
 
 def signup(request):
     if request.method == "POST":
@@ -64,15 +65,16 @@ def logout(request):
 def main(request):
     return render(request, 'accounts/main.html')
 
+
 def home(request):
     users=User.objects.all()
     user=request.user
-    visit_cafe_num=user.total_visit
+    #visit_cafe_num=user.total_visit
     cafenum=CafeList.objects.all()
     ctx = {
         'cafenum':len(cafenum), 
         'usernum':len(users), 
-        'mycafe':visit_cafe_num
+        #'mycafe':visit_cafe_num,
     }
     return render(request,'accounts/home.html', ctx)
 
@@ -630,6 +632,9 @@ def addfriend(request, pk):
     user.friends=json.dumps(friendsList)
     user.save()
 
+    notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
+    notification.save()
+
     return redirect('mypage',pk)
 
 def deletefriend(request, pk):
@@ -747,3 +752,39 @@ def this_cafe_map(request, pk):
         'cafe_address':cafe.address,
     }
     return render(request, 'accounts/cafe_map.html', ctx)
+
+##알림 기능
+class CommentNotification(View):
+    def get(self, request, notification_pk, comment_pk, *args, **kwargs):
+        notification = Notification.objects.get(pk=notification_pk)
+        #체크 필요!!!
+        comment = Comment.objects.get(pk=comment_pk)
+        #comment가 속해잇는 리뷰 객체  리뷰는 또 카페 디테일 페이지
+        comment.post #review 객체임
+        print("review??:", comment.post)
+        print("review pk??:", comment.post.pk)
+        notification.user_has_seen = True
+        notification.save()
+
+        #!!!
+        return redirect('review_list', pk=comment.post.pk)#comment pk가 아니라 review pk로,,,!!
+
+class FollowNotification(View):
+    def get(self, request, notification_pk, user_pk, *args, **kwargs):
+        notification = Notification.objects.get(pk=notification_pk)
+        #체크 필요!
+        user = User.objects.get(pk=user_pk)
+
+        notification.user_has_seen = True
+        notification.save()
+
+        return redirect('mypage', pk=user_pk)
+
+class RemoveNotification(View):
+    def delete(self, request, notification_pk, *args, **kwargs):
+        notification = Notification.objects.get(pk=notification_pk)
+
+        notification.user_has_seen = True
+        notification.save()
+
+        return HttpResponse('Success', content_type='text/plain') #????

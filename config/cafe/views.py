@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.generic import ListView
 from .models import CafeList, Review, ReviewPhoto, Comment
-from accounts.models import User, VisitedCafe, Badge
+from accounts.models import User, VisitedCafe, Badge, Notification
 from .forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q
@@ -79,7 +79,11 @@ def comment_write(request):
     else:
         boolDayOrNight = '오전'   
     timeString = now.strftime('%Y년 %#m월 %#d일 %#I:%M '+boolDayOrNight)
-    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString})
+
+    print("review user name:", review.username)
+    notification = Notification.objects.create(notification_type=2, from_user=request.user, to_user=review.username, comment=comment)
+
+    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString, 'notification':notification})
 
 @csrf_exempt
 def comment_delete(request):
