@@ -26,7 +26,6 @@ def review_list(request, pk):
     #print("each_reviews user:", each_reviews.filter(username=request.user))
 
     user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
-
     #방문했는지 체크 -> 리뷰 작성할 수 있음!
     is_visit = False
 
@@ -79,7 +78,7 @@ def comment_write(request):
         boolDayOrNight = '오후'
     else:
         boolDayOrNight = '오전'   
-    timeString = now.strftime('%Y년 %#m월 %#d일 %I:%M '+boolDayOrNight)
+    timeString = now.strftime('%Y년 %#m월 %#d일 %#I:%M '+boolDayOrNight)
     return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString})
 
 @csrf_exempt
