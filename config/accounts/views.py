@@ -158,11 +158,10 @@ def rank_list(request):
     this_month_first = last_month_first + relativedelta.relativedelta(months=1)
     last_month_last = this_month_first - timedelta(seconds=1) #저번달 막 시간
     
-    #test용
+    #test용TODO:나중에 지우깅!!
     August = datetime(now.year, now.month, 1)
     September = August + relativedelta.relativedelta(months=1)
     August_fin = September - timedelta(seconds=1)
-    #print(last_month_first, last_month_last)
     
     ####################  A_총 방문 랭킹  ####################
     A_users=User.objects.all().order_by('-total_visit')
@@ -174,14 +173,12 @@ def rank_list(request):
     C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin)))
     C_monthly_kinds_dict = {}
     for i in C_monthly_visited_cafe:
-        # i = 뉴오리진 마포점 이렇게 나옴
         if i.user not in C_monthly_kinds_dict.keys():#키 리스트
             C_monthly_kinds_dict[i.user.nickname] = [i.cafe]
         else:
             C_monthly_kinds_dict[i.user.nickname].append(i.cafe)
     #여기까지 {user이름:[카페리스트]}이렇게 내가 원하는 대로 나옴!!
-    # {<User: ye1>: [<CafeList: 뉴오리진 마포점>, <CafeList: 스타벅스 마포용강동점>, <CafeList: 개혁커피>], <User: ye2>: [<CafeList: 뉴오리진 마포점>]}
-    print(C_monthly_kinds_dict)
+
     # 카페 종류 **개수**를 넣어주기
     for i in C_monthly_kinds_dict:
         y = len(C_monthly_kinds_dict.get(i))
@@ -189,7 +186,7 @@ def rank_list(request):
         # {<User: ye1>: 3, <User: ye2>: 1}
 
     #value 값 기준으로 내림차순 정렬
-    #[(<User: ye1>, 3), (<User: ye2>, 1)] 이렇게 튜플로 나옴...
+    #[(<User: ye1>, 3), (<User: ye2>, 1)] 이렇게 튜플로 나옴.
     C_monthly_kinds_tuple = sorted(C_monthly_kinds_dict.items(), key=lambda x: x[1], reverse=True)
     #튜플 딕셔너리로 바꿈
     C_monthly_kinds_order = dict(C_monthly_kinds_tuple)
@@ -198,11 +195,6 @@ def rank_list(request):
     D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
 
     ####################  E_한 달 리뷰 랭킹  ####################
-    #annotate를 통해 review_count라는 새로운 필드를 만든다.(모델 속의 필드가 아닌 다른 정렬기준을 새로 만드는 것!)
-    #review_count는 Count함수를 이용한 계산 필드
-    #review_person은 Review 모델에서 User를 참조하는 username의 related_name이다. 
-    #그니까 review_person을 통해 해당 유저의 리뷰를 세고 그 숫자로 정렬
-    #(ex) D_each_user_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('-total_review')
     E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
 
     ctx={
@@ -218,7 +210,6 @@ def rank_list(request):
         'D_all_review_order': D_all_review_order,
         ##### E_한 달 리뷰 랭킹 #####
         'E_month_review_order' : E_month_review_order,
-
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
