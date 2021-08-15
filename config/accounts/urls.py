@@ -28,6 +28,7 @@ urlpatterns = [
     path('rank/list/', views.rank_list, name='rank_list'),
     path('rank/detail/', views.rank_detail, name='rank_detail'),
     path('cafemap/', views.user_cafe_map, name='user_cafe_map'),
+    path('this_cafe_map/<int:pk>/', views.this_cafe_map, name='this_cafe_map'),
     #path('detail/', views.user_detail, name='user_detail'),
 
     path('enroll_home/', views.enroll_home, name="enroll_home"),
@@ -36,4 +37,8 @@ urlpatterns = [
     path('enroll_new_cafe/', views.EnrollNewCafeListView.as_view(), name="enroll_new_cafe"),
     path('enroll_visited_cafe/', views.EnrollVisitedCafeListView.as_view(), name="enroll_visited_cafe"),
     
+    path('notification/<int:notification_pk>/comment/<int:review_pk>', views.CommentNotification.as_view(), name='comment-notification'),
+    path('notification/<int:notification_pk>/profile/<int:user_pk>', views.FollowNotification.as_view(), name='follow-notification'),
+    path('notification/delete/<int:notification_pk>', views.RemoveNotification.as_view(), name='notification-delete'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

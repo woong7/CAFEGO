@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    카페 지도
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_map.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="cafe_map-container">
+        <div>
+            <div id="map" style="width: 100%;"></div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbe48a94474ef23703951ea76b61e90&libraries=services"></script>
+    <script  type="text/javascript">
+    // 현재 카페 정보를 json 형식으로 받아옴
+    const cafe_id = {{ cafe_id | safe }};
+    const cafe_name = "{{ cafe_name | safe }}";
+    const cafe_x = {{ cafe_x | safe }};
+    const cafe_y = {{ cafe_y | safe }};
+    const cafe_address = "{{ cafe_address | safe }}";
+
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = {
+            center: new kakao.maps.LatLng(cafe_y, cafe_x), // 지도의 중심좌표
+            level: 2 // 지도의 확대 레벨
+        };
+    
+    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
+
+    var imageSrc = "https://image.flaticon.com/icons/png/512/3127/3127450.png", // 마커이미지의 주소    
+        imageSize = new kakao.maps.Size(24, 24),
+        imageOption = {offset: new kakao.maps.Point(8, 16)};
+    
+    var marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(cafe_y, cafe_x),
+            image : new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+        });
+
+    // 마커에 클릭이벤트 등록
+    kakao.maps.event.addListener(marker, 'click', function() {
+        // 마커를 클릭하면 장소명이 인포윈도우에 표출
+        infowindow.open(map, marker);
+    });
+
+    // 마커를 클릭하면 장소명을 표출할 인포윈도우
+    var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable : true});
+
+    infowindow.setContent(`
+            <div style="padding:5px;font-size:12px;">${cafe_name}</div>
+            <div style="padding:5px;font-size:10px;">${cafe_address}</div>
+            <div style="padding:5px;font-size:10px;">
+                <a href="../review_list/${cafe_id}">리뷰 작성</a>
+            </div>
+    `);
+
+    infowindow.open(map, marker);
+    </script>
+{% endblock %}

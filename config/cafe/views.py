@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.core import serializers
 from django.views.generic import ListView
 from .models import CafeList, Review, ReviewPhoto, Comment
-from accounts.models import User, VisitedCafe, Badge
+from accounts.models import User, VisitedCafe, Badge, Notification
 from .forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q
@@ -14,10 +14,10 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 
-# Create your views here.
 def review_list(request, pk):
     #해당 카페 /<CafeList: 90도씨> 이렇게 나온다
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
@@ -26,7 +26,6 @@ def review_list(request, pk):
     #print("each_reviews user:", each_reviews.filter(username=request.user))
 
     user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
-
     #방문했는지 체크 -> 리뷰 작성할 수 있음!
     is_visit = False
 
@@ -35,6 +34,7 @@ def review_list(request, pk):
             is_visit = True
         else:
             pass
+        
     #카페 평균 별점 구하기
     if len(each_reviews) == 0: #division zero 에러 피하기
         cafe_stars_avg = 0.0
@@ -52,6 +52,7 @@ def review_list(request, pk):
     
     ctx={
         'this_cafe': this_cafe,
+        'cafe_id': cafe_id,
         'each_reviews': each_reviews,
         'review_photo': review_photo,
         'comments': comments,
@@ -60,16 +61,29 @@ def review_list(request, pk):
 
     return render(request, 'cafe/review_list.html', ctx)
 
+import datetime
 @csrf_exempt
 def comment_write(request):
     req = json.loads(request.body)
     review_id = req['review_id']
     content = req['content']
     review = Review.objects.get(id=review_id)
-    username = review.username
-    comment = Comment.objects.create(post=review, username=username, content=content)
+    user = User.objects.get(username=request.user)
+    comment = Comment.objects.create(post=review, username=user, content=content)
     comment.save()
-    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'comment_user':comment.username, 'comment_time':comment.created_at})
+    now = datetime.datetime.now()
+    dayOrNight = now.strftime('%p')
+    boolDayOrNight = None
+    if dayOrNight == 'PM':
+        boolDayOrNight = '오후'
+    else:
+        boolDayOrNight = '오전'   
+    timeString = now.strftime('%Y년 %#m월 %#d일 %#I:%M '+boolDayOrNight)
+
+    print("review user name:", review.username)
+    notification = Notification.objects.create(notification_type=2, from_user=request.user, to_user=review.username, comment=comment)
+
+    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString, 'notification':notification})
 
 @csrf_exempt
 def comment_delete(request):
@@ -136,7 +150,8 @@ class CafeListView(ListView):
         search_keyword = self.request.GET.get('q', '')
         search_type = self.request.GET.get('type', '') 
         cafe_list = CafeList.objects.order_by('id')#나중에 ㄱㄴㄷ 순으로 바꿀?
-        if search_keyword:
+        
+        if search_keyword: #검색결과가 있을 때
             if len(search_keyword) > 1:
                 if search_type == 'name':
                 #__incontains 대소문자 구별 없이 데이터 가져온다.
@@ -153,6 +168,13 @@ class CafeListView(ListView):
     #하단부에 페이징 처리
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user_visited_cafes = VisitedCafe.objects.filter(user=self.request.user)
+
+        user_visit_list = []
+        for v_cafe in user_visited_cafes:
+            user_visit_list.append(v_cafe.cafe)
+        context['user_visited_cafes'] = user_visit_list
+
         paginator = context['paginator']
         page_numbers_range = 10
         max_index = len(paginator.page_range)
@@ -175,7 +197,6 @@ class CafeListView(ListView):
             context['q'] = search_keyword
         context['type'] = search_type
 
-        user_visited_cafes = VisitedCafe.objects.filter(user=self.request.user)
         return context
 
 # 카페 지도
@@ -214,33 +235,69 @@ def init_data(request):
 
 def sort_latest(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
+    comments = Comment.objects.all()
+    is_visit = False
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
 #리뷰를 쓴 유저가 그 카페를 얼마나 방문했는지에 따라서. 내림차순으로.
 def sort_visit(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
+    comments = Comment.objects.all()
+    is_visit = False
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-visit_cafe__visit_count', '-created_at') #해당카페의 리뷰들
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
 def sort_total_visit(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
+    comments = Comment.objects.all()
+    is_visit = False
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username__total_visit', '-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
 def sort_review(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
+    cafe_id = this_cafe.id
+    comments = Comment.objects.all()
+    is_visit = False
+    user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+    for cafe in user_visited_cafes:
+        if cafe.cafe == this_cafe:
+            is_visit = True
+        else:
+            pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username__total_review', '-created_at')#이름 순으로 정렬
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
-    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo,
+    ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
