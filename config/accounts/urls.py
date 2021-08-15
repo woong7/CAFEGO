@@ -9,6 +9,8 @@ import os
 urlpatterns = [
     path('', views.main, name='main'),
     path('home/', views.home, name='home'),
+    path('signup/', views.UserRegistrationView.as_view(), name='signup'),
+    path('login/', views.LoginView.as_view(), name='login'), #views.login
     path('logout/', views.logout, name='logout'),
     path('mypage/<int:pk>', views.mypage, name='mypage'),
     path('addfriend/<int:pk>', views.addfriend, name='addfriend'),
@@ -16,6 +18,7 @@ urlpatterns = [
     path('friend_search', views.FriendSearchListView.as_view(), name='friend_search'),
     path('friend_register/', views.friend_register, name="friend_register"),
     path('create_admin/', views.create_admin, name="create_admin"),
+    path('<pk>/verify/<token>/', views.UserVerificationView.as_view(), name="verify"),
 
     path('badge/list/<int:pk>', views.badge_list, name='badge_list'),
     path('badge/taken/', views.badge_taken, name='badge_taken'),

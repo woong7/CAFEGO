@@ -36,7 +36,7 @@
 
     <article class="each_review">
         {% for reviews in each_reviews %}
-            {{ reviews.username }} 
+            <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }} </a>
 
             {% if reviews.review_stars == '1.0' %}
                 <span>⭐</span>

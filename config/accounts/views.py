@@ -2,18 +2,19 @@ from django import views
 from django.core import serializers
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 #from django.contrib.auth.models import User #회원가입을 구현하는데 있어 장고가 제공해주는 편리함
 from django.urls import reverse
 from django.contrib import auth
 from django.views import View
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from .models import * #User
 from cafe.models import CafeList, Review, ReviewPhoto, Comment
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
 from . import forms
+from accounts.forms import UserRegistrationForm
 from cafe.forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q, Count
@@ -42,7 +43,7 @@ class LoginView(View):
         ctx = {
             "form": form,
         }
-        return render(request, "accounts/login.html", ctx)
+        return render(request, "accounts/home.html", ctx)
 
     def post(self, request):
         form = forms.LoginForm(request.POST)
@@ -372,11 +373,11 @@ def mypage(request, pk):
         total_drink_dic[v_cafe] = drink_list
 
     
-    print("vcafe:", visit_cafes)
+    #print("vcafe:", visit_cafes)
     
-    print("total drink:", total_drink)#
-    print("total drink dic:", total_drink_dic)#
-    print("total drink dic type:", type(total_drink_dic))#
+    #print("total drink:", total_drink)#
+    #print("total drink dic:", total_drink_dic)#
+    #print("total drink dic type:", type(total_drink_dic))#
 
         #drink_list = Drink.objects.get(visited_cafe=cafe)#되나?
     
@@ -397,8 +398,10 @@ def mypage(request, pk):
             friends.append(user)
         
 
-    my_all_review = Review.objects.filter(username=request.user)
+    my_all_review = Review.objects.filter(username=owner)
     all_review_count = len(my_all_review)
+    review_photo = ReviewPhoto.objects.all() 
+    comments=Comment.objects.filter(username=owner)
 
         
     users=users.order_by('-total_visit')
@@ -446,6 +449,9 @@ def mypage(request, pk):
         'total_badge_count':total_badge_count,
         'names_to_exclude':names_to_exclude,
         'all_review_count': all_review_count,
+        'my_all_review':my_all_review,
+        'review_photo':review_photo,
+        'comments':comments,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
@@ -823,3 +829,54 @@ class RemoveNotification(View):
         notification.save()
 
         return HttpResponse('Success', content_type='text/plain') #????
+
+
+from django.contrib import messages
+from django.contrib.auth.tokens import default_token_generator
+from django.conf import settings
+
+class UserRegistrationView(CreateView):
+    model = get_user_model()
+    form_class = UserRegistrationForm
+    success_url = '/home/'
+    verify_url = '/verify/' 
+    token_generator = default_token_generator
+
+    def form_valid(self, form):
+        response = super().form_valid(form) 
+        if form.instance:
+            self.send_verification_email(form.instance)
+        return response
+
+    def send_verification_email(self, user):
+        token = self.token_generator.make_token(user)
+        send_email_confirmation(self.request, user, email=user.email)
+        # user.email_user('회원가입을 축하드립니다.', '다음 주소로 이동하셔서 인증하세요. {}'.format(self.build_verification_link(user, token)), from_email=settings.EMAIL_HOST_USER)
+        messages.info(self.request, '회원가입을 축하드립니다. 가입하신 이메일주소로 인증메일을 발송했으니 확인 후 인증해주세요.')
+
+    def build_verification_link(self, user, token):
+        return '{}/{}/verify/{}/'.format(self.request.META.get('HTTP_ORIGIN'), user.pk, token)
+
+from django.views.generic.base import TemplateView
+class UserVerificationView(TemplateView):
+    
+    model = get_user_model()
+    redirect_url = '/home/'
+    token_generator = default_token_generator
+
+    def get(self, request, *args, **kwargs):
+        if self.is_valid_token(**kwargs):
+            messages.info(request, '인증이 완료되었습니다.')
+        else:
+            messages.error(request, '인증이 실패되었습니다.')
+        return HttpResponseRedirect(self.redirect_url)   # 인증 성공여부와 상관없이 무조건 로그인 페이지로 이동
+
+    def is_valid_token(self, **kwargs):
+        pk = kwargs.get('pk')
+        token = kwargs.get('tonen')
+        user = self.model.objects.get(pk=pk)
+        is_valid = self.token_generator.check_token(user, token)
+        if is_valid:
+            user.is_active = True
+            user.save()     # 데이터가 변경되면 반드시 save() 메소드 호출
+        return is_valid
