@@ -48,7 +48,7 @@ class UserRegistrationForm(UserCreationForm):
     
     class Meta:
         model = get_user_model()
-        fields = ('email', 'username', 'nickname', 'district', 'town')
+        fields = ('email', 'username', 'nickname', 'city', 'gu', 'dong')
 
 
 class VisitedCafeForm(forms.ModelForm):
