@@ -27,7 +27,7 @@
                 <th> </th>
                 <th>카페명</th>
                 <th>위치</th>
-                <th>방문여부</th>
+                <th>방문등록</th>
             </tr>
         </thead>
         <tbody>
@@ -42,7 +42,7 @@
                         <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
                         <td>{{ cafe.address }}</td> <!-- | truncatechars:10-->
                         <!-- checkbox trigger modal -->
-                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="visit"></td>
+                        <td><input type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="방문등록"></td>
                         <div class="modal fade" id="exampleModal_{{ cafe.id }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             
                             <div class="modal-dialog">

@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 
 def review_list(request, pk):
+    user = request.user
     #해당 카페 /<CafeList: 90도씨> 이렇게 나온다
     this_cafe = CafeList.objects.get(pk=pk) 
     cafe_id = this_cafe.id
@@ -51,6 +52,7 @@ def review_list(request, pk):
         this_cafe.save()
     
     ctx={
+        'user': user,
         'this_cafe': this_cafe,
         'cafe_id': cafe_id,
         'each_reviews': each_reviews,
