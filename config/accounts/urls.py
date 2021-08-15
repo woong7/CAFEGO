@@ -18,7 +18,7 @@ urlpatterns = [
     path('friend_search', views.FriendSearchListView.as_view(), name='friend_search'),
     path('friend_register/', views.friend_register, name="friend_register"),
     path('create_admin/', views.create_admin, name="create_admin"),
-    path('<int:pk>/verify', views.UserVerificationView.as_view(), name="verify"),
+    path('<pk>/verify/<token>/', views.UserVerificationView.as_view(), name="verify"),
 
     path('badge/list/<int:pk>', views.badge_list, name='badge_list'),
     path('badge/taken/', views.badge_taken, name='badge_taken'),

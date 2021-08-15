@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from . import models
 from .models import Drink, User, VisitedCafe
 from allauth.account.forms import SignupForm
@@ -46,8 +47,8 @@ from django.contrib.auth.forms import UserCreationForm
 class UserRegistrationForm(UserCreationForm):
     
     class Meta:
-        model = User
-        fields = ('email', 'username')
+        model = get_user_model()
+        fields = ('email', 'username', 'nickname', 'district', 'town')
 
 
 class VisitedCafeForm(forms.ModelForm):

@@ -43,7 +43,7 @@ class LoginView(View):
         ctx = {
             "form": form,
         }
-        return render(request, "accounts/login.html", ctx)
+        return render(request, "accounts/home.html", ctx)
 
     def post(self, request):
         form = forms.LoginForm(request.POST)
@@ -712,8 +712,8 @@ from django.conf import settings
 class UserRegistrationView(CreateView):
     model = get_user_model()
     form_class = UserRegistrationForm
-    success_url = 'login'
-    verify_url = 'verify' 
+    success_url = '/home/'
+    verify_url = '/verify/' 
     token_generator = default_token_generator
 
     def form_valid(self, form):
@@ -724,7 +724,8 @@ class UserRegistrationView(CreateView):
 
     def send_verification_email(self, user):
         token = self.token_generator.make_token(user)
-        user.email_user('회원가입을 축하드립니다.', '다음 주소로 이동하셔서 인증하세요. {}'.format(self.build_verification_link(user, token)), from_email=settings.EMAIL_HOST_USER)
+        send_email_confirmation(self.request, user, email=user.email)
+        # user.email_user('회원가입을 축하드립니다.', '다음 주소로 이동하셔서 인증하세요. {}'.format(self.build_verification_link(user, token)), from_email=settings.EMAIL_HOST_USER)
         messages.info(self.request, '회원가입을 축하드립니다. 가입하신 이메일주소로 인증메일을 발송했으니 확인 후 인증해주세요.')
 
     def build_verification_link(self, user, token):
@@ -734,7 +735,7 @@ from django.views.generic.base import TemplateView
 class UserVerificationView(TemplateView):
     
     model = get_user_model()
-    redirect_url = '../account/login'
+    redirect_url = '/home/'
     token_generator = default_token_generator
 
     def get(self, request, *args, **kwargs):
