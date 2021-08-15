@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    #socialaccounts.providers.
+
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.naver',
 
 ]
 
@@ -160,3 +162,9 @@ ACCOUNT_FORMS = {'signup': 'accounts.forms.MyCustomSignupForm'} #앱이름.forms
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'kgw980316@gmail.com'
+EMAIL_HOST_PASSWORD = 'parabe1!um'
+EMAIL_USE_TLS = True

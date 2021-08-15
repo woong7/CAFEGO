@@ -1,4 +1,5 @@
 #from config.cafe.models import CafeList
+from allauth.account.utils import send_email_confirmation
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, AbstractBaseUser
 #user model 커스텀
@@ -40,6 +41,7 @@ class UserManager(BaseUserManager):
         return user
 
 import simplejson as json
+
 class User(AbstractBaseUser):
     username_validator: UnicodeUsernameValidator = ...
     username = models.CharField(max_length=150, unique=True) ##########
@@ -50,7 +52,12 @@ class User(AbstractBaseUser):
     agree_terms = models.BooleanField(default=False)
     agree_marketing = models.BooleanField(default=False)
 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(        
+        default=False,                 # 기본값을 False 로 변경
+        help_text=(
+            'Designates whether this user should be treated as active. '
+            'Unselect this instead of deleting accounts.'
+        ),)
     is_admin = models.BooleanField(default=False)
     
     total_visit=models.IntegerField(default=0)
@@ -67,6 +74,9 @@ class User(AbstractBaseUser):
 
     USERNAME_FIELD ='username'
     REQUIRED_FIELDS = ['nickname', 'agree_terms', 'agree_marketing']
+
+    def email_user(self, subject, message, from_email=None, **kwargs): # 이메일 발송 메소드
+        send_email_confirmation(subject, message, from_email, [self.email], **kwargs)
 
     def __str__(self):
         return self.username

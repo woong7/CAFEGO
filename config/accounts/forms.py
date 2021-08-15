@@ -42,6 +42,14 @@ class MyCustomSignupForm(SignupForm):
         user.save()
         return user
 
+from django.contrib.auth.forms import UserCreationForm
+class UserRegistrationForm(UserCreationForm):
+    
+    class Meta:
+        model = User
+        fields = ('email', 'username')
+
+
 class VisitedCafeForm(forms.ModelForm):
     class Meta:
         model = VisitedCafe
