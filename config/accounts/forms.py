@@ -5,6 +5,8 @@ from .models import Drink, User, VisitedCafe
 from allauth.account.forms import SignupForm
 from accounts.choices import *
 
+from django.contrib.auth.forms import UserCreationForm
+
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=20)
     password = forms.CharField(widget=forms.PasswordInput)
@@ -43,12 +45,11 @@ class MyCustomSignupForm(SignupForm):
         user.save()
         return user
 
-from django.contrib.auth.forms import UserCreationForm
 class UserRegistrationForm(UserCreationForm):
     
     class Meta:
         model = get_user_model()
-        fields = ('email', 'username', 'nickname', 'district', 'town')
+        fields = ('username', 'email', 'nickname', 'city', 'gu', 'dong')
 
 
 class VisitedCafeForm(forms.ModelForm):
