@@ -21,10 +21,9 @@ def review_list(request, pk):
     cafe_id = this_cafe.id
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
+    review = Review.objects.filter(cafe=this_cafe)
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
     comments = Comment.objects.all()
-    #print("each_reviews:", each_reviews)
-    #print("each_reviews user:", each_reviews.filter(username=request.user))
 
     user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
     #방문했는지 체크 -> 리뷰 작성할 수 있음!
@@ -48,13 +47,14 @@ def review_list(request, pk):
         #카페 평균 별점 db에 저장하기
         #this_cafe.cafe_stars.save() 이렇게 모델 필드 하나만 저장 nono
         #this_cafe.save()이렇게 전체 모델로 저장하기
-        this_cafe.cafe_stars = cafe_stars_avg
+        this_cafe.cafe_stars = round(cafe_stars_avg, 1)
         this_cafe.save()
     
     ctx={
         'user': user,
         'this_cafe': this_cafe,
         'cafe_id': cafe_id,
+        'review': review,
         'each_reviews': each_reviews,
         'review_photo': review_photo,
         'comments': comments,
