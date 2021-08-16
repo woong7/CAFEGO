@@ -476,6 +476,7 @@ class MyCafeReviewListView(ListView):
 
         return context
 
+
 def review_update(request, pk):
     myreview = get_object_or_404(Review, id=pk)
     
@@ -484,7 +485,7 @@ def review_update(request, pk):
         if form.is_valid():
             myreview = form.save(commit=False)
             myreview.username = request.user
-            myreview.cafe = CafeList.objects.get(pk=pk)
+            myreview.cafe = CafeList.objects.get(name=myreview.cafe)
             myreview = form.save()
 
         for img in request.FILES.getlist('imgs'):
@@ -497,12 +498,17 @@ def review_update(request, pk):
         cafe = CafeList.objects.get(pk=myreview.cafe.id)
         return redirect('cafe:review_list', cafe.id)
     else:
-        #instance=myreview: 원래 속에 있던 데이터를 넣은 채 가져다 두기
-        form = ReviewForm(instance=myreview)
-        cafe_name = CafeList.objects.get(pk=pk)
-        reviewer = request.user
-        ctx = {'form': form, 'cafe_name': cafe_name, 'reviewer': reviewer}
-        return render(request, 'cafe/review_form.html', ctx)
+        if request.user == myreview.username: #리뷰 작성자=사용자
+            #instance=myreview: 원래 속에 있던 데이터를 넣은 채 가져다 두기
+            form = ReviewForm(instance=myreview)
+            cafe_name = CafeList.objects.get(name=myreview.cafe)
+            reviewer = request.user
+            ctx = {'form': form, 'cafe_name': cafe_name, 'reviewer': reviewer}
+            return render(request, 'cafe/review_form.html', ctx)
+        else:
+            cafe = CafeList.objects.get(pk=myreview.cafe.id)
+            ctx = {'cafe': cafe,}
+            return render(request, 'cafe/warning.html', ctx)
 
 from django.views.decorators.csrf import csrf_exempt
 import json

@@ -20,10 +20,9 @@ def review_list(request, pk):
     cafe_id = this_cafe.id
     #해당 카페 리뷰
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
+    review = Review.objects.filter(cafe=this_cafe)
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
     comments = Comment.objects.all()
-    #print("each_reviews:", each_reviews)
-    #print("each_reviews user:", each_reviews.filter(username=request.user))
 
     user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
     #방문했는지 체크 -> 리뷰 작성할 수 있음!
@@ -53,6 +52,7 @@ def review_list(request, pk):
     ctx={
         'this_cafe': this_cafe,
         'cafe_id': cafe_id,
+        'review': review,
         'each_reviews': each_reviews,
         'review_photo': review_photo,
         'comments': comments,

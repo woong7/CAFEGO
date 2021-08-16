@@ -57,7 +57,7 @@
 
     <article class="each_review">
         {% for reviews in each_reviews %}
-            {{ reviews.username }} 
+            {{ reviews.username.nickname }} 
 
             {% if reviews.review_stars == '1.0' %}
                 <span>⭐</span>
@@ -71,6 +71,11 @@
                 <span>⭐⭐⭐⭐⭐</span>
             {% endif %}
             {{ reviews.created_at }}
+
+            {% if reviews.username == request.user %}
+                <button><a href="{% url 'review_update' reviews.id %}">리뷰 수정</a></button>
+            {% endif %}
+
             <br/>
             <span>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11삽질노트-->
             </span>

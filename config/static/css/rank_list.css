@@ -1,0 +1,19 @@
+#rank_page {
+    background-color: wheat;
+    padding: 50px 0px;
+}
+
+
+.inner {
+    width: 100%;
+    height: 40%;
+    overflow: hidden;
+}
+
+.inner img {
+    transition: all 1.3s ease;
+}
+
+.inner:hover img {
+    transform: scale(1.2)
+}
