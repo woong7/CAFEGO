@@ -2,24 +2,26 @@ from django import views
 from django.core import serializers
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 #from django.contrib.auth.models import User #회원가입을 구현하는데 있어 장고가 제공해주는 편리함
 from django.urls import reverse
 from django.contrib import auth
 from django.views import View
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from .models import * #User
-from cafe.models import CafeList, Review, ReviewPhoto
+from cafe.models import CafeList, Review, ReviewPhoto, Comment
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
 from . import forms
+from accounts.forms import UserRegistrationForm, MyCustomSignupForm
 from cafe.forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q, Count
 from datetime import datetime, timedelta
 from dateutil import relativedelta
 import operator
+from django.http import HttpResponseRedirect, HttpResponse
 
 def signup(request):
     if request.method == "POST":
@@ -41,7 +43,7 @@ class LoginView(View):
         ctx = {
             "form": form,
         }
-        return render(request, "accounts/login.html", ctx)
+        return render(request, "accounts/home.html", ctx)
 
     def post(self, request):
         form = forms.LoginForm(request.POST)
@@ -64,6 +66,7 @@ def logout(request):
 def main(request):
     return render(request, 'accounts/main.html')
 
+
 def home(request):
     users = User.objects.all()
     user = request.user
@@ -77,7 +80,7 @@ def home(request):
     return render(request,'accounts/home.html', ctx)
 
 def create_admin(request):
-    User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True)
+    User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True, is_active=True, city="서울특별시", gu="관악구", dong="신림동")
     return redirect('home')
 
 def badge_list(request, pk):
@@ -158,11 +161,10 @@ def rank_list(request):
     this_month_first = last_month_first + relativedelta.relativedelta(months=1)
     last_month_last = this_month_first - timedelta(seconds=1) #저번달 막 시간
     
-    #test용
+    #test용TODO:나중에 지우깅!!
     August = datetime(now.year, now.month, 1)
     September = August + relativedelta.relativedelta(months=1)
     August_fin = September - timedelta(seconds=1)
-    #print(last_month_first, last_month_last)
     
     ####################  A_총 방문 랭킹  ####################
     A_users=User.objects.all().order_by('-total_visit')
@@ -174,14 +176,12 @@ def rank_list(request):
     C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin)))
     C_monthly_kinds_dict = {}
     for i in C_monthly_visited_cafe:
-        # i = 뉴오리진 마포점 이렇게 나옴
         if i.user not in C_monthly_kinds_dict.keys():#키 리스트
             C_monthly_kinds_dict[i.user.nickname] = [i.cafe]
         else:
             C_monthly_kinds_dict[i.user.nickname].append(i.cafe)
     #여기까지 {user이름:[카페리스트]}이렇게 내가 원하는 대로 나옴!!
-    # {<User: ye1>: [<CafeList: 뉴오리진 마포점>, <CafeList: 스타벅스 마포용강동점>, <CafeList: 개혁커피>], <User: ye2>: [<CafeList: 뉴오리진 마포점>]}
-    print(C_monthly_kinds_dict)
+
     # 카페 종류 **개수**를 넣어주기
     for i in C_monthly_kinds_dict:
         y = len(C_monthly_kinds_dict.get(i))
@@ -189,7 +189,7 @@ def rank_list(request):
         # {<User: ye1>: 3, <User: ye2>: 1}
 
     #value 값 기준으로 내림차순 정렬
-    #[(<User: ye1>, 3), (<User: ye2>, 1)] 이렇게 튜플로 나옴...
+    #[(<User: ye1>, 3), (<User: ye2>, 1)] 이렇게 튜플로 나옴.
     C_monthly_kinds_tuple = sorted(C_monthly_kinds_dict.items(), key=lambda x: x[1], reverse=True)
     #튜플 딕셔너리로 바꿈
     C_monthly_kinds_order = dict(C_monthly_kinds_tuple)
@@ -198,11 +198,6 @@ def rank_list(request):
     D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
 
     ####################  E_한 달 리뷰 랭킹  ####################
-    #annotate를 통해 review_count라는 새로운 필드를 만든다.(모델 속의 필드가 아닌 다른 정렬기준을 새로 만드는 것!)
-    #review_count는 Count함수를 이용한 계산 필드
-    #review_person은 Review 모델에서 User를 참조하는 username의 related_name이다. 
-    #그니까 review_person을 통해 해당 유저의 리뷰를 세고 그 숫자로 정렬
-    #(ex) D_each_user_review = User.objects.all().annotate(review_count = Count('review_person')).order_by('-total_review')
     E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
 
     ctx={
@@ -218,7 +213,6 @@ def rank_list(request):
         'D_all_review_order': D_all_review_order,
         ##### E_한 달 리뷰 랭킹 #####
         'E_month_review_order' : E_month_review_order,
-
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
@@ -370,11 +364,11 @@ def mypage(request, pk):
         total_drink_dic[v_cafe] = drink_list
 
     
-    print("vcafe:", visit_cafes)
+    #print("vcafe:", visit_cafes)
     
-    print("total drink:", total_drink)#
-    print("total drink dic:", total_drink_dic)#
-    print("total drink dic type:", type(total_drink_dic))#
+    #print("total drink:", total_drink)#
+    #print("total drink dic:", total_drink_dic)#
+    #print("total drink dic type:", type(total_drink_dic))#
 
         #drink_list = Drink.objects.get(visited_cafe=cafe)#되나?
     
@@ -395,8 +389,10 @@ def mypage(request, pk):
             friends.append(user)
         
 
-    my_all_review = Review.objects.filter(username=request.user)
+    my_all_review = Review.objects.filter(username=owner)
     all_review_count = len(my_all_review)
+    review_photo = ReviewPhoto.objects.all() 
+    comments=Comment.objects.filter(username=owner)
 
         
     users=users.order_by('-total_visit')
@@ -444,6 +440,9 @@ def mypage(request, pk):
         'total_badge_count':total_badge_count,
         'names_to_exclude':names_to_exclude,
         'all_review_count': all_review_count,
+        'my_all_review':my_all_review,
+        'review_photo':review_photo,
+        'comments':comments,
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
@@ -485,6 +484,7 @@ class MyCafeReviewListView(ListView):
 
         return context
 
+
 def review_update(request, pk):
     myreview = get_object_or_404(Review, id=pk)
     
@@ -493,7 +493,7 @@ def review_update(request, pk):
         if form.is_valid():
             myreview = form.save(commit=False)
             myreview.username = request.user
-            myreview.cafe = CafeList.objects.get(pk=pk)
+            myreview.cafe = CafeList.objects.get(name=myreview.cafe)
             myreview = form.save()
 
         for img in request.FILES.getlist('imgs'):
@@ -506,12 +506,17 @@ def review_update(request, pk):
         cafe = CafeList.objects.get(pk=myreview.cafe.id)
         return redirect('cafe:review_list', cafe.id)
     else:
-        #instance=myreview: 원래 속에 있던 데이터를 넣은 채 가져다 두기
-        form = ReviewForm(instance=myreview)
-        cafe_name = CafeList.objects.get(pk=pk)
-        reviewer = request.user
-        ctx = {'form': form, 'cafe_name': cafe_name, 'reviewer': reviewer}
-        return render(request, 'cafe/review_form.html', ctx)
+        if request.user == myreview.username: #리뷰 작성자=사용자
+            #instance=myreview: 원래 속에 있던 데이터를 넣은 채 가져다 두기
+            form = ReviewForm(instance=myreview)
+            cafe_name = CafeList.objects.get(name=myreview.cafe)
+            reviewer = request.user
+            ctx = {'form': form, 'cafe_name': cafe_name, 'reviewer': reviewer}
+            return render(request, 'cafe/review_form.html', ctx)
+        else:
+            cafe = CafeList.objects.get(pk=myreview.cafe.id)
+            ctx = {'cafe': cafe,}
+            return render(request, 'cafe/warning.html', ctx)
 
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -629,6 +634,8 @@ def addfriend(request, pk):
 
     user.friends=json.dumps(friendsList)
     user.save()
+    notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
+    notification.save()
 
     return redirect('mypage',pk)
 
@@ -732,6 +739,11 @@ def friend_register(request):
         user.friends=json.dumps(friendsList)
         user.save()
 
+        target =User.objects.get(nickname=str_friendname)
+        print("target:", target) #user objects가 맞는지
+        notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
+        notification.save()
+
     return redirect('friend_search')
 
 def this_cafe_map(request, pk):
@@ -747,3 +759,123 @@ def this_cafe_map(request, pk):
         'cafe_address':cafe.address,
     }
     return render(request, 'accounts/cafe_map.html', ctx)
+
+##알림 기능
+class CommentNotification(View):
+    def get(self, request, notification_pk, review_pk, *args, **kwargs):
+        # print("self:", self)
+        # print("request:", request)
+        # print("notification pk:", notification_pk)
+        # print("self request get:", self.args)
+        # print("self request get:", self.kwargs['review_pk'])
+        # print("review_pk:", review_pk)
+        notification = Notification.objects.get(pk=notification_pk)
+        #체크 필요!!!
+
+        comment = Comment.objects.get(pk=review_pk)
+        #comment가 속해잇는 리뷰 객체  리뷰는 또 카페 디테일 페이지
+        comment.post #review 객체임
+        #해당하는 카페 객체도 받아와야 함!
+        this_cafe = comment.post.cafe #cafelist 객체임
+        cafe_id = this_cafe.id
+        each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
+        review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+        comments = Comment.objects.all()
+        user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
+            #방문했는지 체크 -> 리뷰 작성할 수 있음!
+        is_visit = False
+
+        for cafe in user_visited_cafes:
+            if cafe.cafe == this_cafe:
+                is_visit = True
+            else:
+                pass
+
+        print("review??:", comment.post)##???
+        print("review pk??:", comment.post.pk)###???
+        notification.user_has_seen = True
+        notification.save()
+
+        #!!!
+
+        ctx={
+        'this_cafe': this_cafe,
+        'cafe_id': cafe_id,
+        'each_reviews': each_reviews,
+        'review_photo': review_photo,
+        'comments': comments,
+        'is_visit': is_visit,
+        } 
+        return render(request, 'cafe/review_list.html', ctx)
+        #return redirect('review_list', pk=comment.post.pk)#comment pk가 아니라 review pk로,,,!!
+
+class FollowNotification(View):
+    def get(self, request, notification_pk, user_pk, *args, **kwargs):
+        notification = Notification.objects.get(pk=notification_pk)
+        #체크 필요!
+        user = User.objects.get(pk=user_pk)
+
+        notification.user_has_seen = True
+        notification.save()
+
+        return redirect('mypage', pk=user_pk)
+
+class RemoveNotification(View):
+    def delete(self, request, notification_pk, *args, **kwargs):
+        notification = Notification.objects.get(pk=notification_pk)
+
+        notification.user_has_seen = True
+        notification.save()
+
+        return HttpResponse('Success', content_type='text/plain') #????
+
+
+from django.contrib import messages
+from django.contrib.auth.tokens import default_token_generator
+from django.conf import settings
+
+class UserRegistrationView(CreateView):
+    model = get_user_model()
+    form_class = UserRegistrationForm
+    success_url = '/home/'
+    verify_url = '/verify/' 
+    token_generator = default_token_generator
+
+    def form_valid(self, form):
+        response = super().form_valid(form) 
+        if form.instance:
+            self.send_verification_email(form.instance)
+        return response
+
+    def send_verification_email(self, user):
+        token = self.token_generator.make_token(user)
+        send_email_confirmation(self.request, user, email=user.email)
+        # user.email_user('회원가입을 축하드립니다.', '다음 주소로 이동하셔서 인증하세요. {}'.format(self.build_verification_link(user, token)), from_email=settings.EMAIL_HOST_USER)
+        messages.info(self.request, '회원가입을 축하드립니다. 가입하신 이메일주소로 인증메일을 발송했으니 확인 후 인증해주세요.')
+
+    def build_verification_link(self, user, token):
+        return '{}/{}/verify/{}/'.format(self.request.META.get('HTTP_ORIGIN'), user.pk, token)
+
+from django.views.generic.base import TemplateView
+class UserVerificationView(TemplateView):
+    
+    model = get_user_model()
+    redirect_url = '/home/'
+    token_generator = default_token_generator
+
+    def get(self, request, *args, **kwargs):
+        if self.is_valid_token(**kwargs):
+            messages.info(request, '인증이 완료되었습니다.')
+        else:
+            messages.error(request, '인증이 실패되었습니다.')
+        return HttpResponseRedirect(self.redirect_url)   # 인증 성공여부와 상관없이 무조건 로그인 페이지로 이동
+
+    def is_valid_token(self, **kwargs):
+        pk = kwargs.get('pk')
+        token = kwargs.get('tonen')
+        user = self.model.objects.get(pk=pk)
+        is_valid = self.token_generator.check_token(user, token)
+        if is_valid:
+            user.is_active = True
+            user.save()     # 데이터가 변경되면 반드시 save() 메소드 호출
+        return is_valid

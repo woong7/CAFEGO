@@ -9,20 +9,47 @@
 {% endblock %}
 {% block content %}
 <div class="px-4 py-3 my-5 text-center">
-    <h1 class="display-5 fw-bold">{{ this_cafe.name }}</h1>
-    <div class="col-lg-6 mx-auto">
+    <h1 class="display-5 fw-bold">{{this_cafe.pk}} {{ this_cafe.name }}</h1>
+    <div class="col-lg-6 mx-auto text-center">
         <p class="lead mb-4">{{ this_cafe.address }}</p>
-        <h3> 평점 : {{ this_cafe.cafe_stars }}</h3>
-        {{this_cafe.pk}}
+            <div class="rating_wrap_parents">
+                <div class="rating_wrap">
+                    <div class="rating" data-rate="{{ this_cafe.cafe_stars }}">
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                    </div>
+                </div>
+                <div class="rating_wrap">
+                    <div class="not_rating">
+                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <span class="rating_number">({{ this_cafe.cafe_stars }}점)</span>
+        
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <button class="btn btn-outline-primary" onclick="location.href= '{% url 'this_cafe_map' this_cafe.id %}'">지도 보기</button>
             {% if is_visit %}
                 <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:review_create' this_cafe.id %}'">리뷰 작성</button>
             {% endif %}
         </div>
+    </br>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <button class="btn btn-outline-primary" onclick="location.href= 'https://google.com/maps/place/{{this_cafe.name}}'">카카오맵에서 리뷰 평점 보기</button>
+            <button class="btn btn-outline-primary" onClick="location.href='https://map.naver.com/v5/search/{{this_cafe.name}}'">네이버지도에서 리뷰 평점 보기</button>
+            <button class="btn btn-outline-primary" onClick="location.href='https://google.com/search?q={{this_cafe.name}}'">구글맵에서 리뷰 평점 보기</button>
+        </div>
     </div>
 </div>
-
+{% if each_reviews.count > 0 %}
 <div class="cafe_info position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
     <hr/>
     <div class="review_list">
@@ -31,12 +58,13 @@
         <button type="button" onclick="location.href='{% url 'cafe:sort_visit' this_cafe.id %}'">{{this_cafe.name}} 방문 순</button>
         <button type="button" onclick="location.href='{% url 'cafe:sort_total_visit' this_cafe.id %}'">총 방문 순</button>
         <button type="button" onclick="location.href='{% url 'cafe:sort_review' this_cafe.id %}'">리뷰 순</button>
+        {{each_reviews.count}}
     </div>
     <hr/>
 
     <article class="each_review">
         {% for reviews in each_reviews %}
-            {{ reviews.username }} 
+            <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }} </a>
 
             {% if reviews.review_stars == '1.0' %}
                 <span>⭐</span>
@@ -50,6 +78,11 @@
                 <span>⭐⭐⭐⭐⭐</span>
             {% endif %}
             {{ reviews.created_at }}
+
+            {% if reviews.username == request.user %}
+                <button><a href="{% url 'review_update' reviews.id %}">리뷰 수정</a></button>
+            {% endif %}
+
             <br/>
             <span>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11삽질노트-->
             </span>
@@ -83,87 +116,115 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
-                <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
-                <hr/>
-            {% endfor %}
-        </article>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
-    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
-    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
-    <script type="text/javascript">
-    // 댓글 작성
-    const requestWrite = new XMLHttpRequest();
+                            </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
+            <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
+            <hr/>
+        {% endfor %}
+    </article>
+</div>
+{% else %}
+<div class="cafe_info position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
+    아직 등록된 리뷰가 없습니다. 방문카페 등록 후 첫번째 리뷰의 주인공이 되어 보세요!
+    <hr/>
+</div>
+{% endif %}
 
-    const commentWrite = (review_id) => {
-        const url = '/cafe/comment_write/';
-        const content = document.querySelector(`.input-${review_id}`).value;
-        requestWrite.open('POST', url, true);
-        requestWrite.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        requestWrite.send(JSON.stringify({'review_id': review_id, 'content': content}));
-    };
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
+<script type="text/javascript">
+// 댓글 작성
+const requestWrite = new XMLHttpRequest();
 
-    const writeResponse = () => {
-        if(requestWrite.status < 400) {
-            const {review_id, content, comment_id, username, comment_time} = JSON.parse(requestWrite.response);
-            console.log(content);
-            const comments = document.querySelector(`.comments-${review_id}`);
-            const element = document.querySelector(`.input-${review_id}`);
-            comments.innerHTML += `
-                <div class="comment-${comment_id} container my-1">
-                    <div class="row">
-                        <div class="col">${content}</div>
-                        <div class="col">${username}</div>
-                        <div class="col">${comment_time}</div>
-                        <div class="col">
-                            <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
-                        </div>
+const commentWrite = (review_id) => {
+    const url = '/cafe/comment_write/';
+    const content = document.querySelector(`.input-${review_id}`).value;
+    requestWrite.open('POST', url, true);
+    requestWrite.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+    );
+    requestWrite.send(JSON.stringify({'review_id': review_id, 'content': content}));
+};
+
+const writeResponse = () => {
+    if(requestWrite.status < 400) {
+        const {review_id, content, comment_id, username, comment_time} = JSON.parse(requestWrite.response);
+        console.log(content);
+        const comments = document.querySelector(`.comments-${review_id}`);
+        const element = document.querySelector(`.input-${review_id}`);
+        comments.innerHTML += `
+            <div class="comment-${comment_id} container my-1">
+                <div class="row">
+                    <div class="col">${content}</div>
+                    <div class="col">${username}</div>
+                    <div class="col">${comment_time}</div>
+                    <div class="col">
+                        <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
                     </div>
                 </div>
-            `;
-        }
-    };
+            </div>
+        `;
+    }
+};
 
-    requestWrite.onreadystatechange = () => {
-        if(requestWrite.readyState === XMLHttpRequest.DONE) {
-            writeResponse();
-        }
-    };
+requestWrite.onreadystatechange = () => {
+    if(requestWrite.readyState === XMLHttpRequest.DONE) {
+        writeResponse();
+    }
+};
 
-    //댓글 삭제
-    const requestDelete = new XMLHttpRequest();
+//댓글 삭제
+const requestDelete = new XMLHttpRequest();
 
-    const commentDelete = (comment_id) => {
-        const url = '/cafe/comment_delete/';
-        requestDelete.open('POST', url, true);
-        requestDelete.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        requestDelete.send(JSON.stringify({comment_id: comment_id}));
-    };
+const commentDelete = (comment_id) => {
+    const url = '/cafe/comment_delete/';
+    requestDelete.open('POST', url, true);
+    requestDelete.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+    );
+    requestDelete.send(JSON.stringify({comment_id: comment_id}));
+};
 
-    const deleteResponse = () => {
-        if(requestDelete.status < 400) {
-            const {comment_id} = JSON.parse(requestDelete.response);
-            const element = document.querySelector(`.comment-${comment_id}`);
-            element.remove();
-        }
-    };
+const deleteResponse = () => {
+    if(requestDelete.status < 400) {
+        const {comment_id} = JSON.parse(requestDelete.response);
+        const element = document.querySelector(`.comment-${comment_id}`);
+        element.remove();
+    }
+};
 
     requestDelete.onreadystatechange = () => {
         if(requestDelete.readyState === XMLHttpRequest.DONE) {
             deleteResponse();
         }
     };
+
+    //카페 별점 매기기
+    var rating = $('.rating'); //rating class 불러와
+    
+    rating.each(function() { //rating 각자마다 할 일이 있다.
+        var $this = $(this); //rating을 this로 부른다.
+        var targetScore = $this.attr('data-rate'); 
+        var firstdigit = targetScore.split('.'); //나눠서 배열로 만듦 ex) 3.5점이면 ['3', '5']이렇게 됨
+
+        if (firstdigit.length > 1) { //배열의 개수가 1보다 크니까 소수점이 있다는 의미
+            for(var i = 0; i<firstdigit[0]; i++) { //배열 첫 번째 요소, 즉 일의 자리는 똑같이 반복문 돌리기
+                $this.find('.star').eq(i).css({width:'100%'}); 
+            }
+            $this.find('.star').eq(firstdigit[0]).css({width:firstdigit[1]+'0%'});
+        } else {
+            for(var i = 0; i<targetScore; i++) { //소수점이 없으면 별점만큼 반복해서
+                $this.find('.star').eq(i).css({width:'100%'}); //star 찾아서 채워주기
+            }
+        }
+    });
     </script>
 {% endblock %}

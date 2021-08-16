@@ -9,6 +9,8 @@ import os
 urlpatterns = [
     path('', views.main, name='main'),
     path('home/', views.home, name='home'),
+    path('signup/', views.UserRegistrationView.as_view(), name='signup'),
+    path('login/', views.LoginView.as_view(), name='login'), #views.login
     path('logout/', views.logout, name='logout'),
     path('mypage/<int:pk>', views.mypage, name='mypage'),
     path('addfriend/<int:pk>', views.addfriend, name='addfriend'),
@@ -16,6 +18,7 @@ urlpatterns = [
     path('friend_search', views.FriendSearchListView.as_view(), name='friend_search'),
     path('friend_register/', views.friend_register, name="friend_register"),
     path('create_admin/', views.create_admin, name="create_admin"),
+    path('<pk>/verify/<token>/', views.UserVerificationView.as_view(), name="verify"),
 
     path('badge/list/<int:pk>', views.badge_list, name='badge_list'),
     path('badge/taken/', views.badge_taken, name='badge_taken'),
@@ -34,4 +37,8 @@ urlpatterns = [
     path('enroll_new_cafe/', views.EnrollNewCafeListView.as_view(), name="enroll_new_cafe"),
     path('enroll_visited_cafe/', views.EnrollVisitedCafeListView.as_view(), name="enroll_visited_cafe"),
     
+    path('notification/<int:notification_pk>/comment/<int:review_pk>', views.CommentNotification.as_view(), name='comment-notification'),
+    path('notification/<int:notification_pk>/profile/<int:user_pk>', views.FollowNotification.as_view(), name='follow-notification'),
+    path('notification/delete/<int:notification_pk>', views.RemoveNotification.as_view(), name='notification-delete'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,9 +2,10 @@ h1 {
     color : #386ABB;
 }
 
-/* a {
+a {
     width: 226px;
-} */
+}
+
 .center {
     display: block;
     margin-left: auto;
@@ -31,7 +32,7 @@ div.container4 p {
 }
 .layer .content {
         display: inline-block;
-        /* background: #f00; */
+        background: #f00;
         vertical-align: middle;
 }
 .layer:before {
@@ -45,7 +46,7 @@ div.container4 p {
 .bg-darkblue {
     background-color: #386ABB;
 }
-  
+
 
 .ptb-12 {
     padding-top: 19rem;
