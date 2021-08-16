@@ -13,16 +13,22 @@
     <div class="col-lg-6 mx-auto">
         <p class="lead mb-4">{{ this_cafe.address }}</p>
         <h3> 평점 : {{ this_cafe.cafe_stars }}</h3>
-        {{this_cafe.pk}}
+        {{this_cafe.id}}
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <button class="btn btn-outline-primary" onclick="location.href= '{% url 'this_cafe_map' this_cafe.id %}'">지도 보기</button>
             {% if is_visit %}
                 <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:review_create' this_cafe.id %}'">리뷰 작성</button>
             {% endif %}
         </div>
+    </br>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <button class="btn btn-outline-primary" onclick="location.href= 'https://google.com/maps/place/{{this_cafe.name}}'">카카오맵에서 리뷰 평점 보기</button>
+            <button class="btn btn-outline-primary" onClick="location.href='https://map.naver.com/v5/search/{{this_cafe.name}}'">네이버지도에서 리뷰 평점 보기</button>
+            <button class="btn btn-outline-primary" onClick="location.href='https://google.com/search?q={{this_cafe.name}}'">구글맵에서 리뷰 평점 보기</button>
+        </div>
     </div>
 </div>
-
+{% if each_reviews.count > 0 %}
 <div class="cafe_info position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
     <hr/>
     <div class="review_list">
@@ -31,6 +37,7 @@
         <button type="button" onclick="location.href='{% url 'cafe:sort_visit' this_cafe.id %}'">{{this_cafe.name}} 방문 순</button>
         <button type="button" onclick="location.href='{% url 'cafe:sort_total_visit' this_cafe.id %}'">총 방문 순</button>
         <button type="button" onclick="location.href='{% url 'cafe:sort_review' this_cafe.id %}'">리뷰 순</button>
+        {{each_reviews.count}}
     </div>
     <hr/>
 
@@ -93,6 +100,12 @@
         {% endfor %}
     </article>
 </div>
+{% else %}
+<div class="cafe_info position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
+    아직 등록된 리뷰가 없습니다. 방문카페 등록 후 첫번째 리뷰의 주인공이 되어 보세요!
+    <hr/>
+</div>
+{% endif %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
