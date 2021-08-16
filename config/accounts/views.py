@@ -637,6 +637,8 @@ def addfriend(request, pk):
 
     user.friends=json.dumps(friendsList)
     user.save()
+    notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
+    notification.save()
 
     return redirect('mypage',pk)
 
