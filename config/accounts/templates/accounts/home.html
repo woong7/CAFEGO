@@ -14,7 +14,7 @@
             <p class="font-weight-bold">{{user.nickname}} 님 반가워요!</p> <!--일단 ID로,,-->
             <p>카페고에 오신 것을 환영합니다~</p>
             <button class="btn btn-outline-primary" onClick="location.href='{% url 'enroll_home' %}'">방문카페 추가하러가기</button>
-            {% if mycafe != 0 %}
+            {% if total_visit != 0 %}
                 <button class="btn btn-outline-primary" onClick="location.href='{% url 'user_cafe_map' %}'">나의 카페지도 보러가기</button>
             {% endif %}
             <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:cafe_list' %}'">카페 검색하기</button>
