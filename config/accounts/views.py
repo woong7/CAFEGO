@@ -80,7 +80,7 @@ def home(request):
     return render(request,'accounts/home.html', ctx)
 
 def create_admin(request):
-    User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True, is_active=True)
+    User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True, is_active=True, city="서울특별시", gu="관악구", dong="신림동")
     return redirect('home')
 
 def badge_list(request, pk):

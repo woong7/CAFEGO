@@ -41,7 +41,7 @@
                     <tr>
                         <td>{{ user.id }}</td>
                         <td><a href="{% url 'mypage' user.id %}">{{ user.nickname }}</a></td>
-                        <td>{{ user.town }}</td> <!-- | truncatechars:10-->
+                        <td>{{user.gu}} {{ user.dong }}</td> <!-- | truncatechars:10-->
                         <!-- checkbox trigger modal -->
                         <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ user.id }}" name="visit" value="visit"></td>
                         <div class="modal fade" id="exampleModal_{{ user.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
