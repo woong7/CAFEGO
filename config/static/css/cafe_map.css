@@ -10,9 +10,15 @@
 
 #keyword-search {
     width: 300px;
+    height: 93.3vh;
     padding-left: 10px;
 }
 
-#map {
-    
+.search {
+    height: 90px;
+}
+
+#placesList {
+    height: 90%;
+    overflow-y: auto;
 }

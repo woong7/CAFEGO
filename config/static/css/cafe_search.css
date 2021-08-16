@@ -1,26 +1,21 @@
-li {
-    text-decoration: none;
-}
-
 .rating_wrap_parents {
     position: relative;
-    left: 38%;
-    bottom: 20px;
-    width: 180px;
-    margin-bottom: 20px;
+    left: 30%;
+    width: 130px;
 }
 
-.rating_wrap {
+/* 별 5개를 묶어서 absolute해야 겹쳐짐 */
+.rating_wrap { 
     position: absolute;
 }
 
 .rating .star_wrap {
-    width: 30px;
+    width: 20px;
     display: inline-block;
 }
 
 .not_rating .star_wrap {
-    width: 30px;
+    width: 20px;
     display: inline-block;
 }
 
@@ -30,7 +25,7 @@ li {
 }
 
 .full_star { /* 별 */
-    font-size: 29px;
+    font-size: 19px;
     color: rgb(255, 238, 0);
 } 
 
@@ -39,7 +34,7 @@ li {
 }
 
 .empty_star { /* 별 */
-    font-size: 29px;
+    font-size: 19px;
     color: black;
 }
 

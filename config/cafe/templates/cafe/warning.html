@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    리뷰작성
+{% endblock %}
+{% block content %}
+    <h2>리뷰 작성자만 수정할 수 있습니다.</h2>
+    <button><a href="{% url 'cafe:review_list' cafe.id %}">리뷰리스트 가기</a></button>
+{% endblock %}
