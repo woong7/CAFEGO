@@ -10,22 +10,20 @@
 
 {% block content %}
     <div class="cafe_map-container">
-        <div>
-            <div id="keyword-search" class="bg-lightgray">
-                <div class="option">
-                    <div class="bg-cafego-blue">
-                        <form id="searchForm">
-                            <input type="text" value="" placeholder="키워드 입력" id="keyword"> 
-                            <input type="button" id="search-cafe" value="검색하기"></input> 
-                        </form>
-                    </div>
+        <div id="keyword-search">
+            <div class="bg-search-area search">
+                <div>
+                    <span>원하는 카페를 검색해보세요!</span>
                 </div>
-                <hr>
-                <ul id="placesList">
-                </ul>
+                <form id="searchForm">
+                    <input type="text" value="" placeholder="키워드 입력" id="keyword"> 
+                    <input type="button" id="search-cafe" value="검색하기"></input> 
+                </form>
             </div>
-            <div id="map"></div>
+            <ul id="placesList">
+            </ul>
         </div>
+        <div id="map"></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
@@ -36,7 +34,7 @@
     <script  type="text/javascript"> 
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
         mapOption = {
-            center: new kakao.maps.LatLng(37.540, 126.940), // 지도의 중심좌표
+            center: new kakao.maps.LatLng(37.5642135, 127.0016985), // 지도의 중심좌표
             level: 2 // 지도의 확대 레벨
         };
     
@@ -265,10 +263,12 @@
     // 검색결과 항목을 Element로 반환하는 함수
     function getListItem(index, keywordMarker) {
         var el = document.createElement('li'),
-        itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                    '<div class="info">' +
-                    '   <h5 style="cursor: pointer;">' + keywordMarker.Fb + '</h5>' +
-                    '</div>';         
+        itemStr =
+                '<span class="markerbg marker_' + (index+1) + '"></span>' +
+                '<div class="info">' +
+                    '<h5 style="cursor: pointer;">' + keywordMarker.Fb + '</h5>' +
+                    '<hr/>'
+                '</div>';         
 
         el.innerHTML = itemStr;
         el.className = 'item';
