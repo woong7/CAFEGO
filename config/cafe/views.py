@@ -219,10 +219,10 @@ def init_data(request):
         s = pd.DataFrame(dr)
     ss = []
     for i in range(len(s)):
-        st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i])
+        st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i], s['ID'][i])
         ss.append(st)
     for i in range(len(s)):
-        CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3])
+        CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3], id=ss[i][4])#id값 써도 될려낭
 
     Badge.objects.create(badge_name="카페홀릭", badge_image="static/image/CafeHolic_badge.png", badge_get="카페 총 누적 방문횟수 X회 이상") 
     Badge.objects.create(badge_name="사교왕", badge_image="static/image/AmericanoLover.png", badge_get="친구 수 X명 이상")    

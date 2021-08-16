@@ -38,15 +38,7 @@
                             <a class="text-dark fw-bold nav-item-hover" href="{% url 'cafe:cafe_list' %}">카페검색</a>
                         </li>
                         <li>
-                            <div class="dropdown">
-                                <a class="text-dark fw-bold nav-item-hover dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                    카페추가
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" href="{% url 'enroll_home' %}">카페 추가 홈</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'enroll_new_cafe' %}">새로 방문한 카페 추가</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'enroll_visited_cafe' %}">이전에 방문했던 카페 추가</a></li>
-                            </div>
+                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'enroll_home' %}">카페추가</a>
                         </li>
                         <li class="nav-item mx-2">
                             <a class="text-dark fw-bold nav-item-hover" href="{% url 'cafe:cafe_map' %}">카페지도</a>

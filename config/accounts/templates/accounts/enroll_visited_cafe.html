@@ -41,7 +41,7 @@
             검색 결과: {{page_obj.paginator.count}}개
                 {% for cafe in visited_cafe_list %}
                     <tr>
-                        <td>{{cafe.cafe.id}}</td>
+                        <td>{{forloop.counter}}</td>
                         <td><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{ cafe.cafe.name }}</a></td>
                         <td>{{cafe.cafe.address}}</td>
                         <td>{{ cafe.visit_count }}</td>
@@ -165,6 +165,4 @@
     {% endif %}
 
 </div>
-<p>지도 사진</p>
-<p>지도 위에서 태그 표시, 클릭할 수 있게.</p>
 {% endblock %}
