@@ -30,7 +30,7 @@
                 <th>카페명</th>
                 <th>위치</th>
                 <th>방문 횟수</th>
-                <th>방문여부</th>             
+                <th>방문추가</th>             
             </tr>
         </thead>
         <tbody>
@@ -43,9 +43,9 @@
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{ cafe.cafe.name }}</a></td>
-                        <td>{{cafe.cafe.address}}</td>
+                        <td><a href="{% url 'this_cafe_map' cafe.cafe.id %}">{{ cafe.cafe.address }}</a></td>
                         <td>{{ cafe.visit_count }}</td>
-                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.cafe.id }}" name="visit" value="visit"></td>
+                        <td><input type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.cafe.id }}" name="visit" value="방문추가"></td>
                                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal_{{ cafe.cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -58,7 +58,7 @@
                                             </h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div class="modal-body">
+                                        <div class="modal-body" style="text-align: left;">
                                             마신 음료를 체크해주세요!<br>
                                             <input type="radio" class="btn btn-primary" name="beverage" value="아메리카노"> 아메리카노 <br>
                                             <input type="radio" class="btn btn-primary" name="beverage" value="바닐라라떼"> 바닐라라떼 <br>
