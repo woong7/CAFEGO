@@ -36,12 +36,18 @@
                 <th>별점</th>             
             </tr>
         </thead>
-        <tbody>
+        <br>
             {% if q %}
             <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
             {% endif %}
             {% if cafe_list %}
                 검색 결과: {{page_obj.paginator.count}}개
+                </br>
+                <button class="btn btn-primary" type="button">전체 카페 리스트 보기</button>
+            </br>
+                <button class="btn btn-success" type="button"> 방문한 카페 리스트 보기</button>
+                
+                
                 {% for cafe in cafe_list %}
                     <tr class="text-center">
                         <td>{{ cafe.id }}</td>
