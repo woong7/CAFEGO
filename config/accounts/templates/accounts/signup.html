@@ -1,16 +1,37 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<body>
-    <select name="addressRegion" id="addressRegion1"></select>
-    <select name="addressDo" id="addressDo1"></select>
-    <select name="addressSiGunGu" id="addressSiGunGu1"></select>
-</body>
+<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 12rem;">
+<p id="header-logo-image"></p>
+  <h1>{% trans "회원가입" %}</h1>
+  <br><br>
+  <form class="signup" id="signup_form" method="post" action="{%url 'signup' %}">
+    <p><label for="id_username">아이디:</label> <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username"></p>
+    <p><label for="id_email">이메일:</label> <input type="email" name="email" maxlength="254" id="id_email"></p>
+    <p><label for="id_nickname">닉네임:</label> <input type="text" name="nickname" maxlength="150" required="" id="id_nickname"></p>
+    <p><label for="id_agree_terms">정보제공 동의:</label> <input type="checkbox" name="agree_terms" id="id_agree_terms"></p>
+    <p><label for="id_agree_marketing">마케팅 동의:</label> <input type="checkbox" name="agree_marketing" id="id_agree_marketing"></p>
+    <span>거주지: </span>
+    <select name="city" id="addressRegion" form="signup_form"></select>
+    <select name="gu" id="addressDo" form="signup_form"></select>
+    <select name="dong" id="addressSiGunGu" form="signup_form"></select>
+    <br/><br/>
+    <p><label for="id_password1">비밀번호:</label> <input type="password" name="password1" autocomplete="new-password" required="" id="id_password1"> <span class="helptext"></span></p>
+    <p><label for="id_password2">비밀번호 확인:</label> <input type="password" name="password2" autocomplete="new-password" required="" id="id_password2"></p>
+    <hr/>
+    {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button class="btn btn-outline-primary" type="submit">회원가입</button>
+  </form>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script  type="text/javascript"> 
 $(function(){
-    areaSelectMaker("select[name=addressRegion]");
+    areaSelectMaker("select[id=addressRegion]");
 });
 
 var areaSelectMaker = function(target){
@@ -69,6 +90,7 @@ var areaSelectMaker = function(target){
                 init($(this), false);
                 var Region = $(this).val();
                 var keys = Object.keys(area[Region]);
+                
                 keys.forEach(function(Do){
                     a2.append("<option value="+Do+">"+Do+"</option>");    
                 });
@@ -94,3 +116,4 @@ var areaSelectMaker = function(target){
 }
 
 </script>
+{% endblock %}

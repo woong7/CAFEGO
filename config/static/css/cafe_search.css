@@ -35,7 +35,7 @@
 
 .empty_star { /* 별 */
     font-size: 19px;
-    color: black;
+    color: gray;
 }
 
 .empty_star:hover {

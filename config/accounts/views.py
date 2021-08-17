@@ -2,7 +2,7 @@ from django import views
 from django.core import serializers
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 #from django.contrib.auth.models import User #회원가입을 구현하는데 있어 장고가 제공해주는 편리함
 from django.urls import reverse
 from django.contrib import auth
@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
 from . import forms
-from accounts.forms import UserRegistrationForm, MyCustomSignupForm
+from accounts.forms import UserRegistrationForm, MyCustomForm
 from cafe.forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q, Count
@@ -22,7 +22,9 @@ from datetime import datetime, timedelta
 from dateutil import relativedelta
 import operator
 from django.http import HttpResponseRedirect, HttpResponse
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
+@csrf_protect 
 def signup(request):
     if request.method == "POST":
         if request.POST["password1"] == request.POST["password2"]:
@@ -157,6 +159,7 @@ def rank_detail(request):
 
 def rank_list(request):
     now = datetime.today() #오늘
+    this_month = now.month-1
     last_month_first = datetime(now.year, now.month-1, 1) #오늘을 기준으로 저번달 첫 시간
     this_month_first = last_month_first + relativedelta.relativedelta(months=1)
     last_month_last = this_month_first - timedelta(seconds=1) #저번달 막 시간
@@ -167,10 +170,31 @@ def rank_list(request):
     August_fin = September - timedelta(seconds=1)
     
     ####################  A_총 방문 랭킹  ####################
-    A_users=User.objects.all().order_by('-total_visit')
+    # A_users=User.objects.all().order_by('-total_visit')
+    A_users=User.objects.all().exclude(total_visit=0).order_by('-total_visit')
+    A_me=User.objects.get(username=request.user)
+
+    #사용자 리스트에 내가 있으면
+    if A_me in A_users:
+        #enumerate: 배열의 인덱스와 값을 뽑아내기
+        for grade, who in enumerate(A_users):
+            if A_me == who:
+                A_my_grade = grade + 1 #인덱스는 0,1,2니까 등수 구하려면 +1
+    #사용자 리스트가 내가 없으면
+    else:
+        A_my_grade = 0
     
     ####################  B_한 달 방문 랭킹  ####################
-    B_users=User.objects.all().order_by('-visit_count_lastmonth')
+    # B_users=User.objects.all().order_by('-visit_count_lastmonth')
+    B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
+    B_me=User.objects.get(username=request.user)
+
+    if B_me in B_users:
+        for grade, who in enumerate(B_users):
+            if B_me == who:
+                B_my_grade = grade + 1 
+    else:
+        B_my_grade = 0
 
     ####################  C_한 달 카페 종류 랭킹  ####################
     C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin)))
@@ -193,26 +217,58 @@ def rank_list(request):
     C_monthly_kinds_tuple = sorted(C_monthly_kinds_dict.items(), key=lambda x: x[1], reverse=True)
     #튜플 딕셔너리로 바꿈
     C_monthly_kinds_order = dict(C_monthly_kinds_tuple)
+
+    C_me=User.objects.get(username=request.user)
+
+    if C_me.nickname in C_monthly_kinds_order.keys():
+        for grade, who in enumerate(C_monthly_kinds_order.keys()):
+            if C_me.nickname == who:
+                C_my_grade = grade + 1
+    else:
+        C_my_grade = 0
     
     ####################  D_누적 리뷰 랭킹  ####################
     D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
+    D_me=User.objects.get(username=request.user)
+
+    if D_me in D_all_review_order:
+        for grade, who in enumerate(D_all_review_order):
+            if D_me == who:
+                D_my_grade = grade + 1 
+    else:
+        D_my_grade = 0
 
     ####################  E_한 달 리뷰 랭킹  ####################
     E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
+    E_me=User.objects.get(username=request.user)
+
+    if E_me in E_month_review_order:
+        for grade, who in enumerate(E_month_review_order):
+            if E_me == who:
+                E_my_grade = grade + 1 
+    else:
+        E_my_grade = 0
 
     ctx={
         'last_month_first': last_month_first,
         'last_month_last': last_month_last,
+        'this_month': this_month,
         ##### A_총 방문 랭킹 #####
         'A_users': A_users,
+        'A_my_grade': A_my_grade,
         ##### B_한 달 방문 랭킹 #####
         'B_users': B_users,
+        'B_my_grade': B_my_grade,
         #####  C_한 달 카페 종류 랭킹  #####
         'C_monthly_kinds_order': C_monthly_kinds_order,
+        'C_my_grade': C_my_grade,
+        # 'C_my_grade': C_my_grade,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
+        'D_my_grade': D_my_grade,
         ##### E_한 달 리뷰 랭킹 #####
         'E_month_review_order' : E_month_review_order,
+        'E_my_grade': E_my_grade,
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
@@ -338,6 +394,45 @@ class EnrollVisitedCafeListView(ListView):
         context['type'] = search_type
 
         return context
+
+
+class InfoUpdateView(ListView):
+    @csrf_exempt
+    def get(self, request, pk):
+        form = forms.MyCustomForm()
+        ctx = {
+            "form": form,
+        }
+        return render(request, "accounts/infoedit.html", ctx)
+    @csrf_exempt
+    def post(self, request, pk):    
+        form = forms.MyCustomForm(request.POST)
+        if form.is_valid():
+            form.save(request)
+            user=request.user
+            user.nickname=form.cleaned_data.get("nickname")
+            user.city=form.cleaned_data.get("city")
+            user.gu=form.cleaned_data.get("gu")
+            user.dong=form.cleaned_data.get("dong")
+            user.agree_terms=form.cleaned_data.get("agree_terms")
+            user.agree_marketing=form.cleaned_data.get("agree_marketing")
+            user.save()
+            
+
+        return render(request, "accounts/home.html", {"form": form})
+
+def infoupdate(request, pk):
+    if request.method == 'POST':
+        user_change_form = MyCustomForm(request.POST, instance=request.user)
+        if user_change_form.is_valid():
+            user_change_form.save(request)
+            return redirect('mypage', request.user.pk)
+    
+    else:
+	    user_change_form = MyCustomForm(instance = request.user)
+	    return render(request, 'accounts/infoedit.html', {'user_change_form':user_change_form})
+
+
 
 def mypage(request, pk):
     #내가 방문한 카페들
@@ -484,7 +579,6 @@ class MyCafeReviewListView(ListView):
 
         return context
 
-
 def review_update(request, pk):
     myreview = get_object_or_404(Review, id=pk)
     
@@ -518,7 +612,7 @@ def review_update(request, pk):
             ctx = {'cafe': cafe,}
             return render(request, 'cafe/warning.html', ctx)
 
-from django.views.decorators.csrf import csrf_exempt
+
 import json
 
 @csrf_exempt
@@ -834,9 +928,13 @@ from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 
+from django.utils.decorators import method_decorator
+
+@method_decorator(csrf_exempt, name='dispatch')
 class UserRegistrationView(CreateView):
     model = get_user_model()
     form_class = UserRegistrationForm
+    template_name="accounts/signup.html"
     success_url = '/home/'
     verify_url = '/verify/' 
     token_generator = default_token_generator

@@ -5,7 +5,7 @@ from .models import Drink, User, VisitedCafe
 from allauth.account.forms import SignupForm
 from accounts.choices import *
 
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=20)
@@ -28,28 +28,33 @@ class UserForm(forms.ModelForm):
         model = User
         fields = '__all__'
 
-class MyCustomSignupForm(SignupForm):
+class MyCustomForm(forms.ModelForm):
     agree_terms = forms.BooleanField(label='서비스 이용약관 및 개인정보방침 동의')
     agree_marketing = forms.BooleanField(label='마케팅 이용 동의')
     nickname = forms.CharField(max_length=150, label='닉네임을 입력하세요')
 
     def save(self, request):
-        user = super(MyCustomSignupForm, self).save(request)
+        user = super(MyCustomForm, self).save(request)
         req_post = request.POST
-        user.city = req_post.__getitem__('addressRegion')
-        user.gu = req_post.__getitem__('addressDo')
-        user.dong = req_post.__getitem__('addressSiGunGu')
+        user.city = req_post.__getitem__('city')
+        user.gu = req_post.__getitem__('gu')
+        user.dong = req_post.__getitem__('dong')
         user.nickname = self.cleaned_data['nickname']
         user.agree_terms = self.cleaned_data['agree_terms']
         user.agree_marketing = self.cleaned_data['agree_marketing']
         user.save()
         return user
 
+    class Meta:
+        model = User
+        fields = ('nickname', 'city', 'gu', 'dong', 'agree_terms', 'agree_marketing')
+
+
 class UserRegistrationForm(UserCreationForm):
     
     class Meta:
         model = get_user_model()
-        fields = ('username', 'email', 'nickname', 'city', 'gu', 'dong')
+        fields = ('username', 'email', 'nickname', 'city', 'gu', 'dong', 'agree_terms', 'agree_marketing')
 
 
 class VisitedCafeForm(forms.ModelForm):

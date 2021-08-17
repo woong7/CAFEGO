@@ -11,13 +11,13 @@
 {% block content %}
     <div class="cafe_map-container">
         <div id="keyword-search">
-            <div class="bg-search-area search">
-                <div>
-                    <span>원하는 카페를 검색해보세요!</span>
+            <div class="bg-search-area search d-flex flex-column justify-content-center align-items-center">
+                <div class="">
+                    <span class="fs-5">원하는 카페를 검색해보세요!</span>
                 </div>
                 <form id="searchForm">
                     <input type="text" value="" placeholder="키워드 입력" id="keyword"> 
-                    <input type="button" id="search-cafe" value="검색하기"></input> 
+                    <input type="button" id="search-cafe" value="검색"></input> 
                 </form>
             </div>
             <ul id="placesList">
@@ -65,13 +65,17 @@
 
     // 지도가 움직일 때 발생하는 이벤트
     // 지도가 움직일때마다 map의 정보들을 초기화
-    kakao.maps.event.addListener(map, 'bounds_changed', function() {             
+    kakao.maps.event.addListener(map, 'bounds_changed', function() {            
         // 지도 영역정보
         bounds = map.getBounds();
         // 영역정보의 남서쪽 정보
         swLatlng = bounds.getSouthWest();
         // 영역정보의 북동쪽 정보
         neLatlng = bounds.getNorthEast();
+        //지도 확대 제어
+        if(neLatlng.Ma-swLatlng.Ma >= 0.0082) {
+            map.setLevel(4);
+        }
 
         // marker 초기화
         removeMarker();
@@ -152,10 +156,12 @@
         kakao.maps.event.addListener(marker, 'click', function() {
             // 마커를 클릭하면 장소명이 인포윈도우에 표출
             infowindow.setContent(`
-                <div style="padding:5px;font-size:12px;">${place.fields.name}</div>
-                <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
-                <div style="padding:5px;font-size:10px;">
-                    <a href="../review_list/${place.pk}">리뷰 작성</a>
+                <div class="d-flex flex-column align-items-center" style="width: 150px; height: 80px;">
+                    <div class="fw-bold" style="padding:5px;font-size:12px;">${place.fields.name}</div>
+                    <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
+                    <div style="padding:5px;font-size:10px;">
+                        <a href="../cafe/review_list/${place.pk}">리뷰 보기</a>
+                    </div>
                 </div>
             `);
             infowindow.open(map, marker);
@@ -243,10 +249,12 @@
                     itemEl.onclick = function () {
                         infowindow_search.close();
                         infowindow.setContent(`
-                            <div style="padding:5px;font-size:12px;">${place.fields.name}</div>
-                            <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
-                            <div style="padding:5px;font-size:10px;">
-                                <a href="../review_list/${place.pk}">리뷰 작성</a>
+                            <div class="d-flex flex-column align-items-center" style="width: 150px; height: 80px;">
+                                <div class="fw-bold" style="padding:5px;font-size:12px;">${place.fields.name}</div>
+                                <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
+                                <div style="padding:5px;font-size:10px;">
+                                    <a href="../cafe/review_list/${place.pk}">리뷰 보기</a>
+                                </div>
                             </div>
                         `);
                         infowindow.open(map, marker);
@@ -265,9 +273,8 @@
         var el = document.createElement('li'),
         itemStr =
                 '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                '<div class="info">' +
-                    '<h5 style="cursor: pointer;">' + keywordMarker.Fb + '</h5>' +
-                    '<hr/>'
+                '<div class="info d-flex flex-column">' +
+                    '<h5 style="margin: 0px; padding-left: 10px;">' + keywordMarker.Fb + '</h5>' +
                 '</div>';         
 
         el.innerHTML = itemStr;

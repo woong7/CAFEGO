@@ -48,6 +48,7 @@ def review_list(request, pk):
         #this_cafe.cafe_stars.save() 이렇게 모델 필드 하나만 저장 nono
         #this_cafe.save()이렇게 전체 모델로 저장하기
         this_cafe.cafe_stars = round(cafe_stars_avg, 1)
+        #print(this_cafe.cafe_stars)
         this_cafe.save()
     
     ctx={

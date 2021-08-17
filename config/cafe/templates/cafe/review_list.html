@@ -14,21 +14,21 @@
         <p class="lead mb-4">{{ this_cafe.address }}</p>
             <div class="rating_wrap_parents">
                 <div class="rating_wrap">
+                    <div class="not_rating">
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                    </div>
+                </div>
+                <div class="rating_wrap">
                     <div class="rating" data-rate="{{ this_cafe.cafe_stars }}">
                         <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
                         <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
                         <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
                         <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
                         <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                    </div>
-                </div>
-                <div class="rating_wrap">
-                    <div class="not_rating">
-                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="far fa-star empty_star"></i></div></div>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,6 @@
             <span>총 작성 리뷰 수: {{ reviews.username.total_review }}</span>
             <br/>
             {{ reviews.content }}<br/>
-            <button type="button" data-toggle="modal" data-target="#myModal">Open Modal</button>
             {% if review_photo %}
                 {% for img in review_photo %}
                     {% if img.review.id == reviews.id %}
@@ -98,40 +97,20 @@
                     {% endif %}
                 {% endfor %}   
             {% endif %}
-                        <div class="modal fade" id="myModal" role="dialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">모달 타이틀</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        내용
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary">확인</button>
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> 
             <br/>
-            
-
-                <div class="comments-{{reviews.id}}">
-                    {% for comment in comments %}
-                        {% if comment.post == reviews %}
-                                <div class="comment-{{comment.id}} container my-1">
-                                    <div class="row">
-                                        <div class="col">{{comment.content}}</div>
-                                        <div class="col">{{comment.username}}</div>
-                                        <div class="col">{{comment.created_at}}</div>
-                                        {% if comment.username == user%}
-                                        <div class="col">
-                                            <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
-                                        </div>
-                                        {% endif %}
+            <div class="comments-{{reviews.id}}">
+                {% for comment in comments %}
+                    {% if comment.post == reviews %}
+                            <div class="comment-{{comment.id}} container my-1">
+                                <div class="row">
+                                    <div class="col">{{comment.content}}</div>
+                                    <div class="col">{{comment.username}}</div>
+                                    <div class="col">{{comment.created_at}}</div>
+                                    {% if comment.username == user%}
+                                    <div class="col">
+                                        <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                     {% endif %}
