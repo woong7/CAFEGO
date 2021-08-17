@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{owner.nickname}}님의 뱃지 리스트 페이지입니다</h1>
+    <div>획득 뱃지 수: {{taken_num}}/{{total_num}}</div>
+    <hr/>
+    {% for badge in badges %}
+        {% if badge in taken_badges %}
+            <div class="alert-warning">
+                <p>획득</p>
+                <img src="{{badge.badge_image.url}}" style="width: 5%; height: 5%;">
+                <p>{{badge.badge_name}}</p>
+                <p>획득 조건: {{badge.badge_get}}</p>
+            </div>
+        {% else %}
+            <div>
+                <p>미획득</p>
+                <img src="{{badge.badge_image.url}}" style="width: 5%; height: 5%;">
+                <p>{{badge.badge_name}}</p>
+                <p>획득 조건: {{badge.badge_get}}</p>
+            </div>
+        {% endif %}
+        <hr/>
+    {% endfor %}
+{% endblock %}

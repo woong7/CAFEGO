@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 12rem;">
+    <p id="header-logo-image"></p>
+    {% if user.is_authenticated %}
+        <p>{{user.nickname}} 님이 로그인 중</p>
+        <button class="btn btn-outline-primary" onClick="location.href='{% url 'home' %}'">시작하기</button>
+    {% else %}
+        <h1></h1>
+        <button class="btn btn-outline-primary" onClick="location.href='{% url 'home' %}'">시작하기</button>
+    {% endif %}
+    
+</div>
+
+<div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
+    <h1 class="font-weight-bold text-light" style="font-weight: bold;">카페고에서 지도 위에 카페 방문 기록을 남겨보세요!</h1>
+    <!-- <p class="lead font-weight-normal text-white" style="padding-top: 3rem">Bootstrap's responsive grid comes in 4 sizes or "breakpoints" : tiny (xs),
+        small(sm), medium(md) and large(lg). These 4 grid sizes enable you create
+        responsive layouts that behave accordingly on different devices.
+    </p>
+    <button class="btn btn-white bg-white" onClick="location.href='#gallery'">Learn More</button> -->
+</div>
+
+<div class="position-relative overflow-hidden m-0 text-center bg-light" id="intro" style="padding: 12rem;">
+    <h1 class="font-weight-bold" style="font-weight: bold;">차별화된 리뷰-답글 시스템</h1>
+    <p>실제 사용자에게 궁금한 점을 물어보세요!</p>
+</div>
+
+<div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
+    <h1 class="font-weight-bold text-light" style="font-weight: bold;">지역별 카페 방문 랭킹을 확인해보세요!</h1>
+    <p>방문한 카페들을 등록하고, 리뷰를 작성해서 다양한 배지들을 획득하세요!</p>
+</div>
+
+<div class="position-relative overflow-hidden m-0 text-center bg-light" id="intro" style="padding: 12rem;">
+    <h1 class="font-weight-bold" style="font-weight: bold;">팔로우해서 다른 사람의 카페지도를 살펴보아요!</h1>
+</div>
+
+<div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
+    <h1 class="font-weight-bold text-light" style="font-weight: bold;">지도기반 카페 방문기록 웹서비스</h1>
+    <button class="btn btn-white bg-white" onClick="location.href='/account/login'">시작하기</button>
+</div>
+
+<!-- {% if user.is_authenticated %}
+    <p>닉네임 {{user.nickname}} 님이 로그인 중</p>
+    <h4><a href="{% url 'home' %}">홈페이지로 가기</a></h4>
+    <h4><a href="{% url 'logout' %}">로그아웃하기</a></h4>
+
+{%else%} -->
+    <!-- <div class="d-grid gap-2 col-6 mx-auto" style="width: 226px;">
+        <a class="btn btn-outline-primary" href="{% url 'home' %}" role="button" >시작하기</a>
+    </div> -->
+<!-- {%endif %} -->
+{% endblock %}

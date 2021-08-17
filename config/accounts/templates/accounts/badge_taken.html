@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{user.nickname}}님이 획득한 뱃지 확인 리스트 페이지입니다</h1>
+
+
+    {% for badge in taken_badges %}
+        <div>
+            <img src="{{badge.badge_image.url}}" style="width: 10%; height: 10%;">
+            <p>{{badge.badge_name}}</p>
+        </div>
+    {% endfor %}
+
+
+{% endblock %}

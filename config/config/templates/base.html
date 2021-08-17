@@ -1,0 +1,87 @@
+{% load static %}
+{% load custom_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/5d4168f05a.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    {% block css %}
+    {% endblock %}
+    <title>CAFE GO! - {% block title %}{% endblock %}</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+    <!-- ------------------------------------네비게이션 바--------------------------------------- -->
+    <nav class="navbar navbar-expand-lg bg-lightgray sticky-top px-2">
+        <div class="container-fluid">
+            {% if user.is_authenticated %}
+                <a href="{% url 'home' %}" class="navbar-brand">
+                    <span id="header-logo-image"></span><span class="blind-logo">카페고 로고</span>
+                </a>
+                <span class="mx-3 nev_text">{{user.nickname}}님 안녕하세요!</span>
+                <div class="nav-item">
+                    {% show_notifications %}
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+                    <ul class="navbar-nav">
+                        <li class="nav-item mx-2">
+                            <a class="nav-item-hover nev_text" href="{% url 'cafe:cafe_list' %}">카페검색</a>
+                        </li>
+                        <li>
+                            <div class="dropdown">
+                                <a class="nav-item-hover dropdown-toggle nev_text" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    카페추가
+                                </a>
+                                <ul class="dropdown-menu bg-lightgray" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item nev_text" href="{% url 'enroll_home' %}">카페 추가 홈</a></li>
+                                    <li><a class="dropdown-item nev_text" href="{% url 'enroll_new_cafe' %}">새로 방문한 카페 추가</a></li>
+                                    <li><a class="dropdown-item nev_text" href="{% url 'enroll_visited_cafe' %}">이전에 방문했던 카페 추가</a></li>
+                            </div>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-item-hover nev_text" href="{% url 'cafe:cafe_map' %}">카페지도</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-item-hover nev_text" href="{% url 'rank_list' %}">랭킹</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-item-hover nev_text" href="{% url 'mypage' user.pk%}">마이페이지</a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-item-hover nev_text" href="{% url 'logout' %}" class="">로그아웃</a>
+                        </li>
+                    </ul>
+                </div>
+            {% else %}
+                <a href="{% url 'main' %}" class="navbar-brand">
+                    <span id="header-logo-image nev_text"></span><span class="blind-logo">카페고 로고</span>
+                </a>
+                <div class="d-flex">
+                    <ul class="navbar-nav">
+                        <li class="nav-item mx-2">
+                            <a class="nav-item-hover nev_text" href="/account/login">로그인</a> 
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-item-hover nev_text" href="{% url 'signup' %}">회원가입</a>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+    <script type="text/javascript" src="{% static 'js/social.js' %}"></script>
+</body>
+</html>
