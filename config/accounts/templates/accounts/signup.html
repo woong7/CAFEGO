@@ -3,9 +3,14 @@
 
 {% block content %}
 <body>
-    <select name="addressRegion" id="addressRegion1"></select>
-    <select name="addressDo" id="addressDo1"></select>
-    <select name="addressSiGunGu" id="addressSiGunGu1"></select>
+  <form class="signup" id="signup_form" method="post" action="{% url 'signup' %}">
+    {% csrf_token %}
+    {{form.as_p}}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button class="btn btn-outline-primary" type="submit">회원가입</button>
+  </form>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script  type="text/javascript"> 
@@ -94,3 +99,4 @@ var areaSelectMaker = function(target){
 }
 
 </script>
+{% endblock %}
