@@ -8,8 +8,7 @@
 <p id="header-logo-image"></p>
   <h1>{% trans "회원가입" %}</h1>
   <br><br>
-  <form class="signup" id="signup_form" method="post" action="/signup/">
-    <input type="hidden" name="csrfmiddlewaretoken" value="n5fr5MIjFDmvTZUx9ZTJgrjW40DLkHQKaAKzJyxXXjmfB8wv4peKWTnyoIC72pGS">
+  <form class="signup" id="signup_form" method="post" action="{%url 'signup' %}">
     <p><label for="id_username">아이디:</label> <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username"></p>
     <p><label for="id_email">이메일:</label> <input type="email" name="email" maxlength="254" id="id_email"></p>
     <p><label for="id_nickname">닉네임:</label> <input type="text" name="nickname" maxlength="150" required="" id="id_nickname"></p>
