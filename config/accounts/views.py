@@ -22,6 +22,7 @@ from datetime import datetime, timedelta
 from dateutil import relativedelta
 import operator
 from django.http import HttpResponseRedirect, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 def signup(request):
     if request.method == "POST":
@@ -393,26 +394,44 @@ class EnrollVisitedCafeListView(ListView):
 
         return context
 
+
 class InfoUpdateView(ListView):
+    @csrf_exempt
     def get(self, request, pk):
         form = forms.MyCustomForm()
         ctx = {
             "form": form,
         }
         return render(request, "accounts/infoedit.html", ctx)
-
-    def post(self, request, pk):
+    @csrf_exempt
+    def post(self, request, pk):    
         form = forms.MyCustomForm(request.POST)
         if form.is_valid():
-            request.user.nickname=form.cleaned_data.get("nickname")
-            request.user.city=form.cleaned_data.get("city")
-            request.user.gu=form.cleaned_data.get("gu")
-            request.user.dong=form.cleaned_data.get("dong")
-            request.user.agree_terms=form.cleaned_data.get("agree_terms")
-            request.user.agree_marketing=form.cleaned_data.get("agree_marketing")
-            request.user.save()
+            form.save(request)
+            user=request.user
+            user.nickname=form.cleaned_data.get("nickname")
+            user.city=form.cleaned_data.get("city")
+            user.gu=form.cleaned_data.get("gu")
+            user.dong=form.cleaned_data.get("dong")
+            user.agree_terms=form.cleaned_data.get("agree_terms")
+            user.agree_marketing=form.cleaned_data.get("agree_marketing")
+            user.save()
+            
 
         return render(request, "accounts/home.html", {"form": form})
+
+def infoupdate(request, pk):
+    if request.method == 'POST':
+        user_change_form = MyCustomForm(request.POST, instance=request.user)
+        if user_change_form.is_valid():
+            user_change_form.save(request)
+            return redirect('mypage', request.user.pk)
+    
+    else:
+	    user_change_form = MyCustomForm(instance = request.user)
+	    return render(request, 'accounts/infoedit.html', {'user_change_form':user_change_form})
+
+
 
 def mypage(request, pk):
     #내가 방문한 카페들
@@ -592,7 +611,7 @@ def review_update(request, pk):
             ctx = {'cafe': cafe,}
             return render(request, 'cafe/warning.html', ctx)
 
-from django.views.decorators.csrf import csrf_exempt
+
 import json
 
 @csrf_exempt

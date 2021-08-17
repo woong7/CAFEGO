@@ -36,9 +36,9 @@ class MyCustomForm(forms.ModelForm):
     def save(self, request):
         user = super(MyCustomForm, self).save(request)
         req_post = request.POST
-        user.city = req_post.__getitem__('addressRegion')
-        user.gu = req_post.__getitem__('addressDo')
-        user.dong = req_post.__getitem__('addressSiGunGu')
+        user.city = req_post.__getitem__('city')
+        user.gu = req_post.__getitem__('gu')
+        user.dong = req_post.__getitem__('dong')
         user.nickname = self.cleaned_data['nickname']
         user.agree_terms = self.cleaned_data['agree_terms']
         user.agree_marketing = self.cleaned_data['agree_marketing']
