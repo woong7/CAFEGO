@@ -4,7 +4,7 @@
 <div class="container py-4">
     <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container-fluid py-2">
-            <h1 class="display-5 fw-bold text-center">{{owner.nickname}}님의 마이페이지</h1>
+            <h1 class="display-5 fw-bold text-center">{{owner.nickname}}의 마이페이지</h1>
             </br>
             <div>
                 {% if visit_cafes %}
@@ -139,7 +139,7 @@
         <div class="col-md-6">
             <div class="h-100 p-5 bg-dark text-white border rounded-3">
                 <div>
-                    <h5>{{owner.nickname}}님의 팔로우 목록</h5>
+                    <h5>팔로우 목록</h5>
                     {% for friend in friends %}
                         <div>
                             <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
