@@ -167,10 +167,31 @@ def rank_list(request):
     August_fin = September - timedelta(seconds=1)
     
     ####################  A_총 방문 랭킹  ####################
-    A_users=User.objects.all().order_by('-total_visit')
+    # A_users=User.objects.all().order_by('-total_visit')
+    A_users=User.objects.all().exclude(total_visit=0).order_by('-total_visit')
+    A_me=User.objects.get(username=request.user)
+
+    #사용자 리스트에 내가 있으면
+    if A_me in A_users:
+        #enumerate: 배열의 인덱스와 값을 뽑아내기
+        for grade, who in enumerate(A_users):
+            if A_me == who:
+                A_my_grade = grade + 1 #인덱스는 0,1,2니까 등수 구하려면 +1
+    #사용자 리스트가 내가 없으면
+    else:
+        A_my_grade = 0
     
     ####################  B_한 달 방문 랭킹  ####################
-    B_users=User.objects.all().order_by('-visit_count_lastmonth')
+    # B_users=User.objects.all().order_by('-visit_count_lastmonth')
+    B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
+    B_me=User.objects.get(username=request.user)
+
+    if B_me in B_users:
+        for grade, who in enumerate(B_users):
+            if B_me == who:
+                B_my_grade = grade + 1 
+    else:
+        B_my_grade = 0
 
     ####################  C_한 달 카페 종류 랭킹  ####################
     C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin)))
@@ -193,26 +214,47 @@ def rank_list(request):
     C_monthly_kinds_tuple = sorted(C_monthly_kinds_dict.items(), key=lambda x: x[1], reverse=True)
     #튜플 딕셔너리로 바꿈
     C_monthly_kinds_order = dict(C_monthly_kinds_tuple)
+
+    C_me=User.objects.get(username=request.user)
+
+    for grade, who in enumerate(C_monthly_kinds_order.keys()):
+        if C_me == who:
+            C_my_grade = grade + 1 
     
     ####################  D_누적 리뷰 랭킹  ####################
     D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
+    D_me=User.objects.get(username=request.user)
+
+    for grade, who in enumerate(D_all_review_order):
+        if D_me == who:
+            D_my_grade = grade + 1 
 
     ####################  E_한 달 리뷰 랭킹  ####################
     E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
+    E_me=User.objects.get(username=request.user)
+
+    for grade, who in enumerate(E_month_review_order):
+        if E_me == who:
+            E_my_grade = grade + 1 
 
     ctx={
         'last_month_first': last_month_first,
         'last_month_last': last_month_last,
         ##### A_총 방문 랭킹 #####
         'A_users': A_users,
+        'A_my_grade': A_my_grade,
         ##### B_한 달 방문 랭킹 #####
         'B_users': B_users,
+        'B_my_grade': B_my_grade,
         #####  C_한 달 카페 종류 랭킹  #####
         'C_monthly_kinds_order': C_monthly_kinds_order,
+        # 'C_my_grade': C_my_grade,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
+        'D_my_grade': D_my_grade,
         ##### E_한 달 리뷰 랭킹 #####
         'E_month_review_order' : E_month_review_order,
+        'E_my_grade': E_my_grade,
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
@@ -483,7 +525,6 @@ class MyCafeReviewListView(ListView):
         context['type'] = search_type
 
         return context
-
 
 def review_update(request, pk):
     myreview = get_object_or_404(Review, id=pk)
