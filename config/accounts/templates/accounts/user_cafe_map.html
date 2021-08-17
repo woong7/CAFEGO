@@ -9,13 +9,13 @@
 {% block content %}
     <div class="cafe_map-container">
         <div id="keyword-search">
-            <div class="bg-search-area">
+            <div class="bg-search-area search d-flex flex-column justify-content-center align-items-center">
                 <div>
-                    <span>원하는 카페를 검색해보세요!</span>
+                    <span class="fs-5">원하는 카페를 검색해보세요!</span>
                 </div>
-                <form id="searchForm">
-                    <input type="text" value="" placeholder="키워드 입력" id="keyword"> 
-                    <input type="button" id="search-cafe" value="검색하기"></input> 
+                <form id="searchForm" name="searchForm" onsubmit="return false;">
+                    <input type="text" value="" placeholder="키워드 입력" id="keyword" onkeyup="enterkey();">
+                    <button id="search-cafe">검색</button> 
                 </form>
             </div>
             <ul id="placesList">
@@ -30,7 +30,6 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbe48a94474ef23703951ea76b61e90&libraries=services"></script>
     <script  type="text/javascript">
-
     let cafeList = {{ data | safe }};
     let mainCafePk = {{ main_cafe | safe }};
     let allPlaces = {{ cafe_list | safe }};
@@ -85,6 +84,10 @@
         swLatlng = bounds.getSouthWest();
         // 영역정보의 북동쪽 정보
         neLatlng = bounds.getNorthEast();
+        //지도 확대 제어
+        if(neLatlng.Ma-swLatlng.Ma >= 0.0082) {
+            map.setLevel(4);
+        }
 
         // marker 초기화
         removeMarker();
@@ -152,10 +155,13 @@
         for(var i = 0; i < cafeList.length; i++) {
             if(place[0].pk === cafeList[i].fields.cafe) {
                 iconSize = cafeList[i].fields.visit_count;
+                if(iconSize >= 10) {
+                    iconSize = 10;
+                }
             }
         }
         // 마커 아이콘 크기 조정
-        var imageSize = new kakao.maps.Size(12 + iconSize * 6, 12 + iconSize * 6);
+        var imageSize = new kakao.maps.Size(16 + iconSize * 3, 16 + iconSize * 3);
 
         // 마커 생성
         var marker = new kakao.maps.Marker({
@@ -172,10 +178,12 @@
         kakao.maps.event.addListener(marker, 'click', function() {
             // 마커를 클릭하면 장소명이 인포윈도우에 표출
             infowindow.setContent(`
-                <div style="padding:5px;font-size:12px;">${place[0].fields.name}</div>
-                <div style="padding:5px;font-size:10px;">${place[0].fields.address}</div>
-                <div style="padding:5px;font-size:10px;">
-                    <a href="../review_list/${place[0].pk}">리뷰 작성</a>
+                <div class="d-flex flex-column align-items-center" style="width: 150px; height: 80px;">
+                    <div class="fw-bold" style="padding:5px;font-size:12px;">${place[0].fields.name}</div>
+                    <div style="padding:5px;font-size:10px;">${place[0].fields.address}</div>
+                    <div style="padding:5px;font-size:10px;">
+                        <a href="../cafe/review_list/${place[0].pk}">리뷰 보기</a>
+                    </div>
                 </div>
             `);
             infowindow.open(map, marker);
@@ -236,10 +244,12 @@
                     itemEl.onclick = function () {
                         infowindow_search.close();
                         infowindow.setContent(`
-                            <div style="padding:5px;font-size:12px;">${place[0].fields.name}</div>
-                            <div style="padding:5px;font-size:10px;">${place[0].fields.address}</div>
-                            <div style="padding:5px;font-size:10px;">
-                                <a href="../review_list/${place[0].pk}">리뷰 작성</a>
+                            <div class="d-flex flex-column align-items-center" style="width: 150px; height: 80px;">
+                                <div class="fw-bold" style="padding:5px;font-size:12px;">${place[0].fields.name}</div>
+                                <div style="padding:5px;font-size:10px;">${place[0].fields.address}</div>
+                                <div style="padding:5px;font-size:10px;">
+                                    <a href="../cafe/review_list/${place[0].pk}">리뷰 보기</a>
+                                </div>
                             </div>
                         `);
                         infowindow.open(map, marker);
@@ -252,6 +262,68 @@
             listEl.appendChild(fragment);
         });
     });
+    function enterkey(){ 
+        if(window.event.keyCode == 13){
+            let placeslist = "#placesList";
+
+            // html의 id가 keyword인 태그 안에 들어있는 값을 들고옴
+            var keyword = $('#keyword').val();
+
+            // 빈 값을 넘겼을 때 에러 설정
+            if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                alert('키워드를 입력해주세요!!!!!!');
+                return false;
+            }
+
+            // keywordMarkers 배열 초기화
+            let keywordMarkers = [];
+            // keywordPlaces 배열 초기화
+            let keywordPlaces = [];
+            // keyword 필터링
+            checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces);
+            console.log(keywordPlaces);
+
+            // 마커와 검색결과 항목에 mouseover 했을때 해당 장소의 인포윈도우에 장소명 표시
+            // mouseout 했을 때는 인포윈도우 닫음
+            var listEl = document.getElementById('placesList'),
+            fragment = document.createDocumentFragment(),
+            listStr = '';
+
+            // 검색 결과 목록에 추가된 항목들을 제거
+            removeAllChildNods(listEl);
+
+            for(var i = 0; i < keywordMarkers.length; i++) {
+                var itemEl = getListItem(i, keywordPlaces[i]);
+                (function(marker, place) {
+                    itemEl.onmouseover =  function () {
+                        displayInfowindow(marker, place[0].fields.name);
+                    };
+
+                    itemEl.onmouseout =  function () {
+                        infowindow_search.close();
+                    };
+
+                    itemEl.onclick = function () {
+                        infowindow_search.close();
+                        infowindow.setContent(`
+                            <div class="d-flex flex-column align-items-center" style="width: 150px; height: 80px;">
+                                <div class="fw-bold" style="padding:5px;font-size:12px;">${place[0].fields.name}</div>
+                                <div style="padding:5px;font-size:10px;">${place[0].fields.address}</div>
+                                <div style="padding:5px;font-size:10px;">
+                                    <a href="../cafe/review_list/${place[0].pk}">리뷰 보기</a>
+                                </div>
+                            </div>
+                        `);
+                        infowindow.open(map, marker);
+                    };
+                })(keywordMarkers[i], keywordPlaces[i]);
+
+                fragment.appendChild(itemEl);
+            }
+            // 검색결과 항목들을 검색결과 목록 Elemnet에 추가
+            listEl.appendChild(fragment);
+        }
+    }
 
     // keyword를 포함한 카페만 보여주는 함수
     function checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces) {
@@ -277,8 +349,8 @@
         var el = document.createElement('li'),
         itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                     '<div class="info">' +
-                    '   <h5 style="cursor: pointer;">' + keywordPlace[0].fields.name + '</h5>' +
-                    '   <h5> 방문 횟수 : ' + keywordPlace[1] + ' </h5>'
+                    '   <h5 style="margin: 0px; padding-left: 10px;">' + keywordPlace[0].fields.name + '</h5>' +
+                    '   <h6 style="color: gray; margin: 0px; padding-left: 10px;"> 방문 횟수 : ' + keywordPlace[1] + ' </h6>'
                     '</div>';         
 
         el.innerHTML = itemStr;

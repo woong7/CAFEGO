@@ -30,7 +30,7 @@
                 <th>카페명</th>
                 <th>위치</th>
                 <th>방문 횟수</th>
-                <th>방문여부</th>             
+                <th>추가 방문 등록</th>             
             </tr>
         </thead>
         <tbody>
@@ -43,9 +43,9 @@
                     <tr>
                         <td>{{cafe.cafe.id}}</td>
                         <td><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{ cafe.cafe.name }}</a></td>
-                        <td>{{cafe.cafe.address}}</td>
+                        <td><a href="{% url 'this_cafe_map' cafe.id %}">{{ cafe.cafe.address }}</a></td>
                         <td>{{ cafe.visit_count }}</td>
-                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.cafe.id }}" name="visit" value="visit"></td>
+                        <td><input type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="등록"></td>
                                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal_{{ cafe.cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
