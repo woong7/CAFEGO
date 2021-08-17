@@ -30,11 +30,20 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbe48a94474ef23703951ea76b61e90&libraries=services"></script>
     <script  type="text/javascript">
-    let cafeList = {{ data | safe }};
+    // 방문한 카페 리스트
+    let cafeList = {{ visited_cafe_list | safe }};
+    // 가장 많이 방문한 카페의 pk값
     let mainCafePk = {{ main_cafe | safe }};
+    // 모든 카페 리스트
     let allPlaces = {{ cafe_list | safe }};
+    // 2차원 배열로 [0]에는 카페의 정보, [1]에는 카페 방문 횟수가 들어감
     let userCafeList = [];
+    // 가장 많이 방문한 카페
     let mainCafe;
+
+    // TODO: 최적화 작업 필요
+    // userCafeList에 원하는 정보들 삽입
+    // 지도 중심에 가장 많이 방문한 카페가 나오도록 설정
     for(var i = 0; i < allPlaces.length; i++) {
         for(var j = 0; j < cafeList.length; j++) {
             if(allPlaces[i].pk === cafeList[j].fields.cafe) {
@@ -99,6 +108,7 @@
 
     // 카페들을 지도에 마킹하는 함수
     function markData(markers, userCafeList, sw, ne) {
+        // TODO: 이진탐색
         // let left_bound=0, right_bound=0;
         // let middle=0, low=0, high=userCafeList.length-1;
         // let find=false;
