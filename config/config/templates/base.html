@@ -19,13 +19,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
     <!-- ------------------------------------네비게이션 바--------------------------------------- -->
-    <nav class="navbar navbar-expand-lg bg-lightgray sticky-top">
+    <nav class="navbar navbar-expand-lg bg-lightgray sticky-top px-2">
         <div class="container-fluid">
             {% if user.is_authenticated %}
                 <a href="{% url 'home' %}" class="navbar-brand">
                     <span id="header-logo-image"></span><span class="blind-logo">카페고 로고</span>
                 </a>
-                <span class="nickname-font mx-3">{{user.nickname}}님 안녕하세요!</span>
+                <span class="mx-3 nev_text">{{user.nickname}}님 안녕하세요!</span>
                 <div class="nav-item">
                     {% show_notifications %}
                 </div>
@@ -35,44 +35,44 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                     <ul class="navbar-nav">
                         <li class="nav-item mx-2">
-                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'cafe:cafe_list' %}">카페검색</a>
+                            <a class="nav-item-hover nev_text" href="{% url 'cafe:cafe_list' %}">카페검색</a>
                         </li>
                         <li>
                             <div class="dropdown">
-                                <a class="text-dark fw-bold nav-item-hover dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-item-hover dropdown-toggle nev_text" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                     카페추가
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" href="{% url 'enroll_home' %}">카페 추가 홈</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'enroll_new_cafe' %}">새로 방문한 카페 추가</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'enroll_visited_cafe' %}">이전에 방문했던 카페 추가</a></li>
+                                <ul class="dropdown-menu bg-lightgray" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item nev_text" href="{% url 'enroll_home' %}">카페 추가 홈</a></li>
+                                    <li><a class="dropdown-item nev_text" href="{% url 'enroll_new_cafe' %}">새로 방문한 카페 추가</a></li>
+                                    <li><a class="dropdown-item nev_text" href="{% url 'enroll_visited_cafe' %}">이전에 방문했던 카페 추가</a></li>
                             </div>
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'cafe:cafe_map' %}">카페지도</a>
+                            <a class="nav-item-hover nev_text" href="{% url 'cafe:cafe_map' %}">카페지도</a>
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'rank_list' %}">랭킹</a>
+                            <a class="nav-item-hover nev_text" href="{% url 'rank_list' %}">랭킹</a>
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'mypage' user.pk%}">마이페이지</a>
+                            <a class="nav-item-hover nev_text" href="{% url 'mypage' user.pk%}">마이페이지</a>
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'logout' %}" class="">로그아웃</a>
+                            <a class="nav-item-hover nev_text" href="{% url 'logout' %}" class="">로그아웃</a>
                         </li>
                     </ul>
                 </div>
             {% else %}
                 <a href="{% url 'main' %}" class="navbar-brand">
-                    <span id="header-logo-image"></span><span class="blind-logo">카페고 로고</span>
+                    <span id="header-logo-image nev_text"></span><span class="blind-logo">카페고 로고</span>
                 </a>
                 <div class="d-flex">
                     <ul class="navbar-nav">
                         <li class="nav-item mx-2">
-                            <a class="text-dark fw-bold nav-item-hover" href="/account/login">로그인</a> 
+                            <a class="nav-item-hover nev_text" href="/account/login">로그인</a> 
                         </li>
                         <li class="nav-item mx-2">
-                            <a class="text-dark fw-bold nav-item-hover" href="{% url 'signup' %}">회원가입</a>
+                            <a class="nav-item-hover nev_text" href="{% url 'signup' %}">회원가입</a>
                         </li>
                     </ul>
                 </div>
