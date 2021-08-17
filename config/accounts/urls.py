@@ -13,6 +13,7 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'), #views.login
     path('logout/', views.logout, name='logout'),
     path('mypage/<int:pk>', views.mypage, name='mypage'),
+    path('info_edit/<int:pk>/', views.InfoUpdateView.as_view(), name='info_edit'),
     path('addfriend/<int:pk>', views.addfriend, name='addfriend'),
     path('deletefriend/<int:pk>', views.deletefriend, name='deletefriend'),
     path('friend_search', views.FriendSearchListView.as_view(), name='friend_search'),

@@ -2,7 +2,7 @@ from django import views
 from django.core import serializers
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 #from django.contrib.auth.models import User #회원가입을 구현하는데 있어 장고가 제공해주는 편리함
 from django.urls import reverse
 from django.contrib import auth
@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as django_logout
 from . import forms
-from accounts.forms import UserRegistrationForm, MyCustomSignupForm
+from accounts.forms import UserRegistrationForm, MyCustomForm
 from cafe.forms import ReviewForm
 from django.contrib import messages
 from django.db.models import Q, Count
@@ -392,6 +392,27 @@ class EnrollVisitedCafeListView(ListView):
         context['type'] = search_type
 
         return context
+
+class InfoUpdateView(ListView):
+    def get(self, request, pk):
+        form = forms.MyCustomForm()
+        ctx = {
+            "form": form,
+        }
+        return render(request, "accounts/infoedit.html", ctx)
+
+    def post(self, request, pk):
+        form = forms.MyCustomForm(request.POST)
+        if form.is_valid():
+            request.user.nickname=form.cleaned_data.get("nickname")
+            request.user.city=form.cleaned_data.get("city")
+            request.user.gu=form.cleaned_data.get("gu")
+            request.user.dong=form.cleaned_data.get("dong")
+            request.user.agree_terms=form.cleaned_data.get("agree_terms")
+            request.user.agree_marketing=form.cleaned_data.get("agree_marketing")
+            request.user.save()
+
+        return render(request, "accounts/home.html", {"form": form})
 
 def mypage(request, pk):
     #내가 방문한 카페들
@@ -890,6 +911,7 @@ from django.conf import settings
 class UserRegistrationView(CreateView):
     model = get_user_model()
     form_class = UserRegistrationForm
+    template_name="accounts/signup.html"
     success_url = '/home/'
     verify_url = '/verify/' 
     token_generator = default_token_generator
