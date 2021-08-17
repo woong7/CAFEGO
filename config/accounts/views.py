@@ -22,7 +22,7 @@ from datetime import datetime, timedelta
 from dateutil import relativedelta
 import operator
 from django.http import HttpResponseRedirect, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 @csrf_protect 
 def signup(request):
