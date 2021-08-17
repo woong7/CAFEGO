@@ -5,6 +5,18 @@
     <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container-fluid py-2">
             <h1 class="display-5 fw-bold text-center">{{owner.nickname}}의 마이페이지</h1>
+            {% if user.id == owner.id %}
+                <a href="{% url 'info_edit' user.pk %}">개인정보 수정</a>
+            {% endif %}
+            <div>
+                {% if owner.nickname in names_to_exclude %}
+                    {% if not owner.id == user.id %}
+                        <a href="{% url 'deletefriend' owner.pk%}">UnFollow</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'addfriend' owner.pk%}">Follow</a>
+                {% endif %}
+            </div>
             </br>
             <div>
                 {% if visit_cafes %}
