@@ -5,14 +5,11 @@
 {% endblock %}
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_map.css' %}">
 {% endblock %}
 
 {% block content %}
-    <div class="cafe_map-container">
-        <div>
-            <div id="map" style="width: 100%;"></div>
-        </div>
+    <div style="height: 93.3vh;">
+        <div id="map" style="width: 100%; height: 100%;"></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
@@ -56,11 +53,13 @@
     var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable : true});
 
     infowindow.setContent(`
-            <div style="padding:5px;font-size:12px;">${cafe_name}</div>
+        <div class="d-flex flex-column align-items-center">
+            <div class="fw-bold" style="padding:5px;font-size:12px;">${cafe_name}</div>
             <div style="padding:5px;font-size:10px;">${cafe_address}</div>
             <div style="padding:5px;font-size:10px;">
                 <a href="../review_list/${cafe_id}">리뷰 작성</a>
             </div>
+        </div>
     `);
 
     infowindow.open(map, marker);
