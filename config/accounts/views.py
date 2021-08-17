@@ -24,6 +24,7 @@ import operator
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+@csrf_protect 
 def signup(request):
     if request.method == "POST":
         if request.POST["password1"] == request.POST["password2"]:
@@ -927,6 +928,9 @@ from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 
+from django.utils.decorators import method_decorator
+
+@method_decorator(csrf_exempt, name='dispatch')
 class UserRegistrationView(CreateView):
     model = get_user_model()
     form_class = UserRegistrationForm
