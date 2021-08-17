@@ -2,6 +2,10 @@
 
 {% block content %}
 <h1>{{owner.nickname}}님의 마이페이지입니다.</h1>
+{% if user.id == owner.id %}
+    <a href="{% url 'info_edit' user.pk %}">개인정보 수정</a>
+{% endif %}
+<hr/>
 <span>획득한 배지 개수: {{ total_badge_count }}개 </span>
 <a href="{% url 'badge_list' owner.pk %}">배지 리스트 보기</a>
 <br>
