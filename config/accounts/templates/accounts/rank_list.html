@@ -31,7 +31,7 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">전체 카페 방문 랭킹</span>
+                  <span class="ranking_title">누적 카페 방문 랭킹</span>
                 </div>
                 <div>
                   {% if A_my_grade == 1 %}
@@ -45,7 +45,7 @@
                   {% endif%}
 
                   <div class="card-text card_info my-3">
-                    현재 {{ request.user.nickname }}님은<br>
+                    {{ request.user.nickname }}님은<br>
                     {% if A_my_grade == 0 %}
                       아직 방문한 카페가 없어요!
                     {% else %}
@@ -98,7 +98,7 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">8월! 카페 방문 랭킹</span>
+                  <span class="ranking_title">{{ this_month }}월 카페 방문 랭킹</span>
                 </div>
                 <div>
                   {% if B_my_grade == 1 %}
@@ -112,7 +112,7 @@
                   {% endif%}
 
                   <div class="card-text card_info my-3">
-                    현재 {{ request.user.nickname }}님은<br>
+                    {{ request.user.nickname }}님은<br>
                     {% if B_my_grade == 0 %}
                       이번 달에 방문한 카페가 없어요!
                     {% else %}
@@ -178,7 +178,14 @@
                     <i class="my-2 fas fa-coffee other_medal"></i>
                   {% endif%}
 
-                  <div class="card-text card_info my-3">현재 {{ request.user.nickname }}님은<br>🌟{{ C_my_grade }}등🌟 입니다!</div>
+                  <div class="card-text card_info my-3">
+                    {{ request.user.nickname }}님은<br>
+                    {% if C_my_grade == 0 %}
+                      방문한 카페가 없어요!
+                    {% else %}
+                      🌟{{ C_my_grade }}등🌟 입니다!
+                    {% endif%}
+                  </div>
                   
                   <!-- C_Button trigger modal -->
                   <button class="button" data-bs-toggle="modal" data-bs-target="#C_Modal">
@@ -225,7 +232,7 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">전체 리뷰 개수 랭킹</span>
+                  <span class="ranking_title">누적 리뷰 작성 랭킹</span>
                 </div>
                 <div>
                   {% if D_my_grade == 1 %}
@@ -238,7 +245,14 @@
                     <i class="my-2 fas fa-coffee other_medal"></i>
                   {% endif%}
 
-                  <div class="card-text card_info my-3">현재 {{ request.user.nickname }}님은<br>🌟{{ D_my_grade }}등🌟 입니다!</div>
+                  <div class="card-text card_info my-3">
+                    {{ request.user.nickname }}님은<br>
+                    {% if D_my_grade == 0 %}
+                      작성한 리뷰가 없어요!
+                    {% else %}
+                      🌟{{ D_my_grade }}등🌟 입니다!
+                    {% endif%}
+                  </div>
                   
                   <!-- D_Button trigger modal -->
                   <button class="button" data-bs-toggle="modal" data-bs-target="#D_Modal">
@@ -285,7 +299,7 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">8월 리뷰 개수 랭킹</span>
+                  <span class="ranking_title">{{ this_month }}월 리뷰 개수 랭킹</span>
                 </div>
                 <div>
                   {% if E_my_grade == 1 %}
@@ -298,7 +312,14 @@
                     <i class="my-2 fas fa-coffee other_medal"></i>
                   {% endif%}
 
-                  <div class="card-text card_info my-3">8월! {{ request.user.nickname }}님은<br>🌟{{ E_my_grade }}등🌟 입니다!</div>
+                  <div class="card-text card_info my-3">
+                    {{ request.user.nickname }}님은<br>
+                    {% if E_my_grade == 0 %}
+                      작성한 리뷰가 없어요!
+                    {% else %}
+                      🌟{{ E_my_grade }}등🌟 입니다!
+                    {% endif%}
+                  </div>
                   
                   <!-- E_Button trigger modal -->
                   <button class="button" data-bs-toggle="modal" data-bs-target="#E_Modal">

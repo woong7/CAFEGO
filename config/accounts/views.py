@@ -157,6 +157,7 @@ def rank_detail(request):
 
 def rank_list(request):
     now = datetime.today() #오늘
+    this_month = now.month-1
     last_month_first = datetime(now.year, now.month-1, 1) #오늘을 기준으로 저번달 첫 시간
     this_month_first = last_month_first + relativedelta.relativedelta(months=1)
     last_month_last = this_month_first - timedelta(seconds=1) #저번달 막 시간
@@ -217,29 +218,39 @@ def rank_list(request):
 
     C_me=User.objects.get(username=request.user)
 
-    for grade, who in enumerate(C_monthly_kinds_order.keys()):
-        if C_me == who:
-            C_my_grade = grade + 1 
+    if C_me.nickname in C_monthly_kinds_order.keys():
+        for grade, who in enumerate(C_monthly_kinds_order.keys()):
+            if C_me.nickname == who:
+                C_my_grade = grade + 1
+    else:
+        C_my_grade = 0
     
     ####################  D_누적 리뷰 랭킹  ####################
     D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
     D_me=User.objects.get(username=request.user)
 
-    for grade, who in enumerate(D_all_review_order):
-        if D_me == who:
-            D_my_grade = grade + 1 
+    if D_me in D_all_review_order:
+        for grade, who in enumerate(D_all_review_order):
+            if D_me == who:
+                D_my_grade = grade + 1 
+    else:
+        D_my_grade = 0
 
     ####################  E_한 달 리뷰 랭킹  ####################
     E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
     E_me=User.objects.get(username=request.user)
 
-    for grade, who in enumerate(E_month_review_order):
-        if E_me == who:
-            E_my_grade = grade + 1 
+    if E_me in E_month_review_order:
+        for grade, who in enumerate(E_month_review_order):
+            if E_me == who:
+                E_my_grade = grade + 1 
+    else:
+        E_my_grade = 0
 
     ctx={
         'last_month_first': last_month_first,
         'last_month_last': last_month_last,
+        'this_month': this_month,
         ##### A_총 방문 랭킹 #####
         'A_users': A_users,
         'A_my_grade': A_my_grade,
@@ -248,6 +259,7 @@ def rank_list(request):
         'B_my_grade': B_my_grade,
         #####  C_한 달 카페 종류 랭킹  #####
         'C_monthly_kinds_order': C_monthly_kinds_order,
+        'C_my_grade': C_my_grade,
         # 'C_my_grade': C_my_grade,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
