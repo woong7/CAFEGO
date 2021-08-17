@@ -226,7 +226,7 @@ def rank_list(request):
         C_my_grade = 0
     
     ####################  D_누적 리뷰 랭킹  ####################
-    D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
+    D_all_review_order = User.objects.all().exclude(total_review=0).order_by('-total_review')#누적 리뷰 랭킹
     D_me=User.objects.get(username=request.user)
 
     if D_me in D_all_review_order:
@@ -237,7 +237,7 @@ def rank_list(request):
         D_my_grade = 0
 
     ####################  E_한 달 리뷰 랭킹  ####################
-    E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
+    E_month_review_order = User.objects.all().exclude(review_count_lastmonth=0).order_by('-review_count_lastmonth')
     E_me=User.objects.get(username=request.user)
 
     if E_me in E_month_review_order:
