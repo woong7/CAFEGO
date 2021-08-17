@@ -405,9 +405,9 @@ class InfoUpdateView(ListView):
         form = forms.MyCustomForm(request.POST)
         if form.is_valid():
             request.user.nickname=form.cleaned_data.get("nickname")
-            request.user.city=form.cleaned_data.get("addressRegion")
-            request.user.gu=form.cleaned_data.get("addressDo")
-            request.user.dong=form.cleaned_data.get("addressSiGunGu")
+            request.user.city=form.cleaned_data.get("city")
+            request.user.gu=form.cleaned_data.get("gu")
+            request.user.dong=form.cleaned_data.get("dong")
             request.user.agree_terms=form.cleaned_data.get("agree_terms")
             request.user.agree_marketing=form.cleaned_data.get("agree_marketing")
             request.user.save()
