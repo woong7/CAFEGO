@@ -68,6 +68,8 @@
 /* 카드 */
 .card_title {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .card_img{
@@ -97,6 +99,51 @@
     width: 280px; 
     height: 45px; 
     background-color: #704F3F;
+}
+
+.ranking_top {
+    position: absolute;
+    left: 23px;
+    top: 60px;
+
+    width: 330px;
+    height: 150px;
+    margin-top: 30px;
+    background-color: #704F3F;
+    opacity: 0.8;
+}
+
+#xs_gold_medal {
+    font-size: 20px;
+    color: gold;
+    margin: 5px;
+}
+
+#xs_silver_medal {
+    font-size: 20px;
+    color: silver;
+    margin: 5px;
+}
+
+#xs_bronze_medal {
+    font-size: 20px;
+    color: rgb(85, 41, 41);
+    margin: 5px;
+}
+
+.ranking_top_content {
+    position: absolute;
+    left: 23px;
+    top: 60px;
+
+    width: 330px;
+    height: 150px;
+    margin-top: 30px;
+    padding: 20px;
+    
+    font-size: 1.3em;
+    font-family: RIDIBatang;
+    color: #F0D9CE;
 }
 
 .card_info{
