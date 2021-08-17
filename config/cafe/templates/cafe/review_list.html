@@ -135,67 +135,67 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
 <script type="text/javascript">
-// 댓글 작성
-const requestWrite = new XMLHttpRequest();
+    // 댓글 작성
+    const requestWrite = new XMLHttpRequest();
 
-const commentWrite = (review_id) => {
-    const url = '/cafe/comment_write/';
-    const content = document.querySelector(`.input-${review_id}`).value;
-    requestWrite.open('POST', url, true);
-    requestWrite.setRequestHeader(
-        'Content-Type',
-        'application/x-www-form-urlencoded'
-    );
-    requestWrite.send(JSON.stringify({'review_id': review_id, 'content': content}));
-};
+    const commentWrite = (review_id) => {
+        const url = '/cafe/comment_write/';
+        const content = document.querySelector(`.input-${review_id}`).value;
+        requestWrite.open('POST', url, true);
+        requestWrite.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestWrite.send(JSON.stringify({'review_id': review_id, 'content': content}));
+    };
 
-const writeResponse = () => {
-    if(requestWrite.status < 400) {
-        const {review_id, content, comment_id, username, comment_time} = JSON.parse(requestWrite.response);
-        console.log(content);
-        const comments = document.querySelector(`.comments-${review_id}`);
-        const element = document.querySelector(`.input-${review_id}`);
-        comments.innerHTML += `
-            <div class="comment-${comment_id} container my-1">
-                <div class="row">
-                    <div class="col">${content}</div>
-                    <div class="col">${username}</div>
-                    <div class="col">${comment_time}</div>
-                    <div class="col">
-                        <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
+    const writeResponse = () => {
+        if(requestWrite.status < 400) {
+            const {review_id, content, comment_id, username, comment_time} = JSON.parse(requestWrite.response);
+            console.log(content);
+            const comments = document.querySelector(`.comments-${review_id}`);
+            const element = document.querySelector(`.input-${review_id}`);
+            comments.innerHTML += `
+                <div class="comment-${comment_id} container my-1">
+                    <div class="row">
+                        <div class="col">${content}</div>
+                        <div class="col">${username}</div>
+                        <div class="col">${comment_time}</div>
+                        <div class="col">
+                            <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-    }
-};
+            `;
+        }
+    };
 
-requestWrite.onreadystatechange = () => {
-    if(requestWrite.readyState === XMLHttpRequest.DONE) {
-        writeResponse();
-    }
-};
+    requestWrite.onreadystatechange = () => {
+        if(requestWrite.readyState === XMLHttpRequest.DONE) {
+            writeResponse();
+        }
+    };
 
-//댓글 삭제
-const requestDelete = new XMLHttpRequest();
+    //댓글 삭제
+    const requestDelete = new XMLHttpRequest();
 
-const commentDelete = (comment_id) => {
-    const url = '/cafe/comment_delete/';
-    requestDelete.open('POST', url, true);
-    requestDelete.setRequestHeader(
-        'Content-Type',
-        'application/x-www-form-urlencoded'
-    );
-    requestDelete.send(JSON.stringify({comment_id: comment_id}));
-};
+    const commentDelete = (comment_id) => {
+        const url = '/cafe/comment_delete/';
+        requestDelete.open('POST', url, true);
+        requestDelete.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestDelete.send(JSON.stringify({comment_id: comment_id}));
+    };
 
-const deleteResponse = () => {
-    if(requestDelete.status < 400) {
-        const {comment_id} = JSON.parse(requestDelete.response);
-        const element = document.querySelector(`.comment-${comment_id}`);
-        element.remove();
-    }
-};
+    const deleteResponse = () => {
+        if(requestDelete.status < 400) {
+            const {comment_id} = JSON.parse(requestDelete.response);
+            const element = document.querySelector(`.comment-${comment_id}`);
+            element.remove();
+        }
+    };
 
     requestDelete.onreadystatechange = () => {
         if(requestDelete.readyState === XMLHttpRequest.DONE) {
@@ -222,5 +222,5 @@ const deleteResponse = () => {
             }
         }
     });
-    </script>
+</script>
 {% endblock %}

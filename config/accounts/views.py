@@ -143,7 +143,7 @@ def user_cafe_map(request):
 
     ctx = {
         'nickname': user.nickname,
-        'data': visited_cafe_list,
+        'visited_cafe_list': visited_cafe_list,
         'main_cafe': main_cafe.pk,
         'cafe_list': cafe_list
     }
