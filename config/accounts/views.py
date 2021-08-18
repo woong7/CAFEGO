@@ -353,7 +353,7 @@ class EnrollNewCafeListView(ListView):
 
 class EnrollVisitedCafeListView(ListView):
     model = VisitedCafe
-    paginate_by = 15
+    paginate_by = 10
     template_name = 'accounts/enroll_visited_cafe.html'
     context_object_name = 'visited_cafe_list'
 
@@ -784,7 +784,7 @@ def friend_search(request):
 
 class FriendSearchListView(ListView):
     model = User
-    paginate_by = 15
+    paginate_by = 10
     template_name = 'accounts/friend_search.html'
     context_object_name = 'user_list'
 

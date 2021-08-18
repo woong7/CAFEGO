@@ -10,24 +10,28 @@
 {% endblock %}
 
 {% block content %}
-<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 5rem;">
-    <h4>이전에 방문했던 카페 리스트 보기</h4>
-    <p>이전에 갔던 카페를 또 방문하셨네요~</p>
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
+    <header class="pt-3">
+        <div class="p-2 pb-md-4 mx-auto text-center">
+            <div class="page_title">Search Visited Cafe</div>
+            <p class="fs-5 text-muted page_info">카페명을 클릭하면 리뷰페이지로 이동할 수 있어요. 주소를 클릭하면 해당 카페 지도로 이동할 수 있어요.</p>
+        </div>
+    </header>
     <!-- 카페 검색창 -->
-    <form action="" method="GET">
-        <select name="type">
+    <form action="" method="GET" class="pb-md-4">
+        <select name="type" style="font-family: RIDIBatang;">
             <option value="name">카페</option>
             <option value="address">주소</option>
             <option value="all">카페+주소</option>
         </select>
-        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
-        <button type="submit" id="search_btn">검색</button><br/>
+        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색" style="font-family: RIDIBatang;">
+        <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
 
     <!-- 카페 리스트  -->
     <table class="table">
         <thead>
-            <tr>
+            <tr class="table_title">
                 <th> </th>
                 <th>카페명</th>
                 <th>위치</th>
@@ -39,17 +43,20 @@
         </thead>
         <tbody>
             {% if q %}
-            <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
+                <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
+                검색 결과: {{page_obj.paginator.count}}개
+            {% else %}
+                <button class="button" onClick="location.href='{% url 'cafe:cafe_list' %}'">전체 카페 리스트 보기</button>
             {% endif %}
-            <button class="btn btn-primary btn-sm" onClick="location.href='{% url 'cafe:cafe_list' %}'">전체 카페 리스트 보기</button>
         </br>
             {% if visited_cafe_list %}
-            검색 결과: {{page_obj.paginator.count}}개
+
+
                 {% for cafe in visited_cafe_list %}
-                    <tr>
-                        <td>{{forloop.counter0|add:page_obj.start_index}}</td>
-                        <td><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{ cafe.cafe.name }}</a></td>
-                        <td><a href="{% url 'this_cafe_map' cafe.cafe.id %}">{{ cafe.cafe.address }}</a></td>
+                    <tr class="text-center table_content">
+                        <td style="vertical-align: middle; font-size:1.2em;">{{forloop.counter0|add:page_obj.start_index}}</td>
+                        <td style="vertical-align: middle;"><a href="{% url 'cafe:review_list' cafe.cafe.id %}" style="color: black; font-size:1.2em;">{{ cafe.cafe.name }}</a></td>
+                        <td style="vertical-align: middle;"><a href="{% url 'this_cafe_map' cafe.cafe.id %}" style="color: black; font-size:1.2em;">{{ cafe.cafe.address }}</a></td>
                         <td>
                             {%if cafe.cafe.cafe_stars == 0.0 %}
                             <div class="rating_wrap_parents">
@@ -87,9 +94,9 @@
                             {% endif %}
                         </td>
 
-                        <td>{{ cafe.visit_count }}</td>
+                        <td style="vertical-align: middle; font-size:1.2em;">{{ cafe.visit_count }}</td>
                         
-                        <td><input type="submit" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.cafe.id }}" name="visit" value="방문추가"></td>
+                        <td><input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.cafe.id }}" name="visit" value="방문추가"></td>
                                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal_{{ cafe.cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -124,15 +131,15 @@
                         </div>
                         <td>
                             <!--리뷰 작성 버튼-->
-                            <button class="btn btn-success btn-sm" onClick="location.href='{% url 'cafe:review_create' cafe.cafe.id %}'">리뷰쓰기</button>
+                            <button class="button" onClick="location.href='{% url 'cafe:review_create' cafe.cafe.id %}'">리뷰쓰기</button>
                         </td>
                     </tr>
                 {% endfor %}
 
             {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때-->
                 {% if q %}  <!--검색어가 있어 q가 context로 넘어오면 검색 결과가 없다.-->
-                <tr class="text-center">
-                    <td colspan="5">
+                <tr class="text-center" style="text-align: center;">
+                    <td colspan="5" style="padding: 1px auto;">
                         등록된 카페가 없습니다.
                     </td>
                 </tr>
@@ -159,22 +166,22 @@
     <!-- 페이징 처리 -->
     {% if is_paginated %}
     <div class="btn-group me-2" role="group" aria-label="First group">
-    <ul class="pagination" style="justify-content: space-around;">
+    <ul class="pagination" style="justify-content: space-around; color:black; font-family: RIDIBatang;">
         <li class="page-item">
             <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}">
-                <button type="button" class="btn btn-outline-secondary">처음</button>
+                처음
             </a>
         </li>
         {% if page_obj.has_previous %}
         <li class="page-item">
             <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">
-                <button type="button" class="btn btn-outline-secondary">이전</button>
+                이전
             </a>
         </li>
         {% else %}
         <li class="page-item disabled">
             <a class="page-link" href="#" tabindex="-1">
-                <button type="button" class="btn btn-outline-secondary">이전</button>
+                이전
             </a>
         </li>
         {% endif %}
@@ -183,7 +190,7 @@
         <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
             
             <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">
-                <button type="button" class="btn btn-outline-secondary">{{ page }}</button>
+                {{ page }}
             </a>
             
         </li>
@@ -192,23 +199,25 @@
         {% if page_obj.has_next %}
         <li class="page-item">
             <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">
-                <button type="button" class="btn btn-outline-secondary">다음</button>
+                다음
             </a>
         </li>
         {% else %}
         <li class="page-item disabled">
             <a class="page-link" href="#">
-                <button type="button" class="btn btn-outline-secondary">다음</button>
+                다음
             </a>
         </li>
         {% endif %}
         <li class="page-item">
             <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}">
-                <button type="button" class="btn btn-outline-secondary">마지막</button>
+                마지막
             </a>
         </li>
-        <span>{{page_obj}}</span>
     </ul>
+    </div>
+    <div style="height:38px; font-family: RIDIBatang;">
+        <span style="line-height: 38px; vertical-align: middle;">{{page_obj}}</span>
     </div>
     {% endif %}
 

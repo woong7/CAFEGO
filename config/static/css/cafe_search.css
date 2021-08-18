@@ -134,3 +134,17 @@
     color: #573728;
     font-weight: 800;
 }
+
+td {
+    text-align: center;
+}
+
+a {
+    color: black;
+}
+
+.activate {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
