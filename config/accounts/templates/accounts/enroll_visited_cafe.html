@@ -47,7 +47,7 @@
             검색 결과: {{page_obj.paginator.count}}개
                 {% for cafe in visited_cafe_list %}
                     <tr>
-                        <td>{{forloop.counter}}</td>
+                        <td>{{forloop.counter0|add:page_obj.start_index}}</td>
                         <td><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{ cafe.cafe.name }}</a></td>
                         <td><a href="{% url 'this_cafe_map' cafe.cafe.id %}">{{ cafe.cafe.address }}</a></td>
                         <td>
