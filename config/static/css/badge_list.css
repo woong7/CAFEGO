@@ -84,10 +84,10 @@ article {
 
 @keyframes up-down {
     0% {
-        transform: translateY(10px);
+        transform: translateY(5px);
     }
     100% {
-        transform: translateY(-10px);
+        transform: translateY(-5px);
     }
 }
 
@@ -100,6 +100,7 @@ article {
     height: 0;
     background: transparent;
     border: 7px solid transparent;
+    border-radius: 5px;
 }
 
 .taken_badge:before {
@@ -142,6 +143,7 @@ article {
     height: 0;
     background: transparen;
     border: 7px solid transparent;
+    border-radius: 5px;
 }
 
 .taken_badge:after {
