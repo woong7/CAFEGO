@@ -10,12 +10,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 5rem;">
-    <h2>원하는 카페를 검색해보세요!</h4>
-    <h6>카페명을 클릭하면 리뷰페이지로 이동할 수 있어요. 주소를 클릭하면 해당 카페 지도로 이동할 수 있어요.</h6>
-    <h6>방문했던 카페만 리뷰를 작성할 수 있어요. 먼저 방문추가를 한 후 리뷰를 작성해주세요!</h6>
-    <a href="{% url 'cafe:cafe_map' %}">지도에서 카페 찾기</a>
-
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center p-4" style="padding: 5rem;">
+    <header class="pt-3">
+        <div class="p-2 pb-md-4 mx-auto text-center">
+            <div class="page_title">Search Cafe</div>
+            <p class="fs-5 text-muted page_info">카페명을 클릭하면 리뷰페이지로 이동할 수 있어요. 주소를 클릭하면 해당 카페 지도로 이동할 수 있어요.</p>
+            <p class="fs-5 text-muted page_info">방문했던 카페만 리뷰를 작성할 수 있어요. 먼저 방문추가를 한 후 리뷰를 작성해주세요!</p>
+        </div>
+    </header>
     <!-- 카페 검색 -->
     <form action="" method="GET">
         <select name="type">
@@ -24,12 +26,12 @@
             <option value="all">카페+주소</option>
         </select>
         <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
-        <button type="submit" id="search_btn">search</button><br/>
+        <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
     <!-- 카페 리스트  -->
     <table class="table">
         <thead>
-            <tr>
+            <tr class="table_title">
                 <th> </th>
                 <th>카페명</th>
                 <th>위치</th>
@@ -43,14 +45,16 @@
             <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
             {% endif %}
 
-            <button class="btn btn-primary btn-sm" onClick="location.href='{% url 'enroll_visited_cafe' %}'">방문 카페 리스트 보기</button>
+            <button class="button" onClick="location.href='{% url 'enroll_visited_cafe' %}'">방문 카페 리스트 보기</button>
     </br>
             {% if cafe_list %}
                 검색 결과: {{page_obj.paginator.count}}개
                 
                 {% for cafe in cafe_list %}
-                    <tr class="text-center">
-                        <td>{{forloop.counter}}</td>
+                    <tr class="text-center table_content">
+                        <td>
+                            {{forloop.counter0|add:page_obj.start_index}}
+                        </td>
                         <td>
                             <a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a>
                         </td>
@@ -94,7 +98,9 @@
                             {% endif %}
                         </td>
                         <!--카페 추가 버튼-->
-                        <td><input type="submit" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="방문추가"></td>
+                        <td>
+                            <input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="방문추가">
+                        </td>
                             <div class="modal fade" id="exampleModal_{{ cafe.id }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <form action="{% url 'visit_register' %}" method='post'>
@@ -131,7 +137,7 @@
                         <td>
                             <!--리뷰 작성 버튼-->
                             {% if cafe in user_visited_cafes %}
-                                <button class="btn btn-success btn-sm" onClick="location.href='{% url 'cafe:review_create' cafe.id %}'">리뷰쓰기</button>
+                                <button class="button" onClick="location.href='{% url 'cafe:review_create' cafe.id %}'">리뷰쓰기</button>
                             {% else %}
                                 
                             {% endif %}
