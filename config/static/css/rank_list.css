@@ -63,7 +63,18 @@
     font-family: RIDIBatang;
 }
 
+/* 동작안함..ㅋ
+.ranking_head {
+    transform: translateY(8px);
+    transition: all 1s ease;
+} */
+
 /* 카드 */
+.ranking_card:hover {
+    transform: translateY(-8px);
+    transition: all .5s ease;
+}
+
 .card_title {
     display: flex;
     flex-direction: column;

@@ -23,18 +23,20 @@
             <div class="container px-5">
                 <article class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mb-3 text-center">
                 {% for badge in badges %}
-                    {% if badge in taken_badges %}      
-                        <div class="box alert-warning">
-                            <div class="imgbox">
-                                <img src="{{badge.badge_image.url}}">
-                            </div>
-                            <div class="contentbox">
-                                <div>
-                                    <h2 class="badge_name">{{badge.badge_name}}</h2>
-                                    <p class="badge_ctx">✨획득 조건✨<br> {{badge.badge_get}}</p>
+                    {% if badge in taken_badges %}    
+                        <div class="taken_badge">
+                            <div class="box">
+                                <div class="imgbox">
+                                    <img src="{{badge.badge_image.url}}">
+                                </div>
+                                <div class="contentbox">
+                                    <div>
+                                        <h2 class="badge_name">{{badge.badge_name}}</h2>
+                                        <p class="badge_ctx">✨획득 조건✨<br> {{badge.badge_get}}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>  
                     {% else %}    
                         <div class="box">
                             <div class="imgbox">
