@@ -16,6 +16,7 @@
 .search {
     height: 90px;
     padding-left: 10px;
+    padding-right: 10px;
 }
 
 #searchForm {
@@ -56,9 +57,16 @@
     width: 290px;
     height: 70px;
     border-top: 1px solid rgb(207, 204, 204);
+    padding-left: 15px;
     cursor: pointer;
 }
 
 #keyword-search li:hover {
     background-color: lightskyblue;
+}
+
+span .placename {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0px;
 }

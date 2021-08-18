@@ -5,197 +5,202 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/review_list.css' %}">
 {% endblock %}
 {% block title %}
-    리뷰리스트
+    {{ this_cafe.name }} 리뷰
 {% endblock %}
 {% block content %}
-<div class="px-4 py-3 my-5 text-center">
-    <h1 class="display-5 fw-bold">{{ this_cafe.name }}</h1>
-    <div class="col-lg-6 mx-auto text-center">
-        <p class="lead mb-4">{{ this_cafe.address }}</p>
-            <div class="rating_wrap_parents">
-                <div class="rating_wrap">
-                    <div class="not_rating">
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
-                    </div>
-                </div>
-                <div class="rating_wrap">
-                    <div class="rating" data-rate="{{ this_cafe.cafe_stars }}">
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                        <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                    </div>
-                </div>
+<div class="container review-content">
+    <!-- 카페 정보 컨테이너 -->
+    <div class="px-4 py-3 my-5 cafe-info shadow-sm card">
+        <h1 class="display-5 fw-bold text-center">{{ this_cafe.name }}</h1>
+        <div class="col-lg-6 mx-auto text-center">
+            <div class="review-cafe-address">
+                <span class="lead">{{ this_cafe.address }}&nbsp;&nbsp;</span>
+                <svg class="map-icon" onclick="location.href= '{% url 'this_cafe_map' this_cafe.id %}'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                    <path d="M256,0C150.112,0,64,86.112,64,192c0,133.088,173.312,307.936,180.672,315.328  C247.808,510.432,251.904,512,256,512c4.096,0,8.192-1.568,11.328-4.672C274.688,499.936,448,325.088,448,192  C448,86.112,361.888,0,256,0z"/>
+                    <circle style="fill:#FAFAFA;" cx="256" cy="192" r="96"/>
+                </svg>
             </div>
-            <br>
-            <span class="rating_number">({{ this_cafe.cafe_stars }}점)</span>
-        
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <button class="btn btn-outline-primary" onclick="location.href= '{% url 'this_cafe_map' this_cafe.id %}'">지도 보기</button>
+                <div class="rating_wrap_parents">
+                    <div class="rating_wrap">
+                        <div class="not_rating">
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                        </div>
+                    </div>
+                    <div class="rating_wrap">
+                        <div class="rating" data-rate="{{ this_cafe.cafe_stars }}">
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                        </div>
+                    </div>
+                </div>
+                <span class="rating_number">({{ this_cafe.cafe_stars }}점)</span>
+            </div>
             {% if is_visit %}
-                <button class="btn btn-outline-primary" onClick="location.href='{% url 'cafe:review_create' this_cafe.id %}'">리뷰 작성</button>
+                <div class="d-flex justify-content-center mt-2 mb-3">
+                    <a href="{% url 'cafe:review_create' this_cafe.id %}">리뷰 작성</a>
+                </div>
             {% endif %}
-        </div>
-    </br>
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <button class="btn btn-outline-primary" onclick="location.href= 'https://place.map.kakao.com/{{this_cafe.pk}}'">카카오맵에서 리뷰 평점 보기</button>
-            <button class="btn btn-outline-primary" onClick="location.href='https://m.map.naver.com/search2/search.naver?query={{this_cafe.name}}'">네이버지도에서 리뷰 평점 보기</button>
-            <button class="btn btn-outline-primary" onClick="location.href='https://www.google.com/maps/search/{{this_cafe.name}}'">구글맵에서 리뷰 평점 보기</button>
-        </div>
-    </div>
-</div>
-{% if each_reviews.count > 0 %}
-<div class="cafe_info position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
-    <hr/>
-    <div class="review_list">
-        <span>정렬</span><!--선택했을 때 색깔 바뀌게!-->
-        <button type="button" onclick="location.href='{% url 'cafe:sort_latest' this_cafe.id %}'">최신 순</button>
-        <button type="button" onclick="location.href='{% url 'cafe:sort_visit' this_cafe.id %}'">{{this_cafe.name}} 방문 순</button>
-        <button type="button" onclick="location.href='{% url 'cafe:sort_total_visit' this_cafe.id %}'">총 방문 순</button>
-        <button type="button" onclick="location.href='{% url 'cafe:sort_review' this_cafe.id %}'">리뷰 순</button>
-        {{each_reviews.count}}
-    </div>
-    <hr/>
-
-    <article class="each_review">
-        {% for reviews in each_reviews %}
-            <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }} </a>
-
-            {% if reviews.review_stars == '1.0' %}
-                <span>⭐</span>
-            {% elif reviews.review_stars == '2.0' %}
-                <span>⭐⭐</span>
-            {% elif reviews.review_stars == '3.0' %}
-                <span>⭐⭐⭐</span>
-            {% elif reviews.review_stars == '4.0' %}
-                <span>⭐⭐⭐⭐</span>
-            {% elif reviews.review_stars == '5.0' %}
-                <span>⭐⭐⭐⭐⭐</span>
-            {% endif %}
-            {{ reviews.created_at }}
-
-            {% if reviews.username == request.user %}
-                <button><a href="{% url 'review_update' reviews.id %}">리뷰 수정</a></button>
-            {% endif %}
-
-            <br/>
-            <span>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11삽질노트-->
-            </span>
-            <span>총 카페 방문 횟수: {{ reviews.username.total_visit }}</span>
-            <span>총 작성 리뷰 수: {{ reviews.username.total_review }}</span>
-            <br/>
-            {{ reviews.content }}<br/>
-            {% if review_photo %}
-                {% for img in review_photo %}
-                    {% if img.review.id == reviews.id %}
-                        <img src="{{img.image.url}}" style="width: 5%; height: 5%;" data-toggle="modal" data-target="#myModal">       
-                    {% endif %}
-                {% endfor %}   
-            {% endif %}
-            <br/>
-            <div class="comments-{{reviews.id}}">
-                {% for comment in comments %}
-                    {% if comment.post == reviews %}
-                            <div class="comment-{{comment.id}} container my-1">
-                                <div class="row">
-                                    <div class="col">{{comment.content}}</div>
-                                    <div class="col">{{comment.username}}</div>
-                                    <div class="col">{{comment.created_at}}</div>
-                                    {% if comment.username == user%}
-                                    <div class="col">
-                                        <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                    {% endif %}
-                {% endfor %}
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <button class="fw-bold btn btn-outline-warning another-review-button" onclick="location.href= 'https://google.com/maps/place/{{this_cafe.name}}'">카카오맵<br>리뷰 보기</button>
+                <button class="fw-bold btn btn-outline-success another-review-button" onClick="location.href='https://map.naver.com/v5/search/{{this_cafe.name}}'">네이버지도<br>리뷰 보기</button>
+                <button class="fw-bold btn btn-outline-danger another-review-button" onClick="location.href='https://google.com/search?q={{this_cafe.name}}'">구글맵<br>리뷰 보기</button>
             </div>
-            <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
-            <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
-            <hr/>
-        {% endfor %}
-    </article>
-</div>
-{% else %}
-<div class="cafe_info position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
-    아직 등록된 리뷰가 없습니다. 방문카페 등록 후 첫번째 리뷰의 주인공이 되어 보세요!
-    <hr/>
-</div>
-{% endif %}
+        </div>
+    
+    <!-- 리뷰 컨테이너 -->
+    <div class="cafe-review shadow-sm card position-relative overflow-hidden mb-4 text-center" style="padding: 1rem;">
+    {% if each_reviews.count > 0 %}
+        <hr/>
+        <div class="review_list">
+            <span>정렬</span><!--선택했을 때 색깔 바뀌게!-->
+            <button type="button" onclick="location.href='{% url 'cafe:sort_latest' this_cafe.id %}'">최신 순</button>
+            <button type="button" onclick="location.href='{% url 'cafe:sort_visit' this_cafe.id %}'">{{this_cafe.name}} 방문 순</button>
+            <button type="button" onclick="location.href='{% url 'cafe:sort_total_visit' this_cafe.id %}'">총 방문 순</button>
+            <button type="button" onclick="location.href='{% url 'cafe:sort_review' this_cafe.id %}'">리뷰 순</button>
+            {{each_reviews.count}}
+        </div>
+        <hr/>
 
+        <article class="each_review">
+            {% for reviews in each_reviews %}
+                <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }} </a>
+
+                {% if reviews.review_stars == '1.0' %}
+                    <span>⭐</span>
+                {% elif reviews.review_stars == '2.0' %}
+                    <span>⭐⭐</span>
+                {% elif reviews.review_stars == '3.0' %}
+                    <span>⭐⭐⭐</span>
+                {% elif reviews.review_stars == '4.0' %}
+                    <span>⭐⭐⭐⭐</span>
+                {% elif reviews.review_stars == '5.0' %}
+                    <span>⭐⭐⭐⭐⭐</span>
+                {% endif %}
+                {{ reviews.created_at }}
+
+                {% if reviews.username == request.user %}
+                    <button><a href="{% url 'review_update' reviews.id %}">리뷰 수정</a></button>
+                {% endif %}
+
+                <br/>
+                <span>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11삽질노트-->
+                </span>
+                <span>총 카페 방문 횟수: {{ reviews.username.total_visit }}</span>
+                <span>총 작성 리뷰 수: {{ reviews.username.total_review }}</span>
+                <br/>
+                {{ reviews.content }}<br/>
+                {% if review_photo %}
+                    {% for img in review_photo %}
+                        {% if img.review.id == reviews.id %}
+                            <img src="{{img.image.url}}" style="width: 5%; height: 5%;" data-toggle="modal" data-target="#myModal">       
+                        {% endif %}
+                    {% endfor %}   
+                {% endif %}
+                <br/>
+                <div class="comments-{{reviews.id}}">
+                    {% for comment in comments %}
+                        {% if comment.post == reviews %}
+                                <div class="comment-{{comment.id}} container my-1">
+                                    <div class="row">
+                                        <div class="col">{{comment.content}}</div>
+                                        <div class="col">{{comment.username}}</div>
+                                        <div class="col">{{comment.created_at}}</div>
+                                        {% if comment.username == user%}
+                                        <div class="col">
+                                            <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
+                <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
+                <hr/>
+            {% endfor %}
+        </article>
+    {% else %}
+    <div class="cafe_info position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
+        <span>아직 등록된 리뷰가 없습니다. 방문카페 등록 후 첫번째 리뷰의 주인공이 되어 보세요!</span>
+    <hr/>
+    {% endif %}
+    </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
 <script type="text/javascript">
-// 댓글 작성
-const requestWrite = new XMLHttpRequest();
+    // 댓글 작성
+    const requestWrite = new XMLHttpRequest();
 
-const commentWrite = (review_id) => {
-    const url = '/cafe/comment_write/';
-    const content = document.querySelector(`.input-${review_id}`).value;
-    requestWrite.open('POST', url, true);
-    requestWrite.setRequestHeader(
-        'Content-Type',
-        'application/x-www-form-urlencoded'
-    );
-    requestWrite.send(JSON.stringify({'review_id': review_id, 'content': content}));
-};
+    const commentWrite = (review_id) => {
+        const url = '/cafe/comment_write/';
+        const content = document.querySelector(`.input-${review_id}`).value;
+        requestWrite.open('POST', url, true);
+        requestWrite.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestWrite.send(JSON.stringify({'review_id': review_id, 'content': content}));
+    };
 
-const writeResponse = () => {
-    if(requestWrite.status < 400) {
-        const {review_id, content, comment_id, username, comment_time} = JSON.parse(requestWrite.response);
-        console.log(content);
-        const comments = document.querySelector(`.comments-${review_id}`);
-        const element = document.querySelector(`.input-${review_id}`);
-        comments.innerHTML += `
-            <div class="comment-${comment_id} container my-1">
-                <div class="row">
-                    <div class="col">${content}</div>
-                    <div class="col">${username}</div>
-                    <div class="col">${comment_time}</div>
-                    <div class="col">
-                        <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
+    const writeResponse = () => {
+        if(requestWrite.status < 400) {
+            const {review_id, content, comment_id, username, comment_time, notification} = JSON.parse(requestWrite.response);
+            console.log(content);
+            const comments = document.querySelector(`.comments-${review_id}`);
+            const element = document.querySelector(`.input-${review_id}`);
+            comments.innerHTML += `
+                <div class="comment-${comment_id} container my-1">
+                    <div class="row">
+                        <div class="col">${content}</div>
+                        <div class="col">${username}</div>
+                        <div class="col">${comment_time}</div>
+                        <div class="col">
+                            <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-    }
-};
+            `;
+        }
+    };
 
-requestWrite.onreadystatechange = () => {
-    if(requestWrite.readyState === XMLHttpRequest.DONE) {
-        writeResponse();
-    }
-};
+    requestWrite.onreadystatechange = () => {
+        if(requestWrite.readyState === XMLHttpRequest.DONE) {
+            writeResponse();
+        }
+    };
 
-//댓글 삭제
-const requestDelete = new XMLHttpRequest();
+    //댓글 삭제
+    const requestDelete = new XMLHttpRequest();
 
-const commentDelete = (comment_id) => {
-    const url = '/cafe/comment_delete/';
-    requestDelete.open('POST', url, true);
-    requestDelete.setRequestHeader(
-        'Content-Type',
-        'application/x-www-form-urlencoded'
-    );
-    requestDelete.send(JSON.stringify({comment_id: comment_id}));
-};
+    const commentDelete = (comment_id) => {
+        const url = '/cafe/comment_delete/';
+        requestDelete.open('POST', url, true);
+        requestDelete.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestDelete.send(JSON.stringify({comment_id: comment_id}));
+    };
 
-const deleteResponse = () => {
-    if(requestDelete.status < 400) {
-        const {comment_id} = JSON.parse(requestDelete.response);
-        const element = document.querySelector(`.comment-${comment_id}`);
-        element.remove();
-    }
-};
+    const deleteResponse = () => {
+        if(requestDelete.status < 400) {
+            const {comment_id} = JSON.parse(requestDelete.response);
+            const element = document.querySelector(`.comment-${comment_id}`);
+            element.remove();
+        }
+    };
 
     requestDelete.onreadystatechange = () => {
         if(requestDelete.readyState === XMLHttpRequest.DONE) {
@@ -222,5 +227,5 @@ const deleteResponse = () => {
             }
         }
     });
-    </script>
+</script>
 {% endblock %}
