@@ -1,0 +1,149 @@
+@font-face {
+    font-family: 'Cafe24Danjunghae';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Danjunghae.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RIDIBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'twaysky';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* .color {
+    #F0A986
+    #B3A29A
+    #A3735B
+    #F0D9CE
+    #704F3F
+    #573728
+} */
+
+#badge_list_page {
+    background-color: #F0D9CE;
+    padding: 50px 0px;
+}
+
+.page_title {
+    font-size: 80px;
+    font-family: Cafe24Danjunghae;
+    text-shadow: 2px 2px 2px #B3A29A;
+    color: #704F3F;
+}
+
+.page_info {
+    font-size: 10px;
+    font-family: RIDIBatang;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+} */
+
+.container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 1300px; 
+    transform-style: preserve-3d;
+}
+
+article {
+    display: flex;
+    justify-content: space-around;
+}
+
+article .box {
+    position: relative;
+    width: 260px;
+    height: 370px;
+    margin: 20px 0;
+    perspective: 1000px;
+    overflow: hidden;
+    transform-style: preserve-3d;
+}
+
+article .box .imgbox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: top;
+    transform-style: preserve-3d;
+    transition: 0.5s;
+    transition-delay: 0.2s;
+}
+
+article .box:hover .imgbox {
+    transform: rotateX(-90deg);
+    opacity: 0;
+    transition-delay: 0s;
+}
+
+article .box .imgbox img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.container .box .contentbox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #704F3F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+
+    transform-origin: bottom;
+    transform-style: preserve-3d;
+    transition: 0.5s;
+    transform: rotateX(90deg);
+    opacity: 0;
+
+    font-family: RIDIBatang;
+    color: #F0D9CE;
+}
+
+.badge_name {
+    font-family: Cafe24Danjunghae;
+    color: #F0D9CE;
+    text-shadow: 2px 2px 2px #B3A29A;
+    padding-bottom: 30px;
+}
+
+.badge_ctx {
+    font-size: 18px;
+}
+
+.container .box:hover .contentbox {
+    transform: rotateX(0deg);
+    opacity: 1;
+    transition-delay: 0.2s;
+}

@@ -52,17 +52,15 @@
 }
 
 .page_title {
-    font-size: 5em;
+    font-size: 80px;
     font-family: Cafe24Danjunghae;
     text-shadow: 2px 2px 2px #B3A29A;
     color: #704F3F;
-    font-weight: bolder;
 }
 
 .page_info {
-    font-size: 2em;
+    font-size: 10px;
     font-family: RIDIBatang;
-    color: #A3735B;
 }
 
 /* 카드 */
@@ -180,23 +178,23 @@
 }
 
 .sm_gold_medal {
-    font-size: 2.7rem;
+    font-size: 45px;
     color: gold;
     margin-top: 2px;
 }
 .sm_silver_medal {
-    font-size: 2.7rem;
+    font-size: 45px;
     color: silver;
     margin-top: 2px;
 }
 .sm_bronze_medal {
-    font-size: 2.7rem;
+    font-size: 45px;
     color: rgb(85, 41, 41);
     margin-top: 2px;
 }
 .sm_other_medal {
     font-family: twaysky;
-    font-size: 1.6em;
+    font-size: 40px;
     color: #573728;
 }
 

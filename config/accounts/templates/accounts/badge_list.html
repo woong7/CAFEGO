@@ -1,25 +1,60 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/badge_list.css' %}">
+{% endblock %}
+{% block title %}
+    뱃지리스트
+{% endblock %}
 
 {% block content %}
-    <h1>{{owner.nickname}}님의 뱃지 리스트 페이지입니다</h1>
-    <div>획득 뱃지 수: {{taken_num}}/{{total_num}}</div>
-    <hr/>
-    {% for badge in badges %}
-        {% if badge in taken_badges %}
-            <div class="alert-warning">
-                <p>획득</p>
-                <img src="{{badge.badge_image.url}}" style="width: 5%; height: 5%;">
-                <p>{{badge.badge_name}}</p>
-                <p>획득 조건: {{badge.badge_get}}</p>
+    <section id="badge_list_page" class="p-4">
+        <header class="pt-3">
+            <div class="pricing-header p-2 pb-md-4 mx-auto text-center">
+                <div class="page_title">Badge List</div>
+                <p class="fs-5 text-muted page_info">본인이 획득한 뱃지는 특별한 표시가 있어요!<br>카드에 마우스를 올리면 뱃지 획득 방법을 알 수 있어요!😉</p>
+                <br>
+                <div class="fs-5 text-muted page_info">🎇획득 뱃지 수: {{taken_num}}/{{total_num}}🎇</div>
             </div>
-        {% else %}
-            <div>
-                <p>미획득</p>
-                <img src="{{badge.badge_image.url}}" style="width: 5%; height: 5%;">
-                <p>{{badge.badge_name}}</p>
-                <p>획득 조건: {{badge.badge_get}}</p>
+        </header>
+        
+        <body>
+            <div class="container px-5">
+                <article class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mb-3 text-center">
+                {% for badge in badges %}
+                    {% if badge in taken_badges %}      
+                        <div class="box alert-warning">
+                            <div class="imgbox">
+                                <img src="{{badge.badge_image.url}}">
+                            </div>
+                            <div class="contentbox">
+                                <div>
+                                    <h2 class="badge_name">{{badge.badge_name}}</h2>
+                                    <p class="badge_ctx">✨획득 조건✨<br> {{badge.badge_get}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}    
+                        <div class="box">
+                            <div class="imgbox">
+                                <img src="{{badge.badge_image.url}}">
+                            </div>
+                            <div class="contentbox">
+                                <div>
+                                    <h2 class="badge_name">{{badge.badge_name}}</h2>
+                                    <p class="badge_ctx">✨획득 조건✨<br> {{badge.badge_get}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                
+                </article>
             </div>
-        {% endif %}
-        <hr/>
-    {% endfor %}
+
+        </body>
+        
+    </section>
+
 {% endblock %}

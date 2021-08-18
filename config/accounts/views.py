@@ -168,7 +168,6 @@ def rank_list(request):
     August_fin = September - timedelta(seconds=1)
     
     ####################  A_총 방문 랭킹  ####################
-    # A_users=User.objects.all().order_by('-total_visit')
     A_users=User.objects.all().exclude(total_visit=0).order_by('-total_visit')
     A_me=User.objects.get(username=request.user)
 
@@ -183,7 +182,6 @@ def rank_list(request):
         A_my_grade = 0
     
     ####################  B_한 달 방문 랭킹  ####################
-    # B_users=User.objects.all().order_by('-visit_count_lastmonth')
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
     B_me=User.objects.get(username=request.user)
 
@@ -416,7 +414,6 @@ class InfoUpdateView(ListView):
 
 def mypage(request, pk):
     #내가 방문한 카페들
-    
     user=request.user
     owner=User.objects.get(id=pk)
     visit_cafes=VisitedCafe.objects.filter(user=owner)
@@ -728,7 +725,6 @@ def deletefriend(request, pk):
 def friend_search(request):
 
     return render(request, 'accounts/friend_search')
-
 
 class FriendSearchListView(ListView):
     model = User
