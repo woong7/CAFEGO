@@ -48,7 +48,7 @@
                 </div>
             {% endif %}
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <button class="fw-bold btn btn-outline-warning another-review-button" onclick="location.href= 'https://google.com/maps/place/{{this_cafe.name}}'">카카오맵<br>리뷰 보기</button>
+                <button class="fw-bold btn btn-outline-warning another-review-button" onclick="location.href= 'https://place.map.kakao.com/{{this_cafe.pk}}'">카카오맵<br>리뷰 보기</button>
                 <button class="fw-bold btn btn-outline-success another-review-button" onClick="location.href='https://map.naver.com/v5/search/{{this_cafe.name}}'">네이버지도<br>리뷰 보기</button>
                 <button class="fw-bold btn btn-outline-danger another-review-button" onClick="location.href='https://google.com/search?q={{this_cafe.name}}'">구글맵<br>리뷰 보기</button>
             </div>
