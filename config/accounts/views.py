@@ -248,7 +248,7 @@ def rank_list(request):
         E_my_grade = 0
     
     ####################  F_팔로워 수 랭킹  ####################
-    F_follwer_order = User.objects.all().order_by('-follwernum')
+    F_follwer_order = User.objects.all().exclude(follwernum=0).order_by('-follwernum')
     F_me=User.objects.get(username=request.user)
 
     if F_me in F_follwer_order:
@@ -659,9 +659,6 @@ def visit_register(request):
         # print('!!!!!!!', v_cafe.created_at) ##@@
         user = User.objects.get(username=request.user)
         user.total_visit += 1
-
-        #새로운 카페 등록은 무조건 새로운 종류니까 바로 카운트 올림
-        user.kinds_of_cafe_lastmonth += 1
 
         #모달창에서 선택한 음료 저장
         jsonDec=json.decoder.JSONDecoder()
