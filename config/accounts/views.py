@@ -170,7 +170,6 @@ def rank_list(request):
     August_fin = September - timedelta(seconds=1)
     
     ####################  A_총 방문 랭킹  ####################
-    # A_users=User.objects.all().order_by('-total_visit')
     A_users=User.objects.all().exclude(total_visit=0).order_by('-total_visit')
     A_me=User.objects.get(username=request.user)
 
@@ -185,7 +184,6 @@ def rank_list(request):
         A_my_grade = 0
     
     ####################  B_한 달 방문 랭킹  ####################
-    # B_users=User.objects.all().order_by('-visit_count_lastmonth')
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
     B_me=User.objects.get(username=request.user)
 
@@ -228,7 +226,7 @@ def rank_list(request):
         C_my_grade = 0
     
     ####################  D_누적 리뷰 랭킹  ####################
-    D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
+    D_all_review_order = User.objects.all().exclude(total_review=0).order_by('-total_review')#누적 리뷰 랭킹
     D_me=User.objects.get(username=request.user)
 
     if D_me in D_all_review_order:
@@ -239,7 +237,7 @@ def rank_list(request):
         D_my_grade = 0
 
     ####################  E_한 달 리뷰 랭킹  ####################
-    E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
+    E_month_review_order = User.objects.all().exclude(review_count_lastmonth=0).order_by('-review_count_lastmonth')
     E_me=User.objects.get(username=request.user)
 
     if E_me in E_month_review_order:
@@ -450,7 +448,6 @@ def infoupdate(request, pk):
 
 def mypage(request, pk):
     #내가 방문한 카페들
-    
     user=request.user
     owner=User.objects.get(id=pk)
     visit_cafes=VisitedCafe.objects.filter(user=owner)
@@ -781,7 +778,6 @@ def deletefriend(request, pk):
 def friend_search(request):
 
     return render(request, 'accounts/friend_search')
-
 
 class FriendSearchListView(ListView):
     model = User

@@ -71,7 +71,6 @@ class User(AbstractBaseUser):
     #한달마다 초기화
     visit_count_lastmonth = models.IntegerField(default=0) #지난 한달간 방문한 횟수 센다, 매월 초기화해준다.
     review_count_lastmonth = models.IntegerField(default=0)
-    kinds_of_cafe_lastmonth = models.IntegerField(default=0)
 
     badge_taken=models.TextField(null=True, default=json.dumps([]))
     friends=models.TextField(null=True, default=json.dumps([]))
