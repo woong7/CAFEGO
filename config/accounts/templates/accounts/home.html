@@ -22,13 +22,19 @@
         </div>
         
 {% else %}
-    <p>메인 페이지로 돌아가도록 설정</p>
-    {% if usernum == 0 %}
-        <h4><a href="{%url 'create_admin' %}">슈퍼유저 생성</a></h4>
-    {% else %}
-        <h4><a href="/account/login">로그인하기</a></h4>
-    {% endif %}
-    <h4><a href="{% url 'signup' %}">회원가입</a></h4>
+    <div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 18rem;">
+        <p id="header-logo-image"></p>
+        <h1></h1>
+        {% if usernum == 0 %}
+            <button class="btn btn-outline-primary" onClick="location.href='{%url 'create_admin' %}'">슈퍼유저 생성</button>
+        {% else %}
+            <button class="btn btn-outline-primary" onClick="location.href='/account/login'">로그인하기</button>
+            <h1></h1>
+        {% endif %}
+        <button class="btn btn-outline-primary" onClick="location.href='/account/signup'">회원가입</button>
+    </div>
+    
+
 {%endif %}
 
 {% endblock %}

@@ -22,8 +22,9 @@ from datetime import datetime, timedelta
 from dateutil import relativedelta
 import operator
 from django.http import HttpResponseRedirect, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
+@csrf_protect 
 def signup(request):
     if request.method == "POST":
         if request.POST["password1"] == request.POST["password2"]:
@@ -144,7 +145,7 @@ def user_cafe_map(request):
 
     ctx = {
         'nickname': user.nickname,
-        'data': visited_cafe_list,
+        'visited_cafe_list': visited_cafe_list,
         'main_cafe': main_cafe.pk,
         'cafe_list': cafe_list
     }
@@ -965,6 +966,9 @@ from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 
+from django.utils.decorators import method_decorator
+
+@method_decorator(csrf_exempt, name='dispatch')
 class UserRegistrationView(CreateView):
     model = get_user_model()
     form_class = UserRegistrationForm

@@ -2,12 +2,48 @@ li {
     text-decoration: none;
 }
 
+/* 전체 틀 잡기 */
+.review-content {
+    width: 800px;
+    padding-top: 16px;
+    margin: 0 auto;
+}
+
+/* 카페 정보 최상위 */
+.cafe-info {
+    width: 100%;
+}
+
+.review-cafe-address {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.map-icon {
+    width: 25px;
+    height: auto;
+}
+
+.map-icon path {
+    fill: #2482EE;
+}
+
+.map-icon path:hover {
+    fill: #3396FF;
+    cursor: pointer;
+}
+
+.another-review-button {
+    width: 150px;
+}
+
+/* 별점 최상위 */
 .rating_wrap_parents {
-    position: relative;
-    left: 38%;
-    bottom: 20px;
+    display: inline-block;
     width: 180px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .rating_wrap {
@@ -30,19 +66,19 @@ li {
 }
 
 .full_star { /* 별 */
-    font-size: 29px;
+    font-size: 28px;
     color: rgb(255, 238, 0);
 } 
 
-.full_star:hover {
+/* .full_star:hover {
     transform: rotate(15deg) scale(1);
-}
+} */
 
 .empty_star { /* 별 */
     font-size: 28px;
     color: gray;
 }
 
-.empty_star:hover {
+/* .empty_star:hover {
     transform: rotate(15deg) scale(1);
-}
+} */
