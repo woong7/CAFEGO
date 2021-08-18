@@ -6,8 +6,51 @@
 {% endblock %}
 
 {% block content %}
+<!------------------------------------------------옆으로 넘어가는 창------------------------------------------------>
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    </div>
+    <div class="carousel-inner" style="color: black;">
+        <div class="carousel-item active bg-dark">
+            <div class="carousel-caption d-none d-md-block">
+                <h1 class="font-weight-bold text-light" style="font-weight: bold;">지도 위에 카페 방문 기록을 남겨보세요!</h1>
+            </div>
+        </div>
+        <div class="carousel-item bg-dark">
+            <div class="carousel-caption d-none d-md-block">
+                <h1 class="font-weight-bold text-light" style="font-weight: bold;">실제 카페 방문자에게 물어보세요!</h1>
+            </div>
+        </div>
+        <div class="carousel-item bg-dark">
+            <div class="carousel-caption d-none d-md-block">
+                <h1 class="font-weight-bold text-light" style="font-weight: bold;">지역별 카페 방문 랭킹을 확인해보세요!</h1>
+            </div>
+        </div>
+        <div class="carousel-item bg-dark">
+            <div class="carousel-caption d-none d-md-block">
+                <h1 class="font-weight-bold text-light" style="font-weight: bold;">팔로우해서 다른 사람의 카페지도를 살펴보아요!</h1>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+<div class="text-center">
+</br></br>
+    <button class="btn btn-outline-primary" onClick="location.href='{% url 'home' %}'">시작하기</button>
+</div>
 
-<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 12rem;">
+<!-- <div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 12rem;">
     <p id="header-logo-image"></p>
     {% if user.is_authenticated %}
         <p>{{user.nickname}} 님이 로그인 중</p>
@@ -16,16 +59,11 @@
         <h1></h1>
         <button class="btn btn-outline-primary" onClick="location.href='{% url 'home' %}'">시작하기</button>
     {% endif %}
-    
-</div>
+</div> -->
 
+<!--
 <div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
-    <h1 class="font-weight-bold text-light" style="font-weight: bold;">카페고에서 지도 위에 카페 방문 기록을 남겨보세요!</h1>
-    <!-- <p class="lead font-weight-normal text-white" style="padding-top: 3rem">Bootstrap's responsive grid comes in 4 sizes or "breakpoints" : tiny (xs),
-        small(sm), medium(md) and large(lg). These 4 grid sizes enable you create
-        responsive layouts that behave accordingly on different devices.
-    </p>
-    <button class="btn btn-white bg-white" onClick="location.href='#gallery'">Learn More</button> -->
+    <h1 class="font-weight-bold text-light" style="font-weight: bold;">지도 위에 카페 방문 기록을 남겨보세요!</h1>
 </div>
 
 <div class="position-relative overflow-hidden m-0 text-center bg-light" id="intro" style="padding: 12rem;">
@@ -45,6 +83,52 @@
 <div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
     <h1 class="font-weight-bold text-light" style="font-weight: bold;">지도기반 카페 방문기록 웹서비스</h1>
     <button class="btn btn-white bg-white" onClick="location.href='/account/login'">시작하기</button>
+</div> -->
+
+<hr class="featurette-divider">
+
+<div class="row featurette">
+    <div class="col-md-7">
+        <h2 class="featurette-heading">방문했던 카페를 추가하여 나만의 카페지도를 만들어보세요!</h2>
+    </br></br>
+        <p class="lead">서울 시내 37000여개의 카페 중에 내가 방문했던 카페를 찾아 추가해보세요. 마신 음료를 함께 기록할 수 있어요. 나만의 카페지도 위에 방문했던 카페들이 이모티콘으로 표시되요. 많이 갈수록 이모티콘이 커져요.</p>
+    </div>
+    <div class="col-md-5">
+        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
+    </div>
+</div>
+<hr class="featurette-divider">
+<div class="row featurette">
+    <div class="col-md-7 order-md-2">
+        <h2 class="featurette-heading">카페별로 리뷰를 남기고 댓글을 달아보세요!</h2>
+    </br></br>
+        <p class="lead">방문했던 카페에 리뷰를 남길 수 있어요. 리뷰에 댓글을 달아 카페 사용자에게 직접 물어볼 수 있어요. 다양한 카페를 방문한 사람에게, 그 카페 단골에게 솔직한 답변을 들어보세요.</p>
+    </div>
+    <div class="col-md-5 order-md-1">
+        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
+    </div>
+</div>
+<hr class="featurette-divider">
+<div class="row featurette">
+    <div class="col-md-7">
+        <h2 class="featurette-heading">매달 갱신되는 랭킹 시스템으로 나의 순위를 확인해보세요!</h2>
+    </br></br>
+        <p class="lead">카페를 얼마나 갔는지, 리뷰를 얼마나 썼는지에 따라 누적 순위와 지난달 순위를 확인해볼 수 있어요. </p>
+    </div>
+    <div class="col-md-5">
+        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
+    </div>
+</div>
+<hr class="featurette-divider">
+<div class="row featurette">
+    <div class="col-md-7 order-md-2">
+        <h2 class="featurette-heading">아이디나 동네를 검색해서 팔로우 해보세요!</h2>
+    </br></br>
+        <p class="lead">유저 검색 페이지에서 친구의 아이디를 검색해보세요. 내가 살고 있는 동네를 검색해서 동네친구의 카페지도를 확인해보세요.</p>
+    </div>
+    <div class="col-md-5 order-md-1">
+        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
+    </div>
 </div>
 
 <!-- {% if user.is_authenticated %}
