@@ -25,7 +25,7 @@
     <button class="btn btn-outline-primary" type="submit">로그인 하기</button>
     
     <br><br>
-    <p>{% blocktrans %}계정이 없다면<a href="{{ signup_url }}">회원가입</a>을 진행하세요.{% endblocktrans %}</p>
+    <p>계정이 없다면<a href="{% url 'signup' %}">회원가입</a>을 진행하세요.</p>
     <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
     <hr/>
     <a class="fw-bold btn btn-outline-danger" href="{% provider_login_url 'google' %}">구글 로그인</a>
