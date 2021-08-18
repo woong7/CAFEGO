@@ -5,27 +5,23 @@
     새로운 친구 등록
 {% endblock %}
 {% block content %}
-    <h1>새로운 친구를 등록하는 페이지입니다.</h1>
-    <p>새로운 친구 등록하기</p>
+<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 5rem;">
+    <h4>새로운 친구 등록하기</h4>
     <p>다른 유저를 검색해보세요!</p>
 
-    {% if q %}
-    <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
-    {% endif %}
-
-    <!-- 카페 검색창 -->
+    <!-- 친구 검색창 -->
     <form action="" method="GET">
         <select name="type">
             <option value="nickname">닉네임</option>
-            <option value="town">동네</option>
+            <option value="dong">동네</option>
             <option value="all">닉네임+동네</option>
         </select>
         <input type="text" name="q" value="{{ q }}" placeholder="유저 닉네임 검색">
         <button type="submit" id="search_btn">search</button><br/>
     </form>
 
-    <!-- 카페 리스트  -->
-    <table>
+    <!-- 친구 리스트  -->
+    <table class="table">
         <thead>
             <tr>
                 <th> </th>
@@ -35,20 +31,23 @@
             </tr>
         </thead>
         <tbody>
+            {% if q %}
+            <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
+            {% endif %}
             {% if user_list %}
-                검색 결과: {{page_obj.paginator.count}}개
+                검색 결과: {{page_obj.paginator.count}}명
                 {% for user in user_list %}
                     <tr>
                         <td>{{ user.id }}</td>
                         <td><a href="{% url 'mypage' user.id %}">{{ user.nickname }}</a></td>
                         <td>{{user.gu}} {{ user.dong }}</td> <!-- | truncatechars:10-->
                         <!-- checkbox trigger modal -->
-                        <td><input type="radio" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ user.id }}" name="visit" value="visit"></td>
+                        <td><input type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ user.id }}" name="visit" value="Follow"></td>
                         <div class="modal fade" id="exampleModal_{{ user.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             
                             <div class="modal-dialog">
                                 <form action="{% url 'friend_register' %}" method='post'>
-                                    <div class="modal-content">
+                                    <div class="modal-content"> 
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLabel" name="friendname2">
                                                 <input type="text" name="friendname" value="{{ user.nickname }}">
@@ -143,6 +142,6 @@
     </div>
     {% endif %}
 
-
+</div>
 {% endblock %}
 

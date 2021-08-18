@@ -248,6 +248,17 @@ def rank_list(request):
                 E_my_grade = grade + 1 
     else:
         E_my_grade = 0
+    
+    ####################  F_팔로워 수 랭킹  ####################
+    F_follwer_order = User.objects.all().order_by('-follwernum')
+    F_me=User.objects.get(username=request.user)
+
+    if F_me in F_follwer_order:
+        for grade, who in enumerate(F_follwer_order):
+            if F_me == who:
+                F_my_grade = grade + 1 
+    else:
+        F_my_grade = 0
 
     ctx={
         'last_month_first': last_month_first,
@@ -269,6 +280,9 @@ def rank_list(request):
         ##### E_한 달 리뷰 랭킹 #####
         'E_month_review_order' : E_month_review_order,
         'E_my_grade': E_my_grade,
+        ##### F_팔로워 수 랭킹 #####
+        'F_follwer_order' : F_follwer_order,
+        'F_my_grade': F_my_grade,
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
@@ -472,6 +486,7 @@ def mypage(request, pk):
     jsonDec=json.decoder.JSONDecoder()
     badgeList=jsonDec.decode(owner.badge_taken)
     friendsList=jsonDec.decode(owner.friends)
+    follwersList=jsonDec.decode(owner.follwers)
 
     excludesList=jsonDec.decode(user.friends)
     names_to_exclude = [o for o in excludesList]
@@ -479,9 +494,12 @@ def mypage(request, pk):
 
     users=User.objects.all()
     friends=[]
+    follwers=[]
     for user in users:
         if user.nickname in friendsList:
             friends.append(user)
+        if user.nickname in follwersList:
+            follwers.append(user)
         
 
     my_all_review = Review.objects.filter(username=owner)
@@ -529,6 +547,8 @@ def mypage(request, pk):
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
         'friends':friends,
+        'followingnum':len(friends),
+        'follwers':follwers,
         'drink_list' :total_drink,
         'drink_list_dic' :total_drink_dic,
         'total_visit': owner.total_visit,
@@ -728,6 +748,13 @@ def addfriend(request, pk):
 
     user.friends=json.dumps(friendsList)
     user.save()
+
+    follwersList=jsonDec.decode(target.follwers)
+    follwersList.append(user.nickname)
+    target.follwers=json.dumps(follwersList)
+    target.follwernum+=1
+    target.save()
+
     notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
     notification.save()
 
@@ -739,6 +766,12 @@ def deletefriend(request, pk):
     friendsList=jsonDec.decode(user.friends)
     target=User.objects.get(id=pk)
     friendsList.remove(target.nickname)
+
+    follwersList=jsonDec.decode(target.follwers)
+    follwersList.remove(user.nickname)
+    target.follwers=json.dumps(follwersList)
+    target.follwernum-=1
+    target.save()
 
     user.friends=json.dumps(friendsList)
     user.save()
@@ -774,10 +807,10 @@ class FriendSearchListView(ListView):
             if len(search_keyword) > 1:
                 if search_type == 'nickname':
                     search_user_list = user_list.filter(nickname__icontains=search_keyword)
-                elif search_type == 'town':
-                    search_user_list = user_list.filter(town__icontains=search_keyword)
+                elif search_type == 'dong':
+                    search_user_list = user_list.filter(Q(dong__icontains=search_keyword) | Q(gu__icontains=search_keyword))
                 elif search_type == 'all':
-                    search_user_list = user_list.filter(Q(nickname__icontains=search_keyword) | Q(town__icontains=search_keyword))
+                    search_user_list = user_list.filter(Q(nickname__icontains=search_keyword) | Q(dong__icontains=search_keyword) | Q(gu__icontains=search_keyword))
                 return search_user_list
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
@@ -834,6 +867,11 @@ def friend_register(request):
         user.save()
 
         target =User.objects.get(nickname=str_friendname)
+        follwersList=jsonDec.decode(target.follwers)
+        follwersList.append(user.nickname)
+        target.follwers=json.dumps(follwersList)
+        target.follwernum+=1
+        target.save()
         print("target:", target) #user objects가 맞는지
         notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
         notification.save()
