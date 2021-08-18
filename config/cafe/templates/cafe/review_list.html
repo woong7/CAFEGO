@@ -58,7 +58,6 @@
         <button type="button" onclick="location.href='{% url 'cafe:sort_visit' this_cafe.id %}'">{{this_cafe.name}} 방문 순</button>
         <button type="button" onclick="location.href='{% url 'cafe:sort_total_visit' this_cafe.id %}'">총 방문 순</button>
         <button type="button" onclick="location.href='{% url 'cafe:sort_review' this_cafe.id %}'">리뷰 순</button>
-        {{each_reviews.count}}
     </div>
     <hr/>
 

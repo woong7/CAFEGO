@@ -49,7 +49,7 @@ class User(AbstractBaseUser):
     username_validator: UnicodeUsernameValidator = ...
     username = models.CharField(max_length=150, unique=True) ##########
     email = models.EmailField(blank=True)
-    nickname = models.CharField(max_length=150)
+    nickname = models.CharField(max_length=150, unique=True)
 
     city = models.CharField(max_length=10)
     gu = models.CharField(max_length=10)
@@ -75,6 +75,8 @@ class User(AbstractBaseUser):
 
     badge_taken=models.TextField(null=True, default=json.dumps([]))
     friends=models.TextField(null=True, default=json.dumps([]))
+    follwers=models.TextField(null=True, default=json.dumps([]))
+    follwernum=models.IntegerField(default=0)
 
     objects = UserManager()
 

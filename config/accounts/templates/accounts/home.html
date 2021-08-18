@@ -28,7 +28,7 @@
     {% else %}
         <h4><a href="/account/login">로그인하기</a></h4>
     {% endif %}
-    <h4><a href="/account/signup">회원가입</a></h4>
+    <h4><a href="{% url 'signup' %}">회원가입</a></h4>
 {%endif %}
 
 {% endblock %}
