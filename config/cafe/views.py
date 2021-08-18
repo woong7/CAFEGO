@@ -83,10 +83,9 @@ def comment_write(request):
         boolDayOrNight = '오전'   
     timeString = now.strftime('%Y년 %#m월 %#d일 %#I:%M '+boolDayOrNight)
 
-    print("review user name:", review.username)
     notification = Notification.objects.create(notification_type=2, from_user=request.user, to_user=review.username, comment=comment)
-
-    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString, 'notification':notification})
+    notification.save()
+    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString})
 
 @csrf_exempt
 def comment_delete(request):

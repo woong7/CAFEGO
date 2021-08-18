@@ -15,9 +15,9 @@
                 <div class="">
                     <span class="fs-5">원하는 카페를 검색해보세요!</span>
                 </div>
-                <form id="searchForm">
-                    <input type="text" value="" placeholder="키워드 입력" id="keyword"> 
-                    <input type="button" id="search-cafe" value="검색"></input> 
+                <form id="searchForm" name="searchForm" onsubmit="return false;">
+                    <input type="text" value="" placeholder="키워드 입력" id="keyword" onkeyup="enterkey();"> 
+                    <button id="search-cafe">검색</button> 
                 </form>
             </div>
             <ul id="placesList">
@@ -160,7 +160,7 @@
                     <div class="fw-bold" style="padding:5px;font-size:12px;">${place.fields.name}</div>
                     <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
                     <div style="padding:5px;font-size:10px;">
-                        <a href="../cafe/review_list/${place.pk}">리뷰 보기</a>
+                        <a href="../review_list/${place.pk}">리뷰 보기</a>
                     </div>
                 </div>
             `);
@@ -236,7 +236,69 @@
             removeAllChildNods(listEl);
 
             for(var i = 0; i < keywordMarkers.length; i++) {
-                var itemEl = getListItem(i, keywordMarkers[i]);
+                var itemEl = getListItem(i, keywordPlaces[i]);
+                (function(marker, place) {
+                    itemEl.onmouseover =  function () {
+                        displayInfowindow(marker, place.fields.name);
+                    };
+
+                    itemEl.onmouseout =  function () {
+                        infowindow_search.close();
+                    };
+
+                    itemEl.onclick = function () {
+                        infowindow_search.close();
+                        infowindow.setContent(`
+                            <div class="d-flex flex-column align-items-center" style="width: 150px; height: 100px;">
+                                <div class="fw-bold" style="padding:5px;font-size:12px;">${place.fields.name}</div>
+                                <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
+                                <div style="padding:5px;font-size:10px;">
+                                    <a href="../review_list/${place.pk}">리뷰 보기</a>
+                                </div>
+                            </div>
+                        `);
+                        infowindow.open(map, marker);
+                    };
+                })(keywordMarkers[i], keywordPlaces[i]);
+
+                fragment.appendChild(itemEl);
+            }
+            // 검색결과 항목들을 검색결과 목록 Elemnet에 추가
+            listEl.appendChild(fragment);
+        });
+    });
+    function enterkey(){ 
+        if(window.event.keyCode == 13){
+            let placeslist = "#placesList";
+
+            // html의 id가 keyword인 태그 안에 들어있는 값을 들고옴
+            var keyword = $('#keyword').val();
+
+            // 빈 값을 넘겼을 때 에러 설정
+            if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                alert('키워드를 입력해주세요!!!!!!');
+                return false;
+            }
+
+            // keywordMarkers 배열 초기화
+            let keywordMarkers = [];
+            // keywordPlaces 배열 초기화
+            let keywordPlaces = [];
+            // keyword 필터링
+            checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces);
+            console.log(keywordPlaces);
+
+            // 마커와 검색결과 항목에 mouseover 했을때 해당 장소의 인포윈도우에 장소명 표시
+            // mouseout 했을 때는 인포윈도우 닫음
+            var listEl = document.getElementById('placesList'),
+            fragment = document.createDocumentFragment(),
+            listStr = '';
+
+            // 검색 결과 목록에 추가된 항목들을 제거
+            removeAllChildNods(listEl);
+
+            for(var i = 0; i < keywordMarkers.length; i++) {
+                var itemEl = getListItem(i, keywordPlaces[i]);
                 (function(marker, place) {
                     itemEl.onmouseover =  function () {
                         displayInfowindow(marker, place.fields.name);
@@ -265,17 +327,23 @@
             }
             // 검색결과 항목들을 검색결과 목록 Elemnet에 추가
             listEl.appendChild(fragment);
-        });
-    });
+        }
+    }
 
     // 검색결과 항목을 Element로 반환하는 함수
-    function getListItem(index, keywordMarker) {
+    function getListItem(index, keywordPlace) {
         var el = document.createElement('li'),
-        itemStr =
-                '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                '<div class="info d-flex flex-column">' +
-                    '<h5 style="margin: 0px; padding-left: 10px;">' + keywordMarker.Fb + '</h5>' +
-                '</div>';         
+        itemStr = `
+            <span class="markerbg marker_$(index+1)"></span>
+                <div class="info d-flex flex-column">
+                    <div>
+                        <span class="placename">${keywordPlace.fields.name}</span>
+                    </div>
+                    <div class="">
+                        <span>${keywordPlace.fields.address}</span>
+                    </div>
+                </div>
+        `;         
 
         el.innerHTML = itemStr;
         el.className = 'item';
