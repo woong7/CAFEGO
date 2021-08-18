@@ -31,8 +31,9 @@
                 <button class="btn btn-primary btn-sm" onClick="location.href='{% url 'myreview_list' %}'">작성한 리뷰 보기</button>
                 <br>
                 <span>총 방문 카페 수 : {{visit_cafes.count }} 곳</span><br>
-                <span>총 카페 방문 횟수 : {{ total_visit }} 회</span>
-                <br>
+                <span>총 카페 방문 횟수 : {{ total_visit }} 회</span><br>
+                <span>Following : {{ followingnum }} 명</span><br>
+                <span>Follwer : {{ owner.follwernum }} 명</span><br>
             </p>
         </div>
     </div>
@@ -63,7 +64,7 @@
                 <div class="collapse" id="collapseExample2">
                     <div class="card card-body">
                         {% for cafe, drinks in drink_list_dic.items %} 
-                            <span style="font-size: 20px; font-weight: bold">카페명 : <a href="">{{cafe}}</a></span>
+                            <span style="font-size: 20px; font-weight: bold">카페명 : <a href="{% url 'cafe:review_list' cafe.id%}">{{cafe}}</a></span>
                             <span> 방문 횟수: {{cafe.visit_count}}</span>
                             <span> 마신음료 : </span>
                             {% for drink in drinks %}
@@ -148,22 +149,47 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6">
+            <div class="h-100 p-5 bg-dark border rounded-3">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample">
+                    팔로우 목록
+                </button>
+                {% if user.id == owner.id %}
+                    <button class="btn btn-primary btn" onClick="location.href='{% url 'friend_search' %}'">유저 검색</button>
+                {% endif %}
+                <div class="collapse" id="collapseExample4">
+                    <div>
+                        <br>
+                        {% for friend in friends %}
+                            <div>
+                                <li style="font-size: 20px; font-weight: bold"><a href="{% url 'mypage' friend.pk%}">{{ friend.nickname }}</a></li>
+                                <br>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <div class="col-md-6">
             <div class="h-100 p-5 bg-dark text-white border rounded-3">
-                <div>
-                    <h5>팔로우 목록</h5>
-                    {% for friend in friends %}
-                        <div>
-                            <li style="font-size: 20px; font-weight: bold"> {{ friend.nickname }}</li>
-                            => <a href="{% url 'mypage' friend.pk%}">{{friend.nickname}}님의 마이페이지로 이동</a>
-                            <br/><br/><br/>
-                        </div>
-                    {% endfor %}
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample">
+                    팔로워 목록
+                </button>
+                <div class="collapse" id="collapseExample5">
+                    <div>
+                        <br>
+                        {% for follwer in follwers %}
+                            <div>
+                                <li style="font-size: 20px; font-weight: bold"><a href="{% url 'mypage' follwer.pk%}">{{ follwer.nickname }}</a></li>
+                                
+                                <br>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                {% if user.id == owner.id %}
-                    <button class="btn btn-primary btn-sm" onClick="location.href='{% url 'friend_search' %}'">유저 검색</button>
-                {% endif %}
-            </div>
         </div>
     </div>
 </div>

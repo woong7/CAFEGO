@@ -145,7 +145,7 @@ def user_cafe_map(request):
 
     ctx = {
         'nickname': user.nickname,
-        'data': visited_cafe_list,
+        'visited_cafe_list': visited_cafe_list,
         'main_cafe': main_cafe.pk,
         'cafe_list': cafe_list
     }
@@ -170,7 +170,6 @@ def rank_list(request):
     August_fin = September - timedelta(seconds=1)
     
     ####################  A_총 방문 랭킹  ####################
-    # A_users=User.objects.all().order_by('-total_visit')
     A_users=User.objects.all().exclude(total_visit=0).order_by('-total_visit')
     A_me=User.objects.get(username=request.user)
 
@@ -185,7 +184,6 @@ def rank_list(request):
         A_my_grade = 0
     
     ####################  B_한 달 방문 랭킹  ####################
-    # B_users=User.objects.all().order_by('-visit_count_lastmonth')
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
     B_me=User.objects.get(username=request.user)
 
@@ -228,7 +226,7 @@ def rank_list(request):
         C_my_grade = 0
     
     ####################  D_누적 리뷰 랭킹  ####################
-    D_all_review_order = User.objects.all().order_by('-total_review')#누적 리뷰 랭킹
+    D_all_review_order = User.objects.all().exclude(total_review=0).order_by('-total_review')#누적 리뷰 랭킹
     D_me=User.objects.get(username=request.user)
 
     if D_me in D_all_review_order:
@@ -239,7 +237,7 @@ def rank_list(request):
         D_my_grade = 0
 
     ####################  E_한 달 리뷰 랭킹  ####################
-    E_month_review_order = User.objects.all().order_by('-review_count_lastmonth')
+    E_month_review_order = User.objects.all().exclude(review_count_lastmonth=0).order_by('-review_count_lastmonth')
     E_me=User.objects.get(username=request.user)
 
     if E_me in E_month_review_order:
@@ -248,6 +246,17 @@ def rank_list(request):
                 E_my_grade = grade + 1 
     else:
         E_my_grade = 0
+    
+    ####################  F_팔로워 수 랭킹  ####################
+    F_follwer_order = User.objects.all().order_by('-follwernum')
+    F_me=User.objects.get(username=request.user)
+
+    if F_me in F_follwer_order:
+        for grade, who in enumerate(F_follwer_order):
+            if F_me == who:
+                F_my_grade = grade + 1 
+    else:
+        F_my_grade = 0
 
     ctx={
         'last_month_first': last_month_first,
@@ -269,6 +278,9 @@ def rank_list(request):
         ##### E_한 달 리뷰 랭킹 #####
         'E_month_review_order' : E_month_review_order,
         'E_my_grade': E_my_grade,
+        ##### F_팔로워 수 랭킹 #####
+        'F_follwer_order' : F_follwer_order,
+        'F_my_grade': F_my_grade,
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
@@ -436,7 +448,6 @@ def infoupdate(request, pk):
 
 def mypage(request, pk):
     #내가 방문한 카페들
-    
     user=request.user
     owner=User.objects.get(id=pk)
     visit_cafes=VisitedCafe.objects.filter(user=owner)
@@ -472,6 +483,7 @@ def mypage(request, pk):
     jsonDec=json.decoder.JSONDecoder()
     badgeList=jsonDec.decode(owner.badge_taken)
     friendsList=jsonDec.decode(owner.friends)
+    follwersList=jsonDec.decode(owner.follwers)
 
     excludesList=jsonDec.decode(user.friends)
     names_to_exclude = [o for o in excludesList]
@@ -479,9 +491,12 @@ def mypage(request, pk):
 
     users=User.objects.all()
     friends=[]
+    follwers=[]
     for user in users:
         if user.nickname in friendsList:
             friends.append(user)
+        if user.nickname in follwersList:
+            follwers.append(user)
         
 
     my_all_review = Review.objects.filter(username=owner)
@@ -529,6 +544,8 @@ def mypage(request, pk):
         'taken_badges':taken_badges,
         'visit_cafes':visit_cafes,
         'friends':friends,
+        'followingnum':len(friends),
+        'follwers':follwers,
         'drink_list' :total_drink,
         'drink_list_dic' :total_drink_dic,
         'total_visit': owner.total_visit,
@@ -644,7 +661,7 @@ def visit_register(request):
         user.total_visit += 1
 
         #새로운 카페 등록은 무조건 새로운 종류니까 바로 카운트 올림
-        user.kinds_of_cafe_lastmonth += 1
+        #user.kinds_of_cafe_lastmonth += 1
 
         #모달창에서 선택한 음료 저장
         jsonDec=json.decoder.JSONDecoder()
@@ -728,6 +745,13 @@ def addfriend(request, pk):
 
     user.friends=json.dumps(friendsList)
     user.save()
+
+    follwersList=jsonDec.decode(target.follwers)
+    follwersList.append(user.nickname)
+    target.follwers=json.dumps(follwersList)
+    target.follwernum+=1
+    target.save()
+
     notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
     notification.save()
 
@@ -740,6 +764,12 @@ def deletefriend(request, pk):
     target=User.objects.get(id=pk)
     friendsList.remove(target.nickname)
 
+    follwersList=jsonDec.decode(target.follwers)
+    follwersList.remove(user.nickname)
+    target.follwers=json.dumps(follwersList)
+    target.follwernum-=1
+    target.save()
+
     user.friends=json.dumps(friendsList)
     user.save()
 
@@ -748,7 +778,6 @@ def deletefriend(request, pk):
 def friend_search(request):
 
     return render(request, 'accounts/friend_search')
-
 
 class FriendSearchListView(ListView):
     model = User
@@ -774,10 +803,10 @@ class FriendSearchListView(ListView):
             if len(search_keyword) > 1:
                 if search_type == 'nickname':
                     search_user_list = user_list.filter(nickname__icontains=search_keyword)
-                elif search_type == 'town':
-                    search_user_list = user_list.filter(town__icontains=search_keyword)
+                elif search_type == 'dong':
+                    search_user_list = user_list.filter(Q(dong__icontains=search_keyword) | Q(gu__icontains=search_keyword))
                 elif search_type == 'all':
-                    search_user_list = user_list.filter(Q(nickname__icontains=search_keyword) | Q(town__icontains=search_keyword))
+                    search_user_list = user_list.filter(Q(nickname__icontains=search_keyword) | Q(dong__icontains=search_keyword) | Q(gu__icontains=search_keyword))
                 return search_user_list
             else:
                 messages.error(self.request, '2글자 이상 입력해주세요.')
@@ -834,6 +863,11 @@ def friend_register(request):
         user.save()
 
         target =User.objects.get(nickname=str_friendname)
+        follwersList=jsonDec.decode(target.follwers)
+        follwersList.append(user.nickname)
+        target.follwers=json.dumps(follwersList)
+        target.follwernum+=1
+        target.save()
         print("target:", target) #user objects가 맞는지
         notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
         notification.save()
@@ -857,21 +891,15 @@ def this_cafe_map(request, pk):
 ##알림 기능
 class CommentNotification(View):
     def get(self, request, notification_pk, review_pk, *args, **kwargs):
-        # print("self:", self)
-        # print("request:", request)
-        # print("notification pk:", notification_pk)
-        # print("self request get:", self.args)
-        # print("self request get:", self.kwargs['review_pk'])
-        # print("review_pk:", review_pk)
         notification = Notification.objects.get(pk=notification_pk)
         #체크 필요!!!
 
-        comment = Comment.objects.get(pk=review_pk)
-        #comment가 속해잇는 리뷰 객체  리뷰는 또 카페 디테일 페이지
-        comment.post #review 객체임
+        this_review = Review.objects.get(pk=review_pk)
+
         #해당하는 카페 객체도 받아와야 함!
-        this_cafe = comment.post.cafe #cafelist 객체임
+        this_cafe = this_review.cafe #cafelist 객체임
         cafe_id = this_cafe.id
+
         each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
         review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
         comments = Comment.objects.all()
@@ -885,12 +913,8 @@ class CommentNotification(View):
             else:
                 pass
 
-        print("review??:", comment.post)##???
-        print("review pk??:", comment.post.pk)###???
         notification.user_has_seen = True
         notification.save()
-
-        #!!!
 
         ctx={
         'this_cafe': this_cafe,
@@ -901,7 +925,6 @@ class CommentNotification(View):
         'is_visit': is_visit,
         } 
         return render(request, 'cafe/review_list.html', ctx)
-        #return redirect('review_list', pk=comment.post.pk)#comment pk가 아니라 review pk로,,,!!
 
 class FollowNotification(View):
     def get(self, request, notification_pk, user_pk, *args, **kwargs):
