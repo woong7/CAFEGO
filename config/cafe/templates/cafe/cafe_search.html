@@ -13,7 +13,9 @@
 <div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 5rem;">
     <h2>원하는 카페를 검색해보세요!</h4>
     <h6>카페명을 클릭하면 리뷰페이지로 이동할 수 있어요. 주소를 클릭하면 해당 카페 지도로 이동할 수 있어요.</h6>
+    <h6>방문했던 카페만 리뷰를 작성할 수 있어요. 먼저 방문추가를 한 후 리뷰를 작성해주세요!</h6>
     <a href="{% url 'cafe:cafe_map' %}">지도에서 카페 찾기</a>
+
     <!-- 카페 검색 -->
     <form action="" method="GET">
         <select name="type">
@@ -31,14 +33,18 @@
                 <th> </th>
                 <th>카페명</th>
                 <th>위치</th>
-                <th>방문여부</th>
                 <th>별점</th>             
+                <th>방문추가</th>
+                <th>리뷰쓰기</th>             
             </tr>
         </thead>
         <br>
             {% if q %}
             <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
             {% endif %}
+
+            <button class="btn btn-primary btn-sm" onClick="location.href='{% url 'enroll_visited_cafe' %}'">방문 카페 리스트 보기</button>
+    </br>
             {% if cafe_list %}
                 검색 결과: {{page_obj.paginator.count}}개
                 
@@ -51,13 +57,6 @@
                         <td>
                             <a href="{% url 'this_cafe_map' cafe.id %}">{{ cafe.address }}</a>
                         </td><!--| truncatechars:10-->
-                        <td>
-                            {% if cafe in user_visited_cafes %}
-                                O
-                            {% else %}
-                                
-                            {% endif %}
-                        </td>
                         <td>
                             {%if cafe.cafe_stars == 0.0 %}
                             <div class="rating_wrap_parents">
@@ -92,6 +91,49 @@
                                         </div>
                                     </div>
                                 </div>
+                            {% endif %}
+                        </td>
+                        <!--카페 추가 버튼-->
+                        <td><input type="submit" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="방문추가"></td>
+                            <div class="modal fade" id="exampleModal_{{ cafe.id }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{% url 'visit_register' %}" method='post'>
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel" name="cafename2">
+                                                    <input type="text" name="cafename" value="{{ cafe.name }}">
+                                                    <input type="text" name="cafeid" value="{{ cafe.id }}">
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                        
+                                            <div class="modal-body" style="text-align: left;">
+                                                마신 음료를 체크해주세요!<br>
+                                                <input type="radio" class="btn btn-primary" name="beverage" value="아메리카노"> 아메리카노 <br>
+                                                <input type="radio" class="btn btn-primary" name="beverage" value="바닐라라떼"> 바닐라라떼 <br>
+                                                <input type="radio" class="btn btn-primary" name="beverage" value="카페라떼"> 카페라떼 <br>
+                                                <input type="radio" class="btn btn-primary" name="beverage" value="카라멜마끼야또"> 카라멜마끼야또 <br>
+                                                <input type="radio" class="btn btn-primary" name="beverage" value="초코라떼"> 초코라떼 <br>
+                                                <input type="radio" class="btn btn-primary" name="beverage" value="녹차라떼"> 녹차라떼 <br>
+                                                <input type="radio" class="btn btn-primary" name="beverage" value="에이드"> 에이드 <br>
+                                                <input type="radio" class="btn btn-primary" name="beverage" value="허브차"> 허브차 <br>
+                                                기타 <input type="text" name="etc" value="">
+                                            </div>
+                                            
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" id="submit_btn_{{cafe.id}}" class="btn btn-primary">등록하기</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        <td>
+                            <!--리뷰 작성 버튼-->
+                            {% if cafe in user_visited_cafes %}
+                                <button class="btn btn-success btn-sm" onClick="location.href='{% url 'cafe:review_create' cafe.id %}'">리뷰쓰기</button>
+                            {% else %}
+                                
                             {% endif %}
                         </td>
                     </tr>
