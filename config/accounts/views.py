@@ -537,8 +537,8 @@ def mypage(request, pk):
     total_badge_count = len(taken_badges)
 
     if total_badge_count != badge_before :
-        for badge in badgeList:
-            if badge not in badgeList_before:
+        for badge in taken_badges:
+            if badge.badge_name not in badgeList_before:
                 notification = Notification.objects.create(notification_type=4, from_user=request.user, to_user=owner, badge=badge)
                 notification.save()
 
