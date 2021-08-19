@@ -303,3 +303,23 @@ def sort_review(request, pk):
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
+
+def cafe_delete(request, pk):
+    user=request.user
+    cafe=CafeList.objects.get(id=pk)
+
+    v_cafe=VisitedCafe.objects.get(user=user, cafe=cafe)
+    user.total_visit-=1
+    user.save()
+
+    if v_cafe.visit_count == 1:
+        v_cafe.delete()
+    else:
+        v_cafe.visit_count-=1
+        jsonDec=json.decoder.JSONDecoder()
+        drinkList=jsonDec.decode(v_cafe.drink_list)
+        del drinkList[len(drinkList)-1]
+        v_cafe.drink_list=json.dumps(drinkList)
+        v_cafe.save()
+
+    return redirect('cafe:cafe_list')

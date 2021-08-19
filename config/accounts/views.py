@@ -481,8 +481,8 @@ def mypage(request, pk):
     #print("drink", drink)
     #print(drink_list.drinkname)
     jsonDec=json.decoder.JSONDecoder()
-    badgeList=jsonDec.decode(owner.badge_taken)
-    badge_before=len(badgeList)
+    badgeList_before=jsonDec.decode(owner.badge_taken)
+    badge_before=len(badgeList_before)
 
     friendsList=jsonDec.decode(owner.friends)
     follwersList=jsonDec.decode(owner.follwers)
@@ -537,25 +537,17 @@ def mypage(request, pk):
     total_badge_count = len(taken_badges)
 
     if total_badge_count != badge_before :
-        notification = Notification.objects.create(notification_type=4, from_user=request.user, to_user=owner)
-        notification.save()
+        for badge in taken_badges:
+            if badge.badge_name not in badgeList_before:
+                notification = Notification.objects.create(notification_type=4, from_user=request.user, to_user=owner, badge=badge)
+                notification.save()
 
     #user에 총 카페 방문횟수 저장
     owner.badge_taken=json.dumps(badgeList)
     owner.save()
     #print("!!!!", this_user.total_visit)
 
-    visited_cafe_list = serializers.serialize('json', visit_cafes)
 
-    main_cafe = None
-    if len(visit_cafes) >= 0:
-        main_cafe = visit_cafes[0]
-        for i in range(1, len(visit_cafes)):
-            if visit_cafes[i-1].visit_count < visit_cafes[i].visit_count:
-                main_cafe = visit_cafes[i]
-    
-    cafes = CafeList.objects.all().order_by('location_x')
-    cafe_list = serializers.serialize('json', cafes)
 
     ctx={
         'owner':owner,
@@ -573,9 +565,6 @@ def mypage(request, pk):
         'my_all_review':my_all_review,
         'review_photo':review_photo,
         'comments':comments,
-        'visited_cafe_list': visited_cafe_list,
-        'main_cafe': main_cafe.pk,
-        'cafe_list': cafe_list
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
@@ -668,7 +657,7 @@ def visit_register(request):
         #카페를 방문한 유저와 그 유저의 방문 횟수 +1
         
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
-        visited_cafes = VisitedCafe.objects.all()
+        visited_cafes = VisitedCafe.objects.filter(user=request.user)
         vcs=[]
         for vc in visited_cafes:
             vcs.append(vc.cafe)

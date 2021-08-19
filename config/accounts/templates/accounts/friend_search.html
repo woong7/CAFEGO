@@ -1,29 +1,38 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/friend_search.css' %}">
+{% endblock %}
+
 {% block title %}
     새로운 친구 등록
 {% endblock %}
+
 {% block content %}
 <div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 5rem;">
-    <h4>새로운 친구 등록하기</h4>
-    <p>다른 유저를 검색해보세요!</p>
-
+    <header class="pt-3">
+        <div class="p-2 pb-md-4 mx-auto text-center">
+            <div class="page_title">Search Friends</div>
+            <p class="fs-5 text-muted page_info">새로운 친구 등록하기</p>
+            <p class="fs-5 text-muted page_info">다른 유저를 검색해보세요!</p>
+        </div>
+    </header>
     <!-- 친구 검색창 -->
-    <form action="" method="GET">
-        <select name="type">
+    <form action="" method="GET" class="pb-md-4">
+        <select name="type" style="font-family: RIDIBatang;">
             <option value="nickname">닉네임</option>
             <option value="dong">동네</option>
             <option value="all">닉네임+동네</option>
         </select>
-        <input type="text" name="q" value="{{ q }}" placeholder="유저 닉네임 검색">
-        <button type="submit" id="search_btn">search</button><br/>
+        <input type="text" name="q" value="{{ q }}" placeholder="유저 닉네임 검색" style="font-family: RIDIBatang;">
+        <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
 
     <!-- 친구 리스트  -->
     <table class="table">
         <thead>
-            <tr>
+            <tr class="table_title">
                 <th> </th>
                 <th>닉네임</th>
                 <th>동네</th>
@@ -32,10 +41,11 @@
         </thead>
         <tbody>
             {% if q %}
-            <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
+            <h5 style="font-family: RIDIBatang;">'{{ q }}' 검색 결과입니다.</h5><br/>
+            <p style="font-family: RIDIBatang;">검색 결과: {{page_obj.paginator.count}}명</p>
             {% endif %}
             {% if user_list %}
-                검색 결과: {{page_obj.paginator.count}}명
+                
                 {% for user in user_list %}
                     <tr>
                         <td>{{ user.id }}</td>
