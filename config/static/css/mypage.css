@@ -1,0 +1,52 @@
+@font-face {
+    font-family: 'Cafe24Danjunghae';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Danjunghae.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RIDIBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'twaysky';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.button {
+    border: 2px solid #704F3F;
+    background-color: white;
+    border-radius: 10px;
+    padding: 6px 7px 2px;
+    font-size: 1.1em;
+    font-family: twaysky;
+    color: #704F3F;
+}
+
+.button:hover {
+    background-color: #704F3F;
+    color: white;
+}
+
+.my_page {
+    background-color: #F0D9CE;
+    
+}
+
+.page_title {
+    font-size: 80px;
+    font-family: Cafe24Danjunghae;
+    text-shadow: 2px 2px 2px #B3A29A;
+    color: #704F3F;
+}
+
+.bg-deepbrown {
+    background-color: #a3735b
+}
