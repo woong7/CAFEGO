@@ -51,13 +51,6 @@
     box-sizing: border-box;
 }
 
-/* body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-} */
-
 .container {
     position: relative;
     display: flex;
@@ -72,38 +65,37 @@ article {
     justify-content: space-around;
 }
 
-.taken_badge {
+.taken_badges {
     position: relative;
     width: 280px;
     height: 390px;
     display: inline-block;
     z-index: 0;
-    animation: up-down 4s ease-in-out infinite alternate-reverse both;
+    animation: up-down 2s ease-in-out infinite alternate-reverse both;
     animation-delay: 2s;
 }
 
 @keyframes up-down {
     0% {
-        transform: translateY(5px);
+        transform: translateY(-10px);
     }
     100% {
-        transform: translateY(-5px);
+        transform: translateY(10px);
     }
 }
 
-.taken_badge:before {
+.taken_imgbox:before {
     content: '';
     position: absolute;
-    top: 11px;
-    left: 2px;
+    top: 0px;
+    left: 0px;
     width: 0;
     height: 0;
     background: transparent;
     border: 7px solid transparent;
-    border-radius: 5px;
 }
 
-.taken_badge:before {
+.taken_imgbox:before {
     animation: making_border 1s linear forwards;
 }
 
@@ -134,19 +126,18 @@ article {
     }
 }
 
-.taken_badge:after {
+.taken_imgbox:after {
     content: '';
     position: absolute;
-    top: 11px;
-    left: 2px;
+    top: 0px;
+    left: 0px;
     width: 0;
     height: 0;
     background: transparen;
     border: 7px solid transparent;
-    border-radius: 5px;
 }
 
-.taken_badge:after {
+.taken_imgbox:after {
     animation: making_border2 1s linear forwards;
 }
 
@@ -177,6 +168,30 @@ article {
     }
 }
 
+
+.taken_img {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 55%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 8px solid #f0a986;
+}
+
+.untaken_img {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 55%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 article .box {
     position: relative;
     width: 260px;
@@ -195,6 +210,7 @@ article .box .imgbox {
     left: 0;
     width: 100%;
     height: 100%;
+    background-color: whitesmoke;
     transform-origin: top;
     transform-style: preserve-3d;
     transition: 0.5s;
@@ -207,13 +223,31 @@ article .box:hover .imgbox {
     transition-delay: 0s;
 }
 
+article .box:hover {
+    box-shadow: none;
+}
+
 article .box .imgbox img {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95%;
+    height: 95%;
     object-fit: cover;
+    border-radius: 50%;
+}
+
+.imgbox h2 {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+
+    font-family: Cafe24Danjunghae;
+    color: #634638;
+    text-shadow: 2px 2px 2px #b3a29a;
 }
 
 .container .box .contentbox {

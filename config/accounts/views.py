@@ -23,6 +23,7 @@ from dateutil import relativedelta
 import operator
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.core.serializers.json import DjangoJSONEncoder
 
 @csrf_protect 
 def signup(request):
@@ -87,46 +88,43 @@ def create_admin(request):
 
 def badge_list(request, pk):
     user=User.objects.get(id=pk)
+    users=User.objects.all()
     badges=Badge.objects.all()
+    visit_cafes=VisitedCafe.objects.filter(user=user)
     jsonDec=json.decoder.JSONDecoder()
-    myList=jsonDec.decode(user.badge_taken)
+    
+    friends=jsonDec.decode(user.friends)
+
+    badgeList=[]
+
+    #배지 획득조건
+    if user.total_visit>=1:
+        badgeList.append("카페홀릭")
+    if user.total_review>=1:
+        badgeList.append("파워블로거")
+    if len(friends)>=1:
+        badgeList.append("사교왕")
+    if len(visit_cafes)>=1:
+        badgeList.append("개척자")
+    
+    if len(users)>=1 and users[0]==user and user.total_visit !=0 : 
+        badgeList.append("랭킹 1위")
+    elif len(users)>=2 and users[1]==user and user.total_visit !=0:
+        badgeList.append("랭킹 2위")
+    elif len(users)>=3 and users[2]==user and user.total_visit !=0:
+        badgeList.append("랭킹 3위")
+
     taken_badges=[]
     for badge in badges:
-        if badge.badge_name in myList:
-            taken_badges.append(badge)   
+        if badge.badge_name in badgeList:
+            taken_badges.append(badge) 
+
+    user.badge_taken=json.dumps(badgeList)
+    user.save()
+
     ctx={'badges':badges, 'taken_badges':taken_badges, 'owner':user, 'taken_num':len(taken_badges), 'total_num':len(badges)-2,}
 
     return render(request, 'accounts/badge_list.html', context=ctx)
-
-import simplejson as json
-def badge_taken(request):
-    user=request.user
-
-    jsonDec=json.decoder.JSONDecoder()
-    myList=jsonDec.decode(user.badge_taken)
-    badges=Badge.objects.all()
-    taken_badges=[]
-    for badge in badges:
-        if badge.badge_name in myList:
-            taken_badges.append(badge)   
-    
-
-    ctx={'taken_badges':taken_badges,'user':user,}
-    return render(request, 'accounts/badge_taken.html', context=ctx)
-
-def badge_untaken(request):
-    user=request.user
-
-    jsonDec=json.decoder.JSONDecoder()
-    myList=jsonDec.decode(user.badge_taken)
-    badges=Badge.objects.all()
-    taken_badges=[]
-    for badge in badges:
-        if not badge.badge_name in myList:
-            taken_badges.append(badge) 
-
-    ctx={'taken_badges':taken_badges, 'user':user,}
-    return render(request, 'accounts/badge_untaken.html', context=ctx)
 
 def user_cafe_map(request):
     user = request.user
@@ -185,6 +183,8 @@ def rank_list(request):
     
     ####################  B_한 달 방문 랭킹  ####################
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
+    # B_users_js=json.dumps([user.json() for user in B_users])
+    # B_users_js=json.dumps(list(B_users), cls=DjangoJSONEncoder)
     B_me=User.objects.get(username=request.user)
 
     if B_me in B_users:
@@ -248,7 +248,7 @@ def rank_list(request):
         E_my_grade = 0
     
     ####################  F_팔로워 수 랭킹  ####################
-    F_follwer_order = User.objects.all().order_by('-follwernum')
+    F_follwer_order = User.objects.all().exclude(follwernum=0).order_by('-follwernum')
     F_me=User.objects.get(username=request.user)
 
     if F_me in F_follwer_order:
@@ -267,11 +267,11 @@ def rank_list(request):
         'A_my_grade': A_my_grade,
         ##### B_한 달 방문 랭킹 #####
         'B_users': B_users,
+        # 'B_users_js': B_users_js,
         'B_my_grade': B_my_grade,
         #####  C_한 달 카페 종류 랭킹  #####
         'C_monthly_kinds_order': C_monthly_kinds_order,
         'C_my_grade': C_my_grade,
-        # 'C_my_grade': C_my_grade,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
         'D_my_grade': D_my_grade,
@@ -482,6 +482,8 @@ def mypage(request, pk):
     #print(drink_list.drinkname)
     jsonDec=json.decoder.JSONDecoder()
     badgeList=jsonDec.decode(owner.badge_taken)
+    badge_before=len(badgeList)
+
     friendsList=jsonDec.decode(owner.friends)
     follwersList=jsonDec.decode(owner.follwers)
 
@@ -519,11 +521,11 @@ def mypage(request, pk):
     if len(visit_cafes)>=1:
         badgeList.append("개척자")
     
-    if len(users)>=1 and users[0]==owner : 
+    if len(users)>=1 and users[0]==owner and owner.total_visit !=0 : 
         badgeList.append("랭킹 1위")
-    elif len(users)>=2 and users[1]==owner:
+    elif len(users)>=2 and users[1]==owner and owner.total_visit !=0:
         badgeList.append("랭킹 2위")
-    elif len(users)>=3 and users[2]==owner:
+    elif len(users)>=3 and users[2]==owner and owner.total_visit !=0:
         badgeList.append("랭킹 3위")
 
     badges=Badge.objects.all()
@@ -534,10 +536,26 @@ def mypage(request, pk):
 
     total_badge_count = len(taken_badges)
 
+    if total_badge_count != badge_before :
+        notification = Notification.objects.create(notification_type=4, from_user=request.user, to_user=owner)
+        notification.save()
+
     #user에 총 카페 방문횟수 저장
     owner.badge_taken=json.dumps(badgeList)
     owner.save()
     #print("!!!!", this_user.total_visit)
+
+    visited_cafe_list = serializers.serialize('json', visit_cafes)
+
+    main_cafe = None
+    if len(visit_cafes) >= 0:
+        main_cafe = visit_cafes[0]
+        for i in range(1, len(visit_cafes)):
+            if visit_cafes[i-1].visit_count < visit_cafes[i].visit_count:
+                main_cafe = visit_cafes[i]
+    
+    cafes = CafeList.objects.all().order_by('location_x')
+    cafe_list = serializers.serialize('json', cafes)
 
     ctx={
         'owner':owner,
@@ -555,6 +573,9 @@ def mypage(request, pk):
         'my_all_review':my_all_review,
         'review_photo':review_photo,
         'comments':comments,
+        'visited_cafe_list': visited_cafe_list,
+        'main_cafe': main_cafe.pk,
+        'cafe_list': cafe_list
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
@@ -668,9 +689,6 @@ def visit_register(request):
         # print('!!!!!!!', v_cafe.created_at) ##@@
         user = User.objects.get(username=request.user)
         user.total_visit += 1
-
-        #새로운 카페 등록은 무조건 새로운 종류니까 바로 카운트 올림
-        #user.kinds_of_cafe_lastmonth += 1
 
         #모달창에서 선택한 음료 저장
         jsonDec=json.decoder.JSONDecoder()
