@@ -166,7 +166,7 @@ a:hover {
     color: gray;
 }
 
-.review-modify-btn {
+.main-btn {
     display: inline-block;
     text-align: center;
     color: #704F3F;
@@ -176,8 +176,22 @@ a:hover {
     border-radius: 8px;
 }
 
-.review-modify-btn:hover {
+.main-btn:hover {
     background-color: #F0D9CE;
+}
+
+.main-reverse-btn {
+    display: inline-block;
+    text-align: center;
+    color: #704F3F;
+    font-weight: bold;
+    background-color:#F0D9CE;
+    border: 1px solid #704F3F;
+    border-radius: 8px;
+}
+
+.main-reverse-btn:hover {
+    background-color: #A3735B;
 }
 
 .each-review-content {
@@ -198,4 +212,22 @@ a:hover {
 
 .review-create-at span{
     font-size: 13px;
+}
+
+details {
+    padding: 16px;
+    border: 1px solid #B3A29A;
+    border-radius: 10px;
+}
+
+summary {
+    font-weight: bold;
+}
+
+summary:hover {
+    color:#704F3F;
+}
+
+.comment-write {
+    width: 90%;
 }
