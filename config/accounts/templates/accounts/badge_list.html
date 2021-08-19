@@ -24,10 +24,13 @@
                 <article class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mb-3 text-center">
                 {% for badge in badges %}
                     {% if badge in taken_badges %}    
-                        <div class="taken_badge">
+                        <div class="taken_badges">
                             <div class="box">
-                                <div class="imgbox">
-                                    <img src="{{badge.badge_image.url}}">
+                                <div class="imgbox taken_imgbox">
+                                    <div class="taken_img">
+                                        <img src="{{badge.badge_image.url}}">
+                                    </div>
+                                    <h2>{{badge.badge_name}}</h2>
                                 </div>
                                 <div class="contentbox">
                                     <div>
@@ -39,8 +42,11 @@
                         </div>  
                     {% else %}    
                         <div class="box">
-                            <div class="imgbox">
-                                <img src="{{badge.badge_image.url}}">
+                            <div class="imgbox" style="opacity: 0.6;">
+                                <div class="untaken_img">
+                                    <img src="{{badge.badge_image.url}}">
+                                </div>
+                                <h2>{{badge.badge_name}}</h2>
                             </div>
                             <div class="contentbox">
                                 <div>

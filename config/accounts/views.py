@@ -23,6 +23,7 @@ from dateutil import relativedelta
 import operator
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.core.serializers.json import DjangoJSONEncoder
 
 @csrf_protect 
 def signup(request):
@@ -182,6 +183,8 @@ def rank_list(request):
     
     ####################  B_한 달 방문 랭킹  ####################
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
+    # B_users_js=json.dumps([user.json() for user in B_users])
+    # B_users_js=json.dumps(list(B_users), cls=DjangoJSONEncoder)
     B_me=User.objects.get(username=request.user)
 
     if B_me in B_users:
@@ -245,7 +248,7 @@ def rank_list(request):
         E_my_grade = 0
     
     ####################  F_팔로워 수 랭킹  ####################
-    F_follwer_order = User.objects.all().order_by('-follwernum')
+    F_follwer_order = User.objects.all().exclude(follwernum=0).order_by('-follwernum')
     F_me=User.objects.get(username=request.user)
 
     if F_me in F_follwer_order:
@@ -264,11 +267,11 @@ def rank_list(request):
         'A_my_grade': A_my_grade,
         ##### B_한 달 방문 랭킹 #####
         'B_users': B_users,
+        # 'B_users_js': B_users_js,
         'B_my_grade': B_my_grade,
         #####  C_한 달 카페 종류 랭킹  #####
         'C_monthly_kinds_order': C_monthly_kinds_order,
         'C_my_grade': C_my_grade,
-        # 'C_my_grade': C_my_grade,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
         'D_my_grade': D_my_grade,
@@ -665,8 +668,6 @@ def visit_register(request):
         user = User.objects.get(username=request.user)
         user.total_visit += 1
 
-        #새로운 카페 등록은 무조건 새로운 종류니까 바로 카운트 올림
-
         #모달창에서 선택한 음료 저장
         jsonDec=json.decoder.JSONDecoder()
         drinkList=jsonDec.decode(v_cafe.drink_list)
@@ -895,21 +896,15 @@ def this_cafe_map(request, pk):
 ##알림 기능
 class CommentNotification(View):
     def get(self, request, notification_pk, review_pk, *args, **kwargs):
-        # print("self:", self)
-        # print("request:", request)
-        # print("notification pk:", notification_pk)
-        # print("self request get:", self.args)
-        # print("self request get:", self.kwargs['review_pk'])
-        # print("review_pk:", review_pk)
         notification = Notification.objects.get(pk=notification_pk)
         #체크 필요!!!
 
-        comment = Comment.objects.get(pk=review_pk)
-        #comment가 속해잇는 리뷰 객체  리뷰는 또 카페 디테일 페이지
-        comment.post #review 객체임
+        this_review = Review.objects.get(pk=review_pk)
+
         #해당하는 카페 객체도 받아와야 함!
-        this_cafe = comment.post.cafe #cafelist 객체임
+        this_cafe = this_review.cafe #cafelist 객체임
         cafe_id = this_cafe.id
+
         each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
         review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
         comments = Comment.objects.all()
@@ -923,12 +918,8 @@ class CommentNotification(View):
             else:
                 pass
 
-        print("review??:", comment.post)##???
-        print("review pk??:", comment.post.pk)###???
         notification.user_has_seen = True
         notification.save()
-
-        #!!!
 
         ctx={
         'this_cafe': this_cafe,
@@ -939,7 +930,6 @@ class CommentNotification(View):
         'is_visit': is_visit,
         } 
         return render(request, 'cafe/review_list.html', ctx)
-        #return redirect('review_list', pk=comment.post.pk)#comment pk가 아니라 review pk로,,,!!
 
 class FollowNotification(View):
     def get(self, request, notification_pk, user_pk, *args, **kwargs):

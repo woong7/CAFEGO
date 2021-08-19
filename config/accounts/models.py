@@ -94,6 +94,16 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+    def to_json(self):
+    	return {
+            "username": self.username,
+            "nickname": self.nickname,
+            "total_visit": self.total_visit,
+            "total_review": self.total_review,
+            "visit_count_lastmonth": self.visit_count_lastmonth,
+            "review_count_lastmonth": self.review_count_lastmonth,
+        }
+
     @property
     def is_staff(self):
         return self.is_admin
