@@ -46,6 +46,7 @@
     margin: 15px 0px;
 }
 
+/* page 기본내용 */
 #rank_page {
     background-color: #F0D9CE;
     padding: 50px 0px;
@@ -63,6 +64,23 @@
     font-family: RIDIBatang;
 }
 
+/* 버튼 */
+.button {
+    border: 2px solid #704F3F;
+    background-color: white;
+    border-radius: 10px;
+    padding: 6px 7px 2px;
+    font-size: 1.1em;
+    font-family: twaysky;
+    color: #704F3F;
+}
+
+.button:hover {
+    background-color: #704F3F;
+    color: white;
+}
+
+/* 랭킹 카드 구분 */
 .monthly_rank {
     font-size: 50px;
     font-family: Cafe24Danjunghae;
@@ -73,7 +91,7 @@
 }
 
 .rank_hr {
-    border-top: 1px solid white;
+    border-top: 5px solid white;
     text-align: center;
 }
 
@@ -84,10 +102,10 @@
     top: -14px;
     padding: 0 10px;
     color: white;
-    font-size: 18px;
-    -webkit-transform: rotate(60deg);
+    font-size: 20px;
+    /* -webkit-transform: rotate(60deg);
     -moz-transform: rotate(60deg);
-    transform: rotate(60deg);
+    transform: rotate(60deg); */
 }
 
 /* 동작안함..ㅋ
@@ -249,20 +267,7 @@
     color: #704F3F;
 }
 
-.button {
-    border: 2px solid #704F3F;
-    background-color: white;
-    border-radius: 10px;
-    padding: 6px 7px 2px;
-    font-size: 1.1em;
-    font-family: twaysky;
-    color: #704F3F;
-}
 
-.button:hover {
-    background-color: #704F3F;
-    color: white;
-}
 
 /* 사진 확대 애니 */
 .inner {
