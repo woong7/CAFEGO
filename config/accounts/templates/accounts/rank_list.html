@@ -18,8 +18,13 @@
     </header>
 
     <div class="container px-5">
+      <div class="text-center">
+        <span class="monthly_rank">{{this_month}}월 랭킹</span>
+        <hr class="rank_hr"></hr>
+      </div>
       <article class="row row-cols-xxl-2 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 row-cols-sm-1 mb-3 text-center">
-
+      
+      
       <!----- B_한 달 방문 랭킹 ----->
       <section class="col">
         <div class="card ranking_card rounded-5 shadow mx-2 my-3">
@@ -29,49 +34,46 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">{{ this_month }}월 카페 방문 랭킹</span>
-                  
-                  <span class="ranking_top"></span>
-                  <div class="ranking_top_content">
-                    {% for user in B_users %}
-                      {% if forloop.counter > 3 %}
-                      {% else %}
-                        {% if forloop.counter == 1 %}
-                          <div style="display: flex; justify-content: center;">
-                            <i class="my-2 fas fa-medal" id="xs_gold_medal"></i>
-                            <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
-                          </div>
-                        {% elif forloop.counter == 2 %}
+                  <span class="ranking_title">{{ this_month }}월 방문 랭킹</span>
+                  <!-- 여기부터 -->
+                  <div id="b_topThree">
+                    <!-- <span class="ranking_top"></span>
+                    <div class="ranking_top_content">
+                      {% for user in B_users %}
+                        {% if forloop.counter > 3 %}
+                        {% else %}
+                          {% if forloop.counter == 1 %}
                             <div style="display: flex; justify-content: center;">
-                              <i class="my-2 fas fa-medal" id="xs_silver_medal"></i>
+                              <i class="my-2 fas fa-medal" id="xs_gold_medal"></i>
                               <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
                             </div>
-                        {% else %}
-                          <div style="display: flex; justify-content: center;">
-                            <i class="my-2 fas fa-medal" id="xs_bronze_medal"></i>
-                            <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
-                          </div>
+                          {% elif forloop.counter == 2 %}
+                              <div style="display: flex; justify-content: center;">
+                                <i class="my-2 fas fa-medal" id="xs_silver_medal"></i>
+                                <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+                              </div>
+                          {% else %}
+                            <div style="display: flex; justify-content: center;">
+                              <i class="my-2 fas fa-medal" id="xs_bronze_medal"></i>
+                              <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+                            </div>
+                          {% endif %}
                         {% endif %}
-                      {% endif %}
-                    {% endfor %}
+                      {% endfor %}
+                    </div> -->
                   </div>
+                  <!-- 여기까지 -->
                 </div>
                   
                 <div>
-                  {% if B_my_grade == 1 %}
-                    <i class="my-2 fas fa-medal gold_medal"></i>
-                  {% elif B_my_grade == 2 %}
-                    <i class="my-2 fas fa-medal silver_medal"></i>
-                  {% elif B_my_grade == 3 %}
-                    <i class="my-2 fas fa-medal bronze_medal"></i>
-                  {% else %}
-                    <i class="my-2 fas fa-coffee other_medal"></i>
-                  {% endif%}
-
+                  <!-- JS 매달 매기기 -->
+                  <div class="b_giveMedal">
+                  </div>
+                    
                   <div class="card-text card_info my-3">
                     {{ request.user.nickname }}님은<br>
                     {% if B_my_grade == 0 %}
-                      이번 달에 방문한 카페가 없어요!
+                      이번 달에 방문한<br>카페가 없어요!
                     {% else %}
                       🌟{{ B_my_grade }}등🌟 입니다!
                     {% endif%}
@@ -151,7 +153,7 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">{{ this_month }}월 리뷰 개수 랭킹</span>
+                  <span class="ranking_title">{{ this_month }}월 리뷰 랭킹</span>
                 </div>
                 <span class="ranking_top"></span>
                 <div class="ranking_top_content">
@@ -178,20 +180,14 @@
                   {% endfor %}
                 </div>
                 <div>
-                  {% if E_my_grade == 1 %}
-                    <i class="my-2 fas fa-medal gold_medal"></i>
-                  {% elif E_my_grade == 2 %}
-                    <i class="my-2 fas fa-medal silver_medal"></i>
-                  {% elif E_my_grade == 3 %}
-                    <i class="my-2 fas fa-medal bronze_medal"></i>
-                  {% else %}
-                    <i class="my-2 fas fa-coffee other_medal"></i>
-                  {% endif%}
+                  <!-- 매달 매기기 -->
+                  <div class="e_giveMedal">
+                  </div>
 
                   <div class="card-text card_info my-3">
                     {{ request.user.nickname }}님은<br>
                     {% if E_my_grade == 0 %}
-                      작성 리뷰가 없어요!
+                      아직 작성한<br>리뷰가 없어요!
                     {% else %}
                       🌟{{ E_my_grade }}등🌟 입니다!
                     {% endif%}
@@ -261,7 +257,12 @@
           </div>
         </div>
       </section>
-
+    </article>
+    <div class="text-center">
+      <span class="monthly_rank">누적 랭킹</span>
+      <hr></hr>
+    </div>
+    <article class="row row-cols-xxl-2 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 row-cols-sm-1 mb-3 text-center">
       <!----- A_총 방문 랭킹 ----->
       <section class="col">
         <div class="card ranking_card rounded-5 shadow mx-2 my-3">
@@ -271,7 +272,7 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">누적 카페 방문 랭킹</span>
+                  <span class="ranking_title">카페 방문 랭킹</span>
                 </div>
                 <span class="ranking_top"></span>
                 <div class="ranking_top_content">
@@ -298,20 +299,14 @@
                   {% endfor %}
                 </div>
                 <div>
-                  {% if A_my_grade == 1 %}
-                    <i class="my-2 fas fa-medal gold_medal"></i>
-                  {% elif A_my_grade == 2 %}
-                    <i class="my-2 fas fa-medal silver_medal"></i>
-                  {% elif A_my_grade == 3 %}
-                    <i class="my-2 fas fa-medal bronze_medal"></i>
-                  {% else %}
-                    <i class="my-2 fas fa-coffee other_medal"></i>
-                  {% endif%}
+                  <!-- 매달 매기기 -->
+                  <div class="a_giveMedal">
+                  </div>
 
                   <div class="card-text card_info my-3">
                     {{ request.user.nickname }}님은<br>
                     {% if A_my_grade == 0 %}
-                      아직 방문한 카페가 없어요!
+                      아직 방문한<br>카페가 없어요!
                     {% else %}
                       🌟{{ A_my_grade }}등🌟 입니다!
                     {% endif%}
@@ -382,7 +377,6 @@
           </div>
         </div>
       </section>
-
       <!----- D_누적 리뷰 개수 랭킹 ----->
       <section class="col">
         <div class="card ranking_card rounded-5 shadow mx-2 my-3">
@@ -392,7 +386,7 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">누적 리뷰 작성 랭킹</span>
+                  <span class="ranking_title">리뷰 작성 랭킹</span>
                 </div>
                 <span class="ranking_top"></span>
                 <div class="ranking_top_content">
@@ -419,20 +413,14 @@
                   {% endfor %}
                 </div>
                 <div>
-                  {% if D_my_grade == 1 %}
-                    <i class="my-2 fas fa-medal gold_medal"></i>
-                  {% elif D_my_grade == 2 %}
-                    <i class="my-2 fas fa-medal silver_medal"></i>
-                  {% elif D_my_grade == 3 %}
-                    <i class="my-2 fas fa-medal bronze_medal"></i>
-                  {% else %}
-                    <i class="my-2 fas fa-coffee other_medal"></i>
-                  {% endif%}
+                  <!-- 매달 매기기 -->
+                  <div class="d_giveMedal">
+                  </div>
 
                   <div class="card-text card_info my-3">
                     {{ request.user.nickname }}님은<br>
                     {% if D_my_grade == 0 %}
-                      작성 리뷰가 없어요!
+                      아직 작성한<br>리뷰가 없어요!
                     {% else %}
                       🌟{{ D_my_grade }}등🌟 입니다!
                     {% endif%}
@@ -513,47 +501,41 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">방문 카페 종류 랭킹</span>
+                  <span class="ranking_title">카페 종류 랭킹</span>
                 </div>
                 <span class="ranking_top"></span>
                 <div class="ranking_top_content">
-                  {% for user in C_monthly_kinds_order %}
+                  {% for key, value in C_monthly_kinds_order.items %}
                     {% if forloop.counter > 3 %}
                     {% else %}
                       {% if forloop.counter == 1 %}
                         <div style="display: flex; justify-content: center;">
                           <i class="my-2 fas fa-medal" id="xs_gold_medal"></i>
-                          <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+                          <div>{{ forloop.counter }}등 {{ key }}</div>
                         </div>
                       {% elif forloop.counter == 2 %}
                           <div style="display: flex; justify-content: center;">
                             <i class="my-2 fas fa-medal" id="xs_silver_medal"></i>
-                            <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+                            <div>{{ forloop.counter }}등 {{ key }}</div>
                           </div>
                       {% else %}
                         <div style="display: flex; justify-content: center;">
                           <i class="my-2 fas fa-medal" id="xs_bronze_medal"></i>
-                          <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+                          <div>{{ forloop.counter }}등 {{ key }}</div>
                         </div>
                       {% endif %}
                     {% endif %}
                   {% endfor %}
                 </div>
                 <div>
-                  {% if C_my_grade == 1 %}
-                    <i class="my-2 fas fa-medal gold_medal"></i>
-                  {% elif C_my_grade == 2 %}
-                    <i class="my-2 fas fa-medal silver_medal"></i>
-                  {% elif C_my_grade == 3 %}
-                    <i class="my-2 fas fa-medal bronze_medal"></i>
-                  {% else %}
-                    <i class="my-2 fas fa-coffee other_medal"></i>
-                  {% endif%}
+                  <!-- 매달 매기기 -->
+                  <div class="c_giveMedal">
+                  </div>
 
                   <div class="card-text card_info my-3">
                     {{ request.user.nickname }}님은<br>
                     {% if C_my_grade == 0 %}
-                      방문한 카페가 없어요!
+                      아직 방문한<br>카페가 없어요!
                     {% else %}
                       🌟{{ C_my_grade }}등🌟 입니다!
                     {% endif%}
@@ -635,7 +617,7 @@
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
                   <span class="ranking_title_back"></span>
-                  <span class="ranking_title">누적 팔로워 수 랭킹</span>
+                  <span class="ranking_title">팔로워 수 랭킹</span>
                 </div>
                 <span class="ranking_top"></span>
                 <div class="ranking_top_content">
@@ -662,20 +644,14 @@
                   {% endfor %}
                 </div>
                 <div>
-                  {% if F_my_grade == 1 %}
-                    <i class="my-2 fas fa-medal gold_medal"></i>
-                  {% elif F_my_grade == 2 %}
-                    <i class="my-2 fas fa-medal silver_medal"></i>
-                  {% elif F_my_grade == 3 %}
-                    <i class="my-2 fas fa-medal bronze_medal"></i>
-                  {% else %}
-                    <i class="my-2 fas fa-coffee other_medal"></i>
-                  {% endif%}
+                  <!-- 매달 매기기 -->
+                  <div class="f_giveMedal">
+                  </div>
 
                   <div class="card-text card_info my-3">
                     {{ request.user.nickname }}님은<br>
                     {% if F_my_grade == 0 %}
-                      팔로워가 없어요!
+                      아직 팔로워가<br>없어요!
                     {% else %}
                       🌟{{ F_my_grade }}등🌟 입니다!
                     {% endif%}
@@ -749,5 +725,104 @@
       </article>
     </div>
   </section>
-{% endblock %}
 
+<script type="text/javascript">
+  //----------------------변수들 모음----------------------------
+  const aGrade = {{ A_my_grade | safe }};
+  const bGrade = {{ B_my_grade | safe }};
+  const cGrade = {{ C_my_grade | safe }};
+  const dGrade = {{ D_my_grade | safe }};
+  const eGrade = {{ E_my_grade | safe }};
+  const fGrade = {{ F_my_grade | safe }};
+
+  // const aOder = {{ A_users | safe }};
+  // const bOder = "{{ B_users_js }}";
+  // const bOder = JSON.parse("{{ B_users_js | escapejs }}");
+  // console.log(bOder);
+  //const aOder = <QuerySet [<User: admin>, <User: ye1>]>; 이렇게 나와염
+  // const bOder = {{ B_users | safe }};
+  // const cOder = {{ C_monthly_kinds_order | safe }};
+  // const dOder = {{ D_all_review_order | safe }};
+  // const eOder = {{ E_month_review_order | safe }};
+  // const fOder = {{ F_follwer_order | safe }};
+
+  //---------------------랭킹 카드에 top3 표시하기------------------
+  //아이디 형태 b_topThree/ order=aOder
+  function topThree(id, order) {
+    $(id).append(`<span class="ranking_top"></span>
+                  <div class="ranking_top_content">`); //기본으로 다 들어감
+    
+    for (var i=0; i<order.length; i++) {
+      if (i>3) {
+        break 
+      } else {
+        if (i===1) { //{{ user.nickname }}어케 처리함??ㅜㅜ
+          $(id).append(`<div style="display: flex; justify-content: center;">
+                          <i class="my-2 fas fa-medal" id="xs_gold_medal"></i>
+                          <div>1등 {{ user.nickname }}</div> 
+                        </div>`);
+        } else if (i===2) {
+          $(id).append(`<div style="display: flex; justify-content: center;">
+                          <i class="my-2 fas fa-medal" id="xs_silver_medal"></i>
+                          <div>2등 {{ user.nickname }}</div>
+                        </div>`);
+        } else {
+          $(id).append(`<div style="display: flex; justify-content: center;">
+                          <i class="my-2 fas fa-medal" id="xs_bronze_medal"></i>
+                          <div>3등 {{ user.nickname }}</div>
+                        </div>`);
+        }
+      }
+    }
+    $(id).append(`</div>`);
+    console.log(aOder)
+  }
+  // <span class="ranking_top"></span>//일단 함
+  // <div class="ranking_top_content">//일단 함
+  //   {% for user in B_users %}
+  //     {% if forloop.counter > 3 %}
+  //     {% else %}
+  //       {% if forloop.counter == 1 %}
+  //         <div style="display: flex; justify-content: center;">
+  //           <i class="my-2 fas fa-medal" id="xs_gold_medal"></i>
+  //           <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+  //         </div>//일단 여기까지함
+  //       {% elif forloop.counter == 2 %}
+  //           <div style="display: flex; justify-content: center;">
+  //             <i class="my-2 fas fa-medal" id="xs_silver_medal"></i>
+  //             <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+  //           </div>
+  //       {% else %}
+  //         <div style="display: flex; justify-content: center;">
+  //           <i class="my-2 fas fa-medal" id="xs_bronze_medal"></i>
+  //           <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+  //         </div>
+  //       {% endif %}
+  //     {% endif %}
+  //   {% endfor %}
+  // </div>
+
+  //-----------------랭킹 카드에 메달 매겨 넣기-------------------
+  function giveMedal(grade, id) {
+    if (grade === 1) {
+      $(id).append('<i class="my-2 fas fa-medal gold_medal"></i>');
+    } else if (grade === 2) {
+      $(id).append('<i class="my-2 fas fa-medal silver_medal"></i>');
+    } else if (grade === 3) {
+      $(id).append('<i class="my-2 fas fa-medal bronze_medal"></i>');
+    } else {
+      $(id).append('<i class="my-2 fas fa-coffee other_medal"></i>');
+    }
+  }
+  
+  giveMedal(aGrade, '.a_giveMedal');
+  giveMedal(bGrade, '.b_giveMedal');
+  giveMedal(cGrade, '.c_giveMedal');
+  giveMedal(dGrade, '.d_giveMedal');
+  giveMedal(eGrade, '.e_giveMedal');
+  giveMedal(fGrade, '.f_giveMedal');
+
+
+</script>
+
+{% endblock %}

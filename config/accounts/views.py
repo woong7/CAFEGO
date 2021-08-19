@@ -23,6 +23,7 @@ from dateutil import relativedelta
 import operator
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.core.serializers.json import DjangoJSONEncoder
 
 @csrf_protect 
 def signup(request):
@@ -185,6 +186,8 @@ def rank_list(request):
     
     ####################  B_한 달 방문 랭킹  ####################
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
+    # B_users_js=json.dumps([user.json() for user in B_users])
+    # B_users_js=json.dumps(list(B_users), cls=DjangoJSONEncoder)
     B_me=User.objects.get(username=request.user)
 
     if B_me in B_users:
@@ -267,11 +270,11 @@ def rank_list(request):
         'A_my_grade': A_my_grade,
         ##### B_한 달 방문 랭킹 #####
         'B_users': B_users,
+        # 'B_users_js': B_users_js,
         'B_my_grade': B_my_grade,
         #####  C_한 달 카페 종류 랭킹  #####
         'C_monthly_kinds_order': C_monthly_kinds_order,
         'C_my_grade': C_my_grade,
-        # 'C_my_grade': C_my_grade,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
         'D_my_grade': D_my_grade,
