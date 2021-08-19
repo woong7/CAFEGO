@@ -85,7 +85,7 @@ def comment_write(request):
 
     notification = Notification.objects.create(notification_type=2, from_user=request.user, to_user=review.username, comment=comment)
     notification.save()
-    return JsonResponse({'review_id':review_id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString})
+    return JsonResponse({'review_id':review_id, 'review_user':review.username.id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString})
 
 @csrf_exempt
 def comment_delete(request):
