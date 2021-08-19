@@ -12,7 +12,7 @@
     <!-- 카페 정보 컨테이너 -->
     <div class="px-4 py-3 my-5 cafe-info shadow-sm card">
         <h1 class="display-5 fw-bold text-center">{{ this_cafe.name }}</h1>
-        <div class="col-lg-6 mx-auto text-center">
+        <div class="col-lg-6 mx-auto mb-3 text-center">
             <div class="review-cafe-address">
                 <span class="lead">{{ this_cafe.address }}&nbsp;&nbsp;</span>
                 <svg class="map-icon" onclick="location.href= '{% url 'this_cafe_map' this_cafe.id %}'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
@@ -42,88 +42,133 @@
                 </div>
                 <span class="rating_number">({{ this_cafe.cafe_stars }}점)</span>
             </div>
-            {% if is_visit %}
-                <div class="d-flex justify-content-center mt-2 mb-3">
-                    <a href="{% url 'cafe:review_create' this_cafe.id %}">리뷰 작성</a>
-                </div>
-            {% endif %}
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <button class="fw-bold btn btn-outline-warning another-review-button" onclick="location.href= 'https://place.map.kakao.com/{{this_cafe.pk}}'">카카오맵<br>리뷰 보기</button>
-                <button class="fw-bold btn btn-outline-success another-review-button" onClick="location.href='https://map.naver.com/v5/search/{{this_cafe.name}}'">네이버지도<br>리뷰 보기</button>
-                <button class="fw-bold btn btn-outline-danger another-review-button" onClick="location.href='https://google.com/search?q={{this_cafe.name}}'">구글맵<br>리뷰 보기</button>
+                <button class="fw-bold btn btn-outline-warning another-review-button" onclick="location.href= 'https://place.map.kakao.com/{{this_cafe.pk}}'">카카오 리뷰</button>
+                <button class="fw-bold btn btn-outline-success another-review-button" onClick="location.href='https://map.naver.com/v5/search/{{this_cafe.name}}'">네이버 리뷰</button>
+                <button class="fw-bold btn btn-outline-danger another-review-button" onClick="location.href='https://google.com/search?q={{this_cafe.name}}'">구글 리뷰</button>
             </div>
         </div>
+
+    <!-- 리뷰 작성 컨테이너 -->
+    {% if is_visit %}
+        <div class="shadow-sm card mb-3 review-create d-flex justify-content-center align-items-center" onclick="location.href='{% url 'cafe:review_create' this_cafe.id %}'">
+            <div>
+                <span>CafeGo 리뷰 작성</span>
+            <!--
+                <svg class="add-icon" onclick="location.href='{% url 'cafe:review_create' this_cafe.id %}'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 42 42" style="enable-background:new 0 0 42 42;" xml:space="preserve">
+                    <path d="M37.059,16H26V4.941C26,2.224,23.718,0,21,0s-5,2.224-5,4.941V16H4.941C2.224,16,0,18.282,0,21  s2.224,5,4.941,5H16v11.059C16,39.776,18.282,42,21,42s5-2.224,5-4.941V26h11.059C39.776,26,42,23.718,42,21S39.776,16,37.059,16z"/>
+                </svg>
+            -->
+            </div>
+        </div>
+    {% endif %}
     
     <!-- 리뷰 컨테이너 -->
-    <div class="cafe-review shadow-sm card position-relative overflow-hidden mb-4 text-center" style="padding: 1rem;">
+    <div class="cafe-review shadow-sm card mb-4 px-5">
     {% if each_reviews.count > 0 %}
-        <hr/>
-        <div class="review_list">
-            <span>정렬</span><!--선택했을 때 색깔 바뀌게!-->
-            <button type="button" onclick="location.href='{% url 'cafe:sort_latest' this_cafe.id %}'">최신 순</button>
-            <button type="button" onclick="location.href='{% url 'cafe:sort_visit' this_cafe.id %}'">{{this_cafe.name}} 방문 순</button>
-            <button type="button" onclick="location.href='{% url 'cafe:sort_total_visit' this_cafe.id %}'">총 방문 순</button>
-            <button type="button" onclick="location.href='{% url 'cafe:sort_review' this_cafe.id %}'">리뷰 순</button>
-            {{each_reviews.count}}
+        <div class="review-list-sequence">
+            <div style="display: table; margin-right: 10px;">
+                <span><b>전체</b> {{each_reviews.count}}</span>
+            </div>
+            <div class="dropdown">
+                <a class="btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <b>정렬 방식</b>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href='{% url 'cafe:sort_latest' this_cafe.id %}'>최신 순</a></li>
+                    <li><a class="dropdown-item" href='{% url 'cafe:sort_visit' this_cafe.id %}'>방문 순</a></li>
+                    <li><a class="dropdown-item" href='{% url 'cafe:sort_total_visit' this_cafe.id %}'>총 방문 순</a></li>
+                    <li><a class="dropdown-item" href='{% url 'cafe:sort_review' this_cafe.id %}'>리뷰 순</a></li>
+                </ul>
+            </div>
         </div>
         <hr/>
 
-        <article class="each_review">
+        <!-- 리뷰 하나하나 -->
+        <article class="each-review">
             {% for reviews in each_reviews %}
-                <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }} </a>
+                <div class="d-flex justify-content-between">
+                    <div class="reviewer-name d-flex">
+                        <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }} </a>
 
-                {% if reviews.review_stars == '1.0' %}
-                    <span>⭐</span>
-                {% elif reviews.review_stars == '2.0' %}
-                    <span>⭐⭐</span>
-                {% elif reviews.review_stars == '3.0' %}
-                    <span>⭐⭐⭐</span>
-                {% elif reviews.review_stars == '4.0' %}
-                    <span>⭐⭐⭐⭐</span>
-                {% elif reviews.review_stars == '5.0' %}
-                    <span>⭐⭐⭐⭐⭐</span>
-                {% endif %}
-                {{ reviews.created_at }}
-
-                {% if reviews.username == request.user %}
-                    <button><a href="{% url 'review_update' reviews.id %}">리뷰 수정</a></button>
-                {% endif %}
-
-                <br/>
-                <span>{{ this_cafe.name }} 방문 횟수: {{reviews.visit_cafe.visit_count}} <!--세현 8/11삽질노트-->
-                </span>
-                <span>총 카페 방문 횟수: {{ reviews.username.total_visit }}</span>
-                <span>총 작성 리뷰 수: {{ reviews.username.total_review }}</span>
-                <br/>
-                {{ reviews.content }}<br/>
-                {% if review_photo %}
-                    {% for img in review_photo %}
-                        {% if img.review.id == reviews.id %}
-                            <img src="{{img.image.url}}" style="width: 5%; height: 5%;" data-toggle="modal" data-target="#myModal">       
+                        {% if reviews.review_stars == '1.0' %}
+                            <span>⭐</span>
+                        {% elif reviews.review_stars == '2.0' %}
+                            <span>⭐⭐</span>
+                        {% elif reviews.review_stars == '3.0' %}
+                            <span>⭐⭐⭐</span>
+                        {% elif reviews.review_stars == '4.0' %}
+                            <span>⭐⭐⭐⭐</span>
+                        {% elif reviews.review_stars == '5.0' %}
+                            <span>⭐⭐⭐⭐⭐</span>
                         {% endif %}
-                    {% endfor %}   
-                {% endif %}
+                        <div class="reviewer-info">
+                            <span> {{reviews.visit_cafe.visit_count}}번째 방문</span><!--세현 8/11삽질노트-->
+                            <span>총 방문 {{ reviews.username.total_visit }}</span>
+                            <span>리뷰 {{ reviews.username.total_review }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        {% if reviews.username == request.user %}
+                            <button class="review-modify-btn" onclick="location.href='{% url 'review_update' reviews.id %}'">수정</button>
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <div class="each-review-content">
+                        {{ reviews.content }}
+                    </div>
+                    <div class="review-img">
+                        {% if review_photo %}
+                            {% for img in review_photo %}
+                                {% if img.review.id == reviews.id %}
+                                    <!-- TODO: 이미지 크기 키우는 modal 만들기-->
+                                    <img src="{{img.image.url}}" data-toggle="modal" data-target="#myModal">       
+                                {% endif %}
+                            {% endfor %}   
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="review-create-at">
+                    <span>{{ reviews.created_at }}</span>
+                </div>
                 <br/>
                 <div class="comments-{{reviews.id}}">
-                    {% for comment in comments %}
-                        {% if comment.post == reviews %}
-                                <div class="comment-{{comment.id}} container my-1">
-                                    <div class="row">
-                                        <div class="col">{{comment.content}}</div>
-                                        <div class="col">{{comment.username}}</div>
-                                        <div class="col">{{comment.created_at}}</div>
-                                        {% if comment.username == user%}
-                                        <div class="col">
-                                            <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
-                                        </div>
+                    <div class="accordion" id="accordion-{{reviews.id}}">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-{{reviews.id}}">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{reviews.id}}" aria-expanded="false" aria-controls="collapse-{{reviews.id}}">
+                                댓글
+                            </button>
+                            </h2>
+                            <div id="collapse-{{reviews.id}}" class="accordion-collapse collapse show" aria-labelledby="heading-{{reviews.id}}" data-bs-parent="#accordion-{{reviews.id}}">
+                                <div class="accordion-body">
+                                    {% for comment in comments %}
+                                        {% if comment.post == reviews %}
+                                            <div class="comment-{{comment.id}} container my-1">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <a href="{% url 'mypage' reviews.username.pk %}">{{ comment.username }} </a>
+                                                    </div>
+                                                    <div class="col">{{comment.content}}</div>
+                                                    <div class="col">{{comment.created_at}}</div>
+                                                    {% if comment.username == user%}
+                                                    <div class="col">
+                                                        <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
                                         {% endif %}
-                                    </div>
+                                    {% endfor %}
+                                <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
+                                <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
                                 </div>
-                        {% endif %}
-                    {% endfor %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
-                <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
+                <br/>
                 <hr/>
             {% endfor %}
         </article>
@@ -156,7 +201,7 @@
 
     const writeResponse = () => {
         if(requestWrite.status < 400) {
-            const {review_id, content, comment_id, username, comment_time, notification} = JSON.parse(requestWrite.response);
+            const {review_id, review_user, content, comment_id, username, comment_time, notification} = JSON.parse(requestWrite.response);
             console.log(content);
             const comments = document.querySelector(`.comments-${review_id}`);
             const element = document.querySelector(`.input-${review_id}`);
@@ -164,7 +209,9 @@
                 <div class="comment-${comment_id} container my-1">
                     <div class="row">
                         <div class="col">${content}</div>
-                        <div class="col">${username}</div>
+                        <div class="col">
+                            <a href="../../../mypage/${review_user}">${username}</a>
+                        </div>
                         <div class="col">${comment_time}</div>
                         <div class="col">
                             <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
