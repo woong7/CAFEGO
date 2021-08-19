@@ -23,6 +23,7 @@ from dateutil import relativedelta
 import operator
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.core.serializers.json import DjangoJSONEncoder
 
 @csrf_protect 
 def signup(request):
@@ -182,6 +183,8 @@ def rank_list(request):
     
     ####################  B_한 달 방문 랭킹  ####################
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
+    # B_users_js=json.dumps([user.json() for user in B_users])
+    # B_users_js=json.dumps(list(B_users), cls=DjangoJSONEncoder)
     B_me=User.objects.get(username=request.user)
 
     if B_me in B_users:
@@ -245,7 +248,7 @@ def rank_list(request):
         E_my_grade = 0
     
     ####################  F_팔로워 수 랭킹  ####################
-    F_follwer_order = User.objects.all().order_by('-follwernum')
+    F_follwer_order = User.objects.all().exclude(follwernum=0).order_by('-follwernum')
     F_me=User.objects.get(username=request.user)
 
     if F_me in F_follwer_order:
@@ -264,11 +267,11 @@ def rank_list(request):
         'A_my_grade': A_my_grade,
         ##### B_한 달 방문 랭킹 #####
         'B_users': B_users,
+        # 'B_users_js': B_users_js,
         'B_my_grade': B_my_grade,
         #####  C_한 달 카페 종류 랭킹  #####
         'C_monthly_kinds_order': C_monthly_kinds_order,
         'C_my_grade': C_my_grade,
-        # 'C_my_grade': C_my_grade,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
         'D_my_grade': D_my_grade,
@@ -662,8 +665,6 @@ def visit_register(request):
         # print('!!!!!!!', v_cafe.created_at) ##@@
         user = User.objects.get(username=request.user)
         user.total_visit += 1
-
-        #새로운 카페 등록은 무조건 새로운 종류니까 바로 카운트 올림
 
         #모달창에서 선택한 음료 저장
         jsonDec=json.decoder.JSONDecoder()
