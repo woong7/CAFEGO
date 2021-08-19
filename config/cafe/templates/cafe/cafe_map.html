@@ -4,7 +4,6 @@
     카페 지도
 {% endblock %}
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_map.css' %}">
 {% endblock %}
 
@@ -12,9 +11,8 @@
     <div class="cafe_map-container">
         <div id="keyword-search">
             <div class="bg-search-area search d-flex flex-column justify-content-center align-items-center">
-                <button class="btn btn-primary btn-sm" onClick="location.href='{% url 'user_cafe_map' %}'">나의 카페 지도 보러가기</button>
-                <div class="">
-                    <span class="fs-5">원하는 카페를 검색해보세요!</span>
+                <div class="py-1">
+                    <span class="fs-6">지도에 <b>보이는 영역</b>의 카페만 검색됩니다!</span>
                 </div>
                 <form id="searchForm" name="searchForm" onsubmit="return false;">
                     <input type="text" value="" placeholder="키워드 입력" id="keyword" onkeyup="enterkey();"> 
@@ -24,7 +22,8 @@
             <ul id="placesList">
             </ul>
         </div>
-        <div id="map"></div>
+        <div id="map" style="width:100%; height:100%; position:relative; overflow:hidden;"></div>
+        <button class="mycafe-btn" onClick="location.href='{% url 'user_cafe_map' %}'">나의 카페 지도</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
@@ -60,9 +59,9 @@
     markData(markers, cafeList, swLatlng, neLatlng);
 
     // 마커를 클릭하면 장소명을 표출할 인포윈도우
-    var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable : true});
+    var overlay = new kakao.maps.CustomOverlay({zIndex:1, removable : true});
     // 검색 목록을 hover하면 장소명을 표출할 인포윈도우
-    var infowindow_search = new kakao.maps.InfoWindow({zIndex:0}); 
+    var overlay_search = new kakao.maps.CustomOverlay({zIndex:0}); 
 
     // 지도가 움직일 때 발생하는 이벤트
     // 지도가 움직일때마다 map의 정보들을 초기화
@@ -156,16 +155,20 @@
         // 마커에 클릭이벤트 등록
         kakao.maps.event.addListener(marker, 'click', function() {
             // 마커를 클릭하면 장소명이 인포윈도우에 표출
-            infowindow.setContent(`
-                <div class="d-flex flex-column align-items-center" style="width: 150px; height: 80px;">
-                    <div class="fw-bold" style="padding:5px;font-size:12px;">${place.fields.name}</div>
-                    <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
-                    <div style="padding:5px;font-size:10px;">
-                        <a href="../review_list/${place.pk}">리뷰 보기</a>
+            overlay.setContent(`
+                <div class="hover-overlay-click">
+                    <div class="infos d-flex row">
+                        <div class="fw-bold col" style="padding:5px;font-size:20px;">${place.fields.name}</div>
+                        <div class="col" style="padding:5px;font-size:10px;">${place.fields.address}</div>
+                        <div class="col" style="padding:5px;font-size:10px;">
+                            <a href="../review_list/${place.pk}">리뷰 보기</a>
+                            <a href="../review_create/${place.pk}">리뷰 작성</a>
+                        </div>
                     </div>
                 </div>
             `);
-            infowindow.open(map, marker);
+            overlay.setPosition(new kakao.maps.LatLng(place.fields.location_y, place.fields.location_x));
+            overlay.setMap(map);
         });
     }
 
@@ -240,25 +243,27 @@
                 var itemEl = getListItem(i, keywordPlaces[i]);
                 (function(marker, place) {
                     itemEl.onmouseover =  function () {
-                        displayInfowindow(marker, place.fields.name);
+                        displayOverlay(place.fields);
                     };
 
-                    itemEl.onmouseout =  function () {
-                        infowindow_search.close();
-                    };
+                    //itemEl.onmouseout =  function () {
+                        //infowindow_search.close();
+                   //};
 
                     itemEl.onclick = function () {
-                        infowindow_search.close();
-                        infowindow.setContent(`
+                        overlay_search.setMap(null);
+                        overlay.setContent(`
                             <div class="d-flex flex-column align-items-center" style="width: 150px; height: 100px;">
                                 <div class="fw-bold" style="padding:5px;font-size:12px;">${place.fields.name}</div>
                                 <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
                                 <div style="padding:5px;font-size:10px;">
                                     <a href="../review_list/${place.pk}">리뷰 보기</a>
+                                    <a href="../review_create/${place.pk}">리뷰 작성</a>
                                 </div>
                             </div>
                         `);
-                        infowindow.open(map, marker);
+                        overlay.setPosition(new kakao.maps.LatLng(place.fields.location_y, place.fields.location_x));
+                        overlay.setMap(map);
                     };
                 })(keywordMarkers[i], keywordPlaces[i]);
 
@@ -302,25 +307,27 @@
                 var itemEl = getListItem(i, keywordPlaces[i]);
                 (function(marker, place) {
                     itemEl.onmouseover =  function () {
-                        displayInfowindow(marker, place.fields.name);
+                        displayOverlay(place.fields);
                     };
 
                     itemEl.onmouseout =  function () {
-                        infowindow_search.close();
+                        overlay_search.setMap(null);
                     };
 
                     itemEl.onclick = function () {
-                        infowindow_search.close();
-                        infowindow.setContent(`
+                        overlay_search.setMap(null);
+                        overlay.setContent(`
                             <div class="d-flex flex-column align-items-center" style="width: 150px; height: 80px;">
                                 <div class="fw-bold" style="padding:5px;font-size:12px;">${place.fields.name}</div>
                                 <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
                                 <div style="padding:5px;font-size:10px;">
                                     <a href="../review_list/${place.pk}">리뷰 보기</a>
+                                    <a href="../review_create/${place.pk}">리뷰 작성</a>
                                 </div>
                             </div>
                         `);
-                        infowindow.open(map, marker);
+                        overlay.setPosition(new kakao.maps.LatLng(place.fields.location_y, place.fields.location_x));
+                        overlay.setMap(map);
                     };
                 })(keywordMarkers[i], keywordPlaces[i]);
 
@@ -354,11 +361,17 @@
 
     // 검색결과 목록을 클릭했을 때 호출되는 함수
     // 인포윈도우에 장소명 표시
-    function displayInfowindow(marker, title) {
-        var content = '<div style="padding:5px;z-index:0;">' + title + '</div>';
-
-        infowindow_search.setContent(content);
-        infowindow_search.open(map, marker);
+    function displayOverlay(fields) {
+        var content = `
+            <div class="hover-overlay">
+                <div class="info">
+                    <span>${fields.name}</span>
+                </div>
+            </div>
+        `;
+        overlay_search.setPosition(new kakao.maps.LatLng(fields.location_y, fields.location_x));
+        overlay_search.setContent(content);
+        overlay_search.setMap(map);
     }
 
     // 검색결과 목록의 자식 Element를 제거하는 함수
