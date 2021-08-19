@@ -478,8 +478,8 @@ def mypage(request, pk):
     #print("drink", drink)
     #print(drink_list.drinkname)
     jsonDec=json.decoder.JSONDecoder()
-    badgeList=jsonDec.decode(owner.badge_taken)
-    badge_before=len(badgeList)
+    badgeList_before=jsonDec.decode(owner.badge_taken)
+    badge_before=len(badgeList_before)
 
     friendsList=jsonDec.decode(owner.friends)
     follwersList=jsonDec.decode(owner.follwers)
@@ -534,8 +534,10 @@ def mypage(request, pk):
     total_badge_count = len(taken_badges)
 
     if total_badge_count != badge_before :
-        notification = Notification.objects.create(notification_type=4, from_user=request.user, to_user=owner)
-        notification.save()
+        for badge in badgeList:
+            if badge not in badgeList_before:
+                notification = Notification.objects.create(notification_type=4, from_user=request.user, to_user=owner, badge=badge)
+                notification.save()
 
     #user에 총 카페 방문횟수 저장
     owner.badge_taken=json.dumps(badgeList)
