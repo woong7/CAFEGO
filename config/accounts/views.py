@@ -545,6 +545,18 @@ def mypage(request, pk):
     owner.save()
     #print("!!!!", this_user.total_visit)
 
+    visited_cafe_list = serializers.serialize('json', visit_cafes)
+
+    main_cafe = None
+    if len(visit_cafes) >= 0:
+        main_cafe = visit_cafes[0]
+        for i in range(1, len(visit_cafes)):
+            if visit_cafes[i-1].visit_count < visit_cafes[i].visit_count:
+                main_cafe = visit_cafes[i]
+    
+    cafes = CafeList.objects.all().order_by('location_x')
+    cafe_list = serializers.serialize('json', cafes)
+
     ctx={
         'owner':owner,
         'taken_badges':taken_badges,
@@ -561,6 +573,9 @@ def mypage(request, pk):
         'my_all_review':my_all_review,
         'review_photo':review_photo,
         'comments':comments,
+        'visited_cafe_list': visited_cafe_list,
+        'main_cafe': main_cafe.pk,
+        'cafe_list': cafe_list
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)

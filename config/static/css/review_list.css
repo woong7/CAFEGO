@@ -1,5 +1,25 @@
+@font-face {
+    font-family: 'twaysky';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body {
+    background-color: #F0D9CE;
+}
+
 li {
     text-decoration: none;
+}
+
+a {
+    color: #704F3F;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #B3A29A;
 }
 
 /* 전체 틀 잡기 */
@@ -36,7 +56,7 @@ li {
 }
 
 .another-review-button {
-    width: 150px;
+    width: 120px;
 }
 
 /* 별점 최상위 */
@@ -82,3 +102,100 @@ li {
 /* .empty_star:hover {
     transform: rotate(15deg) scale(1);
 } */
+
+/* 리뷰 작성 */
+.review-create {
+    height: 100px;
+    font-family: twaysky;
+    font-size: x-large;
+    font-weight: bold;
+    color: #704F3F;
+}
+
+.review-create:hover {
+    background-color: #B3A29A;
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+/* 리뷰 컨테이너 */
+.cafe-review {
+    width: 100%;
+    padding: 1rem;
+}
+
+.review-list-sequence {
+    display: flex;
+    justify-content: start;
+}
+
+.review-list-sequence span {
+    display: table-cell; 
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+#dropdownMenuLink {
+    border: 1px solid;
+}
+
+.each-review {
+
+}
+
+.reviewer-name a {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.reviewer-name span {
+    letter-spacing: -5px;
+    line-height: 200%;
+}
+
+.reviewer-info {
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.reviewer-info span {
+    margin-left: 10px;
+    letter-spacing: -2px;
+    font-size: 13px;
+    color: gray;
+}
+
+.review-modify-btn {
+    display: inline-block;
+    text-align: center;
+    color: #704F3F;
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid #F0D9CE;
+    border-radius: 8px;
+}
+
+.review-modify-btn:hover {
+    background-color: #F0D9CE;
+}
+
+.each-review-content {
+    white-space:pre-line;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.review-img { 
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.review-create-at {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.review-create-at span{
+    font-size: 13px;
+}
