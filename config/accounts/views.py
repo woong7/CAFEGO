@@ -291,7 +291,7 @@ def enroll_home(request):
 
 class EnrollNewCafeListView(ListView):
     model = VisitedCafe
-    paginate_by = 15
+    paginate_by = 10
     template_name = 'accounts/enroll_new_cafe.html'
     context_object_name = 'new_cafe_list'
 
@@ -353,7 +353,7 @@ class EnrollNewCafeListView(ListView):
 
 class EnrollVisitedCafeListView(ListView):
     model = VisitedCafe
-    paginate_by = 15
+    paginate_by = 10
     template_name = 'accounts/enroll_visited_cafe.html'
     context_object_name = 'visited_cafe_list'
 
@@ -651,16 +651,25 @@ def visit_register(request):
             print("존재하지 않습니다!")
         
         #카페를 방문한 유저와 그 유저의 방문 횟수 +1
-        v_cafe = VisitedCafe()
-        v_cafe.user = request.user
-        v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+        
+        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        visited_cafes = VisitedCafe.objects.all()
+        vcs=[]
+        for vc in visited_cafes:
+            vcs.append(vc.cafe)
+        if this_cafe in vcs: #이전에 갔을 때
+            v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
+        else: #처음 갔을 때
+            v_cafe = VisitedCafe()
+            v_cafe.user = request.user
+            v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
 
         #음료를 저장할 카페, 날짜 저장
         now = datetime.today() ##@@
-        drink = Drink()
-        drink.visited_cafe = v_cafe
+
         # v_cafe.created_at = now ##@@
         # print('!!!!!!!', v_cafe.created_at) ##@@
         user = User.objects.get(username=request.user)
@@ -671,12 +680,10 @@ def visit_register(request):
         drinkList=jsonDec.decode(v_cafe.drink_list)
         #TODO:에러처리 필요,,,! 기타에 뭐 적으면 선택 못하도록, 선택 하면 기타에 못 적도록.
         if str_new_drinkname != "":#8개 중 선택시 etc에는 항상 빈값이 들어간다. 무조건. 기타를 선택시
-            drink.drinkname = str_new_drinkname
             drinkList.append(str_new_drinkname)
             user.visit_count_lastmonth += 1 
 
         else: # 8개 중 선택시.
-            drink.drinkname = str_drinkname
             drinkList.append(str_drinkname)
             user.visit_count_lastmonth += 1 
             
@@ -684,9 +691,8 @@ def visit_register(request):
 
         user.save()
         v_cafe.save()
-        drink.save()
 
-    return redirect('enroll_new_cafe')
+    return redirect('cafe:cafe_list')
 
 @csrf_exempt
 def visited_register(request):
@@ -702,10 +708,8 @@ def visited_register(request):
         user = User.objects.get(username=request.user)
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
         v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
-        
         v_cafe.visit_count += 1
         user.total_visit += 1
-        drink = Drink.objects.get(visited_cafe=v_cafe)#이전에 등록된 것 근데 이제 필요없을듯,,,
 
         jsonDec=json.decoder.JSONDecoder()
         drinkList=jsonDec.decode(v_cafe.drink_list)
@@ -735,7 +739,6 @@ def visited_register(request):
 
         user.save()
         v_cafe.save()
-        drink.save()
 
     return redirect('enroll_visited_cafe')
 
@@ -784,7 +787,7 @@ def friend_search(request):
 
 class FriendSearchListView(ListView):
     model = User
-    paginate_by = 15
+    paginate_by = 10
     template_name = 'accounts/friend_search.html'
     context_object_name = 'user_list'
 
