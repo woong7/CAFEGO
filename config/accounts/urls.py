@@ -23,8 +23,6 @@ urlpatterns = [
     path('<pk>/verify/<token>/', views.UserVerificationView.as_view(), name="verify"),
 
     path('badge/list/<int:pk>', views.badge_list, name='badge_list'),
-    path('badge/taken/', views.badge_taken, name='badge_taken'),
-    path('badge/untaken/', views.badge_untaken, name='badge_untaken'),
     path('myreview_list/', views.MyCafeReviewListView.as_view(), name='myreview_list'),
     path('review_update/<int:pk>/', views.review_update, name='review_update'),
     path('rank/list/', views.rank_list, name='rank_list'),

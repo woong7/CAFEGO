@@ -1,49 +1,43 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/mypage.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="p-5 mb-4 bg-light rounded-3">
+<div class="py-4 my_page p-5">
+    <div class="p-5 mb-4 bg-deepbrown  rounded-3">
         <div class="container-fluid py-2">
-            <h1 class="display-5 fw-bold text-center">{{owner.nickname}}의 마이페이지</h1>
+            <h1 class="display-5 fw-bold text-center page_title">{{owner.nickname}}님의 마이페이지</h1>
             {% if user.id == owner.id %}
-                <a href="{% url 'info_edit' user.pk %}">개인정보 수정</a>
+                <button class="btn button btn-sm" onClick="location.href='{% url 'info_edit' user.pk %}'">개인정보 수정</button>
             {% endif %}
             <div>
                 {% if owner.nickname in names_to_exclude %}
                     {% if not owner.id == user.id %}
-                        <a href="{% url 'deletefriend' owner.pk%}">UnFollow</a>
+                        <button class="btn button btn-sm" onClick="location.href='{% url 'deletefriend' owner.pk%}'">UnFollow</button>
                     {% endif %}
                 {% else %}
-                    <a href="{% url 'addfriend' owner.pk%}">Follow</a>
+                    <button class="btn button btn-sm" onClick="location.href='{% url 'addfriend' owner.pk%}'">Follow</button>
                 {% endif %}
             </div>
             </br>
             <div>
                 {% if visit_cafes %}
-                    <button class="btn btn-primary btn-sm" onClick="location.href='{% url 'user_cafe_map' %}'">나의 카페 지도 보러가기</button>
+                    <button class="btn button btn-sm" onClick="location.href='{% url 'user_cafe_map' %}'">나의 카페 지도 보러가기</button>
                 {% endif %}
             </div>
-            <p class="col-md-8 fs-4">
-                <span>획득한 배지 개수: {{ total_badge_count }}개 </span>
-                <button class="btn btn-primary btn-sm" onClick="location.href='{% url 'badge_list' owner.pk %}'">배지 리스트 보기</button>
-                <br>
-                <span>작성한 리뷰 수 : {{all_review_count}}개 </span>
-                <button class="btn btn-primary btn-sm" onClick="location.href='{% url 'myreview_list' %}'">작성한 리뷰 보기</button>
-                <br>
-                <span>총 방문 카페 수 : {{visit_cafes.count }} 곳</span><br>
-                <span>총 카페 방문 횟수 : {{ total_visit }} 회</span><br>
-                <span>Following : {{ followingnum }} 명</span><br>
-                <span>Follwer : {{ owner.follwernum }} 명</span><br>
-            </p>
         </div>
     </div>
 
     <div class="row align-items-md-stretch">
         <div class="col-md-6">
-            <div class="h-100 p-5 bg-dark rounded-3">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
+            <div class="h-100 p-5 bg-deepbrown rounded-3">
+                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
                     획득한 배지 보기
                 </button>
+                <button class="btn button btn-sm" onClick="location.href='{% url 'badge_list' owner.pk %}'">획득한 배지: {{total_badge_count}}개</button>
                 <div class="collapse" id="collapseExample1">
                     <div class="card card-body">
                         {% for badge in taken_badges %}
@@ -58,8 +52,8 @@
         </div>
         <div class="col-md-6">
             <div class="h-100 p-5 bg-light border rounded-3">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">
-                    방문한 카페 보기
+                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">
+                    방문한 카페: {{visit_cafes.count}}곳 / 총 {{ total_visit }}회
                 </button>
                 <div class="collapse" id="collapseExample2">
                     <div class="card card-body">
@@ -80,10 +74,10 @@
     <div class="row align-items-md-stretch">
         <div class="col-md-6">
             <div class="h-100 p-5  bg-light rounded-3">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample">
+                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample">
                     작성한 리뷰 보기
                 </button>
-
+                <button class="btn button btn-sm" type="button" onClick="location.href='{% url 'myreview_list' %}'">작성한 리뷰 : {{all_review_count}}개 </button>
                 <div class="collapse" id="collapseExample3">
                     <div class="card card-body">
                         <article class="each_review">
@@ -151,12 +145,14 @@
         </div>
 
         <div class="col-md-6">
-            <div class="h-100 p-5 bg-dark border rounded-3">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample">
-                    팔로우 목록
+            <div class="h-100 p-5 bg-dark text-white border rounded-3">
+                <span class="btn button btn-sm">팔로잉: {{followingnum}}명</span>
+                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample">
+                    팔로잉 목록
                 </button>
+                
                 {% if user.id == owner.id %}
-                    <button class="btn btn-primary btn" onClick="location.href='{% url 'friend_search' %}'">유저 검색</button>
+                    <button class="btn button btn-sm" onClick="location.href='{% url 'friend_search' %}'">유저 검색</button>
                 {% endif %}
                 <div class="collapse" id="collapseExample4">
                     <div>
@@ -175,7 +171,8 @@
 
         <div class="col-md-6">
             <div class="h-100 p-5 bg-dark text-white border rounded-3">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample">
+                <span class="btn button btn-sm">팔로워: {{owner.follwernum}}명</span>
+                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample">
                     팔로워 목록
                 </button>
                 <div class="collapse" id="collapseExample5">
