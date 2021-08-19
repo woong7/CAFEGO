@@ -75,7 +75,7 @@
 
 #search_page {
     background-color: #F0D9CE;
-    padding: 50px 0px;
+    padding: 0px 0px;
 }
 
 .page_title {
@@ -94,7 +94,7 @@
     border: 2px solid #704F3F;
     background-color: white;
     border-radius: 10px;
-    padding: 6px 7px 2px;
+    padding: 3px 7px 3px;
     font-size: 1.1em;
     font-family: twaysky;
     color: #704F3F;
@@ -139,12 +139,30 @@ td {
     text-align: center;
 }
 
-a {
-    color: black;
-}
 
 .activate {
     background-color: #4CAF50;
     color: white;
     border-radius: 5px;
 }
+
+.atag {
+    color: black;
+    font-size:1.2em;
+}
+
+.atag:hover {
+    color:#573728;
+}
+
+select, input[type=text]{
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    border: 1px solid #573728;
+    color: black;
+    width: 110px;
+    height: 30px;
+    padding-left: 10px;
+    }
+    
