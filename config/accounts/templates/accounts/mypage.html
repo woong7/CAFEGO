@@ -57,7 +57,20 @@
             <h3 class="text-center mt-3" style="font-size: 14pt;">{{owner.self_intro}}</h3>
         </div>
         <br/>
-        <div class="row align-items-md-stretch  d-flex justify-content-center">
+    <div class="row align-items-center d-flex justify-content-center">    
+            {% for badge in taken_badges %}
+                <p class="col-md-2">
+                    <img src="{{badge.badge_image.url}}" style="width: 50px; height: 50px;"><br/>
+                    <span>{{badge.badge_name}}</span>
+                </p>
+            {% endfor %}
+            <p class="col-md-2">
+                <button class="btn-md button" onClick="location.href='{% url 'badge_list' owner.pk %}'">
+                        획득한 배지 보기
+                </button>
+            </p>
+    </div>
+    <div class="row align-items-md-stretch  d-flex justify-content-center">
         <div class="col-md-4">
             <div class="h-100 pb-5 rounded-3 d-flex justify-content-center" >
                 {% if user.id == owner.id %}
@@ -79,30 +92,8 @@
             </div>
         </div>
         </div>
-    <div class="row align-items-md-stretch d-flex justify-content-center">
-        {% for badge in taken_badges %}
-            <p>
-                <img src="{{badge.badge_image.url}}" style="width: 5%; height: 5%;">
-                <span>{{badge.badge_name}}</span>
-            </p>
-        {% endfor %}
-        <div class="col-md-4">
-            <div class="h-100 p-5 d-flex justify-content-center rounded-3">
-                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
-                    획득한 배지 보기
-                </button>
-                <button class="btn button btn-sm" onClick="location.href='{% url 'badge_list' owner.pk %}'">획득한 배지: {{total_badge_count}}개</button>
-                <div class="collapse" id="collapseExample1">
-                    <div class="card card-body">
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-       
+    
+    
     </div>
 
     <div class="row align-items-md-stretch d-flex justify-content-center my-3">
