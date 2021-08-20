@@ -1,10 +1,11 @@
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Kakao 지도 Web API</title>
+        <title>CAFEGO</title>
         
         <link href="https://apis.map.kakao.com/favicon.ico" rel="shortcut icon">
         
@@ -58,7 +59,6 @@
             </ul>
         </div> -->
 
-        <h1 class="only_print">Kakao 지도 Web API</h1>
         <!--우측 점박이로 페이지 이동 가능-->
         <ul id="pagination">
             <li><a href="#"></a></li>
@@ -69,10 +69,11 @@
             <li><a href="#"></a></li>
         </ul>
 
-        <div id="daumBody">
+        <div id="daumBody" style="margin-left: 0px;">
             <div id="daumContent">
                 <div class="page" id="intro">
-                    <div class="bg"></div>
+                    <!-- <div class="bg"></div> -->
+                    
                     <!-- <div class="center"></div>
                     <div class="circle_red"></div>
                     <div class="circle_orange"></div> -->
@@ -89,21 +90,28 @@
                     <!-- marker end -->
                     <div class="wrap">
                         <!-- 가운데 점선 원 -->
-                        <svg width="1000" height="1000" class="dashCircle" id="wideCircle"><circle transform="translate(500, 500)" cx="0" cy="0" r="490"></circle></svg> 
+                        <!-- <svg width="1000" height="1000" class="dashCircle" id="wideCircle"><circle transform="translate(500, 500)" cx="0" cy="0" r="490"></circle></svg> 
                         <svg width="1000" height="1000" class="dashCircle" id="narrowCircle"><circle transform="translate(500, 500)" cx="0" cy="0" r="350"></circle></svg>
-                        <div class="core"><!--[if lte IE 8]><div class="figure"></div><![endif]-->
-                            <h2><em>Hello,</em><br>CAFEGO</h2>
-                            <p>Kakao 지도 API는 무료로 제공되고 있습니다.<br>지도 APP KEY를 등록하신 후, 지금 바로 사용해보세요.</p>
-                            <ul class="quantity">
+                        -->
+                        <div class="core">
+                            <!--[if lte IE 8]><div class="figure"></div><![endif]-->
+                            <h2>
+                                <!-- <em>Hello,</em> -->
+                                <br>CAFEGO
+                            </h2>
+                            <p>지도기반 카페이용기록 웹서비스</p>
+                            <!-- <ul class="quantity">
                                 <li>- 1일 300,000회 사용 가능</li>
-                            </ul>
-                            <div class="wrap_startbtn"><a href="guide/"><span>시작하기</span></a></div>
+                            </ul> -->
+                            <div class="wrap_startbtn"><a href="guide/"><span>로그인하기</span></a></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="page" id="feature1">
-                    <div class="bg"></div>
+                    <!-- <div class="bg"></div> -->
+                    <div style="background-image:url(../../../media/static/image/main_coffee.jpeg)"></div>
+
                     <div class="wrap">
                         <!--야구공원 태그 사진-->
                         <!-- <div class="figure right">
@@ -115,27 +123,31 @@
 
                         <div class="desc left">
                             <em><span>01</span></em>
-                            <div class="title">자유로운 형태의 마커를 올려보세요.</div>
-                            <p>지도 위에 마커를 올려서 특정 장소를 표시할 수 있습니다. 장소 명칭이나 간단한 소개글도 함께 표시할 수 있습니다.</p>
-                            <a class="link_sample" href="sample/markerWithCustomOverlay/"><span>샘플보기</span></a>
-                            <a class="link_sample" href="sample/markerWithCustomOverlay/"><span>샘플보기</span></a>
+                            <div class="title" style="background-image:none!important;"><span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">방문했던 카페를 추가하여 나만의 카페지도를 만들어보세요.</span></div>
+                            <p>서울 시내 37733개의 카페 중에 내가 방문했던 카페를 찾아 추가할 수 있습니다. 카페리스트에서 검색하거나, 현재위치 근처의 카페들을 지도에서 찾아 추가할 수 있습니다.</p>
+                            <a class="link_sample" href="{% url 'cafe:cafe_list' %}"><span>검색하여 추가</span></a>
+                            <a class="link_sample" href="{% url 'cafe:cafe_map' %}"><span>지도에서 추가</span></a>
                         </div>
                     </div>
                 </div>
 
                 <div class="page" id="feature2">
-                    <div class="bg"></div>
+                    <!-- <div class="bg"></div> -->
+
                     <div class="wrap">
+                        <!-- 
                         <div class="figure left">
                             <div class="modern">
                                 <svg width="600" height="600" class="areaDashCircle" id="wideAreaCircle"><circle transform="translate(300, 300)" cx="0" cy="0" r="220"></circle></svg> 
                                 <svg width="400" height="400" class="areaDashCircle" id="narrowAreaCircle"><circle transform="translate(200, 200)" cx="0" cy="0" r="170"></circle></svg>
                                 <canvas id="lineArea" width="720" height="720"></canvas>
                             </div>
-                            <div class="alternative">
-                                <img class="alt_circle" src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/big_circle2.png" alt="원"><!-- IE 9 이하에서는 display:none --> 
-                                <img class="alt_triangle" src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/big_triangle.png" alt="삼각형"><!-- IE 9 이하에서는 display:none -->
+
+                            <div class="alternative"> IE 9 이하에서는 display:none
+                                <img class="alt_circle" src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/big_circle2.png" alt="원">
+                                <img class="alt_triangle" src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/big_triangle.png" alt="삼각형">
                             </div>
+
                             <div class="box box_small box1"><div class="info"><div class="text">거리 <span class="num">241</span>m</div></div><img class="dot" src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/mini_circle.png" alt=""></div>
                             <div class="box box_small box2"><div class="info"><div class="text">거리 <span class="num">488</span>m</div></div><img class="dot" src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/mini_circle.png" alt=""></div>
                             <div class="box box_small box3"><div class="info"><div class="text">거리 <span class="num">725</span>m</div></div><img class="dot" src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/mini_circle.png" alt=""></div>
@@ -146,28 +158,31 @@
                                     <div class="text"><span class="tit1">도보</span><span class="tit2"><span class="num">220</span>m</span></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+<!-- 
                         <svg width="30" height="30" id="smallCircle"><circle cx="50%" cy="50%" r="11"></circle></svg>
                         <svg width="130" height="90" id="partCircle"><circle cx="50%" cy="20" r="55"></circle></svg> 
                         <svg width="30" height="37" id="redTriangle"><path d="M3 34 L7 3 L26 6 Z"></path></svg>
-                        <!--배경 뒤에 나오는 숫자,,,-->
-                        <div class="box_dist"><span class="number">725</span>m</div>
+                            배경 뒤에 나오는 숫자,,,
+                        <div class="box_dist"><span class="number">725</span>m</div> -->
 
                         <div class="desc white right">
                             <em><span>02</span></em>
-                            <div class="title">지도 위에 다양한 도형을 그려보세요.</div>
-                            <p>지도 위에 선, 원, 다각형 등의 도형을 그릴 수 있습니다. 도형의 실제 크기나 면적값도 함께 확인하실 수 있습니다.</p>
-                            <a class="link_sample" href="sample/calculatePolylineDistance/"><span>샘플보기</span></a>
+                            <div class="title" style="background-image:none!important;"><span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif; color: #fff;">나만의 카페지도를 만들어보세요.</span></div>
+                            <p>카페에서 마신 음료도 함께 추가할 수 있습니다. 방문 추가한 카페들이 지도 위에 이모티콘으로 표시됩니다.</p>
+                            <a class="link_sample" href="{% url 'user_cafe_map' %}"><span>나의 카페지도</span></a>
                         </div>
                     </div>
                 </div>
                     
             
                 <div class="page" id="feature3">
-                    <div class="bg"></div>
+                    <!-- <div class="bg"></div> -->
+
                     <div class="wrap">
                         <!--오른쪽 그림 + 애니메이션-->
-                        <div class="figure right"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/feature3_img.png">
+
+                        <!-- <div class="figure right"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/feature3_img.png">
                             <div class="overlaybox">
                                 <div class="boxtitle">금주 영화순위</div>
                                 <div class="first">
@@ -181,22 +196,22 @@
                                     <li><span class="number">5</span> <span class="title">안녕, 헤이즐</span> <span class="arrow down"></span> <span class="count">1</span></li>
                                 </ul>
                             </div>
-                        </div>
+                        </div> -->
                         <!--왼쪽 글 -->
                         <div class="desc left">
                             <em><span>03</span></em>
-                            <div class="title">원하는 위치에 원하는 컨텐츠를 표시할 수 있습니다.</div>
-                            <p>지도 위에 HTML로 구현 가능한 모든 컨텐츠를 올릴 수 있습니다. CSS를 이용하여 자유롭게 꾸며보세요.</p>
-                            <a class="link_sample" href="sample/customOverlay2/"><span>샘플보기</span></a>
+                            <div class="title" style="background-image:none!important;"><span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">방문했던 카페에 리뷰를 남기고 댓글을 달아보세요.</span></div>
+                            <p>리뷰에 댓글을 달아 카페 사용자에게 직접 물어볼 수 있습니다. 다양한 카페를 방문한 사람에게, 그 카페 단골에게 솔직한 답변을 들을 수 있습니다.</p>
+                            <a class="link_sample" href="{% url 'cafe:cafe_list' %}"><span>리뷰 쓰러가기</span></a>
                         </div>
                     </div>
                 </div>
 
                 <div class="page" id="feature4">
-                    <div class="bg"></div>
+                    <!-- <div class="bg"></div> -->
                     <div class="wrap">
                         <div class="pattern"></div>
-                        <div class="figure left">
+                        <!-- <div class="figure left">
                             <div class="roadview_overlay">
                                 <div class="overlay_info"><a href="https://place.map.kakao.com/17600274" target="_blank"><strong>월정리 해수욕장</strong></a>
                                     <div class="description">
@@ -205,43 +220,44 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!--오른쪽 글-->
                         <div class="desc white right">
                             <em><span>04</span></em>
-                            <div class="title">로드뷰를 활용하면 다양한 표현이 가능합니다.</div>
-                            <p>실제 주변을 확인하는데 로드뷰만한게 없죠. 로드뷰에 마커를 올려 여러분의 장소를 표시해보세요.</p>
-                            <a class="link_sample" href="sample/roadviewCustomOverlay/"><span>샘플보기</span></a>
+                            <div class="title" style="background-image:none!important;"><span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif; color: #fff;">매달 갱신되는 랭킹 시스템으로 나의 순위를 확인해보세요</span></div>
+                            <p>카페를 얼마나 갔는지, 리뷰를 얼마나 썼는지에 따라 누적 순위와 지난달 순위를 랭킹 페이지에서 확인해볼 수 있습니다.</p>
+                            <a class="link_sample" href="{%url 'rank_list' %}"><span>랭킹 보러가기</span></a>
+                            <a class="link_sample" href="{%url 'badge_list' user.pk %}"><span>배지 보러가기</span></a>
                         </div>
                     </div>
                 </div>
 
                 <div class="page" id="feature5">
-                    <div class="bg"></div>
+                    <!-- <div class="bg"></div> -->
                     <div class="wrap">
 
-                        <div class="figure right">
+                        <!-- <div class="figure right">
                             <div class="ipad device">
                                 <div class="map"></div>
                             </div>
                             <div class="nexus device"></div>
-                        </div>
+                        </div> -->
 
                         <div class="desc left">
                             <em><span>05</span></em>
-                            <div class="title">모든 모바일 웹 환경을 지원합니다.</div>
-                            <p>스마트폰이나 태블릿등 터치 디바이스의 웹브라우저에서도 로드뷰를 포함한 모든 기능을 동일하게 이용하실 수 있습니다.</p>
+                            <div class="title" style="background-image:none!important;"><span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">아이디나 동네를 검색해서 팔로우 해보세요.</span></div>
+                            <p>유저 검색 페이지에서 친구의 아이디를 검색할 수 있습니다. 내가 살고 있는 동네를 검색해서 동네친구의 카페지도를 확인해볼 수 있습니다.</p>
                         </div>
                     </div>
                 </div>
 
 
-                <div class="footer">
+                <!-- <div class="footer">
                     <div class="fold">
                         그 외 자세한 기능을 알고 싶으시면<br><a href="sample/">Sample</a>과 <a href="documentation/">Documentation</a> 페이지를 참고하세요.
                     </div>
-                </div>
+                </div> -->
 
 
             </div>

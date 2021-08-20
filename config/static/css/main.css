@@ -146,3 +146,19 @@ div.container4 p {
       margin-top: 7rem;
     }
   }
+
+
+
+.hoverbox .screen [class*='hud']{
+  position : absolute;
+  top: 50%; left: 50%;
+  transform:translate(-50%, -50%);
+  transition: all 1s;
+}
+
+@keyframes rolling01 { 
+  0% {transform:translate(-50%, -50%) rotate();}
+  100% {transform:translate(-50%, -50%) rotate(360deg);}
+}
+
+.hoverbox .screen .hud01 {animation:rolling01 5s linear infinite; }
