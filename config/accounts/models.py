@@ -94,6 +94,16 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+    def to_json(self):
+    	return {
+            "username": self.username,
+            "nickname": self.nickname,
+            "total_visit": self.total_visit,
+            "total_review": self.total_review,
+            "visit_count_lastmonth": self.visit_count_lastmonth,
+            "review_count_lastmonth": self.review_count_lastmonth,
+        }
+
     @property
     def is_staff(self):
         return self.is_admin
@@ -142,5 +152,6 @@ class Notification(models.Model):
     from_user = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)#follow
     #post - like
     comment = models.ForeignKey('cafe.Comment', on_delete=models.CASCADE, related_name='+', blank=True, null=True)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateTimeField(default=timezone.now)
     user_has_seen = models.BooleanField(default=False)#봤는지 안 봤는지 체크

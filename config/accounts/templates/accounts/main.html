@@ -2,143 +2,170 @@
 {% load static %}
 
 {% block css %}
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kakao 지도 API">
+<meta property="og:description" content="Kakao 지도 API를 이용해보세요. 다양한 샘플과 상세한 매뉴얼로 개발자분들의 시간을 아껴드리겠습니다!">
+<meta property="og:image" content="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/daumMapsApi.png">
+<meta property="og:url" content="https://apis.map.kakao.com"><meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:title" content="Kakao 지도 API">
+<meta name="twitter:description" content="Kakao 지도 API를 이용해보세요. 다양한 샘플과 상세한 매뉴얼로 개발자분들의 시간을 아껴드리겠습니다!">
+<meta name="twitter:image" content="https://apis.map.kakao.com/images/daumMapsApiThumb.png">
+<meta name="twitter:url" content="https://apis.map.kakao.com">
+
+<!--요거 써도 되는 건지 모르겠음...-->
+<link rel="stylesheet" type="text/css" href="//t1.daumcdn.net/mapapisdoc/cssjs/1619092942440/css/web.min.css">
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+<script type="text/javascript" src="https://spi.maps.daum.net/imap/map_js_init/v3.js"></script>
+<script type="text/javascript" src="//s1.daumcdn.net/svc/original/U03/cssjs/jquery/jquery-1.11.0.js"></script>
+<script type="text/javascript" src="//s1.daumcdn.net/svc/original/U0301/cssjs/JSON-js/fc535e9cc8/json2.min.js"></script>
 {% endblock %}
 
 {% block content %}
-<!------------------------------------------------옆으로 넘어가는 창------------------------------------------------>
-<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
-    </div>
-    <div class="carousel-inner" style="color: black;">
-        <div class="carousel-item active bg-dark">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="font-weight-bold text-light" style="font-weight: bold;">지도 위에 카페 방문 기록을 남겨보세요!</h1>
+
+<body class="web top" data-page_section="web" data-page_type="top" data-title="Kakao 지도 Web API">
+
+    <!--우측 점박이로 페이지 이동 가능-->
+    <ul id="pagination">
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+    </ul>
+
+    <div id="daumBody" style="margin-left: 0px; background-color: white;">
+        <div id="daumContent">
+            <div class="page" id="intro">
+                <!-- <div class="bg"></div> -->
+                
+                <div class="wrap">
+                    <!-- 가운데 점선 원 -->
+                    <div class="hoverbox">
+                        <div class="screen">
+                            <div class="hud01">
+                                <img src="../../../media/static/image/coffee-mug.png" style="width: 800px; height: 800px; max-width: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="core" style="background-color: transparent; color: white;">
+                        <!--[if lte IE 8]><div class="figure"></div><![endif]-->
+                        <h2>
+                            <!-- <em>Hello,</em> -->
+                            <br>CAFEGO
+                        </h2>
+                        <p>지도기반 카페이용기록 웹서비스</p>
+                        <!-- <ul class="quantity">
+                            <li>- 1일 300,000회 사용 가능</li>
+                        </ul> -->
+                        {% if user.is_authenticated %}
+                            <div class="wrap_startbtn"><a href="#feature1"><span>시작하기</span></a></div>
+                        {% else %}
+                            <div class="wrap_startbtn"><a href="/account/login"><span>로그인하기</span></a></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="feature1">
+                <!-- <div class="bg"></div> -->
+                
+                <div class="wrap">
+                    <div style="background-image:url(../../../media/static/image/coffee_main.svg); background-repeat: no-repeat; height: 300px; position: absolute; left: 800px; width:600px; top: 220px;"></div>
+
+                    <div class="desc left">
+                        <em><span>01</span></em>
+                        <div class="title" style="background-image:none!important;">
+                            <span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">방문했던 카페를 추가하여<br> 나만의 카페지도를 만들어보세요.</span>
+                        </div>
+                        <p style="width: 402px;">서울 시내 37733개의 카페 중에 내가 방문했던 카페를 찾아 추가할 수 있습니다. 카페리스트에서 검색하거나, 현재위치 근처의 카페들을 지도에서 찾아 추가할 수 있습니다.</p>
+                        <a class="link_sample" href="{% url 'cafe:cafe_list' %}" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
+                        <a class="link_sample" href="{% url 'cafe:cafe_map' %}" style="width: 160px;"><span>지도에서 카페추가</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="feature2">
+                <!-- <div class="bg"></div> -->
+
+                <div class="wrap">
+
+                    <div class="desc white right">
+                        <em><span>02</span></em>
+                        <div class="title" style="background-image:none!important;">
+                            <span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">나만의 카페지도를 만들어보세요.</span>
+                        </div>
+                        <p>카페 추가시 마신 음료도 함께 기록할 수 있습니다. 방문 추가한 카페들이 지도 위에 이모티콘으로 표시됩니다.</p>
+                        <a class="link_sample" href="{% url 'user_cafe_map' %}" style="width: 149px;"><span>나의 카페지도 보기</span></a>
+                    </div>
+                </div>
+            </div>
+                
+        
+            <div class="page" id="feature3">
+                <!-- <div class="bg"></div> -->
+
+                <div class="wrap">
+                    <!--오른쪽 그림 + 애니메이션-->
+                    <div style="background-image:url(../../../media/static/image/background_ex.jpg); background-repeat: no-repeat; height: 100%; position: absolute; width:100%;"></div>
+                    <!--왼쪽 글 -->
+                    <div class="desc left">
+                        <em><span>03</span></em>
+                        <div class="title" style="background-image:none!important;">
+                            <span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">방문했던 카페에 리뷰를 남기고 댓글을 달아보세요.</span>
+                        </div>
+                        <p style="width: 417px;">리뷰에 댓글을 달아 카페 사용자에게 직접 물어볼 수 있습니다. 다양한 카페를 방문한 사람에게, 그 카페 단골에게 <br>솔직한 답변을 들을 수 있습니다.</p>
+                        <a class="link_sample" href="{% url 'enroll_visited_cafe' %}" style="width: 146px; margin-right: 10px;"><span>방문카페 리뷰 쓰기</span></a>
+                        <a class="link_sample" href="{% url 'cafe:cafe_list' %}"style="width: 160px;"><span>리뷰에 댓글 쓰러가기</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="feature4">
+                <!-- <div class="bg"></div> -->
+                <div class="wrap">
+                    <div class="pattern"></div>
+
+                    <!--오른쪽 글-->
+                    <div class="desc white right">
+                        <em><span>04</span></em>
+                        <div class="title" style="background-image:none!important;"><span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">매달 갱신되는 랭킹 시스템으로 나의 순위를 확인해보세요.</span></div>
+                        <p style="width: 410px;">카페를 얼마나 갔는지, 리뷰를 얼마나 썼는지에 따라 누적 <br>순위와 지난달 순위를 랭킹 페이지에서 확인해볼 수 있습니다.</p>
+                        <a class="link_sample" href="{%url 'rank_list' %}" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
+                        {% if user.is_authenticated %}
+                            <a class="link_sample" href="{%url 'badge_list' user.pk %}"><span>배지 보러가기</span></a>
+                        {% else %}
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="feature5">
+                <!-- <div class="bg"></div> -->
+                <div class="wrap">
+
+
+                    <div class="desc left">
+                        <em><span>05</span></em>
+                        <div class="title" style="background-image:none!important;">
+                            <span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">아이디나 동네를 검색해서<br> 팔로우 해보세요.</span>
+                        </div>
+                        <p style="width: 411px;">유저 검색 페이지에서 친구의 아이디를 검색할 수 있습니다. 내가 살고 있는 동네를 검색해서 동네친구의 카페지도를 확인해볼 수 있습니다.</p>
+                        <a class="link_sample" href="{% url 'friend_search' %}"><span>유저검색 하기</span></a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="carousel-item bg-dark">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="font-weight-bold text-light" style="font-weight: bold;">실제 카페 방문자에게 물어보세요!</h1>
-            </div>
-        </div>
-        <div class="carousel-item bg-dark">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="font-weight-bold text-light" style="font-weight: bold;">지역별 카페 방문 랭킹을 확인해보세요!</h1>
-            </div>
-        </div>
-        <div class="carousel-item bg-dark">
-            <div class="carousel-caption d-none d-md-block">
-                <h1 class="font-weight-bold text-light" style="font-weight: bold;">팔로우해서 다른 사람의 카페지도를 살펴보아요!</h1>
-            </div>
-        </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
-<div class="text-center">
-</br></br>
-    <button class="btn btn-outline-primary" onClick="location.href='{% url 'home' %}'">시작하기</button>
-</div>
+                
+    <script type="text/javascript" src="//m1.daumcdn.net/tiara/js/td.min.js"></script>
+    <script type="text/javascript">var _tiq = 'undefined' !== typeof _tiq ? _tiq : [];window._tiq = _tiq; _tiq.push(['__trackPageview']);</script>
+    <script type="text/javascript" src="//t1.daumcdn.net/mapapisdoc/cssjs/1619092942440/js/service.min.js"></script>
+</body>
 
-<!-- <div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 12rem;">
-    <p id="header-logo-image"></p>
-    {% if user.is_authenticated %}
-        <p>{{user.nickname}} 님이 로그인 중</p>
-        <button class="btn btn-outline-primary" onClick="location.href='{% url 'home' %}'">시작하기</button>
-    {% else %}
-        <h1></h1>
-        <button class="btn btn-outline-primary" onClick="location.href='{% url 'home' %}'">시작하기</button>
-    {% endif %}
-</div> -->
-
-<!--
-<div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
-    <h1 class="font-weight-bold text-light" style="font-weight: bold;">지도 위에 카페 방문 기록을 남겨보세요!</h1>
-</div>
-
-<div class="position-relative overflow-hidden m-0 text-center bg-light" id="intro" style="padding: 12rem;">
-    <h1 class="font-weight-bold" style="font-weight: bold;">차별화된 리뷰-답글 시스템</h1>
-    <p>실제 사용자에게 궁금한 점을 물어보세요!</p>
-</div>
-
-<div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
-    <h1 class="font-weight-bold text-light" style="font-weight: bold;">지역별 카페 방문 랭킹을 확인해보세요!</h1>
-    <p>방문한 카페들을 등록하고, 리뷰를 작성해서 다양한 배지들을 획득하세요!</p>
-</div>
-
-<div class="position-relative overflow-hidden m-0 text-center bg-light" id="intro" style="padding: 12rem;">
-    <h1 class="font-weight-bold" style="font-weight: bold;">팔로우해서 다른 사람의 카페지도를 살펴보아요!</h1>
-</div>
-
-<div class="position-relative overflow-hidden m-0 text-center bg-darkblue" id="intro" style="padding: 12rem;">
-    <h1 class="font-weight-bold text-light" style="font-weight: bold;">지도기반 카페 방문기록 웹서비스</h1>
-    <button class="btn btn-white bg-white" onClick="location.href='/account/login'">시작하기</button>
-</div> -->
-
-<hr class="featurette-divider">
-
-<div class="row featurette">
-    <div class="col-md-7">
-        <h2 class="featurette-heading">방문했던 카페를 추가하여 나만의 카페지도를 만들어보세요!</h2>
-    </br></br>
-        <p class="lead">서울 시내 37000여개의 카페 중에 내가 방문했던 카페를 찾아 추가해보세요. 마신 음료를 함께 기록할 수 있어요. 나만의 카페지도 위에 방문했던 카페들이 이모티콘으로 표시되요. 많이 갈수록 이모티콘이 커져요.</p>
-    </div>
-    <div class="col-md-5">
-        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
-    </div>
-</div>
-<hr class="featurette-divider">
-<div class="row featurette">
-    <div class="col-md-7 order-md-2">
-        <h2 class="featurette-heading">카페별로 리뷰를 남기고 댓글을 달아보세요!</h2>
-    </br></br>
-        <p class="lead">방문했던 카페에 리뷰를 남길 수 있어요. 리뷰에 댓글을 달아 카페 사용자에게 직접 물어볼 수 있어요. 다양한 카페를 방문한 사람에게, 그 카페 단골에게 솔직한 답변을 들어보세요.</p>
-    </div>
-    <div class="col-md-5 order-md-1">
-        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
-    </div>
-</div>
-<hr class="featurette-divider">
-<div class="row featurette">
-    <div class="col-md-7">
-        <h2 class="featurette-heading">매달 갱신되는 랭킹 시스템으로 나의 순위를 확인해보세요!</h2>
-    </br></br>
-        <p class="lead">카페를 얼마나 갔는지, 리뷰를 얼마나 썼는지에 따라 누적 순위와 지난달 순위를 확인해볼 수 있어요. </p>
-    </div>
-    <div class="col-md-5">
-        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
-    </div>
-</div>
-<hr class="featurette-divider">
-<div class="row featurette">
-    <div class="col-md-7 order-md-2">
-        <h2 class="featurette-heading">아이디나 동네를 검색해서 팔로우 해보세요!</h2>
-    </br></br>
-        <p class="lead">유저 검색 페이지에서 친구의 아이디를 검색해보세요. 내가 살고 있는 동네를 검색해서 동네친구의 카페지도를 확인해보세요.</p>
-    </div>
-    <div class="col-md-5 order-md-1">
-        <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
-    </div>
-</div>
-
-<!-- {% if user.is_authenticated %}
-    <p>닉네임 {{user.nickname}} 님이 로그인 중</p>
-    <h4><a href="{% url 'home' %}">홈페이지로 가기</a></h4>
-    <h4><a href="{% url 'logout' %}">로그아웃하기</a></h4>
-
-{%else%} -->
-    <!-- <div class="d-grid gap-2 col-6 mx-auto" style="width: 226px;">
-        <a class="btn btn-outline-primary" href="{% url 'home' %}" role="button" >시작하기</a>
-    </div> -->
-<!-- {%endif %} -->
 {% endblock %}

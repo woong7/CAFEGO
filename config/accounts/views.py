@@ -23,6 +23,7 @@ from dateutil import relativedelta
 import operator
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.core.serializers.json import DjangoJSONEncoder
 
 @csrf_protect 
 def signup(request):
@@ -87,46 +88,43 @@ def create_admin(request):
 
 def badge_list(request, pk):
     user=User.objects.get(id=pk)
+    users=User.objects.all()
     badges=Badge.objects.all()
+    visit_cafes=VisitedCafe.objects.filter(user=user)
     jsonDec=json.decoder.JSONDecoder()
-    myList=jsonDec.decode(user.badge_taken)
+    
+    friends=jsonDec.decode(user.friends)
+
+    badgeList=[]
+
+    #배지 획득조건
+    if user.total_visit>=1:
+        badgeList.append("카페홀릭")
+    if user.total_review>=1:
+        badgeList.append("파워블로거")
+    if len(friends)>=1:
+        badgeList.append("사교왕")
+    if len(visit_cafes)>=1:
+        badgeList.append("개척자")
+    
+    if len(users)>=1 and users[0]==user and user.total_visit !=0 : 
+        badgeList.append("랭킹 1위")
+    elif len(users)>=2 and users[1]==user and user.total_visit !=0:
+        badgeList.append("랭킹 2위")
+    elif len(users)>=3 and users[2]==user and user.total_visit !=0:
+        badgeList.append("랭킹 3위")
+
     taken_badges=[]
     for badge in badges:
-        if badge.badge_name in myList:
-            taken_badges.append(badge)   
+        if badge.badge_name in badgeList:
+            taken_badges.append(badge) 
+
+    user.badge_taken=json.dumps(badgeList)
+    user.save()
+
     ctx={'badges':badges, 'taken_badges':taken_badges, 'owner':user, 'taken_num':len(taken_badges), 'total_num':len(badges)-2,}
 
     return render(request, 'accounts/badge_list.html', context=ctx)
-
-import simplejson as json
-def badge_taken(request):
-    user=request.user
-
-    jsonDec=json.decoder.JSONDecoder()
-    myList=jsonDec.decode(user.badge_taken)
-    badges=Badge.objects.all()
-    taken_badges=[]
-    for badge in badges:
-        if badge.badge_name in myList:
-            taken_badges.append(badge)   
-    
-
-    ctx={'taken_badges':taken_badges,'user':user,}
-    return render(request, 'accounts/badge_taken.html', context=ctx)
-
-def badge_untaken(request):
-    user=request.user
-
-    jsonDec=json.decoder.JSONDecoder()
-    myList=jsonDec.decode(user.badge_taken)
-    badges=Badge.objects.all()
-    taken_badges=[]
-    for badge in badges:
-        if not badge.badge_name in myList:
-            taken_badges.append(badge) 
-
-    ctx={'taken_badges':taken_badges, 'user':user,}
-    return render(request, 'accounts/badge_untaken.html', context=ctx)
 
 def user_cafe_map(request):
     user = request.user
@@ -185,6 +183,8 @@ def rank_list(request):
     
     ####################  B_한 달 방문 랭킹  ####################
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
+    # B_users_js=json.dumps([user.json() for user in B_users])
+    # B_users_js=json.dumps(list(B_users), cls=DjangoJSONEncoder)
     B_me=User.objects.get(username=request.user)
 
     if B_me in B_users:
@@ -248,7 +248,7 @@ def rank_list(request):
         E_my_grade = 0
     
     ####################  F_팔로워 수 랭킹  ####################
-    F_follwer_order = User.objects.all().order_by('-follwernum')
+    F_follwer_order = User.objects.all().exclude(follwernum=0).order_by('-follwernum')
     F_me=User.objects.get(username=request.user)
 
     if F_me in F_follwer_order:
@@ -267,11 +267,11 @@ def rank_list(request):
         'A_my_grade': A_my_grade,
         ##### B_한 달 방문 랭킹 #####
         'B_users': B_users,
+        # 'B_users_js': B_users_js,
         'B_my_grade': B_my_grade,
         #####  C_한 달 카페 종류 랭킹  #####
         'C_monthly_kinds_order': C_monthly_kinds_order,
         'C_my_grade': C_my_grade,
-        # 'C_my_grade': C_my_grade,
         #####  D_누적 리뷰 랭킹  #####
         'D_all_review_order': D_all_review_order,
         'D_my_grade': D_my_grade,
@@ -291,7 +291,7 @@ def enroll_home(request):
 
 class EnrollNewCafeListView(ListView):
     model = VisitedCafe
-    paginate_by = 15
+    paginate_by = 10
     template_name = 'accounts/enroll_new_cafe.html'
     context_object_name = 'new_cafe_list'
 
@@ -353,7 +353,7 @@ class EnrollNewCafeListView(ListView):
 
 class EnrollVisitedCafeListView(ListView):
     model = VisitedCafe
-    paginate_by = 15
+    paginate_by = 10
     template_name = 'accounts/enroll_visited_cafe.html'
     context_object_name = 'visited_cafe_list'
 
@@ -481,7 +481,9 @@ def mypage(request, pk):
     #print("drink", drink)
     #print(drink_list.drinkname)
     jsonDec=json.decoder.JSONDecoder()
-    badgeList=jsonDec.decode(owner.badge_taken)
+    badgeList_before=jsonDec.decode(owner.badge_taken)
+    badge_before=len(badgeList_before)
+
     friendsList=jsonDec.decode(owner.friends)
     follwersList=jsonDec.decode(owner.follwers)
 
@@ -519,11 +521,11 @@ def mypage(request, pk):
     if len(visit_cafes)>=1:
         badgeList.append("개척자")
     
-    if len(users)>=1 and users[0]==owner : 
+    if len(users)>=1 and users[0]==owner and owner.total_visit !=0 : 
         badgeList.append("랭킹 1위")
-    elif len(users)>=2 and users[1]==owner:
+    elif len(users)>=2 and users[1]==owner and owner.total_visit !=0:
         badgeList.append("랭킹 2위")
-    elif len(users)>=3 and users[2]==owner:
+    elif len(users)>=3 and users[2]==owner and owner.total_visit !=0:
         badgeList.append("랭킹 3위")
 
     badges=Badge.objects.all()
@@ -534,22 +536,18 @@ def mypage(request, pk):
 
     total_badge_count = len(taken_badges)
 
+    if total_badge_count != badge_before :
+        for badge in taken_badges:
+            if badge.badge_name not in badgeList_before:
+                notification = Notification.objects.create(notification_type=4, from_user=request.user, to_user=owner, badge=badge)
+                notification.save()
+
     #user에 총 카페 방문횟수 저장
     owner.badge_taken=json.dumps(badgeList)
     owner.save()
     #print("!!!!", this_user.total_visit)
 
-    visited_cafe_list = serializers.serialize('json', visit_cafes)
 
-    main_cafe = None
-    if len(visit_cafes) >= 0:
-        main_cafe = visit_cafes[0]
-        for i in range(1, len(visit_cafes)):
-            if visit_cafes[i-1].visit_count < visit_cafes[i].visit_count:
-                main_cafe = visit_cafes[i]
-    
-    cafes = CafeList.objects.all().order_by('location_x')
-    cafe_list = serializers.serialize('json', cafes)
 
     ctx={
         'owner':owner,
@@ -567,9 +565,6 @@ def mypage(request, pk):
         'my_all_review':my_all_review,
         'review_photo':review_photo,
         'comments':comments,
-        'visited_cafe_list': visited_cafe_list,
-        'main_cafe': main_cafe.pk,
-        'cafe_list': cafe_list
     }
 
     return render(request, 'accounts/mypage.html', context=ctx)
@@ -652,82 +647,66 @@ def visit_register(request):
     if request.method == 'POST':
         req_post = request.POST
         #음료 내용 받아온다.
-        try:
-            str_cafename = req_post.__getitem__('cafename')
-            str_new_drinkname = req_post.__getitem__('etc')
-            str_drinkname = req_post.__getitem__('beverage')
-        except:
-            print("존재하지 않습니다!")
-        
+        str_cafename = req_post.__getitem__('cafename')
+        str_drinkname = req_post.__getitem__('beverage')
+
         #카페를 방문한 유저와 그 유저의 방문 횟수 +1
-        v_cafe = VisitedCafe()
-        v_cafe.user = request.user
-        v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+        
+        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        visited_cafes = VisitedCafe.objects.filter(user=request.user)
+        vcs=[]
+        for vc in visited_cafes:
+            vcs.append(vc.cafe)
+        if this_cafe in vcs: #이전에 갔을 때
+            v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
+        else: #처음 갔을 때
+            v_cafe = VisitedCafe()
+            v_cafe.user = request.user
+            v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
 
         #음료를 저장할 카페, 날짜 저장
         now = datetime.today() ##@@
-        drink = Drink()
-        drink.visited_cafe = v_cafe
+
         # v_cafe.created_at = now ##@@
-        # print('!!!!!!!', v_cafe.created_at) ##@@
+
         user = User.objects.get(username=request.user)
         user.total_visit += 1
-
-        #새로운 카페 등록은 무조건 새로운 종류니까 바로 카운트 올림
-        #user.kinds_of_cafe_lastmonth += 1
 
         #모달창에서 선택한 음료 저장
         jsonDec=json.decoder.JSONDecoder()
         drinkList=jsonDec.decode(v_cafe.drink_list)
-        #TODO:에러처리 필요,,,! 기타에 뭐 적으면 선택 못하도록, 선택 하면 기타에 못 적도록.
-        if str_new_drinkname != "":#8개 중 선택시 etc에는 항상 빈값이 들어간다. 무조건. 기타를 선택시
-            drink.drinkname = str_new_drinkname
-            drinkList.append(str_new_drinkname)
-            user.visit_count_lastmonth += 1 
 
-        else: # 8개 중 선택시.
-            drink.drinkname = str_drinkname
-            drinkList.append(str_drinkname)
-            user.visit_count_lastmonth += 1 
+        drinkList.append(str_drinkname)
+        user.visit_count_lastmonth += 1 
             
         v_cafe.drink_list=json.dumps(drinkList)
 
         user.save()
         v_cafe.save()
-        drink.save()
 
-    return redirect('enroll_new_cafe')
+    return redirect('cafe:cafe_list')
 
 @csrf_exempt
 def visited_register(request):
     if request.method == 'POST':
         req_post = request.POST
-        try:
-            str_cafename = req_post.__getitem__('cafename')
-            str_new_drinkname = req_post.__getitem__('etc')
-            str_drinkname = req_post.__getitem__('beverage')
-        except:
-            print("존재하지 않습니다!")
+        str_cafename = req_post.__getitem__('cafename')
+        str_drinkname = req_post.__getitem__('beverage')
 
         user = User.objects.get(username=request.user)
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
         v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
-        
         v_cafe.visit_count += 1
         user.total_visit += 1
-        drink = Drink.objects.get(visited_cafe=v_cafe)#이전에 등록된 것 근데 이제 필요없을듯,,,
 
         jsonDec=json.decoder.JSONDecoder()
         drinkList=jsonDec.decode(v_cafe.drink_list)
 
-        if str_new_drinkname != "":
-            drinkList.append(str_new_drinkname)
-            user.visit_count_lastmonth += 1 
-        else:
-            drinkList.append(str_drinkname)
-            user.visit_count_lastmonth += 1 
+        drinkList.append(str_drinkname)
+        user.visit_count_lastmonth += 1 
         
         v_cafe.drink_list=json.dumps(drinkList)
 
@@ -747,7 +726,6 @@ def visited_register(request):
 
         user.save()
         v_cafe.save()
-        drink.save()
 
     return redirect('enroll_visited_cafe')
 
@@ -796,7 +774,7 @@ def friend_search(request):
 
 class FriendSearchListView(ListView):
     model = User
-    paginate_by = 15
+    paginate_by = 10
     template_name = 'accounts/friend_search.html'
     context_object_name = 'user_list'
 
@@ -906,21 +884,15 @@ def this_cafe_map(request, pk):
 ##알림 기능
 class CommentNotification(View):
     def get(self, request, notification_pk, review_pk, *args, **kwargs):
-        # print("self:", self)
-        # print("request:", request)
-        # print("notification pk:", notification_pk)
-        # print("self request get:", self.args)
-        # print("self request get:", self.kwargs['review_pk'])
-        # print("review_pk:", review_pk)
         notification = Notification.objects.get(pk=notification_pk)
         #체크 필요!!!
 
-        comment = Comment.objects.get(pk=review_pk)
-        #comment가 속해잇는 리뷰 객체  리뷰는 또 카페 디테일 페이지
-        comment.post #review 객체임
+        this_review = Review.objects.get(pk=review_pk)
+
         #해당하는 카페 객체도 받아와야 함!
-        this_cafe = comment.post.cafe #cafelist 객체임
+        this_cafe = this_review.cafe #cafelist 객체임
         cafe_id = this_cafe.id
+
         each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
         review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
         comments = Comment.objects.all()
@@ -934,12 +906,8 @@ class CommentNotification(View):
             else:
                 pass
 
-        print("review??:", comment.post)##???
-        print("review pk??:", comment.post.pk)###???
         notification.user_has_seen = True
         notification.save()
-
-        #!!!
 
         ctx={
         'this_cafe': this_cafe,
@@ -950,7 +918,6 @@ class CommentNotification(View):
         'is_visit': is_visit,
         } 
         return render(request, 'cafe/review_list.html', ctx)
-        #return redirect('review_list', pk=comment.post.pk)#comment pk가 아니라 review pk로,,,!!
 
 class FollowNotification(View):
     def get(self, request, notification_pk, user_pk, *args, **kwargs):

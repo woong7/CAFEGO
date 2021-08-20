@@ -85,7 +85,7 @@ def comment_write(request):
 
     notification = Notification.objects.create(notification_type=2, from_user=request.user, to_user=review.username, comment=comment)
     notification.save()
-    return JsonResponse({'review_id':review_id, 'review_user':review.username.id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString})
+    return JsonResponse({'review_id':review_id, 'comment_user':comment.username.id, 'content':content, 'comment_id':comment.id, 'username':user.username, 'comment_time':timeString})
 
 @csrf_exempt
 def comment_delete(request):
@@ -106,6 +106,7 @@ def review_create(request, pk):
             myreview.username = request.user
             myreview.cafe = CafeList.objects.get(pk=pk)
             visit_cafes = VisitedCafe.objects.filter(cafe=myreview.cafe)
+            
             get_user_visit_cafe = visit_cafes.get(user=request.user)
 
             myreview.visit_cafe = get_user_visit_cafe ####
@@ -224,13 +225,13 @@ def init_data(request):
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3], id=ss[i][4])#id값 써도 될려낭
 
-    Badge.objects.create(badge_name="카페홀릭", badge_image="static/image/CafeHolic_badge.png", badge_get="카페 총 누적 방문횟수 X회 이상") 
-    Badge.objects.create(badge_name="사교왕", badge_image="static/image/AmericanoLover.png", badge_get="친구 수 X명 이상")    
-    Badge.objects.create(badge_name="개척자", badge_image="static/image/CafeHolic_badge.png", badge_get="X개 이상의 카페 방문")    
-    Badge.objects.create(badge_name="파워블로거", badge_image="static/image/AmericanoLover.png", badge_get="X개 이상의 리뷰 작성")    
-    Badge.objects.create(badge_name="랭킹 1위", badge_image="static/image/금메달.jfif", badge_get="누적 방문 랭킹 1위")    
-    Badge.objects.create(badge_name="랭킹 2위", badge_image="static/image/은메달.jfif", badge_get="누적 방문 랭킹 2위")    
-    Badge.objects.create(badge_name="랭킹 3위", badge_image="static/image/동메달.jfif", badge_get="누적 방문 랭킹 3위")    
+    Badge.objects.create(badge_name="카페홀릭", badge_image="static/image/barista.png", badge_get="카페 총 누적 방문횟수 X회 이상") 
+    Badge.objects.create(badge_name="사교왕", badge_image="static/image/follower.png", badge_get="친구 수 X명 이상")    
+    Badge.objects.create(badge_name="개척자", badge_image="static/image/go-to-work.png", badge_get="X개 이상의 카페 방문")    
+    Badge.objects.create(badge_name="파워블로거", badge_image="static/image/blogger.png", badge_get="X개 이상의 리뷰 작성")    
+    Badge.objects.create(badge_name="랭킹 1위", badge_image="static/image/gold-cup.png", badge_get="누적 방문 랭킹 1위")    
+    Badge.objects.create(badge_name="랭킹 2위", badge_image="static/image/silver-cup.png", badge_get="누적 방문 랭킹 2위")    
+    Badge.objects.create(badge_name="랭킹 3위", badge_image="static/image/bronze-cup.png", badge_get="누적 방문 랭킹 3위")    
 
     
     return redirect('home')
@@ -303,3 +304,81 @@ def sort_review(request, pk):
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
     } 
     return render(request, 'cafe/review_list.html', ctx)
+
+def cafe_delete(request, pk):
+    user=request.user
+    cafe=CafeList.objects.get(id=pk)
+
+    v_cafe=VisitedCafe.objects.get(user=user, cafe=cafe)
+    user.total_visit-=1
+    user.save()
+
+    if v_cafe.visit_count == 1:
+        v_cafe.delete()
+    else:
+        v_cafe.visit_count-=1
+        jsonDec=json.decoder.JSONDecoder()
+        drinkList=jsonDec.decode(v_cafe.drink_list)
+        del drinkList[len(drinkList)-1]
+        v_cafe.drink_list=json.dumps(drinkList)
+        v_cafe.save()
+
+    return redirect('cafe:cafe_list')
+
+def enroll_cafe_from_map(request, pk):
+    cafe = CafeList.objects.get(pk=pk)
+    ctx = {
+        'cafe': cafe,
+    }
+    return render(request, 'cafe/enroll_cafe_from_map.html', ctx)
+
+@csrf_exempt
+def enroll_cafe(request):
+    if request.method == 'POST':
+        req_post = request.POST
+        #음료 내용 받아온다.
+        try:
+            str_cafename = req_post.__getitem__('cafename')
+            str_new_drinkname = req_post.__getitem__('etc')
+            str_drinkname = req_post.__getitem__('beverage')
+        except:
+            print("존재하지 않습니다!")
+        
+        #카페를 방문한 유저와 그 유저의 방문 횟수 +1
+        
+        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        visited_cafes = VisitedCafe.objects.filter(user=request.user)
+        vcs=[]
+        for vc in visited_cafes:
+            vcs.append(vc.cafe)
+        if this_cafe in vcs: #이전에 갔을 때
+            v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
+        else: #처음 갔을 때
+            v_cafe = VisitedCafe()
+            v_cafe.user = request.user
+            v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+
+        v_cafe.visit_check = True
+        v_cafe.visit_count += 1
+
+        user = User.objects.get(username=request.user)
+        user.total_visit += 1
+
+        #모달창에서 선택한 음료 저장
+        jsonDec=json.decoder.JSONDecoder()
+        drinkList=jsonDec.decode(v_cafe.drink_list)
+        #TODO:에러처리 필요,,,! 기타에 뭐 적으면 선택 못하도록, 선택 하면 기타에 못 적도록.
+        if str_new_drinkname != "":#8개 중 선택시 etc에는 항상 빈값이 들어간다. 무조건. 기타를 선택시
+            drinkList.append(str_new_drinkname)
+            user.visit_count_lastmonth += 1 
+
+        else: # 8개 중 선택시.
+            drinkList.append(str_drinkname)
+            user.visit_count_lastmonth += 1 
+            
+        v_cafe.drink_list=json.dumps(drinkList)
+
+        user.save()
+        v_cafe.save()
+
+    return redirect('cafe:cafe_map')
