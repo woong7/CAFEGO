@@ -32,6 +32,7 @@
 
 /* 버튼 */
 .button {
+    margin-top: 10px;
     border: 2px solid #704F3F;
     background-color: white;
     border-radius: 10px;
@@ -53,7 +54,7 @@
 }
 
 /* page 기본내용 */
-#login_page {
+#signup_page {
     background-color: #F0D9CE;
     padding: 50px 0px;
 }
@@ -70,18 +71,9 @@
     font-family: RIDIBatang;
 }
 
-.wave{
-    position: absolute;
-    height: 89%;
-    left: 0;
-    bottom: 0;
-    z-index: 1;
-    opacity: 0.9;
-}
-
 .container {
     width: 100vw;
-    height: 95vh;
+    height: 100vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem;
@@ -89,26 +81,25 @@
     box-shadow: 2px 2px 10px gray;
 }
 
+.signup-container {
+    width: 100%;
+}
+
+.wave{
+    position: absolute;
+    height: 85%;
+    width: 500px;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    opacity: 0.9;
+}
+
 .img {
+    width: 90%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-}
-
-.img img {
-    width: 90%;
-    margin-top: 20px;
-    transform:rotate(0deg);
-    -moz-transform: scaleX(-1); 
-    -o-transform: scaleX(-1); 
-    -webkit-transform: scaleX(-1); 
-    transform: scaleX(-1);   
-    filter: FlipH;
-    -ms-filter: "FlipH";
-    z-index: 2;
-}
-
-.img{
     animation: up-down 2s ease-in-out infinite alternate-reverse both;
     z-index: 3;
 }
@@ -122,15 +113,23 @@
     }
 }
 
-form {
-    width: 380px;
+
+.img img {
+    width: 90%;
+    margin-bottom: 70px;
+    margin-right: 20px;
+    z-index: 2;
+}
+
+form{
+    width: 390px;
 }
 
 .avatar {
     width: 165px;
 }
 
-.login-container {
+.signup-container{
     display: flex;
     align-items: flex-start;
     text-align: center;
@@ -140,90 +139,53 @@ form {
 
 .input-div {
     position: relative;
+    width: 100%;
     display: grid;
     grid-template-columns: 10% 90%;
-    margin: 25px 0;
+    margin: 24px 0px;
     padding: 5px 0;
     border-bottom: 2px solid #B3A29A;
 }
 
-/* 입력칸 focus 효과 */
-.input-div:before, .input-div:after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    width: 0%;
-    height: 2px;
-    background-color: #F0A986;
-    transition: .3s;
-}
-
-.input-div:before {
-    right: 50%;
-}
-
-.input-div:after {
-    left: 50%;
-}
-
-.input-div:focus-within .i .icon{
-    color: #F0A986;
-}
-
-.input-div:focus-within .table > .label {
-    top: -7px;
-    font-size: 15px;
-    color: #F0A986;
-}
-
-.input-div:focus-within:before, .input-div:focus-within:after {
-    width: 50%;
-}
-
-.input-div .one {
-    margin-top: 0;
-}
-
-.input-div .two{
-    margin-bottom: 4px;
-}
-
 .i {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-bottom: 3px;
 }
 
-.icon {
+.i .icon {
     color: #B3A29A;
     transition: .3s;
 }
 
 .table {
     position: relative;
-    height: 45px;
+    height: 30px;
     margin: 0;
 }
 
-.label {
+.input-div > div > label {
     position: absolute;
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
     color: #999;
     transition: .3s;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
     font-family: RIDIBatang;
     color: #B3A29A;
 }
 
-.input {
+.input-div > div > i {
+    color: #B3A29A;
+    transition: .3s;
+}
+
+.input-div > div > input {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
-    left: 0;
+    left: 5px;
     border: none;
     outline: none;
     background: none;
@@ -231,58 +193,83 @@ form {
 }
 
 
-/* 아이디 저장 체크박스 */
-.save_wrap {
-    position: relative;
-    width: 35%;
-    height: 20px;
-    margin-left: 10px;
-    margin-bottom: 20px;
-    display: grid;
-    grid-template-columns: 10% 90%;
+/* 포커스 효과 */
+.input-div::before, .input-div::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    width: 0%;
+    height: 2px;
+    background-color: #f0a986;
+    transition: .3s;
 }
 
-.save_label {
-    position: absolute;
-    left: 15%;
+.input-div::before {
+    right: 50%;
+}
+
+.input-div::after {
+    left: 50%;
+}
+
+.input-div:focus-within .icon {
+    color: #f0a986;
+}
+
+.input-div:focus-within label {
+    top: -7px;
     font-size: 15px;
-    font-weight: lighter;
-    font-family: RIDIBatang;
-    color: #B3A29A;
+    color: #f0a986;
+}
+
+.input-div:focus-within::before, .input-div:focus-within::after {
+    width: 50%;
+}
+
+/* 체크박스 */
+.check-div {
+    display: flex;
+    justify-content: center;
+}
+
+.check_wrap {
+    display: flex;
 }
 
 .check {
     position: absolute;
-    top: -1px;
-    left: -3px
+    width: 20px;
 }
 
-.check input {
+.checkbox, .check_icon {
+    position: absolute;
+    left: 0px;
+    top: 5px; 
+}
+
+.check > input {
     display: none;
 }
 
 .check_icon {
-    display: inline-block;
+    background-color: #F0D9CE;
     width: 15px;
     height: 15px;
-    background-color:#B3A29A;
-    border-radius: 3px;
-    position: relative;
-    cursor: pointer;
+    border-radius: 2px;
 }
 
-.check .check_icon::before, .check .check_icon::after {
+.check_icon::before, .check_icon::after {
     content: '';
     display: inline-block;
     width: 4px;
     height: 0;
-    background-color: #F0D9CE;
+    background-color: #B3A29A;
     position: absolute;
     transform-origin: left top;
     border-radius: 1px;
 }
 
-.check .check_icon::before {
+.check_icon::before {
     top: 7px;
     left: 1px;
     transform: rotate(-45deg);
@@ -299,32 +286,51 @@ form {
     transition: all .3s ease;
 }
 
-.check input:checked ~ .check_icon::after {
+.check input:checked ~ .check_icon::after { 
     height: 15px;
     transition: all .35s ease .3s;
 }
+/* ~: 동일 선상의 요소, 부모자식 아니고 동일 선상에 있는 태그들 */
 
 
-/* 로그인 하단부(비번찾기, 소셜로그인 등..) */
-.findPw {
-    display: block;
-    text-align: right;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: .3s;
+.check_label {
+    width: 140px;
+    font-size: 17px;
+    font-weight: lighter;
     font-family: RIDIBatang;
     color: #704F3F;
 }
 
-.findPw:hover {
-    color: #F0A986;
+
+
+
+
+
+/* 거주지 선택, select */
+.house {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    font-family: RIDIBatang;
+    color: #B3A29A;
 }
 
-.social-btn {
-    font-size: 11px;
-    font-weight: lighter;
-    font-family: twaysky;
+.house > div {
+    position: relative;
 }
+
+.house > div > i {
+    margin-right: 2px;
+    position: absolute;
+    top: 50%;
+}
+
+select:active .home_icon {
+    color: #f0a986;
+}
+
 
 /* 반응형 */
 @media screen and (max-width: 1100px){
@@ -365,14 +371,10 @@ form {
 	}
 
     .avatar {
-        width: 150px;
+        width: 130px;
     }
 
 	.login-content{
 		justify-content: center;
 	}
-
-    .social-btn {
-        font-size: 7px;
-    }
 } 
