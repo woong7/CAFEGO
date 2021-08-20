@@ -49,6 +49,7 @@ class LoginView(View):
         return render(request, "accounts/home.html", ctx)
 
     def post(self, request):
+        is_failed=0
         form = forms.LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get("username")
@@ -57,8 +58,17 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 return render(request, "accounts/home.html")
+            else:
+                is_failed=1
+        else:
+            is_failed=1                   
 
-        return render(request, "accounts/login.html", {"form": form})
+        ctx={
+            "form": form, 
+            "is_failed":json.dumps(is_failed),
+        }
+
+        return render(request, "accounts/login.html", ctx)
 
 ##allauth 써서 필요 없나??
 @login_required
@@ -864,7 +874,7 @@ def friend_register(request):
         target.follwernum+=1
         target.save()
         print("target:", target) #user objects가 맞는지
-        notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
+        notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target, date=timezone.now)
         notification.save()
 
     return redirect('friend_search')
