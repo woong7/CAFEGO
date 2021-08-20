@@ -95,6 +95,9 @@
       alert("아이디 또는 비밀번호가 맞지 않습니다");
     }
 
+  <script type="text/javascript">
+    const is_failed = {{is_failed | safe }};
+    console.log(is_failed);
     const inputs = document.querySelectorAll('.input');
 
 

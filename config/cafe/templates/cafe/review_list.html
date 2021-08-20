@@ -89,7 +89,7 @@
                 <hr/>
                 <div class="d-flex justify-content-between">
                     <div class="reviewer-name d-flex">
-                        <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }} </a>
+                        <a href="{% url 'mypage' reviews.username.pk %}" style="font-weight:bold;">{{ reviews.username }} </a>
 
                         {% if reviews.review_stars == '1.0' %}
                             <span>⭐</span>
@@ -144,13 +144,13 @@
                                 <div class="comment-{{comment.id}} my-1">
                                     <div class="row align-items-center">
                                         <div class="col-2">
-                                            <a href="{% url 'mypage' comment.username.pk %}">{{ comment.username }} </a>
+                                            <a href="{% url 'mypage' comment.username.pk %}" style="font-weight:bold;">{{ comment.username }} </a>
                                         </div>
                                         <div class="col-4">{{comment.content}}</div>
                                         <div class="col-4" style="font-size: 13px;">{{comment.created_at}}</div>
                                         {% if comment.username == user %}
                                         <div class="col-2">
-                                            <button class="main-btn" onclick="commentDelete('{{comment.id}}');">삭제</button>
+                                            <button class="main-btn" style="margin-left: 29px;" onclick="commentDelete('{{comment.id}}');">삭제</button>
                                         </div>
                                         {% endif %}
                                     </div>
@@ -207,7 +207,7 @@
                         <div class="col-4">${content}</div>
                         <div class="col-4" style="font-size: 13px;">${comment_time}</div>
                         <div class="col-2">
-                            <button class="main-btn" onclick="commentDelete('${comment_id}');">삭제</button>
+                            <button class="main-btn" style="margin-left: 29px;" onclick="commentDelete('${comment_id}');">삭제</button>
                         </div>
                     </div>
                     <hr/>

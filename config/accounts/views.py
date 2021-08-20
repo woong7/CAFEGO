@@ -63,10 +63,7 @@ class LoginView(View):
         else:
             is_failed=1                   
 
-        ctx={
-            "form": form, 
-            "is_failed":json.dumps(is_failed),
-        }
+        return render(request, "accounts/login.html", {"form": form,})
 
         return render(request, "accounts/login.html", ctx)
 
@@ -881,8 +878,6 @@ def friend_register(request):
 
 def this_cafe_map(request, pk):
     cafe = CafeList.objects.get(pk=pk)
-    #cafes = CafeList.objects.all().order_by('location_x')
-    #cafe_list = serializers.serialize('json', cafes)
     ctx = {
         #'data': cafe_list,
         'cafe_id': cafe.id,
