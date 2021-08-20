@@ -244,9 +244,9 @@ div.container4 p {
   font-size: 1.6em;
   font-family: Cafe24Oneprettynight;
   font-weight: bolder;
-  color: #573728;
+  color: #F0D9CE; 
   margin: .5rem 0 1rem;
-  text-shadow: 1px 1px 1px white;
+  text-shadow: 1px 1px 1px #573728;
 }
 
 .startbtn {
@@ -265,3 +265,15 @@ div.container4 p {
   background-color: #704F3F;
   color: white;
 }
+
+
+/* .color {
+  #F0A986 
+  #B3A29A
+  #A3735B
+  #F0D9CE /페이지 배경색
+  #704F3F /페이지 글자색
+  #573728
+  #1f5753
+  #5ba39e
+} */
