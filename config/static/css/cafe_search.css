@@ -1,3 +1,8 @@
+body {
+    background-color: #F0D9CE;
+    height: 100vh;
+}
+
 .rating_wrap_parents {
     position: relative;
     left: 30%;

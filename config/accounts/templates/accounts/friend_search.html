@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem;">
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem; min-height: 93.3vh;">
     <header class="pt-3">
         <div class="p-2 mx-auto text-center">
             <div class="page_title">Search User</div>
@@ -48,7 +48,7 @@
 
                 {% for user in user_list %}
                     <tr class="text-center table_content">
-                        <td style="vertical-align: middle; font-size:1.2em;">{{ user.id }}</td>
+                        <td style="vertical-align: middle; font-size:1.2em;">{{forloop.counter0|add:page_obj.start_index}}</td>
                         <td style="vertical-align: middle;">
                             <a href="{% url 'mypage' user.id %}" class="atag">{{ user.nickname }}</a>
                         </td>

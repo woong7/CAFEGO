@@ -106,25 +106,28 @@
                                 <div class="modal-dialog">
                                     <form action="{% url 'visit_register' %}" method='post'>
                                         <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel" name="cafename2">
-                                                    <input type="text" name="cafename" value="{{ cafe.name }}">
-                                                    <input type="text" name="cafeid" value="{{ cafe.id }}">
+                                            <div class="modal-header" style="vertical-align: middle;">
+                                                <h5 class="modal-title table_title" id="exampleModalLabel" name="cafename2">
+                                                    <input type="hidden" name="cafename" value="{{ cafe.name }}">
+                                                    <input type="hidden" name="cafeid" value="{{ cafe.id }}">
+                                                    {{cafe.name}}
                                                 </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                         
-                                            <div class="modal-body" style="text-align: left;">
-                                                마신 음료를 체크해주세요!<br>
-                                                <input type="radio" class="btn btn-primary" name="beverage" value="아메리카노"> 아메리카노 <br>
-                                                <input type="radio" class="btn btn-primary" name="beverage" value="바닐라라떼"> 바닐라라떼 <br>
-                                                <input type="radio" class="btn btn-primary" name="beverage" value="카페라떼"> 카페라떼 <br>
-                                                <input type="radio" class="btn btn-primary" name="beverage" value="카라멜마끼야또"> 카라멜마끼야또 <br>
-                                                <input type="radio" class="btn btn-primary" name="beverage" value="초코라떼"> 초코라떼 <br>
-                                                <input type="radio" class="btn btn-primary" name="beverage" value="녹차라떼"> 녹차라떼 <br>
-                                                <input type="radio" class="btn btn-primary" name="beverage" value="에이드"> 에이드 <br>
-                                                <input type="radio" class="btn btn-primary" name="beverage" value="허브차"> 허브차 <br>
-                                                기타 <input type="text" name="etc" value="">
+                                            <div class="modal-body table_content" style="text-align: left;">
+                                                <h3 style="text-align: middle;">마신 음료를 체크해주세요!</h3>
+                                                <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="아메리카노"> 아메리카노 <br>
+                                                <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="바닐라라떼"> 바닐라라떼 <br>
+                                                <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카페라떼"> 카페라떼 <br>
+                                                <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카라멜마끼야또"> 카라멜마끼야또 <br>
+                                                <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="초코라떼"> 초코라떼 <br>
+                                                <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="녹차라떼"> 녹차라떼 <br>
+                                                <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="에이드"> 에이드 <br>
+                                                <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="허브차" id="beverage"> 허브차 <br>
+                                                <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = false;" name="beverage">기타
+                                                <input type="text" name="beverage" id="etc_{{cafe.id}}" value="" placeholder="음료명" disabled="disabled">
+                                            </br>
                                             </div>
                                             
                                             <div class="modal-footer">
