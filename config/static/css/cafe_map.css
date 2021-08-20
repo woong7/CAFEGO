@@ -152,8 +152,8 @@ span .placename {
 .hover-overlay-click .infos {
     padding-left: 10px;
     padding-right: 10px;
-    height: 120px;
-    border-radius: 5px;
+    height: 110px;
+    min-width: 200px;
     border-bottom: 2px solid #ccc;
     border-right: 1px solid #ccc;
     overflow: hidden;
@@ -174,4 +174,36 @@ span .placename {
     width: 22px;
     height: 14px;
     background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+}
+
+.overlay-cafe-name {
+    padding-top: 5px;
+    font-size:20px;
+    text-align: center;
+}
+
+.overlay-cafe-address {
+    padding:5px;
+    font-size:12px; 
+    text-align: center;
+}
+
+.overlay-buttons {
+    padding:5px;
+    display: flex !important;
+    justify-content: space-around;
+}
+
+.overlay-btn {
+    margin-top: 5px;
+    text-align: center;
+    color: #704F3F;
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid #F0D9CE;
+    border-radius: 8px;
+}
+
+.overlay-btn:hover {
+    background-color: #F0D9CE;
 }

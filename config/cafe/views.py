@@ -106,6 +106,7 @@ def review_create(request, pk):
             myreview.username = request.user
             myreview.cafe = CafeList.objects.get(pk=pk)
             visit_cafes = VisitedCafe.objects.filter(cafe=myreview.cafe)
+            
             get_user_visit_cafe = visit_cafes.get(user=request.user)
 
             myreview.visit_cafe = get_user_visit_cafe ####
@@ -323,3 +324,61 @@ def cafe_delete(request, pk):
         v_cafe.save()
 
     return redirect('cafe:cafe_list')
+
+def enroll_cafe_from_map(request, pk):
+    cafe = CafeList.objects.get(pk=pk)
+    ctx = {
+        'cafe': cafe,
+    }
+    return render(request, 'cafe/enroll_cafe_from_map.html', ctx)
+
+@csrf_exempt
+def enroll_cafe(request):
+    if request.method == 'POST':
+        req_post = request.POST
+        #음료 내용 받아온다.
+        try:
+            str_cafename = req_post.__getitem__('cafename')
+            str_new_drinkname = req_post.__getitem__('etc')
+            str_drinkname = req_post.__getitem__('beverage')
+        except:
+            print("존재하지 않습니다!")
+        
+        #카페를 방문한 유저와 그 유저의 방문 횟수 +1
+        
+        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        visited_cafes = VisitedCafe.objects.filter(user=request.user)
+        vcs=[]
+        for vc in visited_cafes:
+            vcs.append(vc.cafe)
+        if this_cafe in vcs: #이전에 갔을 때
+            v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
+        else: #처음 갔을 때
+            v_cafe = VisitedCafe()
+            v_cafe.user = request.user
+            v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+
+        v_cafe.visit_check = True
+        v_cafe.visit_count += 1
+
+        user = User.objects.get(username=request.user)
+        user.total_visit += 1
+
+        #모달창에서 선택한 음료 저장
+        jsonDec=json.decoder.JSONDecoder()
+        drinkList=jsonDec.decode(v_cafe.drink_list)
+        #TODO:에러처리 필요,,,! 기타에 뭐 적으면 선택 못하도록, 선택 하면 기타에 못 적도록.
+        if str_new_drinkname != "":#8개 중 선택시 etc에는 항상 빈값이 들어간다. 무조건. 기타를 선택시
+            drinkList.append(str_new_drinkname)
+            user.visit_count_lastmonth += 1 
+
+        else: # 8개 중 선택시.
+            drinkList.append(str_drinkname)
+            user.visit_count_lastmonth += 1 
+            
+        v_cafe.drink_list=json.dumps(drinkList)
+
+        user.save()
+        v_cafe.save()
+
+    return redirect('cafe:cafe_map')

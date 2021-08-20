@@ -58,6 +58,9 @@ class User(AbstractBaseUser):
     agree_terms = models.BooleanField(default=False)
     agree_marketing = models.BooleanField(default=False)
 
+    self_intro=models.TextField(null=True, blank=True, max_length=150)
+    self_image=models.ImageField(null=True, blank=True, upload_to='media/static/image/')
+
     is_active = models.BooleanField(        
         default=False,                 # 기본값을 False 로 변경
         help_text=(
@@ -138,8 +141,7 @@ class Drink(models.Model):
     visited_cafe = models.ForeignKey(VisitedCafe, on_delete=CASCADE)
     drinkname = models.CharField(max_length=50, choices=DRINK_CHOICES)
 
-    created_at = models.DateTimeField(auto_now_add=True) #카페 등록 시간
-    updated_at = models.DateTimeField(auto_now=True) #갔던 카페 다시 등록 
+    
 
     def __str__(self):
         return self.drinkname
@@ -153,5 +155,6 @@ class Notification(models.Model):
     #post - like
     comment = models.ForeignKey('cafe.Comment', on_delete=models.CASCADE, related_name='+', blank=True, null=True)
     badge = models.ForeignKey(Badge, on_delete=models.CASCADE, blank=True, null=True)
-    date = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True) #카페 등록 시간
+    updated_at = models.DateTimeField(auto_now=True) #갔던 카페 다시 등록 
     user_has_seen = models.BooleanField(default=False)#봤는지 안 봤는지 체크

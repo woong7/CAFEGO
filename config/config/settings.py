@@ -165,7 +165,7 @@ SITE_ID=1
 LOGIN_REDIRECT_URL='/'
 
 
-ACCOUNT_FORMS = {'signup': 'accounts.forms.MyCustomForm'} #앱이름.forms.py,클래스 이름
+ACCOUNT_FORMS = {'signup': 'accounts.forms.UserRegistrationForm'} #앱이름.forms.py,클래스 이름
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
