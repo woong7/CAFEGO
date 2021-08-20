@@ -61,17 +61,18 @@
                                 <form action="{% url 'friend_register' %}" method='post'>
                                     <div class="modal-content"> 
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel" name="friendname2">
-                                                <input type="text" name="friendname" value="{{ user.nickname }}">
-                                                <input type="text" name="friendid" value="{{ user.id }}">
+                                            <h5 class="modal-title table_title" id="exampleModalLabel" name="friendname2">
+                                                <input type="hidden" name="friendname" value="{{ user.nickname }}">
+                                                <input type="hidden" name="friendid" value="{{ user.id }}">
+                                                {{user.nickname}}님을 팔로우 하시겠습니까?
                                             </h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>                                    
     
                                         
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" id="submit_btn_{{user.id}}" class="btn btn-primary" onclick="onClick({{ user }})">Follow</button>
+                                            <button type="button" class="button" data-bs-dismiss="modal">닫기</button>
+                                            <button type="submit" id="submit_btn_{{user.id}}" class="button" onclick="onClick({{ user }})">Follow</button>
                                         </div>
                                     </div>
                                 </form>
