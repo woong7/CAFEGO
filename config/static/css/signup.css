@@ -73,7 +73,7 @@
 
 .container {
     width: 100vw;
-    height: 100vh;
+    height: 780px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem;
@@ -148,7 +148,7 @@ form{
 }
 
 .i {
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 .i .icon {
@@ -212,17 +212,17 @@ form{
     left: 50%;
 }
 
-.input-div:focus-within .icon {
+.input-div.focus .i .icon {
     color: #f0a986;
 }
 
-.input-div:focus-within label {
+.input-div.focus .table  label {
     top: -7px;
     font-size: 15px;
     color: #f0a986;
 }
 
-.input-div:focus-within::before, .input-div:focus-within::after {
+.input-div.focus::before, .input-div.focus::after {
     width: 50%;
 }
 
