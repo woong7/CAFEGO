@@ -83,10 +83,6 @@
         places = [];
         // 마커 데이터 추가
         markData(markers, cafeList, swLatlng, neLatlng);
-        for(var i = 0; i < markers.length; i++) {
-            //console.log(markers[i].Fb);
-        }
-        //console.log(markers.length);
     });
 
     // 카페들을 지도에 마킹하는 함수
@@ -125,11 +121,9 @@
             }
         }
         if(!find) right_bound=low;
-       // console.log(left_bound);
-       // console.log(right_bound);
 
         for(var i=left_bound; i <=right_bound; i++) {
-            if(cafeList[i].fields.location_y < ne.Ma && cafeList[i].fields.location_y > sw.Ma){
+            if(cafeList[i].fields.location_y <ne.Ma && cafeList[i].fields.location_y > sw.Ma){
                 addMarker(markers, cafeList[i]);
                 places.push(cafeList[i]);
             }
@@ -157,12 +151,12 @@
             // 마커를 클릭하면 장소명이 인포윈도우에 표출
             overlay.setContent(`
                 <div class="hover-overlay-click">
-                    <div class="infos d-flex row">
-                        <div class="fw-bold col" style="padding:5px;font-size:20px;">${place.fields.name}</div>
-                        <div class="col" style="padding:5px;font-size:10px;">${place.fields.address}</div>
-                        <div class="col" style="padding:5px;font-size:10px;">
-                            <a href="../review_list/${place.pk}">리뷰 보기</a>
-                            <a href="../review_create/${place.pk}">리뷰 작성</a>
+                    <div class="infos d-flex flex-column">
+                        <div class="fw-bold overlay-cafe-name">${place.fields.name}</div>
+                        <div class="overlay-cafe-address">${place.fields.address}</div>
+                        <div class="overlay-buttons">
+                            <button class="overlay-btn" onClick="location.href='../review_list/${place.pk}'">리뷰 보기</button>
+                            <button class="overlay-btn" onClick="location.href='../enroll_cafe_from_map/${place.pk}'">방문 추가</button>
                         </div>
                     </div>
                 </div>
@@ -200,9 +194,9 @@
     }
 
     //카페 키워드 검색 이벤트
+    // TODO: 밑의 enterkey()와 합쳐야함
     $(document).ready(function(){
         $("#search-cafe").click(function(){
-
             let placeslist = "#placesList";
             // html의 id가 keyword인 태그 안에 들어있는 값을 들고옴
             var keyword = $('#keyword').val();
@@ -213,22 +207,12 @@
                 return false;
             }
 
-            // placeList라는 id값을 가진 태그를 불러옴
-            var $placesList = document.getElementById('placesList');
-            // placeList 태그 빈 값으로 초기화
-            $placesList.innerHTML = '';
             // keywordMarkers 배열 초기화
             let keywordMarkers = [];
             // keywordPlaces 배열 초기화
             let keywordPlaces = [];
             // keyword 필터링
             checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces);
-            // html에 검색된 카페 표시
-            for(var i = 0; i < keywordMarkers.length; i++) {
-                console.log(keywordPlaces[i].fields.name);
-                $placesList = document.getElementById('placesList');
-                $placesList.innerHTML += '<li class="search-result-'+i+'">'+keywordMarkers[i].Fb+'</li>';
-            }
 
             // 마커와 검색결과 항목에 mouseover 했을때 해당 장소의 인포윈도우에 장소명 표시
             // mouseout 했을 때는 인포윈도우 닫음
@@ -246,19 +230,21 @@
                         displayOverlay(place.fields);
                     };
 
-                    //itemEl.onmouseout =  function () {
-                        //infowindow_search.close();
-                   //};
+                    itemEl.onmouseout =  function () {
+                        overlay_search.setMap(null);
+                    };
 
                     itemEl.onclick = function () {
                         overlay_search.setMap(null);
                         overlay.setContent(`
-                            <div class="d-flex flex-column align-items-center" style="width: 150px; height: 100px;">
-                                <div class="fw-bold" style="padding:5px;font-size:12px;">${place.fields.name}</div>
-                                <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
-                                <div style="padding:5px;font-size:10px;">
-                                    <a href="../review_list/${place.pk}">리뷰 보기</a>
-                                    <a href="../review_create/${place.pk}">리뷰 작성</a>
+                            <div class="hover-overlay-click">
+                                <div class="infos d-flex flex-column">
+                                    <div class="fw-bold overlay-cafe-name">${place.fields.name}</div>
+                                    <div class="overlay-cafe-address">${place.fields.address}</div>
+                                    <div class="overlay-buttons">
+                                        <button class="overlay-btn" onClick="location.href='../review_list/${place.pk}'">리뷰 보기</button>
+                                        <button class="overlay-btn" onClick="location.href='../enroll_cafe_from_map/${place.pk}'">방문 추가</button>
+                                    </div>
                                 </div>
                             </div>
                         `);
@@ -317,12 +303,14 @@
                     itemEl.onclick = function () {
                         overlay_search.setMap(null);
                         overlay.setContent(`
-                            <div class="d-flex flex-column align-items-center" style="width: 150px; height: 80px;">
-                                <div class="fw-bold" style="padding:5px;font-size:12px;">${place.fields.name}</div>
-                                <div style="padding:5px;font-size:10px;">${place.fields.address}</div>
-                                <div style="padding:5px;font-size:10px;">
-                                    <a href="../review_list/${place.pk}">리뷰 보기</a>
-                                    <a href="../review_create/${place.pk}">리뷰 작성</a>
+                            <div class="hover-overlay-click">
+                                <div class="infos d-flex flex-column">
+                                    <div class="fw-bold overlay-cafe-name">${place.fields.name}</div>
+                                    <div class="overlay-cafe-address">${place.fields.address}</div>
+                                    <div class="overlay-buttons">
+                                        <button class="overlay-btn" onClick="location.href='../review_list/${place.pk}'">리뷰 보기</button>
+                                        <button class="overlay-btn" onClick="location.href='../enroll_cafe_from_map/${place.pk}'">방문 추가</button>
+                                    </div>
                                 </div>
                             </div>
                         `);
@@ -343,14 +331,14 @@
         var el = document.createElement('li'),
         itemStr = `
             <span class="markerbg marker_$(index+1)"></span>
-                <div class="info d-flex flex-column">
-                    <div>
-                        <span class="placename">${keywordPlace.fields.name}</span>
-                    </div>
-                    <div class="">
-                        <span>${keywordPlace.fields.address}</span>
-                    </div>
+            <div class="info d-flex flex-column">
+                <div style="font-size:18px; font-weight:bold;">
+                    <span class="placename">${keywordPlace.fields.name}</span>
                 </div>
+                <div style="font-size:13px; color:gray;">
+                    <span>${keywordPlace.fields.address}</span>
+                </div>
+            </div>
         `;         
 
         el.innerHTML = itemStr;
