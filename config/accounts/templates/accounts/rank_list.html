@@ -17,27 +17,26 @@
         </div>
     </header>
 
-    <div class="container px-5">
-
+    <article class="container px-5">
+      <!-- 몇월랭킹 -->
       <div class="text-center">
         <span class="monthly_rank">{{this_month}}월 랭킹</span>
         <hr class="rank_hr"></hr>
       </div>
-      <article class="row row-cols-xxl-2 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 row-cols-sm-1 mb-3 text-center">
 
-      <!----- B_한 달 방문 랭킹 ----->
-      <section class="col">
-        <div class="card ranking_card rounded-5 shadow mx-2 my-3">
-          <div class="row g-0">
-            <div class="col-md-8 card_img" style="background-image:url(../../../media/static/image/rank_coffee-beans.jpg)"></div>
-            <div class="col-md-4">
-              <div class="card-body">
-                <div class="card-img-overlay card_title col-md-8">
-                  <span class="ranking_title_back"></span>
-                  <span class="ranking_title">{{ this_month }}월 방문 랭킹</span>
-                  <!-- 여기부터 -->
-                  <div id="b_topThree">
-                    <!-- <span class="ranking_top"></span>
+      <article class="row row-cols-xxl-2 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 row-cols-sm-1 mb-3 text-center">
+        <!----- B_한 달 방문 랭킹 ----->
+        <div class="col">
+          <div class="card ranking_card rounded-5 shadow mx-2 my-3">
+            <div class="row g-0">
+              <div class="col-md-8 card_img" style="background-image:url(../../../media/static/image/rank_coffee-beans.jpg)">
+              </div>
+              <div class="col-md-4">
+                <div class="card-body">
+                  <div class="card-img-overlay card_title col-md-8">
+                    <span class="ranking_title_back"></span>
+                    <span class="ranking_title">{{ this_month }}월 방문 랭킹</span>
+                    <span class="ranking_top"></span>
                     <div class="ranking_top_content">
                       {% for user in B_users %}
                         {% if forloop.counter > 3 %}
@@ -60,209 +59,215 @@
                           {% endif %}
                         {% endif %}
                       {% endfor %}
-                    </div> -->
-                  </div>
-                  <!-- 여기까지 -->
-                </div>
-                  
-                <div>
-                  <!-- JS 매달 매기기 -->
-                  <div class="b_giveMedal">
+                    </div>
                   </div>
                     
-                  <div class="card-text card_info my-3">
-                    {{ request.user.nickname }}님은<br>
-                    {% if B_my_grade == 0 %}
-                      이번 달에 방문한<br>카페가 없어요!
-                    {% else %}
-                      🌟{{ B_my_grade }}등🌟 입니다!
-                    {% endif%}
-                  </div>
-                  
-                  <!-- B_Button trigger modal -->
-                  <button class="button" data-bs-toggle="modal" data-bs-target="#B_Modal">
-                    전체 랭킹
-                  </button>
-                  <!-- B_Modal -->
-                    <div class="modal fade" id="B_Modal" tabindex="-1" aria-labelledby="B_ModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content modal_back">
-                          <div class="modal-header modal_title_group">
-                            <div>
-                              <i class="fas fa-trophy trophy"></i>
-                              <span class="modal-title modal_title" id="A_ModalLabel"> {{ this_month }}월 랭킹 </span>
-                              <i class="fas fa-trophy trophy"></i>
-                            </div>
-                          </div>
-                          <div class="modal-body row mx-auto">
-                          {% for user in B_users %}
-                            {% if forloop.counter == 1 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname }}</span>
-                                  <span class="modal_text">님! 총 {{ user.visit_count_lastmonth }}회 방문했어요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 2 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.visit_count_lastmonth }}회 방문했어요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 3 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.visit_count_lastmonth }}회 방문했어요.</span>
-                                </span>
-                              </div>
-                            {% else %}
-                              <div class="modal_text_group">
-                                <span class="sm_other_medal">{{forloop.counter}}</span>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.visit_count_lastmonth }}회 방문했어요.</span>
-                                </span>
-                              </div>
-                            {% endif %}
-                          {% endfor %}
-                          </div>
-                          <div class="modal-footer">
-                            <button class="button" data-bs-dismiss="modal">닫기</button>
-                          </div>
-                        </div>
-                      </div>
+                  <div>
+                    <!-- JS 매달 매기기 -->
+                    <div class="b_giveMedal">
                     </div>
+                      
+                    <div class="card-text card_info my-3">
+                      {{ request.user.nickname }}님은<br>
+                      {% if B_my_grade == 0 %}
+                        이번 달에 방문한<br>카페가 없어요!
+                      {% else %}
+                        🌟{{ B_my_grade }}등🌟 입니다!
+                      {% endif%}
+                    </div>
+                    
+                    <!-- B_Button trigger modal -->
+                    <button class="button" data-bs-toggle="modal" data-bs-target="#B_Modal">
+                      전체 랭킹
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-
-      <!----- E_한 달 리뷰 개수 랭킹 ----->
-      <section class="col">
-        <div class="card ranking_card rounded-5 shadow mx-2 my-3">
-          <div class="row g-0">
-            <div class="col-md-8 card_img" style="background-image:url(../../../media/static/image/rank_food-1245955_1280.jpg)"></div>
-            <div class="col-md-4">
-              <div class="card-body">
-                <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
-                  <span class="ranking_title_back"></span>
-                  <span class="ranking_title">{{ this_month }}월 리뷰 랭킹</span>
+        <!-- B_Modal -->
+        <div class="modal fade" id="B_Modal" tabindex="-1" aria-labelledby="B_ModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content modal_back">
+              <div class="modal-header modal_title_group">
+                <div>
+                  <i class="fas fa-trophy trophy"></i>
+                  <span class="modal-title modal_title" id="A_ModalLabel"> {{ this_month }}월 랭킹 </span>
+                  <i class="fas fa-trophy trophy"></i>
                 </div>
-                <span class="ranking_top"></span>
-                <div class="ranking_top_content">
-                  {% for user in E_month_review_order %}
-                    {% if forloop.counter > 3 %}
-                    {% else %}
-                      {% if forloop.counter == 1 %}
-                        <div style="display: flex; justify-content: center;">
-                          <i class="my-2 fas fa-medal" id="xs_gold_medal"></i>
-                          <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
-                        </div>
-                      {% elif forloop.counter == 2 %}
+              </div>
+              <div class="modal-body row mx-auto">
+                {% for user in B_users %}
+                  {% if forloop.counter == 1 %}
+                    <div class="modal_text_group">
+                      <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
+                      <span class="col col-md-10 pt-2">
+                        <span class="modal_text_name">{{ user.nickname }}</span>
+                        <span class="modal_text">님! 총 {{ user.visit_count_lastmonth }}회 방문했어요.</span>
+                      </span>
+                    </div>
+                  {% elif forloop.counter == 2 %}
+                    <div class="modal_text_group">
+                      <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
+                      <span class="col col-md-10 pt-2">
+                        <span class="modal_text_name">{{ user.nickname}}</span>
+                        <span class="modal_text">님! 총 {{ user.visit_count_lastmonth }}회 방문했어요.</span>
+                      </span>
+                    </div>
+                  {% elif forloop.counter == 3 %}
+                    <div class="modal_text_group">
+                      <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
+                      <span class="col col-md-10 pt-2">
+                        <span class="modal_text_name">{{ user.nickname}}</span>
+                        <span class="modal_text">님! 총 {{ user.visit_count_lastmonth }}회 방문했어요.</span>
+                      </span>
+                    </div>
+                  {% else %}
+                    <div class="modal_text_group">
+                      <span class="sm_other_medal">{{forloop.counter}}</span>
+                      <span class="col col-md-10 pt-2">
+                        <span class="modal_text_name">{{ user.nickname}}</span>
+                        <span class="modal_text">님! 총 {{ user.visit_count_lastmonth }}회 방문했어요.</span>
+                      </span>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <div class="modal-footer">
+                <button class="button" data-bs-dismiss="modal">닫기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!----- E_한 달 리뷰 개수 랭킹 ----->
+        <div class="col">
+          <div class="card ranking_card rounded-5 shadow mx-2 my-3">
+            <div class="row g-0">
+              <div class="col-md-8 card_img" style="background-image:url(../../../media/static/image/rank_food-1245955_1280.jpg)">
+              </div>
+              <div class="col-md-4">
+                <div class="card-body">
+                  <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
+                    <span class="ranking_title_back"></span>
+                    <span class="ranking_title">{{ this_month }}월 리뷰 랭킹</span>
+                  </div>
+
+                  <span class="ranking_top"></span>
+                  <div class="ranking_top_content">
+                    {% for user in E_month_review_order %}
+                      {% if forloop.counter > 3 %}
+                      {% else %}
+                        {% if forloop.counter == 1 %}
                           <div style="display: flex; justify-content: center;">
-                            <i class="my-2 fas fa-medal" id="xs_silver_medal"></i>
+                            <i class="my-2 fas fa-medal" id="xs_gold_medal"></i>
                             <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
                           </div>
-                      {% else %}
-                        <div style="display: flex; justify-content: center;">
-                          <i class="my-2 fas fa-medal" id="xs_bronze_medal"></i>
-                          <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
-                        </div>
+                        {% elif forloop.counter == 2 %}
+                            <div style="display: flex; justify-content: center;">
+                              <i class="my-2 fas fa-medal" id="xs_silver_medal"></i>
+                              <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+                            </div>
+                        {% else %}
+                          <div style="display: flex; justify-content: center;">
+                            <i class="my-2 fas fa-medal" id="xs_bronze_medal"></i>
+                            <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
+                          </div>
+                        {% endif %}
                       {% endif %}
-                    {% endif %}
-                  {% endfor %}
-                </div>
-                <div>
-                  <!-- 매달 매기기 -->
-                  <div class="e_giveMedal">
-                  </div>
-
-                  <div class="card-text card_info my-3">
-                    {{ request.user.nickname }}님은<br>
-                    {% if E_my_grade == 0 %}
-                      아직 작성한<br>리뷰가 없어요!
-                    {% else %}
-                      🌟{{ E_my_grade }}등🌟 입니다!
-                    {% endif%}
+                    {% endfor %}
                   </div>
                   
-                  <!-- E_Button trigger modal -->
-                  <button class="button" data-bs-toggle="modal" data-bs-target="#E_Modal">
-                    전체 랭킹
-                  </button>
-                  <!-- E_Modal -->
-                    <div class="modal fade" id="E_Modal" tabindex="-1" aria-labelledby="E_ModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content modal_back">
-                          <div class="modal-header modal_title_group">
-                            <div>
-                              <i class="fas fa-trophy trophy"></i>
-                              <span class="modal-title modal_title" id="A_ModalLabel"> {{ this_month }}월 랭킹 </span>
-                              <i class="fas fa-trophy trophy"></i>
-                            </div>
-                          </div>
-                          <div class="modal-body row mx-auto">
-                          {% for user in E_month_review_order %}
-                            {% if forloop.counter == 1 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.review_count_lastmonth }}회 작성했어요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 2 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.review_count_lastmonth }}회 작성했어요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 3 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.review_count_lastmonth }}회 작성했어요.</span>
-                                </span>
-                              </div>
-                            {% else %}
-                              <div class="modal_text_group">
-                                <span class="sm_other_medal">{{forloop.counter}}</span>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.review_count_lastmonth }}회 작성했어요.</span>
-                                </span>
-                              </div>
-                            {% endif %}
-                          {% endfor %}
-                          </div>
-                          <div class="modal-footer">
-                            <button class="button" data-bs-dismiss="modal">닫기</button>
-                          </div>
-                        </div>
-                      </div>
+                  <div>
+                    <!-- 매달 매기기 -->
+                    <div class="e_giveMedal">
                     </div>
+
+                    <div class="card-text card_info my-3">
+                      {{ request.user.nickname }}님은<br>
+                      {% if E_my_grade == 0 %}
+                        아직 작성한<br>리뷰가 없어요!
+                      {% else %}
+                        🌟{{ E_my_grade }}등🌟 입니다!
+                      {% endif%}
+                    </div>
+                    
+                    <!-- E_Button trigger modal -->
+                    <button class="button" data-bs-toggle="modal" data-bs-target="#E_Modal">
+                      전체 랭킹
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </article>
-    <div class="text-center">
-      <span class="monthly_rank">누적 랭킹</span>
-      <hr class="rank_hr"></hr>
-    </div>
-    <article class="row row-cols-xxl-2 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 row-cols-sm-1 mb-3 text-center">
+      </article>
+
+      <!-- E_Modal -->
+      <div class="modal fade" id="E_Modal" tabindex="-1" aria-labelledby="E_ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content modal_back">
+            <div class="modal-header modal_title_group">
+              <div>
+                <i class="fas fa-trophy trophy"></i>
+                <span class="modal-title modal_title" id="A_ModalLabel"> {{ this_month }}월 랭킹 </span>
+                <i class="fas fa-trophy trophy"></i>
+              </div>
+            </div>
+            <div class="modal-body row mx-auto">
+            {% for user in E_month_review_order %}
+              {% if forloop.counter == 1 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.review_count_lastmonth }}회 작성했어요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 2 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.review_count_lastmonth }}회 작성했어요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 3 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.review_count_lastmonth }}회 작성했어요.</span>
+                  </span>
+                </div>
+              {% else %}
+                <div class="modal_text_group">
+                  <span class="sm_other_medal">{{forloop.counter}}</span>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.review_count_lastmonth }}회 작성했어요.</span>
+                  </span>
+                </div>
+              {% endif %}
+            {% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button class="button" data-bs-dismiss="modal">닫기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 누적랭킹 -->
+      <div class="text-center">
+        <span class="monthly_rank">누적 랭킹</span>
+        <hr class="rank_hr"></hr>
+      </div>
+      <article class="row row-cols-xxl-2 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 row-cols-sm-1 mb-3 text-center">
+
+
       <!----- A_총 방문 랭킹 ----->
       <section class="col">
         <div class="card ranking_card rounded-5 shadow mx-2 my-3">
@@ -316,60 +321,6 @@
                   <button class="button" data-bs-toggle="modal" data-bs-target="#A_Modal">
                     전체 랭킹
                   </button>
-                  <!-- A_Modal -->
-                  <div class="modal fade" id="A_Modal" tabindex="-1" aria-labelledby="A_ModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content modal_back">
-                        <div class="modal-header modal_title_group">
-                          <div>
-                            <i class="fas fa-trophy trophy"></i>
-                            <span class="modal-title modal_title" id="A_ModalLabel"> 전체 랭킹 </span>
-                            <i class="fas fa-trophy trophy"></i>
-                          </div>
-                        </div>
-                        <div class="modal-body row mx-auto">
-                        {% for user in A_users %}
-                          {% if forloop.counter == 1 %}
-                            <div class="modal_text_group">
-                              <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
-                              <span class="col col-md-10 pt-2">
-                                <span class="modal_text_name">{{ user.nickname}}</span>
-                                <span class="modal_text">님! 총 {{ user.total_visit }}회 방문했어요.</span>
-                              </span>
-                            </div>
-                          {% elif forloop.counter == 2 %}
-                            <div class="modal_text_group">
-                              <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
-                              <span class="col col-md-10 pt-2">
-                                <span class="modal_text_name">{{ user.nickname}}</span>
-                                <span class="modal_text">님! 총 {{ user.total_visit }}회 방문했어요.</span>
-                              </span>
-                            </div>
-                          {% elif forloop.counter == 3 %}
-                            <div class="modal_text_group">
-                              <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
-                              <span class="col col-md-10 pt-2">
-                                <span class="modal_text_name">{{ user.nickname}}</span>
-                                <span class="modal_text">님! 총 {{ user.total_visit }}회 방문했어요.</span>
-                              </span>
-                            </div>
-                          {% else %}
-                            <div class="modal_text_group">
-                              <span class="sm_other_medal">{{forloop.counter}}</span>
-                              <span class="col col-md-10 pt-2">
-                                <span class="modal_text_name">{{ user.nickname}}</span>
-                                <span class="modal_text">님! 총 {{ user.total_visit }}회 방문했어요.</span>
-                              </span>
-                            </div>
-                          {% endif %}
-                        {% endfor %}
-                        </div>
-                        <div class="modal-footer">
-                          <button class="button" data-bs-dismiss="modal">닫기</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
                 </div>
               </div>
@@ -377,6 +328,61 @@
           </div>
         </div>
       </section>
+      <!-- A_Modal -->
+      <div class="modal fade" id="A_Modal" tabindex="-1" aria-labelledby="A_ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content modal_back">
+            <div class="modal-header modal_title_group">
+              <div>
+                <i class="fas fa-trophy trophy"></i>
+                <span class="modal-title modal_title" id="A_ModalLabel"> 전체 랭킹 </span>
+                <i class="fas fa-trophy trophy"></i>
+              </div>
+            </div>
+            <div class="modal-body row mx-auto">
+            {% for user in A_users %}
+              {% if forloop.counter == 1 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.total_visit }}회 방문했어요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 2 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.total_visit }}회 방문했어요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 3 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.total_visit }}회 방문했어요.</span>
+                  </span>
+                </div>
+              {% else %}
+                <div class="modal_text_group">
+                  <span class="sm_other_medal">{{forloop.counter}}</span>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.total_visit }}회 방문했어요.</span>
+                  </span>
+                </div>
+              {% endif %}
+            {% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button class="button" data-bs-dismiss="modal">닫기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!----- D_누적 리뷰 개수 랭킹 ----->
       <section class="col">
         <div class="card ranking_card rounded-5 shadow mx-2 my-3">
@@ -430,67 +436,66 @@
                   <button class="button" data-bs-toggle="modal" data-bs-target="#D_Modal">
                     전체 랭킹
                   </button>
-                  <!-- D_Modal -->
-                    <div class="modal fade" id="D_Modal" tabindex="-1" aria-labelledby="D_ModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content modal_back">
-                          <div class="modal-header modal_title_group">
-                            <div>
-                              <i class="fas fa-trophy trophy"></i>
-                              <span class="modal-title modal_title" id="A_ModalLabel"> 전체 랭킹 </span>
-                              <i class="fas fa-trophy trophy"></i>
-                            </div>
-                          </div>
-                          <div class="modal-body row mx-auto">
-                          {% for user in D_all_review_order %}
-                            {% if forloop.counter == 1 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.total_review }}회 작성했어요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 2 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.total_review }}회 작성했어요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 3 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.total_review }}회 작성했어요.</span>
-                                </span>
-                              </div>
-                            {% else %}
-                              <div class="modal_text_group">
-                                <span class="sm_other_medal">{{forloop.counter}}</span>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 총 {{ user.total_review }}회 작성했어요.</span>
-                                </span>
-                              </div>
-                            {% endif %}
-                          {% endfor %}
-                          </div>
-                          <div class="modal-footer">
-                            <button class="button" data-bs-dismiss="modal">닫기</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
+      <!-- D_Modal -->
+      <div class="modal fade" id="D_Modal" tabindex="-1" aria-labelledby="D_ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content modal_back">
+            <div class="modal-header modal_title_group">
+              <div>
+                <i class="fas fa-trophy trophy"></i>
+                <span class="modal-title modal_title" id="A_ModalLabel"> 전체 랭킹 </span>
+                <i class="fas fa-trophy trophy"></i>
+              </div>
+            </div>
+            <div class="modal-body row mx-auto">
+            {% for user in D_all_review_order %}
+              {% if forloop.counter == 1 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.total_review }}회 작성했어요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 2 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.total_review }}회 작성했어요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 3 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.total_review }}회 작성했어요.</span>
+                  </span>
+                </div>
+              {% else %}
+                <div class="modal_text_group">
+                  <span class="sm_other_medal">{{forloop.counter}}</span>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 총 {{ user.total_review }}회 작성했어요.</span>
+                  </span>
+                </div>
+              {% endif %}
+            {% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button class="button" data-bs-dismiss="modal">닫기</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!----- C_한달 카페 종류 랭킹 ----->
       <section class="col">
@@ -545,74 +550,72 @@
                   <button class="button" data-bs-toggle="modal" data-bs-target="#C_Modal">
                     전체 랭킹
                   </button>
-                  <!-- C_Modal -->
-                    <div class="modal fade" id="C_Modal" tabindex="-1" aria-labelledby="C_ModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content modal_back">
-                          <div class="modal-header modal_title_group">
-                            <div>
-                              <i class="fas fa-trophy trophy"></i>
-                              <span class="modal-title modal_title" id="A_ModalLabel"> {{ this_month }}월 랭킹 </span>
-                              <i class="fas fa-trophy trophy"></i>
-                            </div>
-                          </div>
-                          <div class="modal-body row mx-auto">
-                          {% for key, value in C_monthly_kinds_order.items %}
-                            {% if forloop.counter == 1 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ key }}</span>
-                                  <span class="modal_text">님! 총 {{ value }}종류 방문했어요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 2 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ key }}</span>
-                                  <span class="modal_text">님! 총 {{ value }}종류 방문했어요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 3 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ key }}</span>
-                                  <span class="modal_text">님! 총 {{ value }}종류 방문했어요.</span>
-                                </span>
-                              </div>
-                            {% else %}
-                              <div class="modal_text_group">
-                                <span class="sm_other_medal">{{forloop.counter}}</span>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ key }}</span>
-                                  <span class="modal_text">님! 총 {{ value }}종류 방문했어요.</span>
-                                </span>
-                              </div>
-                            {% endif %}
-                          {% endfor %}
-                          </div>
-                          <div class="modal-footer">
-                            <button class="button" data-bs-dismiss="modal">닫기</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-
+      <!-- C_Modal -->
+      <div class="modal fade" id="C_Modal" tabindex="-1" aria-labelledby="C_ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content modal_back">
+            <div class="modal-header modal_title_group">
+              <div>
+                <i class="fas fa-trophy trophy"></i>
+                <span class="modal-title modal_title" id="A_ModalLabel"> {{ this_month }}월 랭킹 </span>
+                <i class="fas fa-trophy trophy"></i>
+              </div>
+            </div>
+            <div class="modal-body row mx-auto">
+            {% for key, value in C_monthly_kinds_order.items %}
+              {% if forloop.counter == 1 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ key }}</span>
+                    <span class="modal_text">님! 총 {{ value }}종류 방문했어요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 2 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ key }}</span>
+                    <span class="modal_text">님! 총 {{ value }}종류 방문했어요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 3 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ key }}</span>
+                    <span class="modal_text">님! 총 {{ value }}종류 방문했어요.</span>
+                  </span>
+                </div>
+              {% else %}
+                <div class="modal_text_group">
+                  <span class="sm_other_medal">{{forloop.counter}}</span>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ key }}</span>
+                    <span class="modal_text">님! 총 {{ value }}종류 방문했어요.</span>
+                  </span>
+                </div>
+              {% endif %}
+            {% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button class="button" data-bs-dismiss="modal">닫기</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!----- F_팔로워수 랭킹 ----->
       <section class="col">
         <div class="card ranking_card rounded-5 shadow mx-2 my-3">
           <div class="row g-0">
-            <div class="col-md-8 card_img" style="background-image:url(../../../media/static/image/rank_coffee-1209942_1280.jpg)"></div>
+            <div class="col-md-8 card_img" style="background-image:url(../../../media/static/image/rank_coffee-2565441_1280.jpg)"></div>
             <div class="col-md-4">
               <div class="card-body">
                 <div class="card-img-overlay card_title col-md-8" style="height: 50px;">
@@ -661,69 +664,67 @@
                   <button class="button" data-bs-toggle="modal" data-bs-target="#F_Modal">
                     전체 랭킹
                   </button>
-                  <!-- F_Modal -->
-                    <div class="modal fade" id="F_Modal" tabindex="-1" aria-labelledby="F_ModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content modal_back">
-                          <div class="modal-header modal_title_group">
-                            <div>
-                              <i class="fas fa-trophy trophy"></i>
-                              <span class="modal-title modal_title" id="A_ModalLabel"> 전체 랭킹 </span>
-                              <i class="fas fa-trophy trophy"></i>
-                            </div>
-                          </div>
-                          <div class="modal-body row mx-auto">
-                          {% for user in F_follwer_order %}
-                            {% if forloop.counter == 1 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 친구가 {{ user.follwernum }}명이에요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 2 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 친구가 {{ user.follwernum }}명이에요.</span>
-                                </span>
-                              </div>
-                            {% elif forloop.counter == 3 %}
-                              <div class="modal_text_group">
-                                <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 친구가 {{ user.follwernum }}명이에요.</span>
-                                </span>
-                              </div>
-                            {% else %}
-                              <div class="modal_text_group">
-                                <span class="sm_other_medal">{{forloop.counter}}</span>
-                                <span class="col col-md-10 pt-2">
-                                  <span class="modal_text_name">{{ user.nickname}}</span>
-                                  <span class="modal_text">님! 친구가 {{ user.follwernum }}명이에요.</span>
-                                </span>
-                              </div>
-                            {% endif %}
-                          {% endfor %}
-                          </div>
-                          <div class="modal-footer">
-                            <button class="button" data-bs-dismiss="modal">닫기</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>      
-
-      </article>
-    </div>
+      <!-- F_Modal -->
+      <div class="modal fade" id="F_Modal" tabindex="-1" aria-labelledby="F_ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content modal_back">
+            <div class="modal-header modal_title_group">
+              <div>
+                <i class="fas fa-trophy trophy"></i>
+                <span class="modal-title modal_title" id="A_ModalLabel"> 전체 랭킹 </span>
+                <i class="fas fa-trophy trophy"></i>
+              </div>
+            </div>
+            <div class="modal-body row mx-auto">
+            {% for user in F_follwer_order %}
+              {% if forloop.counter == 1 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_gold_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 친구가 {{ user.follwernum }}명이에요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 2 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_silver_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 친구가 {{ user.follwernum }}명이에요.</span>
+                  </span>
+                </div>
+              {% elif forloop.counter == 3 %}
+                <div class="modal_text_group">
+                  <i class="col-md-2 fas fa-medal sm_bronze_medal"></i>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 친구가 {{ user.follwernum }}명이에요.</span>
+                  </span>
+                </div>
+              {% else %}
+                <div class="modal_text_group">
+                  <span class="sm_other_medal">{{forloop.counter}}</span>
+                  <span class="col col-md-10 pt-2">
+                    <span class="modal_text_name">{{ user.nickname}}</span>
+                    <span class="modal_text">님! 친구가 {{ user.follwernum }}명이에요.</span>
+                  </span>
+                </div>
+              {% endif %}
+            {% endfor %}
+            </div>
+            <div class="modal-footer">
+              <button class="button" data-bs-dismiss="modal">닫기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
   </section>
 
 <script type="text/javascript">
@@ -735,73 +736,7 @@
   const eGrade = {{ E_my_grade | safe }};
   const fGrade = {{ F_my_grade | safe }};
 
-  // const aOder = {{ A_users | safe }};
-  // const bOder = "{{ B_users_js }}";
-  // const bOder = JSON.parse("{{ B_users_js | escapejs }}");
-  // console.log(bOder);
-  //const aOder = <QuerySet [<User: admin>, <User: ye1>]>; 이렇게 나와염
-  // const bOder = {{ B_users | safe }};
-  // const cOder = {{ C_monthly_kinds_order | safe }};
-  // const dOder = {{ D_all_review_order | safe }};
-  // const eOder = {{ E_month_review_order | safe }};
-  // const fOder = {{ F_follwer_order | safe }};
-
-  //---------------------랭킹 카드에 top3 표시하기------------------
-  //아이디 형태 b_topThree/ order=aOder
-  function topThree(id, order) {
-    $(id).append(`<span class="ranking_top"></span>
-                  <div class="ranking_top_content">`); //기본으로 다 들어감
-    
-    for (var i=0; i<order.length; i++) {
-      if (i>3) {
-        break 
-      } else {
-        if (i===1) { //{{ user.nickname }}어케 처리함??ㅜㅜ
-          $(id).append(`<div style="display: flex; justify-content: center;">
-                          <i class="my-2 fas fa-medal" id="xs_gold_medal"></i>
-                          <div>1등 {{ user.nickname }}</div> 
-                        </div>`);
-        } else if (i===2) {
-          $(id).append(`<div style="display: flex; justify-content: center;">
-                          <i class="my-2 fas fa-medal" id="xs_silver_medal"></i>
-                          <div>2등 {{ user.nickname }}</div>
-                        </div>`);
-        } else {
-          $(id).append(`<div style="display: flex; justify-content: center;">
-                          <i class="my-2 fas fa-medal" id="xs_bronze_medal"></i>
-                          <div>3등 {{ user.nickname }}</div>
-                        </div>`);
-        }
-      }
-    }
-    $(id).append(`</div>`);
-    console.log(aOder)
-  }
-  // <span class="ranking_top"></span>//일단 함
-  // <div class="ranking_top_content">//일단 함
-  //   {% for user in B_users %}
-  //     {% if forloop.counter > 3 %}
-  //     {% else %}
-  //       {% if forloop.counter == 1 %}
-  //         <div style="display: flex; justify-content: center;">
-  //           <i class="my-2 fas fa-medal" id="xs_gold_medal"></i>
-  //           <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
-  //         </div>//일단 여기까지함
-  //       {% elif forloop.counter == 2 %}
-  //           <div style="display: flex; justify-content: center;">
-  //             <i class="my-2 fas fa-medal" id="xs_silver_medal"></i>
-  //             <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
-  //           </div>
-  //       {% else %}
-  //         <div style="display: flex; justify-content: center;">
-  //           <i class="my-2 fas fa-medal" id="xs_bronze_medal"></i>
-  //           <div>{{ forloop.counter }}등 {{ user.nickname }}</div>
-  //         </div>
-  //       {% endif %}
-  //     {% endif %}
-  //   {% endfor %}
-  // </div>
-
+  
   //-----------------랭킹 카드에 메달 매겨 넣기-------------------
   function giveMedal(grade, id) {
     if (grade === 1) {
@@ -821,7 +756,6 @@
   giveMedal(dGrade, '.d_giveMedal');
   giveMedal(eGrade, '.e_giveMedal');
   giveMedal(fGrade, '.f_giveMedal');
-
 
 </script>
 

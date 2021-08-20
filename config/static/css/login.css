@@ -265,7 +265,7 @@ form {
     display: inline-block;
     width: 15px;
     height: 15px;
-    background-color:#B3A29A;
+    background-color:#F0D9CE;
     border-radius: 3px;
     position: relative;
     cursor: pointer;
@@ -276,7 +276,7 @@ form {
     display: inline-block;
     width: 4px;
     height: 0;
-    background-color: #F0D9CE;
+    background-color: #B3A29A;
     position: absolute;
     transform-origin: left top;
     border-radius: 1px;
