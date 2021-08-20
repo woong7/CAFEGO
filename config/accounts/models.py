@@ -59,7 +59,7 @@ class User(AbstractBaseUser):
     agree_marketing = models.BooleanField(default=False)
 
     self_intro=models.TextField(null=True, blank=True, max_length=150)
-    self_image=models.ImageField(null=True, upload_to='media/static/image/')
+    self_image=models.ImageField(null=True, blank=True, upload_to='media/static/image/')
 
     is_active = models.BooleanField(        
         default=False,                 # 기본값을 False 로 변경

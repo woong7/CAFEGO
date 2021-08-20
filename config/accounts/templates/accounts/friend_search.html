@@ -14,7 +14,7 @@
     <header class="pt-3">
         <div class="p-2 mx-auto text-center">
             <div class="page_title">Search User</div>
-            <p class="fs-5 text-muted page_info">닉네임과 동네를 검색해서 다른 유저들을 팔로우 해보세요.</p>
+            <p class="fs-5 text-muted page_info">닉네임과 동네를 검색해서 다른 유저들을 찾아보세요.</p>
         </div>
     </header>
     <!-- 친구 검색창 -->
@@ -27,6 +27,13 @@
         <input type="text" name="q" value="{{ q }}" placeholder="유저 닉네임 검색" style="font-family: RIDIBatang; width: 550px;">
         <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
+    {% if messages %}
+        <div style="color:red;">
+            {% for message in messages %}
+                {{ message.tags }}! {{ message.message }}
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <!-- 친구 리스트  -->
     <table class="table">
