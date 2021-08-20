@@ -647,13 +647,9 @@ def visit_register(request):
     if request.method == 'POST':
         req_post = request.POST
         #음료 내용 받아온다.
-        try:
-            str_cafename = req_post.__getitem__('cafename')
-            str_new_drinkname = req_post.__getitem__('etc')
-            str_drinkname = req_post.__getitem__('beverage')
-        except:
-            print("존재하지 않습니다!")
-        
+        str_cafename = req_post.__getitem__('cafename')
+        str_drinkname = req_post.__getitem__('beverage')
+
         #카페를 방문한 유저와 그 유저의 방문 횟수 +1
         
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
@@ -675,21 +671,16 @@ def visit_register(request):
         now = datetime.today() ##@@
 
         # v_cafe.created_at = now ##@@
-        # print('!!!!!!!', v_cafe.created_at) ##@@
+
         user = User.objects.get(username=request.user)
         user.total_visit += 1
 
         #모달창에서 선택한 음료 저장
         jsonDec=json.decoder.JSONDecoder()
         drinkList=jsonDec.decode(v_cafe.drink_list)
-        #TODO:에러처리 필요,,,! 기타에 뭐 적으면 선택 못하도록, 선택 하면 기타에 못 적도록.
-        if str_new_drinkname != "":#8개 중 선택시 etc에는 항상 빈값이 들어간다. 무조건. 기타를 선택시
-            drinkList.append(str_new_drinkname)
-            user.visit_count_lastmonth += 1 
 
-        else: # 8개 중 선택시.
-            drinkList.append(str_drinkname)
-            user.visit_count_lastmonth += 1 
+        drinkList.append(str_drinkname)
+        user.visit_count_lastmonth += 1 
             
         v_cafe.drink_list=json.dumps(drinkList)
 
@@ -702,12 +693,8 @@ def visit_register(request):
 def visited_register(request):
     if request.method == 'POST':
         req_post = request.POST
-        try:
-            str_cafename = req_post.__getitem__('cafename')
-            str_new_drinkname = req_post.__getitem__('etc')
-            str_drinkname = req_post.__getitem__('beverage')
-        except:
-            print("존재하지 않습니다!")
+        str_cafename = req_post.__getitem__('cafename')
+        str_drinkname = req_post.__getitem__('beverage')
 
         user = User.objects.get(username=request.user)
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
@@ -718,12 +705,8 @@ def visited_register(request):
         jsonDec=json.decoder.JSONDecoder()
         drinkList=jsonDec.decode(v_cafe.drink_list)
 
-        if str_new_drinkname != "":
-            drinkList.append(str_new_drinkname)
-            user.visit_count_lastmonth += 1 
-        else:
-            drinkList.append(str_drinkname)
-            user.visit_count_lastmonth += 1 
+        drinkList.append(str_drinkname)
+        user.visit_count_lastmonth += 1 
         
         v_cafe.drink_list=json.dumps(drinkList)
 

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/friend_search.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_search.css' %}">
 {% endblock %}
 
 {% block title %}
@@ -10,22 +10,21 @@
 {% endblock %}
 
 {% block content %}
-<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 5rem;">
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem; min-height: 93.3vh;">
     <header class="pt-3">
-        <div class="p-2 pb-md-4 mx-auto text-center">
-            <div class="page_title">Search Friends</div>
-            <p class="fs-5 text-muted page_info">새로운 친구 등록하기</p>
-            <p class="fs-5 text-muted page_info">다른 유저를 검색해보세요!</p>
+        <div class="p-2 mx-auto text-center">
+            <div class="page_title">Search User</div>
+            <p class="fs-5 text-muted page_info">닉네임과 동네를 검색해서 다른 유저들을 팔로우 해보세요.</p>
         </div>
     </header>
     <!-- 친구 검색창 -->
-    <form action="" method="GET" class="pb-md-4">
+    <form action="" method="GET" class="pb-md-2">
         <select name="type" style="font-family: RIDIBatang;">
             <option value="nickname">닉네임</option>
             <option value="dong">동네</option>
             <option value="all">닉네임+동네</option>
         </select>
-        <input type="text" name="q" value="{{ q }}" placeholder="유저 닉네임 검색" style="font-family: RIDIBatang;">
+        <input type="text" name="q" value="{{ q }}" placeholder="유저 닉네임 검색" style="font-family: RIDIBatang; width: 550px;">
         <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
 
@@ -36,40 +35,44 @@
                 <th> </th>
                 <th>닉네임</th>
                 <th>동네</th>
-                <th>친구여부</th>             
+                <th>Follow</th>             
             </tr>
         </thead>
         <tbody>
             {% if q %}
-            <h5 style="font-family: RIDIBatang;">'{{ q }}' 검색 결과입니다.</h5><br/>
-            <p style="font-family: RIDIBatang;">검색 결과: {{page_obj.paginator.count}}명</p>
+                <h5 style="font-family: RIDIBatang;">'{{ q }}' 검색 결과입니다.</h5><br/>
+                <p style="font-family: RIDIBatang;">검색 결과: {{page_obj.paginator.count}}명</p>
             {% endif %}
+        </br>
             {% if user_list %}
-                
+
                 {% for user in user_list %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td><a href="{% url 'mypage' user.id %}">{{ user.nickname }}</a></td>
-                        <td>{{user.gu}} {{ user.dong }}</td> <!-- | truncatechars:10-->
+                    <tr class="text-center table_content">
+                        <td style="vertical-align: middle; font-size:1.2em;">{{forloop.counter0|add:page_obj.start_index}}</td>
+                        <td style="vertical-align: middle;">
+                            <a href="{% url 'mypage' user.id %}" class="atag">{{ user.nickname }}</a>
+                        </td>
+                        <td style="vertical-align: middle; color: black; font-size:1.2em;">{{user.gu}} {{ user.dong }}</td> <!-- | truncatechars:10-->
                         <!-- checkbox trigger modal -->
-                        <td><input type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ user.id }}" name="visit" value="Follow"></td>
+                        <td><input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ user.id }}" name="visit" value="Follow"></td>
                         <div class="modal fade" id="exampleModal_{{ user.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             
                             <div class="modal-dialog">
                                 <form action="{% url 'friend_register' %}" method='post'>
                                     <div class="modal-content"> 
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel" name="friendname2">
-                                                <input type="text" name="friendname" value="{{ user.nickname }}">
-                                                <input type="text" name="friendid" value="{{ user.id }}">
+                                            <h5 class="modal-title table_title" id="exampleModalLabel" name="friendname2">
+                                                <input type="hidden" name="friendname" value="{{ user.nickname }}">
+                                                <input type="hidden" name="friendid" value="{{ user.id }}">
+                                                {{user.nickname}}님을 팔로우 하시겠습니까?
                                             </h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>                                    
     
                                         
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" id="submit_btn_{{user.id}}" class="btn btn-primary" onclick="onClick({{ user }})">Follow</button>
+                                            <button type="button" class="button" data-bs-dismiss="modal">닫기</button>
+                                            <button type="submit" id="submit_btn_{{user.id}}" class="button" onclick="onClick({{ user }})">Follow</button>
                                         </div>
                                     </div>
                                 </form>
