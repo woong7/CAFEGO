@@ -8,13 +8,15 @@
 <p id="header-logo-image"></p>
   <h1>{% trans "회원가입" %}</h1>
   <br><br>
-  <form class="signup" id="signup_form" method="post" action="{% url 'signup' %}">
+  <form class="signup" id="signup_form" method="post" action="{% url 'signup' %}" enctype="multipart/form-data">
   {% csrf_token %}
     <p><label for="id_username">아이디:</label> <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username"></p>
     <p><label for="id_email">이메일:</label> <input type="email" name="email" maxlength="254" id="id_email"></p>
     <p><label for="id_nickname">닉네임:</label> <input type="text" name="nickname" maxlength="150" required="" id="id_nickname"></p>
     <p><label for="id_agree_terms">정보제공 동의:</label> <input type="checkbox" name="agree_terms" id="id_agree_terms"></p>
     <p><label for="id_agree_marketing">마케팅 동의:</label> <input type="checkbox" name="agree_marketing" id="id_agree_marketing"></p>
+    <p><label for="id_self_intro">한줄 소개:</label> <input type="text" name="self_intro" id="id_self_intro"></p>
+    <p><label for="id_self_image">프로필 사진:</label> <input type="file" name="self_image" id="id_self_image"></p>
     <span>거주지: </span>
     <select name="city" id="addressRegion" form="signup_form"></select>
     <select name="gu" id="addressDo" form="signup_form"></select>

@@ -8,12 +8,58 @@
 {% block content %}
 <div class="py-4 my_page p-5">
     <div class="p-5 mb-4 rounded-3">
-        <div class="container-fluid py-2">
+        <div class="container-fluid pt-2">
             <h1 class="display-5 fw-bold text-center page_title">{{owner.nickname}}'s Mypage</h1>
+            
+            <div class="d-flex justify-content-center">
+                <div class="row align-items-md-stretch d-flex justify-content-center">
+                    <span class="btn button px-5 pt-5 pb-0 fw-bold" style="border:none; background:none;">Following</span>
+                    <span class="btn button px-5" style="height:50px; width:50px; background:none;" data-bs-toggle="collapse" data-bs-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample">
+                    {{followingnum}}
+                    </span>
+            
+                    <div class="collapse" id="collapseExample4">
+                        <div>
+                            <br>
+                            {% for friend in friends %}
+                                <div>
+                                    <li style="font-size: 20px; font-weight: bold"><a href="{% url 'mypage' friend.pk%}">{{ friend.nickname }}</a></li>
+                                    <br>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class=" px-5 d-flex justify-content-center">
+                {% if owner.self_image%}                
+                    <img src="{{owner.self_image.url}}" style="height:250px; width:250px;  border: 2pt groove #000; border-radius:50%; ">              
+                {% endif %}
+                </div>
+                <div class="d-flex justify-content-center row align-items-md-stretch">
+                    <span class="btn button pt-5 pb-0 px-5 fw-bold" style="border:none; background:none;">Follower</span>
+                    <span class="btn button px-5 text-center" style="height:50px; width:50px; background:none;" data-bs-toggle="collapse" data-bs-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample">
+                    {{owner.follwernum}}
+                    </span>
+                    <div class="collapse" id="collapseExample5">
+                        <div>
+                            <br>
+                            {% for follwer in follwers %}
+                                <div>
+                                    <li style="font-size: 20px; font-weight: bold"><a href="{% url 'mypage' follwer.pk%}">{{ follwer.nickname }}</a></li>
+                                    
+                                    <br>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </div>
+            </div>
+            <h3 class="text-center mt-3" style="font-size: 14pt;">{{owner.self_intro}}</h3>
         </div>
         <br/>
-        <div class="col-md-12">
-            <div class="h-100 p-5 rounded-3 d-flex justify-content-center" >
+        <div class="row align-items-md-stretch  d-flex justify-content-center">
+        <div class="col-md-4">
+            <div class="h-100 pb-5 rounded-3 d-flex justify-content-center" >
                 {% if user.id == owner.id %}
                     <button class="btn button btn-sm mx-3" onClick="location.href='{% url 'info_edit' user.pk %}'">개인정보 수정</button>
                 {% endif %}
@@ -32,11 +78,36 @@
             
             </div>
         </div>
+        </div>
+    <div class="row align-items-md-stretch d-flex justify-content-center">
+        {% for badge in taken_badges %}
+            <p>
+                <img src="{{badge.badge_image.url}}" style="width: 5%; height: 5%;">
+                <span>{{badge.badge_name}}</span>
+            </p>
+        {% endfor %}
+        <div class="col-md-4">
+            <div class="h-100 p-5 d-flex justify-content-center rounded-3">
+                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
+                    획득한 배지 보기
+                </button>
+                <button class="btn button btn-sm" onClick="location.href='{% url 'badge_list' owner.pk %}'">획득한 배지: {{total_badge_count}}개</button>
+                <div class="collapse" id="collapseExample1">
+                    <div class="card card-body">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+       
     </div>
 
-    <div class="row align-items-md-stretch my-3">
+    <div class="row align-items-md-stretch d-flex justify-content-center my-3">
         <div class="col-md-6">
-            <div class="h-100 p-5  bg-deepbrown border rounded-3">
+            <div class="h-100 p-5 d-flex justify-content-center border rounded-3">
                 <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">
                     방문한 카페: {{visit_cafes.count}}곳 / 총 {{ total_visit }}회
                 </button>
@@ -55,76 +126,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="h-100 p-5 bg-deepbrown rounded-3">
-                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
-                    획득한 배지 보기
-                </button>
-                <button class="btn button btn-sm" onClick="location.href='{% url 'badge_list' owner.pk %}'">획득한 배지: {{total_badge_count}}개</button>
-                <div class="collapse" id="collapseExample1">
-                    <div class="card card-body">
-                        {% for badge in taken_badges %}
-                            <p>
-                                <img src="{{badge.badge_image.url}}" style="width: 5%; height: 5%;">
-                                <span>{{badge.badge_name}}</span>
-                            </p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row align-items-md-stretch my-3">
-        <div class="col-md-6">
-            <div class="h-100 p-5  bg-deepbrown rounded-3">
-                <span class="btn button btn-sm">팔로잉: {{followingnum}}명</span>
-                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample">
-                    팔로잉 목록
-                </button>
-                
-                {% if user.id == owner.id %}
-                    <button class="btn button btn-sm" onClick="location.href='{% url 'friend_search' %}'">유저 검색</button>
-                {% endif %}
-                <div class="collapse" id="collapseExample4">
-                    <div>
-                        <br>
-                        {% for friend in friends %}
-                            <div>
-                                <li style="font-size: 20px; font-weight: bold"><a href="{% url 'mypage' friend.pk%}">{{ friend.nickname }}</a></li>
-                                <br>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="h-100 p-5  bg-deepbrown rounded-3">
-                <span class="btn button btn-sm">팔로워: {{owner.follwernum}}명</span>
-                <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample">
-                    팔로워 목록
-                </button>
-                <div class="collapse" id="collapseExample5">
-                    <div>
-                        <br>
-                        {% for follwer in follwers %}
-                            <div>
-                                <li style="font-size: 20px; font-weight: bold"><a href="{% url 'mypage' follwer.pk%}">{{ follwer.nickname }}</a></li>
-                                
-                                <br>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-        </div>
-    </div>
-
-
-    <div class="row align-items-md-stretch my-3">  
-        <div class="col-md-6">
-            <div class="h-100 p-5 bg-deepbrown rounded-3">
+            <div class="h-100 p-5 d-flex justify-content-center rounded-3">
                 <button class="btn button btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample">
                     작성한 리뷰 보기
                 </button>
@@ -196,6 +198,8 @@
         </div>
         
     </div>
+
+
 </div>
 
 <div id="map" style="width:500px; height:500px;"></div>

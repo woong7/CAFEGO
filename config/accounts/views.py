@@ -423,6 +423,8 @@ class InfoUpdateView(ListView):
             form.save(request)
             user=request.user
             user.nickname=form.cleaned_data.get("nickname")
+            user.self_intro=form.cleaned_data.get("self_intro")
+            user.self_image=form.cleaned_data.get("self_image")
             user.city=form.cleaned_data.get("city")
             user.gu=form.cleaned_data.get("gu")
             user.dong=form.cleaned_data.get("dong")
@@ -435,7 +437,7 @@ class InfoUpdateView(ListView):
 
 def infoupdate(request, pk):
     if request.method == 'POST':
-        user_change_form = MyCustomForm(request.POST, instance=request.user)
+        user_change_form = MyCustomForm(request.POST, request.FILES, instance=request.user)
         if user_change_form.is_valid():
             user_change_form.save(request)
             return redirect('mypage', request.user.pk)
