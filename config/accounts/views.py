@@ -58,7 +58,7 @@ class LoginView(View):
                 login(request, user)
                 return render(request, "accounts/home.html")
 
-        return render(request, "accounts/login.html", {"form": form})
+        return render(request, "accounts/login.html", {"form": form,})
 
 ##allauth 써서 필요 없나??
 @login_required
@@ -869,8 +869,6 @@ def friend_register(request):
 
 def this_cafe_map(request, pk):
     cafe = CafeList.objects.get(pk=pk)
-    #cafes = CafeList.objects.all().order_by('location_x')
-    #cafe_list = serializers.serialize('json', cafes)
     ctx = {
         #'data': cafe_list,
         'cafe_id': cafe.id,
