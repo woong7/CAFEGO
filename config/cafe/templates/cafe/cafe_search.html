@@ -27,6 +27,13 @@
         <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색"  style="font-family: RIDIBatang; width: 550px;">
         <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
+    {% if messages %}
+        <div style="color:red;">
+            {% for message in messages %}
+                {{ message.tags }}! {{ message.message }}
+            {% endfor %}
+        </div>
+    {% endif %}
     <!-- 카페 리스트  -->
     <table class="table">
         <thead>
@@ -48,6 +55,7 @@
             {% endif %}
 
             </br>
+            
             {% if cafe_list %}
                 
                 
@@ -158,13 +166,7 @@
         </tbody>
     </table>
 
-    {% if messages %}
-        <div>
-            {% for message in messages %}
-                {{ message.tags }}! {{ message.message }}
-            {% endfor %}
-        </div>
-    {% endif %}
+
 
     <!-- 페이징 처리 -->
     {% if is_paginated %}

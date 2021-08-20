@@ -24,7 +24,6 @@
           <p class="fs-5 text-muted page_info">로그인을 해서 카페고의 모든 서비스를 즐겨보세요!</p>
       </div>
   </header>
-
   
   <div class="container position-relative overflow-hidden mx-auto pt-5 text-center bg-light" style="width: 78%; border-radius: 1%;">
     
@@ -86,6 +85,15 @@
       </div>
   </div>
 </section>  
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
+<script type="text/javascript">
+    const is_failed = {{is_failed | safe}};
+    console.log(is_failed);
+    if(is_failed==1)
+    {
+      alert("아이디 또는 비밀번호가 맞지 않습니다");
+    }
 
   <script type="text/javascript">
     const is_failed = {{is_failed | safe }};
