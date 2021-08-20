@@ -10,21 +10,21 @@
 {% endblock %}
 
 {% block content %}
-<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem;">
     <header class="pt-3">
-        <div class="p-2 pb-md-4 mx-auto text-center">
+        <div class="p-2 mx-auto text-center">
             <div class="page_title">Search Visited Cafe</div>
             <p class="fs-5 text-muted page_info">카페명을 클릭하면 리뷰페이지로 이동할 수 있어요. 주소를 클릭하면 해당 카페 지도로 이동할 수 있어요.</p>
         </div>
     </header>
     <!-- 카페 검색창 -->
-    <form action="" method="GET" class="pb-md-4">
+    <form action="" method="GET" class="pb-md-2">
         <select name="type" style="font-family: RIDIBatang;">
             <option value="name">카페</option>
             <option value="address">주소</option>
             <option value="all">카페+주소</option>
         </select>
-        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색" style="font-family: RIDIBatang;">
+        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색" style="font-family: RIDIBatang; width: 550px;">
         <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
 
@@ -43,10 +43,10 @@
         </thead>
         <tbody>
             {% if q %}
-                <h5>'{{ q }}' 검색 결과입니다.</h5><br/>
-                검색 결과: {{page_obj.paginator.count}}개
+                <h5 style="font-family: RIDIBatang;">'{{ q }}' 검색 결과입니다.</h5><br/>
+                <p style="font-family: RIDIBatang;">검색 결과: {{page_obj.paginator.count}}개</p>
             {% else %}
-                <button class="button" onClick="location.href='{% url 'cafe:cafe_list' %}'">전체 카페 리스트 보기</button>
+                <button class="button" onClick="location.href='{% url 'cafe:cafe_list' %}'" style="mb-1;">전체 카페 리스트 보기</button>
             {% endif %}
         </br>
             {% if visited_cafe_list %}
@@ -55,8 +55,8 @@
                 {% for cafe in visited_cafe_list %}
                     <tr class="text-center table_content">
                         <td style="vertical-align: middle; font-size:1.2em;">{{forloop.counter0|add:page_obj.start_index}}</td>
-                        <td style="vertical-align: middle;"><a href="{% url 'cafe:review_list' cafe.cafe.id %}" style="color: black; font-size:1.2em;">{{ cafe.cafe.name }}</a></td>
-                        <td style="vertical-align: middle;"><a href="{% url 'this_cafe_map' cafe.cafe.id %}" style="color: black; font-size:1.2em;">{{ cafe.cafe.address }}</a></td>
+                        <td style="vertical-align: middle;"><a href="{% url 'cafe:review_list' cafe.cafe.id %}" class="atag">{{ cafe.cafe.name }}</a></td>
+                        <td style="vertical-align: middle;"><a href="{% url 'this_cafe_map' cafe.cafe.id %}" class="atag">{{ cafe.cafe.address }}</a></td>
                         <td>
                             {%if cafe.cafe.cafe_stars == 0.0 %}
                             <div class="rating_wrap_parents">
@@ -168,13 +168,13 @@
     <div class="btn-group me-2" role="group" aria-label="First group">
     <ul class="pagination" style="justify-content: space-around; color:black; font-family: RIDIBatang;">
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}" style="color:black;">
                 처음
             </a>
         </li>
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1" style="color:black;">
                 이전
             </a>
         </li>
@@ -189,7 +189,7 @@
         {% for page in page_range %}
         <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
             
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}" style="color:black;">
                 {{ page }}
             </a>
             
@@ -198,7 +198,7 @@
 
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}" style="color:black;">
                 다음
             </a>
         </li>
@@ -210,7 +210,7 @@
         </li>
         {% endif %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}" style="color:black;">
                 마지막
             </a>
         </li>
