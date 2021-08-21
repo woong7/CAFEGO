@@ -1,21 +1,31 @@
 
 <!-- post 부분 수정 필요! -->
 <div class="dropdown">
-	<span class="badge bg-primary notification-badge" onclick="showNotifications()">{{ notifications.count }}</span>
+	<span class="badge notification-badge" onclick="showNotifications()" style="background-color: #fff374; color:#573728; font-size: 14px;">{{ notifications.count }}</span>
 	<div class="dropdown-content d-none" id="notification-container">
 		{% for notification in notifications %}
 			{% if notification.comment %}
 				{% if notification.notification_type == 2 %}
 				<div class="dropdown-item-parent">
-					<a href="{% url 'comment-notification' notification.pk notification.comment.post.pk %}">@{{ notification.from_user.nickname }}님이 내 리뷰에 댓글을 달았습니다!</a>
+					<a href="{% url 'comment-notification' notification.pk notification.comment.post.pk %}">@{{ notification.from_user.nickname }}님이 내 리뷰에 댓글을 달았습니다!<br/>{{notification.created_at}}</a>
 					<span class="dropdown-item-close" onclick="removeNotification(`{% url 'notification-delete' notification.pk %}`, `{{ request.path }}`)">&times;</span>
 				</div>
 				{% endif %}
 			{% else %}
-				<div class="dropdown-item-parent">
-					<a href="{% url 'follow-notification' notification.pk notification.from_user.pk %}">@{{ notification.from_user.nickname }}님이 나를 팔로우 시작했습니다!</a>
-					<span class="dropdown-item-close" onclick="removeNotification(`{% url 'notification-delete' notification.pk %}`, `{{ request.path }}`)">&times;</span>
-				</div>
+				{% if notification.notification_type == 3%}
+					<div class="dropdown-item-parent">
+						<a href="{% url 'follow-notification' notification.pk notification.from_user.pk %}">@{{ notification.from_user.nickname }}님이 나를 팔로우 시작했습니다!<br/>{{notification.created_at}}</a>
+						<span class="dropdown-item-close" onclick="removeNotification(`{% url 'notification-delete' notification.pk %}`, `{{ request.path }}`)">&times;</span>
+					</div>
+				{% elif notification.badge %}
+					<div class="dropdown-item-parent">
+					<p>
+						<img src="{{notification.badge.badge_image.url}}" style="width:10%; height:10%">
+						<a href="{% url 'badge_list' notification.to_user.pk %}">@새로운 배지를 획득했습니다!-{{notification.badge.badge_name}}<br/>획득일시: {{notification.created_at}}</a>
+					</p>
+						<span class="dropdown-item-close" onclick="removeNotification(`{% url 'notification-delete' notification.pk %}`, `{{ request.path }}`)">&times;</span>
+					</div>
+				{% endif %}
 			{% endif %}
 		{% endfor %}
 	</div>

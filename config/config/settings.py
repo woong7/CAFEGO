@@ -64,6 +64,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+MIDDLEWARE_CLASSES = [
+        'django.middleware.csrf.CsrfViewMiddleware',
+]
+
+
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -158,7 +165,7 @@ SITE_ID=1
 LOGIN_REDIRECT_URL='/'
 
 
-ACCOUNT_FORMS = {'signup': 'accounts.forms.MyCustomSignupForm'} #앱이름.forms.py,클래스 이름
+ACCOUNT_FORMS = {'signup': 'accounts.forms.UserRegistrationForm'} #앱이름.forms.py,클래스 이름
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -166,6 +173,39 @@ MEDIA_URL = '/media/'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'kgw980316@gmail.com'
-EMAIL_HOST_PASSWORD = 'parabe1!um'
+EMAIL_HOST_USER = 'pirocafego@gmail.com' #'kgw980316@gmail.com'
+EMAIL_HOST_PASSWORD = 'pirogramming15!' #'parabe1!um'
 EMAIL_USE_TLS = True
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS =True
+CSRF_TRUSTED_ORIGINS = (
+    '127.0.0.1:8000',
+)
+
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8000',
+)
+
+CORS_ALLOW_HEADERS=(
+    'access-control-allow-credentials', 
+    'access-control-allow-origin',
+    'access-control-request-method',
+    'access-control-request-headers',
+    'accept',
+    'accept-encoding',
+    'accept-langueage',
+    'connection',
+    'content-type',
+    'dnt',
+    'credentials',
+    'host',
+    'origin',
+    'user-agent',
+    'X-CSRFToken',
+    'csrftoken',
+    'x-requested-with',
+)
+
+SOCIALACCOUNT_AUTO_SIGNUP=False
+ACCOUNT_EMAIL_REQUIRED = True

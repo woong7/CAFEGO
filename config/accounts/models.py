@@ -48,8 +48,8 @@ import simplejson as json
 class User(AbstractBaseUser):
     username_validator: UnicodeUsernameValidator = ...
     username = models.CharField(max_length=150, unique=True) ##########
-    email = models.EmailField(blank=True)
-    nickname = models.CharField(max_length=150)
+    email = models.EmailField(max_length=150)
+    nickname = models.CharField(max_length=150, unique=True)
 
     city = models.CharField(max_length=10)
     gu = models.CharField(max_length=10)
@@ -57,6 +57,9 @@ class User(AbstractBaseUser):
 
     agree_terms = models.BooleanField(default=False)
     agree_marketing = models.BooleanField(default=False)
+
+    self_intro=models.TextField(null=True, blank=True, max_length=150)
+    self_image=models.ImageField(null=True, blank=True, upload_to='media/static/image/')
 
     is_active = models.BooleanField(        
         default=False,                 # 기본값을 False 로 변경
@@ -71,10 +74,11 @@ class User(AbstractBaseUser):
     #한달마다 초기화
     visit_count_lastmonth = models.IntegerField(default=0) #지난 한달간 방문한 횟수 센다, 매월 초기화해준다.
     review_count_lastmonth = models.IntegerField(default=0)
-    kinds_of_cafe_lastmonth = models.IntegerField(default=0)
 
     badge_taken=models.TextField(null=True, default=json.dumps([]))
     friends=models.TextField(null=True, default=json.dumps([]))
+    follwers=models.TextField(null=True, default=json.dumps([]))
+    follwernum=models.IntegerField(default=0)
 
     objects = UserManager()
 
@@ -92,6 +96,16 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+    def to_json(self):
+    	return {
+            "username": self.username,
+            "nickname": self.nickname,
+            "total_visit": self.total_visit,
+            "total_review": self.total_review,
+            "visit_count_lastmonth": self.visit_count_lastmonth,
+            "review_count_lastmonth": self.review_count_lastmonth,
+        }
 
     @property
     def is_staff(self):
@@ -127,8 +141,7 @@ class Drink(models.Model):
     visited_cafe = models.ForeignKey(VisitedCafe, on_delete=CASCADE)
     drinkname = models.CharField(max_length=50, choices=DRINK_CHOICES)
 
-    created_at = models.DateTimeField(auto_now_add=True) #카페 등록 시간
-    updated_at = models.DateTimeField(auto_now=True) #갔던 카페 다시 등록 
+    
 
     def __str__(self):
         return self.drinkname
@@ -141,5 +154,7 @@ class Notification(models.Model):
     from_user = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)#follow
     #post - like
     comment = models.ForeignKey('cafe.Comment', on_delete=models.CASCADE, related_name='+', blank=True, null=True)
-    date = models.DateTimeField(default=timezone.now)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True) #카페 등록 시간
+    updated_at = models.DateTimeField(auto_now=True) #갔던 카페 다시 등록 
     user_has_seen = models.BooleanField(default=False)#봤는지 안 봤는지 체크

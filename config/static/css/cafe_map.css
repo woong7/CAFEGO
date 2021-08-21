@@ -16,12 +16,33 @@
 .search {
     height: 90px;
     padding-left: 10px;
+    padding-right: 10px;
+}
+
+.mycafe-btn {
+    position: absolute;
+    top: 70px;
+    left: 330px;
+    margin-top: 5px;
+    display: inline-block;
+    text-align: center;
+    color: #704F3F;
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid #F0D9CE;
+    box-shadow: 0px 1px 8px #704F3F;
+    border-radius: 8px;
+    z-index:1;
+}
+
+.mycafe-btn:hover {
+    background-color: #F0D9CE;
 }
 
 #searchForm {
     width: 300px;
     height: 30px;
-    border: 1px solid #1b5ac2;
+    border: 1px solid #704F3F;
     background: #ffffff;
 }
 
@@ -38,10 +59,14 @@
     width: 50px;
     height: 28px;
     border: 0px;
-    background: #1b5ac2;
+    background: #704F3F;
     outline: none;
     float: right;
-    color: #ffffff;
+    color: white;
+}
+
+#search-cafe:hover {
+    background: #A3735B;
 }
 
 #placesList {
@@ -56,9 +81,129 @@
     width: 290px;
     height: 70px;
     border-top: 1px solid rgb(207, 204, 204);
+    padding-left: 15px;
     cursor: pointer;
 }
 
 #keyword-search li:hover {
-    background-color: lightskyblue;
+    background-color: #F0D9CE;
+}
+
+span .placename {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.hover-overlay {
+    text-align: left;
+    overflow: hidden;
+    position: relative;
+    font-size: 12px;
+    font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+    line-height: 1.5;
+    top: -35px;
+    left: 5px;
+    padding: 7px;
+}
+
+.hover-overlay span {
+    font-weight: bold;
+}
+
+.hover-overlay .info {
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 20px;
+    border-radius: 5px;
+    border-bottom: 2px solid #ccc;
+    border-right: 1px solid #ccc;
+    overflow: hidden;
+    background: #fff;
+}
+
+.hover-overlay .info:nth-child(1) {
+    border: 0;
+    box-shadow: 0px 1px 2px #888;
+}
+
+.info:after {
+    content: '';
+    position: absolute;
+    margin-left: -12px;
+    left: 50%;
+    bottom: -4px;
+    width: 22px;
+    height: 13px;
+    background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+}
+
+.hover-overlay-click {
+    text-align: left;
+    overflow: hidden;
+    position: relative;
+    font-size: 12px;
+    font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+    line-height: 1.5;
+    top: -87px;
+    left: 5px;
+    padding: 7px;
+}
+.hover-overlay-click .infos {
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 110px;
+    min-width: 200px;
+    border-bottom: 2px solid #ccc;
+    border-right: 1px solid #ccc;
+    overflow: hidden;
+    background: #fff;
+}
+
+.hover-overlay-click .infos:nth-child(1) {
+    border: 0;
+    box-shadow: 0px 1px 2px #888;
+}
+
+.infos:after {
+    content: '';
+    position: absolute;
+    margin-left: -12px;
+    left: 50%;
+    bottom: -4px;
+    width: 22px;
+    height: 14px;
+    background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+}
+
+.overlay-cafe-name {
+    padding-top: 5px;
+    font-size:20px;
+    text-align: center;
+}
+
+.overlay-cafe-address {
+    padding:5px;
+    font-size:12px; 
+    text-align: center;
+}
+
+.overlay-buttons {
+    padding:5px;
+    display: flex !important;
+    justify-content: space-around;
+}
+
+.overlay-btn {
+    margin-top: 5px;
+    text-align: center;
+    color: #704F3F;
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid #F0D9CE;
+    border-radius: 8px;
+}
+
+.overlay-btn:hover {
+    background-color: #F0D9CE;
 }

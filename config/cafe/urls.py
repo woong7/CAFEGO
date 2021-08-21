@@ -18,4 +18,7 @@ urlpatterns = [
     path('sort_review/<int:pk>/', views.sort_review, name='sort_review'),
     path('comment_write/', views.comment_write, name='comment_write'),
     path('comment_delete/', views.comment_delete, name='comment_delete'),
+    path('cafe_delete/<int:pk>/', views.cafe_delete, name='cafe_delete'),
+    path('enroll_cafe_from_map/<int:pk>/', views.enroll_cafe_from_map, name='enroll_cafe_from_map'),
+    path('enroll_cafe/', views.enroll_cafe, name='enroll_cafe'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

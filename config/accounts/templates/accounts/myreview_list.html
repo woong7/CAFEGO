@@ -1,66 +1,78 @@
 {% extends 'base.html' %}
-{%load static}
+{% load static %}
 
 {% block title %}
     {{ request.user }}님의 리뷰
 {% endblock %}
 
+{%block css%}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/myreview_list.css' %}">
+{% endblock %}
+
 {% block content %}
-    <!-- 나의 카페리스트 -->
-    <table>
-    <thead>
-        <tr>
-            <th>카페명</th>
-            <th>나의 별점</th> 
-            <th>내용</th> 
-            <th>작성 날짜</th>      
-            <th>리뷰 수정</th>          
-        </tr>
-    </thead>
-    <tbody>
-        {% for review in my_all_review %}
-            <tr>
-                <td><a href="{% url 'cafe:review_list' review.cafe.id %}">{{ review.cafe }}</a></td>
-                <td>{{ review.review_stars }}</td>
-                <td>{{ review.content }}</td>
-                <td>{{ review.created_at }}</td> 
-                <td><a href="{% url 'review_update' review.id %}">리뷰 수정</a></td>        
+<div class="container review-content">
+    <div class="px-4 py-3 my-5 cafe-info shadow-sm card" style="height:80vh;">
+        <div class="page_title">
+            <span>나의 리뷰 목록</span>
+        </div>
+        <table class="table mt-3">
+        <thead>
+            <tr class="table-title">
+                <th>카페명</th>
+                <th>나의 별점</th> 
+                <th>내용</th> 
+                <th>작성 날짜</th>      
+                <th>리뷰 수정</th>          
             </tr>
-        {% endfor %}    
-    </tbody>
-    </table>
+        </thead>
+        <tbody>
+            {% for review in my_all_review %}
+                <tr class="table-content">
+                    <td><a href="{% url 'cafe:review_list' review.cafe.id %}">{{ review.cafe }}</a></td>
+                    <td>{{ review.review_stars }}</td>
+                    <td>{{ review.content }}</td>
+                    <td>{{ review.created_at }}</td> 
+                    <td><button class="main-reverse-btn" onclick="location.href="{% url 'review_update' review.id %}"">리뷰수정</button></td>        
+                </tr>
+            {% endfor %}    
+        </tbody>
+        </table>
 
-    <!-- 페이징 처리 -->
-    {% if is_paginated %}
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">이전</a>
-            </li>
-            {% endif %}
+        <!-- 페이징 처리 -->
+        {% if is_paginated %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">이전</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">이전</a>
+                </li>
+                {% endif %}
 
-            {% for page in page_range %}
-            <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
-                <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
-            </li>
-            {% endfor %}
+                {% for page in page_range %}
+                <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
+                    <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
+                </li>
+                {% endfor %}
 
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <a class="page-link" href="#">다음</a>
-            </li>
-            {% endif %}
-            <span>{{page_obj}}</span>
-        </ul>
-    {% endif %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">다음</a>
+                </li>
+                {% endif %}
+            </ul>
+            <div class="d-flex justify-content-center">
+                <span class="page-obj">{{page_obj}}</span>
+            </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
 
 
