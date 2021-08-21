@@ -39,34 +39,6 @@ def signup(request):
     return render(request, 'accounts/signup.html')
 
 
-###allauth 써서 필요없을 듯???
-class LoginView(View):
-    def get(self, request):
-        form = forms.LoginForm()
-        ctx = {
-            "form": form,
-        }
-        return render(request, "accounts/home.html", ctx)
-
-    def post(self, request):
-        is_failed=0
-        form = forms.LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return render(request, "accounts/home.html")
-            else:
-                is_failed=1
-        else:
-            is_failed=1                   
-
-        return render(request, "accounts/login.html", {"form": form,})
-
-        return render(request, "accounts/login.html", ctx)
-
 ##allauth 써서 필요 없나??
 @login_required
 def logout(request):
@@ -440,7 +412,7 @@ class InfoUpdateView(ListView):
             user.save()
             
 
-        return render(request, "accounts/home.html", {"form": form})
+        return render(request, "accounts/mypage.html", {"form": form})
 
 def infoupdate(request, pk):
     if request.method == 'POST':
@@ -981,7 +953,7 @@ from django.views.generic.base import TemplateView
 class UserVerificationView(TemplateView):
     
     model = get_user_model()
-    redirect_url = '/home/'
+    redirect_url = '/account/login/'
     token_generator = default_token_generator
 
     def get(self, request, *args, **kwargs):
