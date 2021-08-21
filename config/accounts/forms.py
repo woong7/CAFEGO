@@ -36,10 +36,13 @@ class MyCustomForm(forms.ModelForm):
     def save(self, request):
         user = super(MyCustomForm, self).save(request)
         req_post = request.POST
+        req_files =request.FILES
         user.city = req_post.__getitem__('city')
         user.gu = req_post.__getitem__('gu')
         user.dong = req_post.__getitem__('dong')
         user.nickname = self.cleaned_data['nickname']
+        user.self_intro = self.cleaned_data['self_intro']
+        user.self_image = req_files.__getitem__('self_image')
         user.agree_terms = self.cleaned_data['agree_terms']
         user.agree_marketing = self.cleaned_data['agree_marketing']
         user.save()
@@ -47,14 +50,14 @@ class MyCustomForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('nickname', 'city', 'gu', 'dong', 'agree_terms', 'agree_marketing')
+        fields = ('nickname', 'self_intro', 'self_image', 'city', 'gu', 'dong', 'agree_terms', 'agree_marketing')
 
 
 class UserRegistrationForm(UserCreationForm):
     
     class Meta:
         model = get_user_model()
-        fields = ('username', 'email', 'nickname', 'city', 'gu', 'dong', 'agree_terms', 'agree_marketing')
+        fields = ('username', 'self_intro', 'self_image', 'email', 'nickname', 'city', 'gu', 'dong', 'agree_terms', 'agree_marketing')
 
 
 class VisitedCafeForm(forms.ModelForm):

@@ -1,25 +1,35 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block css%}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/review_list.css' %}">
+{% endblock %}
+
 {% block title %}
     리뷰작성
 {% endblock %}
+
 {% block content %}
-<div class="px-4 py-5 my-5 text-center">
-    <h1 class="display-5 fw-bold">{{ cafe_name.name }}</h1>
-    <div class="col-lg-6 mx-auto">
-        <p class="lead mb-4">{{cafe_name.address}}</p>
-        <div>
+<div class="container review-content">
+    <div class="px-4 py-3 my-5 cafe-info shadow-sm card" style="height:80vh;">
+        <div class="mt-auto">
+            <h2 class="fw-bold text-center">{{ cafe_name.name }}</h2>
+            <h6 class="my-3 text-center">{{cafe_name.address}}</h6>
+        </div>
+        <div class="mx-auto my-auto">
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <!-- 다른 요소들은 form에서 입력받음 -->
                 <p>별점 : {{ form.review_stars}}</p>
                 <p>{{ form.content }}</p>
                 <!-- 사진은 여러 개라서 따로 등록  -->
-                <p>사진 등록 <input type="file" name="imgs" multiple></p>
+                <div>
+                    <span style="font-weight: bold;">사진 등록</span>
+                    <input type="file" name="imgs" multiple/>
+                </div>
 
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <button type="submit" class="btn btn-outline-primary px-4 gap-3">작성완료</button>
+                <div class="d-flex justify-content-center mt-5">
+                    <button type="submit" class="main-reverse-btn" style="width:120px; height:40px;">작성완료</button>
                 </div>
             </form> 
         </div>

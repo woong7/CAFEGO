@@ -47,25 +47,19 @@
                     <div class="hoverbox">
                         <div class="screen">
                             <div class="hud01">
-                                <img src="../../../media/static/image/coffee-mug.png" style="width: 800px; height: 800px; max-width: none;">
+                                <img src="../../../media/static/image/main_1st_rollingcoffee-1572739_1280.png">
                             </div>
                         </div>
                     </div>
 
                     <div class="core" style="background-color: transparent; color: white;">
-                        <!--[if lte IE 8]><div class="figure"></div><![endif]-->
-                        <h2>
-                            <!-- <em>Hello,</em> -->
-                            <br>CAFEGO
-                        </h2>
-                        <p>지도기반 카페이용기록 웹서비스</p>
-                        <!-- <ul class="quantity">
-                            <li>- 1일 300,000회 사용 가능</li>
-                        </ul> -->
+                        <h2 style="margin-top: 5rem;">CAFEGO</h2>
+                        <div class="main_1st_ctx">지도기반 카페 이용기록 웹서비스</div>
+
                         {% if user.is_authenticated %}
-                            <div class="wrap_startbtn"><a href="#feature1"><span>시작하기</span></a></div>
+                            <button class="startbtn" onclick="location.href='/account/login'">Cafe Go</button>
                         {% else %}
-                            <div class="wrap_startbtn"><a href="/account/login"><span>로그인하기</span></a></div>
+                            <button class="startbtn" onclick="location.href='/account/login'">로그인</button>
                         {% endif %}
                     </div>
                 </div>

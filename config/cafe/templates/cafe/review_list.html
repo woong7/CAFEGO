@@ -82,14 +82,14 @@
                 </ul>
             </div>
         </div>
-        <hr/>
 
         <!-- 리뷰 하나하나 -->
         <article class="each-review">
             {% for reviews in each_reviews %}
+                <hr/>
                 <div class="d-flex justify-content-between">
                     <div class="reviewer-name d-flex">
-                        <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }} </a>
+                        <a href="{% url 'mypage' reviews.username.pk %}" style="font-weight:bold;">{{ reviews.username }} </a>
 
                         {% if reviews.review_stars == '1.0' %}
                             <span>⭐</span>
@@ -110,7 +110,7 @@
                     </div>
                     <div>
                         {% if reviews.username == request.user %}
-                            <button class="review-modify-btn" onclick="location.href='{% url 'review_update' reviews.id %}'">수정</button>
+                            <button class="main-btn" onclick="location.href='{% url 'review_update' reviews.id %}'">수정</button>
                         {% endif %}
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                             {% for img in review_photo %}
                                 {% if img.review.id == reviews.id %}
                                     <!-- TODO: 이미지 크기 키우는 modal 만들기-->
-                                    <img src="{{img.image.url}}" data-toggle="modal" data-target="#myModal">       
+                                    <img src="{{img.image.url}}">       
                                 {% endif %}
                             {% endfor %}   
                         {% endif %}
@@ -133,43 +133,36 @@
                     <span>{{ reviews.created_at }}</span>
                 </div>
                 <br/>
-                <div class="comments-{{reviews.id}}">
-                    <div class="accordion" id="accordion-{{reviews.id}}">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading-{{reviews.id}}">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{reviews.id}}" aria-expanded="false" aria-controls="collapse-{{reviews.id}}">
-                                댓글
-                            </button>
-                            </h2>
-                            <div id="collapse-{{reviews.id}}" class="accordion-collapse collapse show" aria-labelledby="heading-{{reviews.id}}" data-bs-parent="#accordion-{{reviews.id}}">
-                                <div class="accordion-body">
-                                    {% for comment in comments %}
-                                        {% if comment.post == reviews %}
-                                            <div class="comment-{{comment.id}} container my-1">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <a href="{% url 'mypage' reviews.username.pk %}">{{ comment.username }} </a>
-                                                    </div>
-                                                    <div class="col">{{comment.content}}</div>
-                                                    <div class="col">{{comment.created_at}}</div>
-                                                    {% if comment.username == user%}
-                                                    <div class="col">
-                                                        <button class="btn-primary" onclick="commentDelete('{{comment.id}}');">삭제</button>
-                                                    </div>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
+                    <details>
+                        <summary>
+                            댓글
+                        </summary>
+                        <hr/>
+                        <div class="comments-{{reviews.id}}">
+                        {% for comment in comments %}
+                            {% if comment.post == reviews %}
+                                <div class="comment-{{comment.id}} my-1">
+                                    <div class="row align-items-center">
+                                        <div class="col-2">
+                                            <a href="{% url 'mypage' comment.username.pk %}" style="font-weight:bold;">{{ comment.username }} </a>
+                                        </div>
+                                        <div class="col-4">{{comment.content}}</div>
+                                        <div class="col-4" style="font-size: 13px;">{{comment.created_at}}</div>
+                                        {% if comment.username == user %}
+                                        <div class="col-2">
+                                            <button class="main-btn" style="margin-left: 29px;" onclick="commentDelete('{{comment.id}}');">삭제</button>
+                                        </div>
                                         {% endif %}
-                                    {% endfor %}
-                                <input class="input-{{reviews.id}}" type="text" placeholder="댓글 달기"/>
-                                <button class="btn btn-sm btn-primary" onclick="commentWrite('{{reviews.id}}');">게시</button>
+                                    </div>
+                                    <hr/>
                                 </div>
-                            </div>
+                            {% endif %}
+                        {% endfor %}
                         </div>
-                    </div>
-                </div>
+                        <input class="input-{{reviews.id}} comment-write" type="text" placeholder="댓글 달기"/>
+                        <button class="main-reverse-btn" onclick="commentWrite('{{reviews.id}}');">게시</button>
+                    </details>        
                 <br/>
-                <hr/>
             {% endfor %}
         </article>
     {% else %}
@@ -201,22 +194,23 @@
 
     const writeResponse = () => {
         if(requestWrite.status < 400) {
-            const {review_id, review_user, content, comment_id, username, comment_time, notification} = JSON.parse(requestWrite.response);
+            const {review_id, comment_user, content, comment_id, username, comment_time, notification} = JSON.parse(requestWrite.response);
             console.log(content);
             const comments = document.querySelector(`.comments-${review_id}`);
             const element = document.querySelector(`.input-${review_id}`);
             comments.innerHTML += `
-                <div class="comment-${comment_id} container my-1">
-                    <div class="row">
-                        <div class="col">${content}</div>
-                        <div class="col">
-                            <a href="../../../mypage/${review_user}">${username}</a>
+                <div class="comment-${comment_id} my-1">
+                    <div class="row align-items-center">
+                        <div class="col-2">
+                            <a href="../../../mypage/${comment_user}">${username}</a>
                         </div>
-                        <div class="col">${comment_time}</div>
-                        <div class="col">
-                            <button class="btn-primary" onclick="commentDelete('${comment_id}');">삭제</button>
+                        <div class="col-4">${content}</div>
+                        <div class="col-4" style="font-size: 13px;">${comment_time}</div>
+                        <div class="col-2">
+                            <button class="main-btn" style="margin-left: 29px;" onclick="commentDelete('${comment_id}');">삭제</button>
                         </div>
                     </div>
+                    <hr/>
                 </div>
             `;
         }

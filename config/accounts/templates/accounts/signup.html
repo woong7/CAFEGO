@@ -1,34 +1,127 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
 {% load i18n %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+{% endblock %}
+{% block title %}
+    signup
+{% endblock %}
 {% block content %}
-<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 12rem;">
-<p id="header-logo-image"></p>
-  <h1>{% trans "회원가입" %}</h1>
-  <br><br>
-  <form class="signup" id="signup_form" method="post" action="{% url 'signup' %}">
-  {% csrf_token %}
-    <p><label for="id_username">아이디:</label> <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username"></p>
-    <p><label for="id_email">이메일:</label> <input type="email" name="email" maxlength="254" id="id_email"></p>
-    <p><label for="id_nickname">닉네임:</label> <input type="text" name="nickname" maxlength="150" required="" id="id_nickname"></p>
-    <p><label for="id_agree_terms">정보제공 동의:</label> <input type="checkbox" name="agree_terms" id="id_agree_terms"></p>
-    <p><label for="id_agree_marketing">마케팅 동의:</label> <input type="checkbox" name="agree_marketing" id="id_agree_marketing"></p>
-    <span>거주지: </span>
-    <select name="city" id="addressRegion" form="signup_form"></select>
-    <select name="gu" id="addressDo" form="signup_form"></select>
-    <select name="dong" id="addressSiGunGu" form="signup_form"></select>
-    <br/><br/>
-    <p><label for="id_password1">비밀번호:</label> <input type="password" name="password1" autocomplete="new-password" required="" id="id_password1"> <span class="helptext"></span></p>
-    <p><label for="id_password2">비밀번호 확인:</label> <input type="password" name="password2" autocomplete="new-password" required="" id="id_password2"></p>
-    <hr/>
-    {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-    {% endif %}
-    <button class="btn btn-outline-primary" type="submit">회원가입</button>
-  </form>
-</div>
+<section id="signup_page" class="py-4 px-5 text-center">
+    <header class="pt-3 login_head">
+        <div class="pricing-header p-2 pb-md-4 mx-auto text-center">
+            <p id="header-logo-image"></p>
+            <p class="fs-5 text-muted page_info">회원가입을 해서 카페고의 모든 서비스를 즐겨보세요!</p>
+        </div>
+    </header>
+
+    <div class="container position-relative overflow-hidden mx-auto pt-5 text-center bg-light" style="width: 78%; border-radius: 1%;">
+        <div class="signup-container">
+            <form class="signup" id="signup_form" method="post" action="{% url 'signup' %}" enctype="multipart/form-data">
+                <img class="avatar" src="../../../media/static/image/undraw_female_avatar_w3jk.svg">
+                <article class="text-center mt-3" style="width:100%;">
+                {% csrf_token %}
+                    <div class="input-div">
+                        <div class="i table"><i class="fas fa-user-alt icon"></i></div>
+                        <div class="table">
+                            <label for="id_username">아이디</label>
+                            <input class="input" type="text" name="username" maxlength="150" autofocus="" required="" id="id_username">
+                        </div>    
+                    </div>
+                    <div class="input-div">
+                        <div class="i table"><i class="fas fa-envelope icon"></i></div>
+                        <div class="table">
+                            <label for="id_email">이메일</label>
+                            <input class="input" type="email" name="email" maxlength="254" id="id_email">
+                        </div>    
+                    </div>
+                    <div class="input-div">
+                        <div class="i table"><i class="fas fa-address-book icon"></i></div>
+                        <div class="table">
+                            <label for="id_nickname">닉네임</label>
+                            <input class="input" type="text" name="nickname" maxlength="150" required="" id="id_nickname">
+                        </div>
+                    </div>
+                    <div class="input-div">
+                        <div class="i table"><i class="fas fa-address-book icon"></i></div>
+                        <div class="table">
+                            <label for="id_self_intro">한줄 소개</label>
+                            <input class="input" type="text" name="self_intro" maxlength="150" id="id_self_intro">
+                        </div>
+                    </div>
+                    <div class="input-div">
+                        <div class="i table"><i class="fas fa-address-book icon"></i></div>
+                        <div class="table">
+                            <label for="id_self_image">프로필 사진</label>
+                            <input class="input px-5 mx-5" type="file" name="self_image" id="id_self_image">
+                        </div>
+                    </div>
+                    <section class="check-div mb-3">
+                        <div class="check_wrap">
+                            <label class="check">
+                                <input type="checkbox" name="agree_terms" id="id_agree_terms" class="save_check">
+                                <span class="check_icon"></span>
+                            </label>
+                            <label for="id_agree_terms" class="check_label mb-1 mx-2">정보제공 동의</label>
+                        </div>
+                        <div class="check_wrap">
+                            <label class="check">
+                                <input type="checkbox" name="agree_marketing" id="id_agree_marketing" class="save_check">
+                                <span class="check_icon"></span>
+                            </label>
+                            <label for="id_agree_marketing" class="check_label mb-1">마케팅 동의</label>
+                        </div>
+                    </section>
+
+                    <section class="house">
+                        <div><i class="fas fa-home home_icon"></i></div>
+                        <span>거주지 </span>
+                        <select name="city" id="addressRegion" form="signup_form"></select>
+                        <select name="gu" id="addressDo" form="signup_form"></select>
+                        <select name="dong" id="addressSiGunGu" form="signup_form"></select>
+                    </section>
+
+                    <div class="input-div">
+                        <div class="i table"><i class="fas fa-lock icon"></i></div>
+                        <div class="table">
+                            <label for="id_password1">비밀번호</label>
+                            <input class="input" type="password" name="password1" autocomplete="new-password" required="" id="id_password1">
+                            <span class="helptext"></span>
+                        </div>
+                    </div>
+                    <div class="input-div">
+                        <div class="i table"><i class="fas fa-lock icon"></i></div>
+                        <div class="table">
+                            <label for="id_password2">비밀번호 확인</label>
+                            <input class="input" type="password" name="password2" autocomplete="new-password" required="" id="id_password2">
+                        </div>
+                    </div>
+
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+                    <button class="btn button" type="submit">회원가입 하기</button>
+                </article>
+            </form>
+        </div>
+
+
+        <div class="img">
+            <img src="../../../media/static/image/undraw_Terms_re_6ak4.svg">
+        </div>
+        <img class="wave" src="../../../media/static/image/wave2.png">
+
+
+    </div>
+</section>
+
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script  type="text/javascript"> 
 $(function(){
@@ -116,5 +209,24 @@ var areaSelectMaker = function(target){
     }
 }
 
+// 입력창 focus 효과
+const inputs = document.querySelectorAll('.input');
+
+function focusFunc() {
+  let parent = this.parentNode.parentNode;
+    parent.classList.add('focus');
+}
+
+function blurFunc() {
+  let parent = this.parentNode.parentNode;
+  if(this.value == "") {
+    parent.classList.remove('focus');
+  }
+}
+
+inputs.forEach ( input => {
+  input.addEventListener('focus', focusFunc);
+  input.addEventListener('blur', blurFunc);
+});
 </script>
 {% endblock %}

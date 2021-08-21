@@ -4,7 +4,7 @@
     카페 지도
 {% endblock %}
 {% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_map.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -43,25 +43,23 @@
             image : new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
         });
 
-    // 마커에 클릭이벤트 등록
-    kakao.maps.event.addListener(marker, 'click', function() {
-        // 마커를 클릭하면 장소명이 인포윈도우에 표출
-        infowindow.open(map, marker);
-    });
-
     // 마커를 클릭하면 장소명을 표출할 인포윈도우
-    var infowindow = new kakao.maps.InfoWindow({zIndex:1, removable : true});
+    var overlay = new kakao.maps.CustomOverlay({zIndex:1});
 
-    infowindow.setContent(`
-        <div class="d-flex flex-column align-items-center">
-            <div class="fw-bold" style="padding:5px;font-size:12px;">${cafe_name}</div>
-            <div style="padding:5px;font-size:10px;">${cafe_address}</div>
-            <div style="padding:5px;font-size:10px;">
-                <a href="../../cafe/review_list/${cafe_id}">리뷰 보기</a>
+    overlay.setContent(`
+        <div class="hover-overlay-click">
+            <div class="infos d-flex flex-column">
+                <div class="fw-bold overlay-cafe-name">${cafe_name}</div>
+                <div class="overlay-cafe-address">${cafe_address}</div>
+                <div class="overlay-buttons">
+                    <button class="overlay-btn" onClick="location.href='../review_list/${cafe_id}'">리뷰 보기</button>
+                    <button class="overlay-btn" onClick="location.href='../enroll_cafe_from_map/${cafe_id}'">방문 추가</button>
+                </div>
             </div>
         </div>
     `);
 
-    infowindow.open(map, marker);
+    overlay.setPosition(new kakao.maps.LatLng(cafe_y, cafe_x));
+    overlay.setMap(map);
     </script>
 {% endblock %}
