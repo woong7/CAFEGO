@@ -22,7 +22,7 @@
 
     <div class="container position-relative overflow-hidden mx-auto pt-5 text-center bg-light" style="width: 78%; border-radius: 1%;">
         <div class="signup-container">
-            <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+            <form class="signup" id="signup_form" method="post" action="{% url 'signup' %}" enctype="multipart/form-data">
                 <img class="avatar" src="../../../media/static/image/undraw_female_avatar_w3jk.svg">
                 <article class="text-center mt-3" style="width:100%;">
                 {% csrf_token %}
@@ -45,6 +45,20 @@
                         <div class="table">
                             <label for="id_nickname">닉네임</label>
                             <input class="input" type="text" name="nickname" maxlength="150" required="" id="id_nickname">
+                        </div>
+                    </div>
+                    <div class="input-div">
+                        <div class="i table"><i class="fas fa-address-book icon"></i></div>
+                        <div class="table">
+                            <label for="id_self_intro">한줄 소개</label>
+                            <input class="input" type="text" name="self_intro" maxlength="150" id="id_self_intro">
+                        </div>
+                    </div>
+                    <div class="input-div">
+                        <div class="i table"><i class="fas fa-address-book icon"></i></div>
+                        <div class="table">
+                            <label for="id_self_image">프로필 사진</label>
+                            <input class="input px-5 mx-5" type="file" name="self_image" id="id_self_image">
                         </div>
                     </div>
                     <section class="check-div mb-3">

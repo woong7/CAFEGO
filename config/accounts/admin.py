@@ -12,5 +12,6 @@ class VisitedCafeAdmin(admin.ModelAdmin):
 
 admin.site.register(Drink)
 admin.site.register(Badge)
+
 admin.site.register(Notification)
 #admin.site.register(User)

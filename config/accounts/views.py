@@ -49,6 +49,7 @@ class LoginView(View):
         return render(request, "accounts/home.html", ctx)
 
     def post(self, request):
+        is_failed=0
         form = forms.LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get("username")
@@ -57,8 +58,14 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 return render(request, "accounts/home.html")
+            else:
+                is_failed=1
+        else:
+            is_failed=1                   
 
-        return render(request, "accounts/login.html", {"form": form})
+        return render(request, "accounts/login.html", {"form": form,})
+
+        return render(request, "accounts/login.html", ctx)
 
 ##allauth 써서 필요 없나??
 @login_required
@@ -423,6 +430,8 @@ class InfoUpdateView(ListView):
             form.save(request)
             user=request.user
             user.nickname=form.cleaned_data.get("nickname")
+            user.self_intro=form.cleaned_data.get("self_intro")
+            user.self_image=form.cleaned_data.get("self_image")
             user.city=form.cleaned_data.get("city")
             user.gu=form.cleaned_data.get("gu")
             user.dong=form.cleaned_data.get("dong")
@@ -435,7 +444,7 @@ class InfoUpdateView(ListView):
 
 def infoupdate(request, pk):
     if request.method == 'POST':
-        user_change_form = MyCustomForm(request.POST, instance=request.user)
+        user_change_form = MyCustomForm(request.POST, request.FILES, instance=request.user)
         if user_change_form.is_valid():
             user_change_form.save(request)
             return redirect('mypage', request.user.pk)
@@ -571,7 +580,7 @@ def mypage(request, pk):
 
 class MyCafeReviewListView(ListView):
     model = Review
-    paginate_by = 5
+    paginate_by = 10
     template_name = 'accounts/myreview_list.html'
     context_object_name = 'my_all_review'
 
@@ -869,8 +878,6 @@ def friend_register(request):
 
 def this_cafe_map(request, pk):
     cafe = CafeList.objects.get(pk=pk)
-    #cafes = CafeList.objects.all().order_by('location_x')
-    #cafe_list = serializers.serialize('json', cafes)
     ctx = {
         #'data': cafe_list,
         'cafe_id': cafe.id,
