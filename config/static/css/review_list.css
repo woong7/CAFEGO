@@ -143,10 +143,6 @@ a:hover {
     border: 1px solid;
 }
 
-.each-review {
-
-}
-
 .reviewer-name a {
     font-size: 20px;
     margin-right: 5px;
@@ -240,4 +236,8 @@ summary:hover {
 
 .comment-write {
     width: 90%;
+}
+
+.drink-list div {
+    margin-left: 27%;
 }

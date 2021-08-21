@@ -28,6 +28,7 @@ def review_list(request, pk):
     user_visited_cafes = VisitedCafe.objects.filter(cafe=this_cafe, user=request.user)
     #방문했는지 체크 -> 리뷰 작성할 수 있음!
     is_visit = False
+    selected = '정렬 방식'
 
     for cafe in user_visited_cafes:
         if cafe.cafe == this_cafe:
@@ -60,6 +61,7 @@ def review_list(request, pk):
         'review_photo': review_photo,
         'comments': comments,
         'is_visit': is_visit,
+        'selected': selected,
     } 
 
     return render(request, 'cafe/review_list.html', ctx)
@@ -249,7 +251,9 @@ def sort_latest(request, pk):
             pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    selected = '최신 순'
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
+    'selected':selected,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
@@ -267,7 +271,9 @@ def sort_visit(request, pk):
             pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-visit_cafe__visit_count', '-created_at') #해당카페의 리뷰들
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    selected = '방문 순'
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
+    'selected':selected,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
@@ -284,7 +290,9 @@ def sort_total_visit(request, pk):
             pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username__total_visit', '-created_at')
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    selected = '총 방문 순'
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
+    'selected':selected,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
@@ -301,7 +309,9 @@ def sort_review(request, pk):
             pass
     each_reviews = Review.objects.filter(cafe=this_cafe).order_by('-username__total_review', '-created_at')#이름 순으로 정렬
     review_photo = ReviewPhoto.objects.filter(review_cafe=this_cafe) 
+    selected = '리뷰 순'
     ctx={'this_cafe': this_cafe, 'each_reviews': each_reviews, 'review_photo': review_photo, 'cafe_id': cafe_id, 'comments': comments, 'is_visit': is_visit,
+    'selected':selected,
     } 
     return render(request, 'cafe/review_list.html', ctx)
 
