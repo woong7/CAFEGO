@@ -6,6 +6,13 @@
 }
 
 @font-face {
+    font-family: 'Cafe24Ssurround';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
     font-family: 'RIDIBatang';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
     font-weight: normal;
@@ -33,6 +40,27 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'twaysky';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ONE-Mobile-POP';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
 #header-logo-image {
     display: inline-block;
     width: 120px;
@@ -52,7 +80,13 @@
 }
 
 .bg-lightgray {
-    background-color: #573728;
+    background-color: #725a4e;
+}
+
+.hello_text {
+    font-size: 1.2rem;
+    font-family: Pretendard-Regular;
+    color: #f0d9ce;
 }
 
 .nev_text {
@@ -69,6 +103,12 @@
 
 a {
     text-decoration: none;
+    color: #553d31;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #B3A29A;
 }
 
 ul {
@@ -141,4 +181,49 @@ ul {
 	color: rgb(180, 25, 25);
 	transition: 0.3s;
 	cursor: pointer;
+}
+
+.pagination {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.page-link {
+    color: #704F3F;
+}
+
+.page-link:hover {
+    background-color:#b99d8f;
+    color: #704F3F;
+}
+
+.pagination .activate .page-link{
+    background-color: #b99d8f;
+}
+
+.table-title {
+    width: 100%;
+    font-family: NEXON Lv1 Gothic OTF;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #573728;
+    position: relative;
+    text-align: center;
+    padding: 3px 2px 0px;
+}
+
+.table-content {
+    font-size: 1em;
+    font-family: Pretendard-Regular;
+    color: #573728;
+    text-align: center;
+}
+
+.page-obj {
+    line-height: 38px;
+    vertical-align: middle;
+    font-family:NEXON Lv1 Gothic OTF;
+    font-weight: bold;
+    color:gray;
 }

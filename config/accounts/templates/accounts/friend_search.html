@@ -10,11 +10,11 @@
 {% endblock %}
 
 {% block content %}
-<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem; min-height: 93.3vh;">
+<div class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem; min-height: 93.3vh;">
     <header class="pt-3">
         <div class="p-2 mx-auto text-center">
             <div class="page_title">Search User</div>
-            <p class="fs-5 text-muted page_info">닉네임과 동네를 검색해서 다른 유저들을 찾아보세요.</p>
+            <p class="text-muted page_info">닉네임과 동네를 검색해서 다른 유저들을 찾아보세요.</p>
         </div>
     </header>
     <!-- 친구 검색창 -->
@@ -38,7 +38,7 @@
     <!-- 친구 리스트  -->
     <table class="table">
         <thead>
-            <tr class="table_title">
+            <tr class="table-title">
                 <th> </th>
                 <th>닉네임</th>
                 <th>동네</th>
@@ -47,19 +47,19 @@
         </thead>
         <tbody>
             {% if q %}
-                <h5 style="font-family: RIDIBatang;">'{{ q }}' 검색 결과입니다.</h5><br/>
-                <p style="font-family: RIDIBatang;">검색 결과: {{page_obj.paginator.count}}명</p>
+                <h5 style="font-family: Pretendard-Regular;">'{{ q }}' 검색 결과입니다.</h5><br/>
+                <p style="font-family: Pretendard-Regular;">검색 결과: {{page_obj.paginator.count}}명</p>
             {% endif %}
         </br>
             {% if user_list %}
 
                 {% for user in user_list %}
-                    <tr class="text-center table_content">
-                        <td style="vertical-align: middle; font-size:1.2em;">{{forloop.counter0|add:page_obj.start_index}}</td>
+                    <tr class="text-center table-content">
+                        <td style="vertical-align: middle;">{{forloop.counter0|add:page_obj.start_index}}</td>
                         <td style="vertical-align: middle;">
-                            <a href="{% url 'mypage' user.id %}" class="atag">{{ user.nickname }}</a>
+                            <a href="{% url 'mypage' user.id %}">{{ user.nickname }}</a>
                         </td>
-                        <td style="vertical-align: middle; color: black; font-size:1.2em;">{{user.gu}} {{ user.dong }}</td> <!-- | truncatechars:10-->
+                        <td style="vertical-align: middle; color: black;">{{user.gu}} {{ user.dong }}</td> <!-- | truncatechars:10-->
                         <!-- checkbox trigger modal -->
                         <td><input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ user.id }}" name="visit" value="Follow"></td>
                         <div class="modal fade" id="exampleModal_{{ user.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -68,18 +68,17 @@
                                 <form action="{% url 'friend_register' %}" method='post'>
                                     <div class="modal-content"> 
                                         <div class="modal-header">
-                                            <h5 class="modal-title table_title" id="exampleModalLabel" name="friendname2">
+                                            <h5 class="modal-title" style="font-family: Pretendard-Regular;" id="exampleModalLabel" name="friendname2">
                                                 <input type="hidden" name="friendname" value="{{ user.nickname }}">
                                                 <input type="hidden" name="friendid" value="{{ user.id }}">
                                                 {{user.nickname}}님을 팔로우 하시겠습니까?
                                             </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>                                    
     
                                         
                                         <div class="modal-footer">
-                                            <button type="button" class="button" data-bs-dismiss="modal">닫기</button>
-                                            <button type="submit" id="submit_btn_{{user.id}}" class="button" onclick="onClick({{ user }})">Follow</button>
+                                            <button class="button" style="width:60px;" data-bs-dismiss="modal">닫기</button>
+                                            <button type="submit" id="submit_btn_{{user.id}}" class="button" style="width:60px;" onclick="onClick({{ user }})">Follow</button>
                                         </div>
                                     </div>
                                 </form>
