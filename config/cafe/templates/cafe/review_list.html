@@ -72,7 +72,7 @@
             </div>
             <div class="dropdown">
                 <a class="btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    <b>정렬 방식</b>
+                    <b>{{selected}}</b>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li><a class="dropdown-item" href='{% url 'cafe:sort_latest' this_cafe.id %}'>최신 순</a></li>
