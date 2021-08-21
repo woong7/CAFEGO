@@ -33,6 +33,14 @@
   font-style: normal;
 }
 
+
+@font-face {
+  font-family: 'HSGyoulnoonkot';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/HSGyoulnoonkot.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* .color {
   #F0A986 
   #B3A29A
@@ -233,41 +241,44 @@ div.container4 p {
 
 .main_1st_mugplate{
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 32rem;
-  height: 32rem;
-  border-radius: 50%; 
-  background-color: white;
-  z-index: 1;
-}
-
-.main_1st_mug { 
-  position: absolute;
-  left: 52%;
+  left: 48%;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 35rem;
   height: 35rem;
+  border-radius: 50%; 
+  z-index: 1;
+  background-image: url(../../media/static/image/main_plate1.jpg);
+  background-size: cover;
+}
+
+.main_1st_mug { 
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 37rem;
+  height: 37rem;
   background-color: transparent;
   z-index: 2;
-  animation:show-img 2s ease;
+  animation:show-img 1.2s ease;
+  animation-delay: .3s;
 }
 
 @keyframes show-img {
   0% {display: none;}
-  25% {width: 7rem; height: 7rem;}
-  50% {width: 15rem; height: 15rem;}
-  75% {width: 23rem;height: 23rem; }
-  100% {width: 31rem; height: 31rem;}
+  20% {width: 7rem; height: 7rem;}
+  40% {width: 14rem; height: 14rem;}
+  60% {width: 21rem; height: 21rem;}
+  80% {width: 29rem;height: 29rem; }
+  100% {width: 37rem; height: 37rem;}
 }
 
 .main_1st_mug img {
   max-width: none;
   width: 100%;
   animation:rolling01 7s linear infinite; 
-  animation-delay: 2s;
+  animation-delay: 2.5s;
   transform-origin: 50% 50%;
 }
 
@@ -285,25 +296,49 @@ div.container4 p {
   width: 30%;
 }
 
-.main_1st_logo {
-  margin-bottom: 1.5rem; 
-  margin-top: 3rem; 
+.main_1st_logo { 
+  margin-top: 1.5rem;
   font-size: 135px; 
   border: 2px black; 
   font-family: 'HSGyoulnoonkot';
   text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;
+  animation: show-logo 2s ease;
+  /* animation-delay: 3s; */
+  /* opacity: 0; */
+}
+
+@keyframes show-logo {
+  0% {display: none;}
+  20% {display: 0.2;}
+  40% {display: 0.4;}
+  60% {opacity: 0.6;}
+  80% {opacity: 0.8;}
+  100% {opacity: 1;}
+}
+
+
+@keyframes show-ctx {
+  0% {display: none;}
+  20% {display: 0.2;}
+  40% {display: 0.4;}
+  60% {opacity: 0.6;}
+  80% {opacity: 0.8;}
+  100% {opacity: 1;}
 }
 
 .main_1st_ctx {
+  position: absolute;
+  margin-top: 1rem;
   font-size: 1.5em;
   font-family: Cafe24Oneprettynight;
   font-weight: bolder;
   color: #F0D9CE; 
   text-shadow: 1px 1px 1px #573728;
+  animation: show-ctx 2s ease;
+  /* animation-delay: 3s; */
 }
 
 .startbtn {
-  margin-top: 1rem;
   border: 2px solid #704F3F;
   background-color: white;
   border-radius: 10px;
@@ -312,6 +347,8 @@ div.container4 p {
   font-family: Cafe24SsurroundAir;
   color: #704F3F;
   font-weight: bolder;
+  animation: show-ctx 2s ease;
+  /* animation-delay: 3s; */
 }
 
 .startbtn:hover {
