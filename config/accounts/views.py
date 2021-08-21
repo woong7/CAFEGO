@@ -580,7 +580,7 @@ def mypage(request, pk):
 
 class MyCafeReviewListView(ListView):
     model = Review
-    paginate_by = 5
+    paginate_by = 10
     template_name = 'accounts/myreview_list.html'
     context_object_name = 'my_all_review'
 
