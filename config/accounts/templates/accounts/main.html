@@ -3,17 +3,7 @@
 
 {% block css %}
 <meta property="og:type" content="website">
-<meta property="og:title" content="Kakao 지도 API">
-<meta property="og:description" content="Kakao 지도 API를 이용해보세요. 다양한 샘플과 상세한 매뉴얼로 개발자분들의 시간을 아껴드리겠습니다!">
-<meta property="og:image" content="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/daumMapsApi.png">
-<meta property="og:url" content="https://apis.map.kakao.com"><meta name="twitter:card" content="summary_large_image">
 
-<meta name="twitter:title" content="Kakao 지도 API">
-<meta name="twitter:description" content="Kakao 지도 API를 이용해보세요. 다양한 샘플과 상세한 매뉴얼로 개발자분들의 시간을 아껴드리겠습니다!">
-<meta name="twitter:image" content="https://apis.map.kakao.com/images/daumMapsApiThumb.png">
-<meta name="twitter:url" content="https://apis.map.kakao.com">
-
-<!--요거 써도 되는 건지 모르겠음...-->
 <link rel="stylesheet" type="text/css" href="//t1.daumcdn.net/mapapisdoc/cssjs/1619092942440/css/web.min.css">
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
@@ -25,16 +15,16 @@
 
 {% block content %}
 
-<body class="web top" data-page_section="web" data-page_type="top" data-title="Kakao 지도 Web API">
+<body class="web top" data-page_section="web" data-page_type="top">
 
     <!--우측 점박이로 페이지 이동 가능-->
     <ul id="pagination">
-        <li><a href="#"></a></li>
-        <li><a href="#"></a></li>
-        <li><a href="#"></a></li>
-        <li><a href="#"></a></li>
-        <li><a href="#"></a></li>
-        <li><a href="#"></a></li>
+        <li><a href="#" style="background-color: #573728;"></a></li>
+        <li><a href="#" style="background-color: #573728;"></a></li>
+        <li><a href="#" style="background-color: #573728;"></a></li>
+        <li><a href="#" style="background-color: #573728;"></a></li>
+        <li><a href="#" style="background-color: #573728;"></a></li>
+        <li><a href="#" style="background-color: #573728;"></a></li>
     </ul>
 
     <div id="daumBody" style="margin-left: 0px; background-color: white;">
@@ -53,13 +43,12 @@
                     </div>
 
                     <div class="core" style="background-color: transparent; color: white;">
-                        <h2 style="margin-top: 5rem;">CAFEGO</h2>
+                        <h2 style="margin-bottom: 1.5rem; margin-top: 3rem; font-size: 135px; border: 2px black; font-family: 'HSGyoulnoonkot';
+                        text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;">CAFEGO</h2>
                         <div class="main_1st_ctx">지도기반 카페 이용기록 웹서비스</div>
 
-                        {% if user.is_authenticated %}
-                            <button class="startbtn" onclick="location.href='/account/login'">Cafe Go</button>
-                        {% else %}
-                            <button class="startbtn" onclick="location.href='/account/login'">로그인</button>
+                        {% if not user.is_authenticated %}
+                            <button class="startbtn" onclick="location.href='/account/login'">Let's Go!</button>
                         {% endif %}
                     </div>
                 </div>
@@ -68,7 +57,7 @@
             <div class="page" id="feature1">
                 <!-- <div class="bg"></div> -->
                 
-                <div class="wrap">
+                <div class="wrap" id="start_page">
                     <!-- <div style="background-image:url(../../../media/static/image/coffee_main.svg); background-repeat: no-repeat; height: 50%; position: relative; left:60%; width:20%; top: 30%;"></div> -->
                     <div style="background-image:url(../../../media/static/image/coffee-main-1.jpeg); height: 100%; position: absolute; width:100%; background-size: 100%; background-position: bottom; opacity: 0.5;"></div>
                     <div style="background-image:url(../../../media/static/image/coffee_main.svg); background-repeat: no-repeat; height: 50%; position: relative; left:60%; width:20%; top: 30%;"></div> 

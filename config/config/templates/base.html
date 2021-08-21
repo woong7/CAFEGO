@@ -41,16 +41,12 @@
         <div class="container-fluid">
             {% if user.is_authenticated %}
                 <a href="{% url 'main' %}" class="navbar-brand" style="width: 126px;">
-                    <span id="header-logo-image"></span>
-                    <span class="blind-logo">카페고 로고</span>
-                </a>
-                <div class="d-flex">
-                    <div>
-                        <span class="mx-3 hello_text">{{user.nickname}}님 안녕하세요!</span>
-                    </div>
-                    <div class="my-auto">
-                        {% show_notifications %}
-                    </div>
+                    <span id="header-logo-image">CAFE GO!</span>
+                </a><span class="blind-logo">카페고 로고</span>
+                
+                <span class="mx-3 nev_text">{{user.nickname}}님 안녕하세요!</span>
+                <div class="nav-item">
+                    {% show_notifications %}
                 </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"><i class="fas fa-bars" style="color:#fff; font-size:28px;"></i></span>
@@ -82,7 +78,7 @@
                 </div>
             {% else %}
                 <a href="{% url 'main' %}" class="navbar-brand" style="width: 126px;">
-                    <span id="header-logo-image"></span>
+                    <span id="header-logo-image">CAFE GO!</span>
                 </a><span class="blind-logo">카페고 로고</span>
                 <div class="d-flex">
                     <ul class="navbar-nav">

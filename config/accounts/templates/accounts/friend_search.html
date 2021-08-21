@@ -61,6 +61,7 @@
                         </td>
                         <td style="vertical-align: middle; color: black;">{{user.gu}} {{ user.dong }}</td> <!-- | truncatechars:10-->
                         <!-- checkbox trigger modal -->
+                        {% if user.is_active %}
                         <td><input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ user.id }}" name="visit" value="Follow"></td>
                         <div class="modal fade" id="exampleModal_{{ user.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             
@@ -84,6 +85,9 @@
                                 </form>
                             </div>
                         </div>
+                        {% else %}
+                        <td><input type="submit" class="button" disabled name="visit" value="Inactivated"></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 <!-- Modal -->

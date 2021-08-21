@@ -47,6 +47,7 @@
     <div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 18rem;">
         <p id="header-logo-image"></p>
         <h1></h1>
+
         {% if usernum == 0 %}
             <button class="btn btn-outline-primary" onClick="location.href='{%url 'create_admin' %}'">슈퍼유저 생성</button>
         {% else %}

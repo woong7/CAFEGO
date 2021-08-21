@@ -7,6 +7,9 @@
 {% endblock %}
 
 {% block content %}
+{% if not owner.is_active %}
+<h1 class="display-5 fw-bold text-center page_title" style="color:red;">비활성화된 계정입니다</h1>
+{% endif %}
 <div class="py-4 my_page p-5 d-flex flex-column">
     <div class="p-5 mb-4 rounded-3 d-flex flex-column ">
         <h1 class="display-5 fw-bold text-center page_title">{{owner.nickname}}'s Mypage</h1>
@@ -15,7 +18,7 @@
                 <div class="d-flex flex-column">
                     <div class=" px-5">
                         {% if owner.self_image%}                
-                            <img src="{{owner.self_image.url}}" style="height:150px; width:150px;  border: 2pt groove #000; border-radius:50%; ">              
+                            <img src="{{owner.self_image.url}}" style="height:150px; width:150px; background-color: beige; border: 2pt groove #000; border-radius:50%; ">              
                         {% else %}
                             <img src="https://image.flaticon.com/icons/png/128/848/848043.png" style="height:150px; width:150px; border-radius:50%; "> 
                         {% endif %}
