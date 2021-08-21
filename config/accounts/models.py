@@ -48,7 +48,7 @@ import simplejson as json
 class User(AbstractBaseUser):
     username_validator: UnicodeUsernameValidator = ...
     username = models.CharField(max_length=150, unique=True) ##########
-    email = models.EmailField(blank=True)
+    email = models.EmailField(max_length=150)
     nickname = models.CharField(max_length=150, unique=True)
 
     city = models.CharField(max_length=10)

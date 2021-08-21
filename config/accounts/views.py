@@ -39,34 +39,6 @@ def signup(request):
     return render(request, 'accounts/signup.html')
 
 
-###allauth 써서 필요없을 듯???
-class LoginView(View):
-    def get(self, request):
-        form = forms.LoginForm()
-        ctx = {
-            "form": form,
-        }
-        return render(request, "accounts/home.html", ctx)
-
-    def post(self, request):
-        is_failed=0
-        form = forms.LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return render(request, "accounts/home.html")
-            else:
-                is_failed=1
-        else:
-            is_failed=1                   
-
-        return render(request, "accounts/login.html", {"form": form,})
-
-        return render(request, "accounts/login.html", ctx)
-
 ##allauth 써서 필요 없나??
 @login_required
 def logout(request):
@@ -95,7 +67,7 @@ def create_admin(request):
 
 def badge_list(request, pk):
     user=User.objects.get(id=pk)
-    users=User.objects.all()
+    users=User.objects.order_by("-total_visit")
     badges=Badge.objects.all()
     visit_cafes=VisitedCafe.objects.filter(user=user)
     jsonDec=json.decoder.JSONDecoder()
@@ -105,13 +77,13 @@ def badge_list(request, pk):
     badgeList=[]
 
     #배지 획득조건
-    if user.total_visit>=1:
+    if user.total_visit>=50:
         badgeList.append("카페홀릭")
-    if user.total_review>=1:
+    if user.total_review>=30:
         badgeList.append("파워블로거")
-    if len(friends)>=1:
+    if len(friends)>=20:
         badgeList.append("사교왕")
-    if len(visit_cafes)>=1:
+    if len(visit_cafes)>=20:
         badgeList.append("개척자")
     
     if len(users)>=1 and users[0]==user and user.total_visit !=0 : 
@@ -440,7 +412,7 @@ class InfoUpdateView(ListView):
             user.save()
             
 
-        return render(request, "accounts/home.html", {"form": form})
+        return render(request, "accounts/mypage.html", {"form": form})
 
 def infoupdate(request, pk):
     if request.method == 'POST':
@@ -521,13 +493,13 @@ def mypage(request, pk):
     badgeList=[]
 
     #배지 획득조건
-    if owner.total_visit>=1:
+    if owner.total_visit>=50:
         badgeList.append("카페홀릭")
-    if all_review_count>=1:
+    if all_review_count>=30:
         badgeList.append("파워블로거")
-    if len(friends)>=1:
+    if len(friends)>=20:
         badgeList.append("사교왕")
-    if len(visit_cafes)>=1:
+    if len(visit_cafes)>=20:
         badgeList.append("개척자")
     
     if len(users)>=1 and users[0]==owner and owner.total_visit !=0 : 
@@ -958,7 +930,7 @@ class UserRegistrationView(CreateView):
     model = get_user_model()
     form_class = UserRegistrationForm
     template_name="accounts/signup.html"
-    success_url = '/home/'
+    success_url = '/account/login/'
     verify_url = '/verify/' 
     token_generator = default_token_generator
 
@@ -981,7 +953,7 @@ from django.views.generic.base import TemplateView
 class UserVerificationView(TemplateView):
     
     model = get_user_model()
-    redirect_url = '/home/'
+    redirect_url = '/account/login/'
     token_generator = default_token_generator
 
     def get(self, request, *args, **kwargs):

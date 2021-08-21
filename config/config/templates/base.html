@@ -41,7 +41,7 @@
         <div class="container-fluid">
             {% if user.is_authenticated %}
                 <a href="{% url 'main' %}" class="navbar-brand" style="width: 126px;">
-                    <span id="header-logo-image"></span>
+                    <span id="header-logo-image">CAFE GO!</span>
                 </a><span class="blind-logo">카페고 로고</span>
                 
                 <span class="mx-3 nev_text">{{user.nickname}}님 안녕하세요!</span>
@@ -78,7 +78,7 @@
                 </div>
             {% else %}
                 <a href="{% url 'main' %}" class="navbar-brand" style="width: 126px;">
-                    <span id="header-logo-image"></span>
+                    <span id="header-logo-image">CAFE GO!</span>
                 </a><span class="blind-logo">카페고 로고</span>
                 <div class="d-flex">
                     <ul class="navbar-nav">
