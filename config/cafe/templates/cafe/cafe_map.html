@@ -23,7 +23,11 @@
             </ul>
         </div>
         <div id="map" style="width:100%; height:100%; position:relative; overflow:hidden;"></div>
+        {% if user.total_visit == 0 %}
+        <a class="mycafe-btn" href="{% url 'cafe:cafe_list' %}" onClick="return confirm('방문했던 카페등록이 하나이상 필요한 페이지입니다. 지금 바로 첫번째 카페를 방문추가 하시겠습니까?');">나의 카페 지도</a>
+        {% else %}
         <button class="mycafe-btn" onClick="location.href='{% url 'user_cafe_map' %}'">나의 카페 지도</button>
+        {% endif %}
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
