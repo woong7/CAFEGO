@@ -286,8 +286,12 @@ div.container4 p {
 }
 
 .main_1st_logo {
-  font-size: 7rem;
-  width: 100%;
+  margin-bottom: 1.5rem; 
+  margin-top: 3rem; 
+  font-size: 135px; 
+  border: 2px black; 
+  font-family: 'HSGyoulnoonkot';
+  text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;
 }
 
 .main_1st_ctx {
