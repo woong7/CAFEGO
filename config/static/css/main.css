@@ -218,39 +218,88 @@ div.container4 p {
   background: url(../../media/static/image/main_1st.jpg);
 }
 
-.hoverbox .screen [class*='hud']{
+.hoverbox [class*='hud']{
   position : absolute;
   top: 50%; left: 50%;
   transform:translate(-50%, -50%);
   transition: all 2.5s;
 }
 
-@keyframes rolling01 { 
-  0% {transform:translate(-50%, -50%) rotate();}
-  100% {transform:translate(-50%, -50%) rotate(360deg);}
+.hoverbox .hud01 {
+  position: relative;
+  width: 50rem; 
+  height: 50rem;
 }
 
-.hoverbox .screen .hud01 {
-  animation:rolling01 5s linear infinite; 
+.main_1st_mugplate{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 32rem;
+  height: 32rem;
+  border-radius: 50%; 
+  background-color: white;
+  z-index: 1;
 }
 
-.hud01 img {
-  width: 700px; 
-  height: 700px; 
+.main_1st_mug { 
+  position: absolute;
+  left: 52%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 35rem;
+  height: 35rem;
+  background-color: transparent;
+  z-index: 2;
+  animation:show-img 2s ease;
+}
+
+@keyframes show-img {
+  0% {display: none;}
+  25% {width: 7rem; height: 7rem;}
+  50% {width: 15rem; height: 15rem;}
+  75% {width: 23rem;height: 23rem; }
+  100% {width: 31rem; height: 31rem;}
+}
+
+.main_1st_mug img {
   max-width: none;
+  width: 100%;
+  animation:rolling01 7s linear infinite; 
+  animation-delay: 2s;
+  transform-origin: 50% 50%;
+}
+
+@keyframes rolling01 { 
+  100% {transform:rotate(360deg);}
+}
+
+.main_1st_group {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  left: 35%;
+  top: 30%;
+  width: 30%;
+}
+
+.main_1st_logo {
+  font-size: 7rem;
+  width: 100%;
 }
 
 .main_1st_ctx {
-  font-size: 1.6em;
+  font-size: 1.5em;
   font-family: Cafe24Oneprettynight;
   font-weight: bolder;
   color: #F0D9CE; 
-  margin: .5rem 0 1rem;
   text-shadow: 1px 1px 1px #573728;
 }
 
 .startbtn {
-  margin-top: 5px;
+  margin-top: 1rem;
   border: 2px solid #704F3F;
   background-color: white;
   border-radius: 10px;
@@ -258,7 +307,7 @@ div.container4 p {
   font-size: 1.1em;
   font-family: Cafe24SsurroundAir;
   color: #704F3F;
-  font-weight: bold;
+  font-weight: bolder;
 }
 
 .startbtn:hover {

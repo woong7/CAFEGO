@@ -40,21 +40,21 @@
     <div id="daumBody" style="margin-left: 0px; background-color: white;">
         <div id="daumContent">
             <div class="page first_page" id="intro">
-                <!-- <div class="bg"></div> -->
-                <!-- <img src="../../../media/static/image/coffee-mug.png" style="width: 800px; height: 800px; max-width: none;"> -->
-                <div class="wrap">
+                <div class="wrap" style="position: relative;">
                     <!-- 가운데 점선 원 -->
                     <div class="hoverbox">
-                        <div class="screen">
-                            <div class="hud01">
-                                <img src="../../../media/static/image/main_1st_rollingcoffee-1572739_1280.png">
+                        <div class="hud01">
+                            <div class="main_1st_mugplate">
+                                <div class="main_1st_mug">
+                                    <img src="../../../media/static/image/main_1st_rollamericano.png">
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="core" style="background-color: transparent; color: white;">
-                        <h2 style="margin-top: 5rem;">CAFEGO</h2>
+                    <div class="main_1st_group" style="background-color: transparent; color: white;">
                         <div class="main_1st_ctx">지도기반 카페 이용기록 웹서비스</div>
+                        <span class="main_1st_logo">CAFEGO</span>
 
                         {% if user.is_authenticated %}
                             <button class="startbtn" onclick="location.href='/account/login'">Cafe Go</button>
