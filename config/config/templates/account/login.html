@@ -94,21 +94,11 @@
 </section>  
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
+
 <script type="text/javascript">
-  /*const is_failed = {{is_failed | safe}};
-
-  console.log(is_failed);
-
-  if(is_failed==1)
-  {
-    alert("아이디 또는 비밀번호가 맞지 않습니다");
-  }*/
-
-
   function focusFunc() {
     let parent = this.parentNode.parentNode;
-      parent.classList.add('focus');
-      // icons.style.color = "red";
+    parent.classList.add('focus');
   }
 
   function blurFunc() {
@@ -122,6 +112,13 @@
     input.addEventListener('focus', focusFunc);
     input.addEventListener('blur', blurFunc);
   });
-</script>
+
+  if(is_failed==1)
+  {
+    alert("아이디 또는 비밀번호가 맞지 않습니다");
+  }*/
+
+
+  </script>
 
 {% endblock %}
