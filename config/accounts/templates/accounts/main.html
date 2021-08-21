@@ -57,9 +57,7 @@
                         text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;">CAFEGO</h2>
                         <div class="main_1st_ctx">지도기반 카페 이용기록 웹서비스</div>
 
-                        {% if user.is_authenticated %}
-                            <button class="startbtn" onclick="location.href='/account/login'">Cafe Go</button>
-                        {% else %}
+                        {% if not user.is_authenticated %}
                             <button class="startbtn" onclick="location.href='/account/login'">Let's Go!</button>
                         {% endif %}
                     </div>
