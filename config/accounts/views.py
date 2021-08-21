@@ -871,7 +871,7 @@ def friend_register(request):
         target.follwernum+=1
         target.save()
         print("target:", target) #user objects가 맞는지
-        notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target, date=timezone.now)
+        notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
         notification.save()
 
     return redirect('friend_search')

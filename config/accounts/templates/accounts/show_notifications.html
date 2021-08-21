@@ -1,20 +1,20 @@
 
 <!-- post 부분 수정 필요! -->
 <div class="dropdown">
-	<span class="badge bg-primary notification-badge" onclick="showNotifications()">{{ notifications.count }}</span>
+	<span class="badge notification-badge" onclick="showNotifications()" style="background-color: #fff374; color:#573728; font-size: 14px;">{{ notifications.count }}</span>
 	<div class="dropdown-content d-none" id="notification-container">
 		{% for notification in notifications %}
 			{% if notification.comment %}
 				{% if notification.notification_type == 2 %}
 				<div class="dropdown-item-parent">
-					<a href="{% url 'comment-notification' notification.pk notification.comment.post.pk %}">@{{ notification.from_user.nickname }}님이 내 리뷰에 댓글을 달았습니다!</a>
+					<a href="{% url 'comment-notification' notification.pk notification.comment.post.pk %}">@{{ notification.from_user.nickname }}님이 내 리뷰에 댓글을 달았습니다!<br/>{{notification.created_at}}</a>
 					<span class="dropdown-item-close" onclick="removeNotification(`{% url 'notification-delete' notification.pk %}`, `{{ request.path }}`)">&times;</span>
 				</div>
 				{% endif %}
 			{% else %}
 				{% if notification.notification_type == 3%}
 					<div class="dropdown-item-parent">
-						<a href="{% url 'follow-notification' notification.pk notification.from_user.pk %}">@{{ notification.from_user.nickname }}님이 나를 팔로우 시작했습니다!</a>
+						<a href="{% url 'follow-notification' notification.pk notification.from_user.pk %}">@{{ notification.from_user.nickname }}님이 나를 팔로우 시작했습니다!<br/>{{notification.created_at}}</a>
 						<span class="dropdown-item-close" onclick="removeNotification(`{% url 'notification-delete' notification.pk %}`, `{{ request.path }}`)">&times;</span>
 					</div>
 				{% elif notification.badge %}

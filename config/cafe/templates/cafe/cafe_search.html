@@ -114,13 +114,13 @@
                                 <div class="modal-dialog">
                                     <form action="{% url 'visit_register' %}" method='post'>
                                         <div class="modal-content">
-                                            <div class="modal-header" style="vertical-align: middle;">
+                                            <div class="modal-header" style="text-align: center; justify-content: center;">
                                                 <h5 class="modal-title table_title" id="exampleModalLabel" name="cafename2">
                                                     <input type="hidden" name="cafename" value="{{ cafe.name }}">
                                                     <input type="hidden" name="cafeid" value="{{ cafe.id }}">
                                                     {{cafe.name}}
                                                 </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                
                                             </div>
                                         
                                             <div class="modal-body table_content" style="text-align: left;">
