@@ -110,9 +110,8 @@ a:hover {
 /* 리뷰 작성 */
 .review-create {
     height: 100px;
-    font-family: twaysky;
+    font-family: ONE-Mobile-POP;
     font-size: x-large;
-    font-weight: bold;
     color: #704F3F;
 }
 
@@ -236,8 +235,4 @@ summary:hover {
 
 .comment-write {
     width: 90%;
-}
-
-.drink-list div {
-    margin-left: 27%;
 }

@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/myreview_list.css' %}">
-{% endblock %}
-
 {% block title %}
     {{ request.user }}님의 리뷰
 {% endblock %}
@@ -16,6 +12,9 @@
 {% block content %}
 <div class="container review-content">
     <div class="px-4 py-3 my-5 cafe-info shadow-sm card" style="height:80vh;">
+        <div class="page_title">
+            <span>나의 리뷰 목록</span>
+        </div>
         <table class="table mt-3">
         <thead>
             <tr class="table-title">
@@ -33,7 +32,7 @@
                     <td>{{ review.review_stars }}</td>
                     <td>{{ review.content }}</td>
                     <td>{{ review.created_at }}</td> 
-                    <td><button class="main-reverse-btn" onclick="location.href="{% url 'review_update' review.id %}">리뷰 수정</button></td>        
+                    <td><button class="main-reverse-btn" onclick="location.href="{% url 'review_update' review.id %}"">리뷰수정</button></td>        
                 </tr>
             {% endfor %}    
         </tbody>

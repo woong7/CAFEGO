@@ -47,26 +47,6 @@ body {
     transform: rotate(15deg) scale(1);
 }
 
-@font-face {
-    font-family: 'Cafe24Danjunghae';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Danjunghae.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'RIDIBatang';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'twaysky';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
 
 /* .color {
     #F0A986
@@ -84,24 +64,25 @@ body {
 }
 
 .page_title {
-    font-size: 80px;
+    font-size: 60px;
     font-family: Cafe24Danjunghae;
     text-shadow: 2px 2px 2px #B3A29A;
     color: #704F3F;
 }
 
 .page_info {
-    font-size: 10px;
-    font-family: RIDIBatang;
+    font-size: 1.1em;
+    font-family: Pretendard-Regular;
 }
 
 .button {
-    border: 2px solid #704F3F;
+    border: 1px solid #704F3F;
     background-color: white;
     border-radius: 10px;
-    padding: 3px 7px 3px;
-    font-size: 1.1em;
-    font-family: twaysky;
+    padding: 2px 5px 2px;
+    font-size: 1em;
+    font-family: Pretendard-Regular;
+    font-weight: bold;
     color: #704F3F;
 }
 
@@ -110,54 +91,23 @@ body {
     color: white;
 }
 
-
-.table_title {
-    font-family: twaysky;
-    font-size: 1.5em;
-    color: #573728;
-    text-shadow: 2px 2px 2px #F0D9CE;
-    position: relative;
-
-    height: 48px;
-    padding: 3px 2px 0px;
-    /* background-color: #B3A29A;  */
-}
-
-
-.table_content {
-    /* position: absolute;
-    left: 23px;
-    top: 60px;
-
-    width: 330px;
-    height: 150px;
-    margin-top: 30px;
-    padding: 20px;
-     */
-    font-size: 1em;
-    font-family: RIDIBatang;
-    color: #573728;
-    font-weight: 800;
-}
-
 td {
     text-align: center;
 }
 
+.table-title {
+    font-size: 1.35em;
+    font-weight: 800;
+}
+.table-content {
+    font-size: 1.05em;
+    font-family: NEXON Lv1 Gothic OTF;
+}
 
 .activate {
     background-color: #4CAF50;
     color: white;
     border-radius: 5px;
-}
-
-.atag {
-    color: black;
-    font-size:1.2em;
-}
-
-.atag:hover {
-    color:#573728;
 }
 
 select, input[type=text]{
@@ -169,5 +119,14 @@ select, input[type=text]{
     width: 110px;
     height: 30px;
     padding-left: 10px;
-    }
-    
+}
+
+.drink-list div {
+    display: -webkit-inline-box;
+    padding-left: 20%;
+}
+
+.drink-list div span {
+    padding-left: 10px;
+    padding-right: 10px;
+}
