@@ -117,8 +117,8 @@
                         </div>
                         <p style="width: 417px;">리뷰에 댓글을 달아 카페 사용자에게 직접 물어볼 수 있습니다. 여러 카페를 방문한 사람에게, 그 카페 단골에게 <br>사용자 입장에서의 솔직한 답변을 들어보세요.</p>
                         {% if user.is_authenticated %}
-                        <a class="link_sample" href="{% url 'enroll_visited_cafe' %}" style="width: 146px; margin-right: 10px;"><span>방문카페 리뷰 쓰기</span></a>
-                        <a class="link_sample" href="{% url 'cafe:cafe_list' %}" style="width: 160px;"><span>리뷰에 댓글 쓰러가기</span></a>
+                        <a class="link_sample" href="{% url 'enroll_visited_cafe' %}" style="width: 146px; margin-right: 10px;"><span>리뷰 쓰기</span></a>
+                        <a class="link_sample" href="{% url 'cafe:cafe_list' %}" style="width: 160px;"><span>리뷰에 댓글 쓰기</span></a>
                         {% else %}
                         <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 146px; margin-right: 10px;"><span>방문카페 리뷰 쓰기</span></a>
                         <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>리뷰에 댓글 쓰러가기</span></a>
