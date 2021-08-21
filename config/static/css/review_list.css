@@ -236,3 +236,7 @@ summary:hover {
 .comment-write {
     width: 90%;
 }
+
+.drink-list div {
+    margin-left: 27%;
+}
