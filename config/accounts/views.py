@@ -95,7 +95,7 @@ def create_admin(request):
 
 def badge_list(request, pk):
     user=User.objects.get(id=pk)
-    users=User.objects.all()
+    users=User.objects.order_by("-total_visit")
     badges=Badge.objects.all()
     visit_cafes=VisitedCafe.objects.filter(user=user)
     jsonDec=json.decoder.JSONDecoder()
@@ -105,13 +105,13 @@ def badge_list(request, pk):
     badgeList=[]
 
     #배지 획득조건
-    if user.total_visit>=1:
+    if user.total_visit>=50:
         badgeList.append("카페홀릭")
-    if user.total_review>=1:
+    if user.total_review>=30:
         badgeList.append("파워블로거")
-    if len(friends)>=1:
+    if len(friends)>=20:
         badgeList.append("사교왕")
-    if len(visit_cafes)>=1:
+    if len(visit_cafes)>=20:
         badgeList.append("개척자")
     
     if len(users)>=1 and users[0]==user and user.total_visit !=0 : 
@@ -521,13 +521,13 @@ def mypage(request, pk):
     badgeList=[]
 
     #배지 획득조건
-    if owner.total_visit>=1:
+    if owner.total_visit>=50:
         badgeList.append("카페홀릭")
-    if all_review_count>=1:
+    if all_review_count>=30:
         badgeList.append("파워블로거")
-    if len(friends)>=1:
+    if len(friends)>=20:
         badgeList.append("사교왕")
-    if len(visit_cafes)>=1:
+    if len(visit_cafes)>=20:
         badgeList.append("개척자")
     
     if len(users)>=1 and users[0]==owner and owner.total_visit !=0 : 
@@ -871,7 +871,7 @@ def friend_register(request):
         target.follwernum+=1
         target.save()
         print("target:", target) #user objects가 맞는지
-        notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target, date=timezone.now)
+        notification = Notification.objects.create(notification_type=3, from_user=request.user, to_user=target)
         notification.save()
 
     return redirect('friend_search')
@@ -958,7 +958,7 @@ class UserRegistrationView(CreateView):
     model = get_user_model()
     form_class = UserRegistrationForm
     template_name="accounts/signup.html"
-    success_url = '/home/'
+    success_url = '/account/login/'
     verify_url = '/verify/' 
     token_generator = default_token_generator
 

@@ -12,12 +12,30 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'SF_IceLemon';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/SF_IceLemon.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'HSGyoulnoonkot';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/HSGyoulnoonkot.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 #header-logo-image {
     display: inline-block;
     width: 120px;
     height: 39px;
-    background: url(../../media/static/image/logo.png) no-repeat;
-    background-size: 120px;
+    /*background: url(../../media/static/image/logo.png) no-repeat;
+    background-size: 120px;*/
+    font-family: HSGyoulnoonkot;
+    color:#fff;
+    text-shadow: 3px 1px 2px beige; 
+    font-weight: 400;
+    
+    font-size: 30px;
     vertical-align: middle;
 }
 
@@ -35,7 +53,7 @@
 }
 
 .nev_text {
-	font-size: 1.5rem;
+	font-size: 1.25rem;
     font-family: RIDIBatang;
     color: #f0d9ce;
 }
