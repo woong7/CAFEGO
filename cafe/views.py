@@ -227,13 +227,13 @@ def init_data(request):
     for i in range(len(s)):
         CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3], id=ss[i][4])#id값 써도 될려낭
 
-    Badge.objects.create(badge_name="카페홀릭", badge_image="static/image/barista.png", badge_get="카페 총 누적 방문횟수 50회 이상") 
-    Badge.objects.create(badge_name="사교왕", badge_image="static/image/follower.png", badge_get="친구 수 20명 이상")    
-    Badge.objects.create(badge_name="개척자", badge_image="static/image/go-to-work.png", badge_get="20곳 이상의 카페 방문")    
-    Badge.objects.create(badge_name="파워블로거", badge_image="static/image/blogger.png", badge_get="30개 이상의 리뷰 작성")    
-    Badge.objects.create(badge_name="랭킹 1위", badge_image="static/image/gold-cup.png", badge_get="누적 방문 랭킹 1위")    
-    Badge.objects.create(badge_name="랭킹 2위", badge_image="static/image/silver-cup.png", badge_get="누적 방문 랭킹 2위")    
-    Badge.objects.create(badge_name="랭킹 3위", badge_image="static/image/bronze-cup.png", badge_get="누적 방문 랭킹 3위")    
+    Badge.objects.create(badge_name="카페홀릭", badge_image="../static/image/barista.png", badge_get="카페 총 누적 방문횟수 50회 이상") 
+    Badge.objects.create(badge_name="사교왕", badge_image="../static/image/follower.png", badge_get="친구 수 20명 이상")    
+    Badge.objects.create(badge_name="개척자", badge_image="../static/image/go-to-work.png", badge_get="20곳 이상의 카페 방문")    
+    Badge.objects.create(badge_name="파워블로거", badge_image="../static/image/blogger.png", badge_get="30개 이상의 리뷰 작성")    
+    Badge.objects.create(badge_name="랭킹 1위", badge_image="../static/image/gold-cup.png", badge_get="누적 방문 랭킹 1위")    
+    Badge.objects.create(badge_name="랭킹 2위", badge_image="../static/image/silver-cup.png", badge_get="누적 방문 랭킹 2위")    
+    Badge.objects.create(badge_name="랭킹 3위", badge_image="../static/image/bronze-cup.png", badge_get="누적 방문 랭킹 3위")    
 
     
     return redirect('home')

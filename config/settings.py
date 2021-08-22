@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-v%sc+=0r)$!637)vebs_x8z!am*tz*=@xylv=!@3us2kjo7=fg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -173,8 +173,8 @@ MEDIA_URL = '/media/'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'pirocafego@gmail.com' #'kgw980316@gmail.com'
-EMAIL_HOST_PASSWORD = 'pirogramming15!' #'parabe1!um'
+EMAIL_HOST_USER = 'pirocafego@gmail.com'
+EMAIL_HOST_PASSWORD = 'pirogramming15!'
 EMAIL_USE_TLS = True
 
 CORS_ORIGIN_ALLOW_ALL = True
