@@ -223,7 +223,7 @@ div.container4 p {
 .hoverbox {
   width: 100vw;
   height: 100vh;
-  background: url(../../media/static/image/main_1st.jpg);
+  background: url(../../static/image/main_1st.jpg);
 }
 
 .hoverbox [class*='hud']{
@@ -248,7 +248,7 @@ div.container4 p {
   height: 35rem;
   border-radius: 50%; 
   z-index: 1;
-  background-image: url(../../media/static/image/main_plate.jpg);
+  background-image: url(../../static/image/main_plate.jpg);
   background-size: cover;
 }
 
