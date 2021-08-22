@@ -1,0 +1,24 @@
+.friends {
+    font-size: 20px;
+    font-weight: bold;
+    font-family: NEXON Lv1 Gothic OTF;
+}
+
+span {
+    font-family: Pretendard-Regular;
+}
+
+.my_page {
+    background-color: #F0D9CE;
+}
+
+.page_title {
+    font-size: 80px;
+    font-family: Cafe24Danjunghae;
+    text-shadow: 2px 2px 2px #B3A29A;
+    color: #704F3F;
+}
+
+.bg-deepbrown {
+    background-color: #a3735b
+}

@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_search.css' %}">
+{% endblock %}
+
+{% block title %}
+    카페 검색
+{% endblock %}
+
+{% block content %}
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem;">
+    <header class="pt-3">
+        <div class="p-2 mx-auto text-center">
+            <div class="page_title">Search Cafe</div>
+            <p class="text-muted page_info">카페명을 클릭하면 리뷰페이지로 이동할 수 있어요. 주소를 클릭하면 해당 카페 지도로 이동할 수 있어요.<br>방문했던 카페만 리뷰를 작성할 수 있어요. 먼저 방문추가를 한 후 리뷰를 작성해주세요!</p>
+        </div>
+    </header>
+    <!-- 카페 검색 -->
+    <form action="" method="GET" class="pb-md-2">
+        <select name="type" style="font-family: Pretendard-Regular;">
+            <option value="name">카페</option>
+            <option value="address">주소</option>
+            <option value="all">카페+주소</option>
+        </select>
+        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색"  style="font-family: Pretendard-Regular; width: 550px;">
+        <button class="button" type="submit" id="search_btn">search</button><br/>
+    </form>
+    {% if messages %}
+        <div style="color:red;">
+            {% for message in messages %}
+                {{ message.tags }}! {{ message.message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <!-- 카페 리스트  -->
+    <table class="table">
+        <thead>
+            <tr class="table-title">
+                <th> </th>
+                <th>카페명</th>
+                <th>위치</th>
+                <th>별점</th>             
+                <th>방문추가</th>
+                <th>리뷰쓰기</th>             
+            </tr>
+        </thead>
+        <tbody>
+            {% if q %}
+                <h5 style="font-family: Pretendard-Regular;">'{{ q }}' 검색 결과입니다.</h5><br/>
+                <p style="font-family: Pretendard-Regular;">검색 결과: {{page_obj.paginator.count}}개</p>
+            {% else %}    
+                <button class="button" onClick="location.href='{% url 'enroll_visited_cafe' %}'" style="mb-1;">방문 카페 리스트 보기</button>
+            {% endif %}
+
+            </br>
+            
+            {% if cafe_list %}
+                
+                
+                {% for cafe in cafe_list %}
+                    <tr class="text-center table-content">
+                        <td style="vertical-align: middle; font-size:1.1em; color:black;">
+                            {{forloop.counter0|add:page_obj.start_index}}
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <a href="{% url 'this_cafe_map' cafe.id %}">{{ cafe.address }}</a>
+                        </td>
+                        <td>
+                            {%if cafe.cafe_stars == 0.0 %}
+                            <div class="rating_wrap_parents">
+                                <div class="rating_wrap">
+                                    <div class="not_rating">
+                                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                        <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                                <div class="rating_wrap_parents">
+                                    <div class="rating_wrap" style="vertical-align: middle;">
+                                        <div class="not_rating">
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
+                                        </div>
+                                    </div>
+                                    <div class="rating_wrap">
+                                        <div class="rating" data-rate="{{cafe.cafe_stars}}">
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <!--카페 추가 버튼-->
+                        <td>
+                            <input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="방문추가">
+                        </td>
+                            <div class="modal fade" id="exampleModal_{{ cafe.id }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{% url 'visit_register' %}" method='post'>
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="text-align: center; justify-content: center;">
+                                                <h5 class="modal-title table_title" id="exampleModalLabel" name="cafename2">
+                                                    <input type="hidden" name="cafename" value="{{ cafe.name }}">
+                                                    <input type="hidden" name="cafeid" value="{{ cafe.id }}">
+                                                    <span style="font-size: 30px; font-weight: bold">{{cafe.name}}</span>
+                                                </h5>
+                                                
+                                            </div>
+                                        
+                                            <div class="modal-body d-flex drink-list" style="flex-direction: column;">
+                                                <p style="font-size: 20px; text-align: center; margin-bottom:7%;">마신 음료를 체크해주세요!</p>
+                                                <div>
+                                                    <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="아메리카노">
+                                                    <span>아메리카노</span>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="바닐라라떼">
+                                                    <span>바닐라라떼</span>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카페라떼">
+                                                    <span>카페라떼</span>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카라멜마끼야또">
+                                                    <span>카라멜마끼야또</span>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="초코라떼">
+                                                    <span>초코라떼</span>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="녹차라떼">
+                                                    <span>녹차라떼</span>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="에이드">
+                                                    <span>에이드</span>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="허브차">
+                                                    <span>허브차</span>
+                                                </div>
+                                                <div>
+                                                    <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage">
+                                                    <span>기타</span>
+                                                    <input type="text" id="etc_{{cafe.id}}" name="beverage" value="" placeholder="음료명" style="height:20px;"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="modal-footer">
+                                                <button type="button" class="button" data-bs-dismiss="modal">닫기</button>
+                                                <button type="submit" id="submit_btn_{{cafe.id}}" class="button">추가</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        <td>
+                            <!--리뷰 작성 버튼-->
+                            {% if cafe in user_visited_cafes %}
+                                <button class="button" onClick="location.href='{% url 'cafe:review_create' cafe.id %}'">리뷰쓰기</button>
+                            {% else %}
+                                
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때-->
+                <tr class="text-center">
+                    <td colspan="5">
+                        등록된 카페가 없습니다.
+                    </td>
+                </tr>
+            {% endif %}            
+        </tbody>
+    </table>
+
+
+
+    <!-- 페이징 처리 -->
+    {% if is_paginated %}
+    <div class="btn-group me-2" role="group" aria-label="First group">
+    <ul class="pagination" style="justify-content: space-around; font-family: RIDIBatang; color: black;">
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}" style="color:black;">
+                처음
+            </a>
+        </li>
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1" style="color:black;">
+                이전
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" >
+                이전
+            </a>
+        </li>
+        {% endif %}
+
+        {% for page in page_range %}
+        <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
+            
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}" style="color: black;">
+                {{ page }}
+            </a>
+            
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}" style="color: black;">
+                다음
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">
+                다음
+            </a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}" style="color: black;">
+                마지막
+            </a>
+        </li>
+    </ul>
+    </div>
+    <div style="height:38px;">
+        <span class="page-obj">{{page_obj}}</span>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+    //카페 별점 매기기
+    var rating = $('.rating'); //rating class 불러와
+    
+    rating.each(function() { //rating 각자마다 할 일이 있다.
+        var $this = $(this); //rating을 this로 부른다.
+        var targetScore = $this.attr('data-rate'); 
+        var firstdigit = targetScore.split('.'); //나눠서 배열로 만듦 ex) 3.5점이면 ['3', '5']이렇게 됨
+
+        if (firstdigit.length > 1) { //배열의 개수가 1보다 크니까 소수점이 있다는 의미
+            for(var i = 0; i<firstdigit[0]; i++) { //배열 첫 번째 요소, 즉 일의 자리는 똑같이 반복문 돌리기
+                $this.find('.star').eq(i).css({width:'100%'}); 
+            }
+            $this.find('.star').eq(firstdigit[0]).css({width:firstdigit[1]+'0%'});
+        } else {
+            for(var i = 0; i<targetScore; i++) { //소수점이 없으면 별점만큼 반복해서
+                $this.find('.star').eq(i).css({width:'100%'}); //star 찾아서 채워주기
+            }
+        }
+    });
+</script>
+{% endblock %}

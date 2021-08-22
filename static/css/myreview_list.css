@@ -1,0 +1,78 @@
+
+body {
+    background-color: #F0D9CE;
+}
+
+.page_title {
+    font-size: 45px;
+    font-family: EliceDigitalBaeum_Bold;
+    text-shadow: 0px 1px 0px #B3A29A;
+    color: #704F3F;
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    table-layout: fixed;
+}
+
+th {
+    height: 60px;
+}
+
+td {
+    height: 50px;
+    color: black;
+    vertical-align: middle;
+}
+
+th:nth-child(1) {
+    width: 15%;
+}
+th:nth-child(2) {
+    width: 10%;
+}
+th:nth-child(3) {
+    width: 45%;
+}
+th:nth-child(4) {
+    width: 20%;
+}
+th:nth-child(5) {
+    width: 10%;
+}
+
+td:nth-child(1) {
+    width: 15%;
+    font-weight: bold;
+}
+td:nth-child(2) {
+    width: 10%;
+}
+td:nth-child(3) {
+    width: 45%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+td:nth-child(4) {
+    width: 20%;
+}
+td:nth-child(5) {
+    width: 10%;
+}
+
+.main-reverse-btn {
+    font-family: Pretendard-Regular;
+    display: inline-block;
+    text-align: center;
+    color: #704F3F;
+    font-weight: bold;
+    background-color:#F0D9CE;
+    border: 1px solid #704F3F;
+    border-radius: 8px;
+}
+
+.main-reverse-btn:hover {
+    background-color: #A3735B;
+}

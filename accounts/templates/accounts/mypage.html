@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/mypage.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_search.css' %}">
+{% endblock %}
+
+{% block content %}
+{% if not owner.is_active %}
+<h1 class="display-5 fw-bold text-center page_title" style="color:red;">비활성화된 계정입니다</h1>
+{% endif %}
+<div class="py-4 my_page p-5 d-flex flex-column">
+    <div class="p-5 mb-4 rounded-3 d-flex flex-column ">
+        <h1 class="display-5 fw-bold text-center page_title">{{owner.nickname}}'s Mypage</h1>
+        <div class="container-fluid pt-2 d-flex flex-row">          
+            <div class="d-flex flex-row justify-content-center align-items-top">
+                <div class="d-flex flex-column">
+                    <div class=" px-5">
+                        {% if owner.self_image%}                
+                            <img src="{{owner.self_image.url}}" style="height:150px; width:150px; background-color: beige; border: 2pt groove #000; border-radius:50%; ">              
+                        {% else %}
+                            <img src="https://image.flaticon.com/icons/png/128/848/848043.png" style="height:150px; width:150px; border-radius:50%; "> 
+                        {% endif %}
+                        
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <h3 class="text-start mx-5 mt-3" style="font-size: 14pt; max-width: 220px; font-family: Pretendard-Regular;">{{owner.self_intro}}</h3>
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="d-flex flex-row" style="max-height: 100px;">
+                        <div class="row justify-content-center align-items-md-stretch" style="max-width: 250px;">
+                            <span class="btn button px-5 pt-5 pb-0 fw-bold" style="border:none; background:none;" data-bs-toggle="collapse" data-bs-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample">Following ▼</span>
+                            <span class="btn button text-center" style="height:50px; width:100px; border:none; background:none;" >
+                            {{followingnum}}
+                            </span>
+                    
+                            <div class="collapse" id="collapseExample4">
+                                <div class="card card-body">
+                                    <br>
+                                    {% for friend in friends %}
+                                        <div>
+                                            <div class="friends"><a href="{% url 'mypage' friend.pk %}">{{ friend.nickname }}</a></div>
+                                            <br>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center row align-items-md-stretch" style="max-width: 250px;">
+                            <span class="btn button pt-5 pb-0 px-5 fw-bold" style="border:none; background:none;" data-bs-toggle="collapse" data-bs-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample">Follower ▼</span>
+                            <span class="btn button text-center" style="height:50px; width:100px; border:none; background:none;" >
+                            {{owner.follwernum}}
+                            </span>
+                            <div class="collapse" id="collapseExample5">
+                                <div class="card card-body">
+                                    
+                                    {% for follwer in follwers %}
+                                        <div>
+                                            <li style="font-size: 20px; font-weight: bold"><a href="{% url 'mypage' follwer.pk%}">{{ follwer.nickname }}</a></li>
+                                            
+                                            <br>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center row align-items-md-stretch" style="max-width: 250px;">
+                            <span class="btn button pt-5 pb-0 px-5 fw-bold" style="border:none; background:none;" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">방문한 카페 ▼</span>
+                            <span class="btn button text-center" style="border: none; height:50px; width:150px; background:none;" >
+                                {{visit_cafes.count}}곳 / 총 {{ total_visit }}회
+                            </span>
+                            <div class="collapse" id="collapseExample2">
+                                <div class="card card-body overflow-auto">
+                                    {% for cafe, drinks in drink_list_dic.items %} 
+                                        <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.id%}">{{cafe}}</a></span>
+                                        <span> 방문 횟수: {{cafe.visit_count}}</span>
+                                        <span> 마신음료 : </span>
+                                        {% for drink in drinks %}
+                                            <span>{{drink}}</span>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center row align-items-md-stretch" style="max-width: 250px;">
+                            <span class="btn button pt-5 pb-0 px-5 fw-bold" style="border:none; background:none;"  data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample">작성한 리뷰 ▼</span>
+                            <span class="btn button text-center" style="border: none;; height:50px; width:150px; background:none;" onClick="location.href='{% url 'myreview_list' %}'">
+                                {{all_review_count}}건 ▷
+                            </span>
+                            <div class="collapse" id="collapseExample3">
+                                <div class="card card-body">
+                                    <article class="each_review">
+                                        {% for reviews in my_all_review %}
+                                            <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }}</a> 
+
+                                            {% if reviews.review_stars == '1.0' %}
+                                                <span>⭐</span>
+                                            {% elif reviews.review_stars == '2.0' %}
+                                                <span>⭐⭐</span>
+                                            {% elif reviews.review_stars == '3.0' %}
+                                                <span>⭐⭐⭐</span>
+                                            {% elif reviews.review_stars == '4.0' %}
+                                                <span>⭐⭐⭐⭐</span>
+                                            {% elif reviews.review_stars == '5.0' %}
+                                                <span>⭐⭐⭐⭐⭐</span>
+                                            {% endif %}
+                                            {{ reviews.content }}<br/>
+
+                                            {% if review_photo %}
+                                                {% for img in review_photo %}
+                                                    {% if img.review.id == reviews.id %}
+                                                        <img src="{{img.image.url}}" style="width: 5%; height: 5%;">         
+                                                    {% endif %}
+                                                {% endfor %}   
+                                            {% endif %}
+                                            <br/>
+                                        
+                                            <span style="font-size:13px;">{{ reviews.created_at }}</span>
+                                            <hr/>
+                                        {% endfor %}
+                                    </article>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="container">
+    <div class="row">
+        <div class="col container" >
+            <div class="row">
+                {% for badge in taken_badges %}
+                    <div class="col d-flex flex-column align-items-center">
+                        <img src="{{badge.badge_image.url}}" style="width: 50px; height: 50px;"><br/>
+                        <span class="mx-auto" style="font-size: 15px; font-family: NEXON Lv1 Gothic OTF;">{{badge.badge_name}}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+        <div class="col container">
+            <div class="row">
+                <div class="col text-center">
+                    <button class="button" style="width: 150px; height: 50px; font-size:20px;" onClick="location.href='{% url 'badge_list' owner.pk %}'">
+                            획득한 배지
+                    </button>
+                </div>
+            
+            
+                {% if user.id == owner.id %}
+                <div class="col text-center">
+                    <button class="button col-4" style="width: 150px; height: 50px; font-size:20px;" onClick="location.href='{% url 'info_edit' user.pk %}'">개인정보 수정</button>
+                </div>
+                {% endif %}
+
+                {% if owner.nickname in names_to_exclude %}
+                    {% if not owner.id == user.id %}
+                        <div class="col text-center">
+                            <button class="button col-4" style="width: 150px; height: 50px; font-size:20px;" onClick="location.href='{% url 'deletefriend' owner.pk%}'">UnFollow</button>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="col text-center">
+                        <button class="button col-4" style="width: 150px; height: 50px; font-size:20px;" onClick="location.href='{% url 'addfriend' owner.pk%}'">Follow</button>
+                    </div>
+                {% endif %}
+                
+                {% if visit_cafes %}
+                    <div class="col text-center">
+                        <button class="button col-4" style="width: 150px; height: 50px; font-size:20px;" onClick="location.href='{% url 'user_cafe_map' %}'">나의 카페지도</button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+{% endblock %}
