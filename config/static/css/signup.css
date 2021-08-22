@@ -1,0 +1,380 @@
+@font-face {
+    font-family: 'Cafe24Danjunghae';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Danjunghae.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RIDIBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'twaysky';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* .color {
+    #F0A986 
+    #B3A29A
+    #A3735B
+    #F0D9CE /페이지 배경색
+    #704F3F /페이지 글자색
+    #573728
+    #1f5753
+    #5ba39e
+} */
+
+/* 버튼 */
+.button {
+    margin-top: 10px;
+    border: 2px solid #704F3F;
+    background-color: white;
+    border-radius: 10px;
+    padding: 6px 7px 2px;
+    font-size: 1.1em;
+    font-family: twaysky;
+    color: #704F3F;
+}
+
+.button:hover {
+    background-color: #704F3F;
+    color: white;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* page 기본내용 */
+#signup_page {
+    background-color: #F0D9CE;
+    padding: 50px 0px;
+}
+
+.page_title {
+    font-size: 80px;
+    font-family: Cafe24Danjunghae;
+    text-shadow: 2px 2px 2px #B3A29A;
+    color: #704F3F;
+}
+
+.page_info {
+    font-size: 10px;
+    font-family: RIDIBatang;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+    padding: 0 2rem;
+    box-shadow: 2px 2px 10px gray;
+}
+
+.signup-container {
+    width: 100%;
+}
+
+.wave{
+    position: absolute;
+    height: 85%;
+    width: 500px;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    opacity: 0.9;
+}
+
+.img {
+    width: 90%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    animation: up-down 2s ease-in-out infinite alternate-reverse both;
+    z-index: 3;
+}
+
+@keyframes up-down {
+    0% {
+        transform: translateY(10px);
+    }
+    100% {
+        transform: translateY(-10px);
+    }
+}
+
+
+.img img {
+    width: 90%;
+    margin-bottom: 70px;
+    margin-right: 20px;
+    z-index: 2;
+}
+
+form{
+    width: 390px;
+}
+
+.avatar {
+    width: 165px;
+}
+
+.signup-container{
+    display: flex;
+    align-items: flex-start;
+    text-align: center;
+    justify-content: space-around;
+    z-index: 5;
+}
+
+.input-div {
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 10% 90%;
+    margin: 24px 0px;
+    padding: 5px 0;
+    border-bottom: 2px solid #B3A29A;
+}
+
+.i {
+    margin-bottom: 2px;
+}
+
+.i .icon {
+    color: #B3A29A;
+    transition: .3s;
+}
+
+.table {
+    position: relative;
+    height: 30px;
+    margin: 0;
+}
+
+.input-div > div > label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    transition: .3s;
+    font-size: 1.1rem;
+    font-weight: bold;
+    font-family: RIDIBatang;
+    color: #B3A29A;
+}
+
+.input-div > div > i {
+    color: #B3A29A;
+    transition: .3s;
+}
+
+.input-div > div > input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 5px;
+    border: none;
+    outline: none;
+    background: none;
+    padding: 0.5rem 0.7rem;
+}
+
+
+/* 포커스 효과 */
+.input-div::before, .input-div::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    width: 0%;
+    height: 2px;
+    background-color: #f0a986;
+    transition: .3s;
+}
+
+.input-div::before {
+    right: 50%;
+}
+
+.input-div::after {
+    left: 50%;
+}
+
+.input-div.focus .i .icon {
+    color: #f0a986;
+}
+
+.input-div.focus .table  label {
+    top: -7px;
+    font-size: 15px;
+    color: #f0a986;
+}
+
+.input-div.focus::before, .input-div.focus::after {
+    width: 50%;
+}
+
+/* 체크박스 */
+.check-div {
+    display: flex;
+    justify-content: center;
+}
+
+.check_wrap {
+    display: flex;
+}
+
+.check {
+    position: absolute;
+    width: 20px;
+}
+
+.checkbox, .check_icon {
+    position: absolute;
+    left: 0px;
+    top: 5px; 
+}
+
+.check > input {
+    display: none;
+}
+
+.check_icon {
+    background-color: #F0D9CE;
+    width: 15px;
+    height: 15px;
+    border-radius: 2px;
+}
+
+.check_icon::before, .check_icon::after {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 0;
+    background-color: #B3A29A;
+    position: absolute;
+    transform-origin: left top;
+    border-radius: 1px;
+}
+
+.check_icon::before {
+    top: 7px;
+    left: 1px;
+    transform: rotate(-45deg);
+}
+
+.check_icon::after {
+    top: 12.5px;
+    left: 7.5px;
+    transform: rotate(-135deg);
+}
+
+.check input:checked ~ .check_icon::before {
+    height: 7px;
+    transition: all .3s ease;
+}
+
+.check input:checked ~ .check_icon::after { 
+    height: 15px;
+    transition: all .35s ease .3s;
+}
+/* ~: 동일 선상의 요소, 부모자식 아니고 동일 선상에 있는 태그들 */
+
+
+.check_label {
+    width: 140px;
+    font-size: 17px;
+    font-weight: lighter;
+    font-family: RIDIBatang;
+    color: #704F3F;
+}
+
+
+
+
+
+
+/* 거주지 선택, select */
+.house {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    font-family: RIDIBatang;
+    color: #B3A29A;
+}
+
+.house > div {
+    position: relative;
+}
+
+.house > div > i {
+    margin-right: 2px;
+    position: absolute;
+    top: 50%;
+}
+
+select:active .home_icon {
+    color: #f0a986;
+}
+
+
+/* 반응형 */
+@media screen and (max-width: 1100px){
+	.container{
+		grid-gap: 1rem;
+	}
+    
+    .wave {
+        width: 200px;
+    }
+}
+
+@media screen and (max-width: 1050px){
+	form{
+		width: 300px;
+	}
+
+	.img img{
+		width: 410px;
+	}
+
+    .wave {
+        width: 150px;
+    }
+}
+
+@media screen and (max-width: 1000px){
+	.container{
+		grid-template-columns: 1fr;
+	}
+
+	.img{
+		display: none;
+	}
+
+	.wave{
+		display: none;
+	}
+
+    .avatar {
+        width: 130px;
+    }
+
+	.login-content{
+		justify-content: center;
+	}
+} 

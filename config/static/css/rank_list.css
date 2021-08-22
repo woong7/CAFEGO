@@ -1,0 +1,284 @@
+@font-face {
+    font-family: 'Cafe24Danjunghae';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Danjunghae.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RIDIBatang';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'twaysky';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* .color {
+    #F0A986
+    #B3A29A
+    #A3735B
+    #F0D9CE
+    #704F3F
+    #573728
+} */
+
+.gold_medal {
+    font-size: 70px;
+    color: gold;
+}
+.silver_medal {
+    font-size: 70px;
+    color: silver;
+}
+.bronze_medal {
+    font-size: 70px;
+    color: rgb(85, 41, 41);
+}
+.other_medal {
+    font-size: 50px;
+    color: gray;
+    margin: 15px 0px;
+}
+
+/* page 기본내용 */
+#rank_page {
+    background-color: #F0D9CE;
+    padding: 50px 0px;
+}
+
+.page_title {
+    font-size: 80px;
+    font-family: Cafe24Danjunghae;
+    text-shadow: 2px 2px 2px #B3A29A;
+    color: #704F3F;
+}
+
+.page_info {
+    font-size: 10px;
+    font-family: RIDIBatang;
+}
+
+/* 버튼 */
+.button {
+    border: 2px solid #704F3F;
+    background-color: white;
+    border-radius: 10px;
+    padding: 6px 7px 2px;
+    font-size: 1.1em;
+    font-family: twaysky;
+    color: #704F3F;
+}
+
+.button:hover {
+    background-color: #704F3F;
+    color: white;
+}
+
+/* 랭킹 카드 구분 */
+.monthly_rank {
+    font-size: 50px;
+    font-family: Cafe24Danjunghae;
+    text-shadow: 2px 2px 2px #B3A29A;
+    color: #704F3F;
+    padding-top: 30px;
+    margin-top: 20px;
+}
+
+.rank_hr {
+    border-top: 5px solid white;
+    text-align: center;
+}
+
+.rank_hr:after {
+    content: '⩥⩤';
+    display: inline-block;
+    position: relative;
+    top: -14px;
+    padding: 0 10px;
+    color: white;
+    font-size: 20px;
+    /* -webkit-transform: rotate(60deg);
+    -moz-transform: rotate(60deg);
+    transform: rotate(60deg); */
+}
+
+/* 동작안함..ㅋ
+.ranking_head {
+    transform: translateY(8px);
+    transition: all 1s ease;
+} */
+
+/* 카드 */
+.ranking_card:hover {
+    transform: translateY(-8px);
+    transition: all .5s ease;
+}
+
+.card_title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.card_img{
+    height: 270px;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.6;
+}
+
+.ranking_title {
+    font-family: twaysky;
+    font-size: 1.8em;
+    color: #573728;
+    text-shadow: 2px 2px 2px #F0D9CE;
+    position: relative;
+
+    height: 48px;
+    padding: 3px 2px 0px;
+    background-color: #B3A29A; 
+}
+
+.ranking_title_back {
+    position: absolute;
+    left: 23px;
+    top: 27px;
+
+    width: 210px; 
+    height: 45px; 
+    background-color: #704F3F;
+}
+
+.ranking_top {
+    position: absolute;
+    left: 23px;
+    top: 60px;
+
+    width: 330px;
+    height: 150px;
+    margin-top: 30px;
+    background-color: #704F3F;
+    opacity: 0.8;
+}
+
+#xs_gold_medal {
+    font-size: 20px;
+    color: gold;
+    margin: 5px;
+}
+
+#xs_silver_medal {
+    font-size: 20px;
+    color: silver;
+    margin: 5px;
+}
+
+#xs_bronze_medal {
+    font-size: 20px;
+    color: rgb(85, 41, 41);
+    margin: 5px;
+}
+
+.ranking_top_content {
+    position: absolute;
+    left: 23px;
+    top: 60px;
+
+    width: 330px;
+    height: 150px;
+    margin-top: 30px;
+    padding: 20px;
+    
+    font-size: 1.3em;
+    font-family: RIDIBatang;
+    color: #F0D9CE;
+}
+
+.card_info{
+    font-size: 1.3em;
+    font-family: RIDIBatang;
+    color: #704F3F;
+}
+
+/* 랭킹 모달창 */
+.modal_back {
+    background-color: #F0D9CE;
+}
+
+.trophy{
+    font-size: 2rem;
+    color: gold;
+}
+
+.modal_title {
+    font-family: twaysky;
+    font-size: 1.6em;
+    color: #573728;
+    text-shadow: 2px 2px 2px #B3A29A;
+}
+
+.modal_title_group {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal_text_group {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sm_gold_medal {
+    font-size: 45px;
+    color: gold;
+    margin-top: 2px;
+}
+.sm_silver_medal {
+    font-size: 45px;
+    color: silver;
+    margin-top: 2px;
+}
+.sm_bronze_medal {
+    font-size: 45px;
+    color: rgb(85, 41, 41);
+    margin-top: 2px;
+}
+.sm_other_medal {
+    font-family: twaysky;
+    font-size: 40px;
+    color: #573728;
+}
+
+.modal_text_name {
+    font-size: 1.5em;
+    font-family: RIDIBatang;
+    font-weight: bolder;
+    color: #704F3F;
+}
+
+.modal_text {
+    font-size: 1.3em;
+    font-family: RIDIBatang;
+    color: #704F3F;
+}
+
+
+
+/* 사진 확대 애니 */
+.inner {
+    overflow: hidden;
+}
+
+
+.inner img {
+    transition: all 1.3s ease;
+}
+
+.inner:hover img {
+    transform: scale(1.2)
+}

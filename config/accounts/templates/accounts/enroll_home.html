@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/enroll.css' %}">
+{% endblock %}
+{% block content %}
+
+<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 5rem;">
+    <p id="header-logo-image"></p>
+    <h1></h1>
+    <h3 class="font-weight-bold">{{user.username}} 님 반가워요!</h3> <!--일단 ID로,,  fontweight이 안 맞음;;-->
+    <h5>카페를 추가하세요!</h5>
+    <div class="row" style="justify-content: space-around;">
+        <div class="card col-sm-6" style="width: auto;">
+            <img class="card-img-top center" src="../../../static/image/cafe2.png" style='height: 80%; width: 80%; display: block; margin: 0 auto;'/>
+            <div class="card-body">
+                <button class="btn btn-outline-primary" onClick="location.href='{% url 'enroll_new_cafe' %}'">새로 방문한 카페 추가하기</button>
+            </div>
+        </div>
+        <div class="card col-sm-6" style="width: auto;">
+            <img class="card-img-top center" src="../../../static/image/cafe1.png" style='height: 80%; width: 80%; display: block; margin: 0 auto;'/>
+            <div class="card-body">
+                <button class="btn btn-outline-primary" onClick="location.href='{% url 'enroll_visited_cafe' %}'">이전에 방문했던 카페 추가하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

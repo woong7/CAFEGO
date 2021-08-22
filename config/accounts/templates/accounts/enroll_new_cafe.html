@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    새로운 카페 등록
+{% endblock %}
+
+{% block content %}
+<div class="position-relative overflow-hidden m-0 text-center bg-light" style="padding: 5rem;">
+    <h4>새로운 카페 추가하기</h4>
+    <p>방문한 카페를 검색해보세요!</p>
+    <!-- 카페 검색창 -->
+    <form action="" method="GET">
+        <select name="type">
+            <option value="name">카페</option>
+            <option value="address">주소</option>
+            <option value="all">카페+주소</option>
+        </select>
+        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
+        <button type="submit" id="search_btn">검색</button><br/>
+    </form>
+
+    <!-- 카페 리스트  -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th> </th>
+                <th>카페명</th>
+                <th>위치</th>
+                <th>방문추가</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if q %}
+            <p>'{{ q }}' 검색 결과입니다.</p>
+            {% endif %}
+            {% if new_cafe_list %}
+                검색 결과: {{page_obj.paginator.count}}개
+                {% for cafe in new_cafe_list %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td><a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a></td>
+                        <td><a href="{% url 'this_cafe_map' cafe.id %}">{{ cafe.address }}</a></td> <!-- | truncatechars:10-->
+                        <!-- checkbox trigger modal -->
+                        <td><input type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="방문추가"></td>
+                        <div class="modal fade" id="exampleModal_{{ cafe.id }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            
+                            <div class="modal-dialog">
+                                <form action="{% url 'visit_register' %}" method='post'>
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel" name="cafename2">
+                                                <input type="text" name="cafename" value="{{ cafe.name }}">
+                                                <input type="text" name="cafeid" value="{{ cafe.id }}">
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                    
+                                        <div class="modal-body" style="text-align: left;">
+                                            마신 음료를 체크해주세요!<br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="아메리카노"> 아메리카노 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="바닐라라떼"> 바닐라라떼 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="카페라떼"> 카페라떼 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="카라멜마끼야또"> 카라멜마끼야또 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="초코라떼"> 초코라떼 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="녹차라떼"> 녹차라떼 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="에이드"> 에이드 <br>
+                                            <input type="radio" class="btn btn-primary" name="beverage" value="허브차"> 허브차 <br>
+                                            기타 <input type="text" name="etc" value="">
+                                        </div>
+                                        
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" id="submit_btn_{{cafe.id}}" class="btn btn-primary">등록하기</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </tr>
+                {% endfor %}
+                <!-- Modal -->
+            {% else %}      <!--게시글 쿼리셋이 존재하지 않을 때 카페 미등록-->
+                <tr>
+                    <td>등록된 카페가 없습니다.</td>
+                </tr>
+            {% endif %}            
+        </tbody>
+    </table>
+
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+            {{ message.tags }}! {{ message.message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <br>
+    <!-- 페이징 처리 -->
+    {% if is_paginated %}
+    <div class="btn-group me-2" role="group" aria-label="First group">
+    <ul class="pagination" style="justify-content: space-around;">
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}">
+                <button type="button" class="btn btn-outline-secondary">처음</button>
+            </a>
+        </li>
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">
+                <button type="button" class="btn btn-outline-secondary">이전</button>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">
+                <button type="button" class="btn btn-outline-secondary">이전</button>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for page in page_range %}
+        <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
+            
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">
+                <button type="button" class="btn btn-outline-secondary">{{ page }}</button>
+            </a>
+            
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">
+                <button type="button" class="btn btn-outline-secondary">다음</button>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">
+                <button type="button" class="btn btn-outline-secondary">다음</button>
+            </a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}">
+                <button type="button" class="btn btn-outline-secondary">마지막</button>
+            </a>
+        </li>
+        <span>{{page_obj}}</span>
+    </ul>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+

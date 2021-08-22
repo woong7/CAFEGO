@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/badge_list.css' %}">
+{% endblock %}
+{% block title %}
+    뱃지리스트
+{% endblock %}
+
+{% block content %}
+    <section id="badge_list_page" class="p-4">
+        <header class="pt-3">
+            <div class="pricing-header p-2 pb-md-4 mx-auto text-center">
+                <div class="page_title">Badge List</div>
+                <p class="fs-5 text-muted page_info">본인이 획득한 뱃지는 특별한 표시가 있어요!<br>카드에 마우스를 올리면 뱃지 획득 방법을 알 수 있어요!😉</p>
+                <br>
+                <div class="fs-5 text-muted page_info">🎇획득 뱃지 수: {{taken_num}}/{{total_num}}🎇</div>
+            </div>
+        </header>
+        
+        <body>
+            <div class="container px-5">
+                <article class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mb-3 text-center">
+                {% for badge in badges %}
+                    {% if badge in taken_badges %}    
+                        <div class="taken_badges">
+                            <div class="box">
+                                <div class="imgbox taken_imgbox">
+                                    <div class="taken_img">
+                                        <img src="{{badge.badge_image.url}}">
+                                    </div>
+                                    <h2>{{badge.badge_name}}</h2>
+                                </div>
+                                <div class="contentbox">
+                                    <div>
+                                        <h2 class="badge_name">{{badge.badge_name}}</h2>
+                                        <p class="badge_ctx">✨획득 조건✨<br> {{badge.badge_get}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    {% else %}    
+                        <div class="box">
+                            <div class="imgbox" style="opacity: 0.6;">
+                                <div class="untaken_img">
+                                    <img src="{{badge.badge_image.url}}">
+                                </div>
+                                <h2>{{badge.badge_name}}</h2>
+                            </div>
+                            <div class="contentbox">
+                                <div>
+                                    <h2 class="badge_name">{{badge.badge_name}}</h2>
+                                    <p class="badge_ctx">✨획득 조건✨<br> {{badge.badge_get}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                
+                </article>
+            </div>
+
+        </body>
+        
+    </section>
+
+{% endblock %}
