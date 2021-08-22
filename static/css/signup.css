@@ -19,6 +19,22 @@
     font-style: normal;
 }
 
+
+@font-face {
+    font-family: 'HSGyoulnoonkot';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/HSGyoulnoonkot.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+@font-face {
+    font-family: 'Wemakeprice-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Wemakeprice-Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* .color {
     #F0A986 
     #B3A29A
@@ -38,7 +54,7 @@
     border-radius: 10px;
     padding: 6px 7px 2px;
     font-size: 1.1em;
-    font-family: twaysky;
+    font-family: Wemakeprice-Bold;
     color: #704F3F;
 }
 
@@ -81,8 +97,13 @@
     box-shadow: 2px 2px 10px gray;
 }
 
-.signup-container {
+.signup-container{
     width: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 5;
 }
 
 .wave{
@@ -113,6 +134,14 @@
     }
 }
 
+.logo { 
+    color: white;
+    margin-top: 1.5rem;
+    font-size: 135px; 
+    border: 2px black; 
+    font-family: 'HSGyoulnoonkot';
+    text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;
+}
 
 .img img {
     width: 90%;
@@ -129,13 +158,6 @@ form{
     width: 165px;
 }
 
-.signup-container{
-    display: flex;
-    align-items: flex-start;
-    text-align: center;
-    justify-content: space-around;
-    z-index: 5;
-}
 
 .input-div {
     position: relative;
@@ -171,8 +193,22 @@ form{
     transition: .3s;
     font-size: 1.1rem;
     font-weight: bold;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
     color: #B3A29A;
+}
+
+.profile-img {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    transition: .3s;
+    font-size: 1.1rem;
+    font-weight: bold;
+    font-family: Wemakeprice-Bold;
+    color: #B3A29A;
+
 }
 
 .input-div > div > i {
@@ -219,6 +255,14 @@ form{
 .input-div.focus .table  label {
     top: -7px;
     font-size: 15px;
+    color: #f0a986;
+}
+
+.input-div.focus .profile-img {
+    color: #f0a986;
+}
+
+.home-div.focus .house > div {
     color: #f0a986;
 }
 
@@ -297,7 +341,7 @@ form{
     width: 140px;
     font-size: 17px;
     font-weight: lighter;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
     color: #704F3F;
 }
 
@@ -313,7 +357,7 @@ form{
     padding: 10px 0;
     font-size: 1.1rem;
     font-weight: bold;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
     color: #B3A29A;
 }
 

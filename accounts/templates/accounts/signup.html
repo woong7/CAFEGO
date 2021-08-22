@@ -15,7 +15,7 @@
 <section id="signup_page" class="py-4 px-5 text-center">
     <header class="pt-3 login_head">
         <div class="pricing-header p-2 pb-md-4 mx-auto text-center">
-            <p id="header-logo-image"></p>
+            <span class="logo">CAFEGO</span>
             <p class="fs-5 text-muted page_info">회원가입을 해서 카페고의 모든 서비스를 즐겨보세요!</p>
         </div>
     </header>
@@ -49,16 +49,16 @@
                         </div>
                     </div>
                     <div class="input-div">
-                        <div class="i table"><i class="fas fa-address-book icon"></i></div>
+                        <div class="i table"><i class="fas fa-edit icon"></i></div>
                         <div class="table">
                             <label for="id_self_intro">한줄 소개</label>
                             <input class="input" type="text" name="self_intro" maxlength="150" id="id_self_intro">
                         </div>
                     </div>
                     <div class="input-div">
-                        <div class="i table"><i class="fas fa-address-book icon"></i></div>
+                        <div class="i table"><i class="fas fa-images icon"></i></div>
                         <div class="table">
-                            <label for="id_self_image">프로필 사진</label>
+                            <div class="profile-img" for="id_self_image">프로필 사진</div>
                             <input class="input px-5 mx-5" type="file" name="self_image" id="id_self_image" style="padding: 0; left: 14px;">
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                     <section class="house" style="padding-top: 20px;">
                         <div><i class="fas fa-home home_icon"></i></div>
                         <span>거주지 </span>
-                        <select name="city" id="addressRegion" form="signup_form"></select>
+                        <select class="home-div" name="city" id="addressRegion" form="signup_form"></select>
                         <select name="gu" id="addressDo" form="signup_form"></select>
                         <select name="dong" id="addressSiGunGu" form="signup_form"></select>
                     </section>

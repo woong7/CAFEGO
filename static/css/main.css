@@ -41,6 +41,12 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Wemakeprice-Bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Wemakeprice-Bold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 /* .color {
   #F0A986 
   #B3A29A
@@ -219,7 +225,7 @@ div.container4 p {
     }
   }
 
-
+/* -----------------------main 1st--------------------- */
 .hoverbox {
   width: 100vw;
   height: 100vh;
@@ -239,7 +245,7 @@ div.container4 p {
   height: 50rem;
 }
 
-.main_1st_mugplate{
+.m1_mugplate{
   position: absolute;
   left: 48%;
   top: 50%;
@@ -252,17 +258,17 @@ div.container4 p {
   background-size: cover;
 }
 
-.main_1st_mug { 
+.m1_mug { 
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 37rem;
-  height: 37rem;
+  width: 35rem;
+  height: 35rem;
   background-color: transparent;
   z-index: 2;
-  animation:show-img 1.2s ease;
-  animation-delay: .3s;
+  animation:show-img 1s ease;
+  /* animation-delay: .2s; */
 }
 
 @keyframes show-img {
@@ -271,14 +277,14 @@ div.container4 p {
   40% {width: 14rem; height: 14rem;}
   60% {width: 21rem; height: 21rem;}
   80% {width: 29rem;height: 29rem; }
-  100% {width: 37rem; height: 37rem;}
+  100% {width: 35rem; height: 35rem;}
 }
 
-.main_1st_mug img {
+.m1_mug img {
   max-width: none;
   width: 100%;
-  animation:rolling01 7s linear infinite; 
-  animation-delay: 2.5s;
+  animation:rolling01 6s linear infinite; 
+  animation-delay: 2s;
   transform-origin: 50% 50%;
 }
 
@@ -286,7 +292,7 @@ div.container4 p {
   100% {transform:rotate(360deg);}
 }
 
-.main_1st_group {
+.m1_group {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -296,7 +302,7 @@ div.container4 p {
   width: 30%;
 }
 
-.main_1st_logo { 
+.m1_logo { 
   margin-top: 1.5rem;
   font-size: 135px; 
   border: 2px black; 
@@ -326,11 +332,11 @@ div.container4 p {
   100% {opacity: 1;}
 }
 
-.main_1st_ctx {
+.m1_ctx {
   position: absolute;
   margin-top: 1rem;
   font-size: 1.5em;
-  font-family: Cafe24Oneprettynight;
+  font-family: Wemakeprice-Bold;
   font-weight: bolder;
   color: #F0D9CE; 
   text-shadow: 1px 1px 1px #573728;
@@ -344,7 +350,7 @@ div.container4 p {
   border-radius: 10px;
   padding: 6px 7px 2px;
   font-size: 1.1em;
-  font-family: Cafe24SsurroundAir;
+  font-family: Wemakeprice-Bold;
   color: #704F3F;
   font-weight: bolder;
   animation: show-ctx 2s ease;
@@ -357,13 +363,104 @@ div.container4 p {
 }
 
 
+
+/* -----------------------main 1st--------------------- */
 /* .color {
-  #F0A986 
+  #F0A986
+  #d58e6f
+  #a56768
+  #743957 
+  #d38842
+  #d5b054
+  #ececee
+  #dcd3cc
+  #F0D9CE
   #B3A29A
-  #A3735B
-  #F0D9CE /페이지 배경색
+  #998884
+  #bb937e
+  #A3735B /페이지 배경색
+  #915549
   #704F3F /페이지 글자색
   #573728
+  #362f37
   #1f5753
   #5ba39e
+  #6e7a67
 } */
+
+@font-face { /*  */
+  font-family: 'Cafe24Ssurround';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'EliceDigitalBaeum_Bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/EliceDigitalBaeum_Bold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'IM_Hyemin-Bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+.m2-back {
+  background-image:url(../../../static/image/coffee-main-1.jpeg); 
+  position: absolute; 
+  width:100%; 
+  height: 100%; 
+  background-position: 40%; 
+  opacity: 0.5;
+}
+
+[class*='num'] {
+  font-weight: bolder;
+  font-family: Cafe24Danjunghae;
+  font-size: 2rem;
+  color: #5ba39e;
+  text-shadow: 1px 1px 1px #1f5753;
+}
+
+[class*='odd-title'] {
+  position:absolute; 
+  left:0px; 
+  bottom:7px; 
+  font-size: 2rem; 
+  text-indent:0; 
+  margin-top: 1rem;
+  font-family: EliceDigitalBaeum_Bold;
+  color: #F0D9CE;
+  text-shadow: 2px 2px 2px #704F3F;
+}
+
+[class*='even-title'] {
+  position:absolute; 
+  left:0px; 
+  bottom:7px; 
+  font-size: 2rem; 
+  text-indent:0; 
+  margin-top: 1rem;
+  font-family: EliceDigitalBaeum_Bold;
+  color: #704F3F;
+  text-shadow: 2px 2px 2px #d58e6f;
+}
+
+.m2-ctx {
+  width: 415px; 
+  background: white;
+  opacity: .5;
+  border-radius: 5px;
+  font-family: IM_Hyemin-Bold;
+}
+
+.m2-btn {
+  border: 2px solid #704F3F;
+  background-color: white;
+  border-radius: 10px;
+  padding: 6px 7px 2px;
+  font-size: 1.2em;
+  font-family: Wemakeprice-Bold;
+  color: #704F3F;
+}

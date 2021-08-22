@@ -19,6 +19,19 @@
     font-style: normal;
 }
 
+@font-face {
+  font-family: 'HSGyoulnoonkot';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/HSGyoulnoonkot.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'Wemakeprice-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Wemakeprice-Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 /* .color {
     #F0A986 
     #B3A29A
@@ -52,6 +65,16 @@
     box-sizing: border-box;
 }
 
+
+.logo { 
+    color: white;
+    margin-top: 1.5rem;
+    font-size: 135px; 
+    border: 2px black; 
+    font-family: 'HSGyoulnoonkot';
+    text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;
+}
+
 /* page 기본내용 */
 #login_page {
     background-color: #F0D9CE;
@@ -81,7 +104,7 @@
 
 .container {
     width: 100vw;
-    height: 650px;
+    height: 100vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem;
@@ -132,9 +155,9 @@ form {
 
 .login-container {
     display: flex;
-    align-items: flex-start;
     text-align: center;
     justify-content: space-around;
+    align-items: center;
     z-index: 5;
 }
 
@@ -214,7 +237,7 @@ form {
     transition: .3s;
     font-size: 1.2rem;
     font-weight: bold;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
     color: #B3A29A;
 }
 
@@ -247,7 +270,7 @@ form {
     left: 15%;
     font-size: 15px;
     font-weight: lighter;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
     color: #B3A29A;
 }
 
@@ -314,6 +337,8 @@ form {
     transition: .3s;
     font-family: RIDIBatang;
     color: #704F3F;
+    font-weight: lighter;
+    cursor: pointer;
 }
 
 .findPw:hover {
@@ -323,7 +348,7 @@ form {
 .social-btn {
     font-size: 11px;
     font-weight: lighter;
-    font-family: twaysky;
+    font-family: Wemakeprice-Bold;
 }
 
 /* 반응형 */
