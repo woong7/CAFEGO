@@ -48,7 +48,7 @@ class Review(models.Model):
 class ReviewPhoto(models.Model):
     review_cafe = models.ForeignKey(CafeList, on_delete=models.CASCADE, related_name='review_cafe')
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='this_review')
-    image = models.ImageField(verbose_name='리뷰 사진', upload_to = 'media/review/%Y/%m/%d', null=True) 
+    image = models.ImageField(verbose_name='리뷰 사진', upload_to = 'static/image/review/%Y/%m/%d', null=True) 
 
 
 class Comment(models.Model):
@@ -63,5 +63,5 @@ class Comment(models.Model):
         return self.content
 
 class Map(models.Model):
-    emoticon_list = models.ImageField(upload_to = 'media/map/%Y/%m/%d')
+    emoticon_list = models.ImageField(upload_to = 'static/image/map/%Y/%m/%d')
     level = models.IntegerField()

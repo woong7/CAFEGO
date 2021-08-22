@@ -167,9 +167,9 @@ LOGIN_REDIRECT_URL='/'
 
 ACCOUNT_FORMS = {'signup': 'accounts.forms.UserRegistrationForm'} #앱이름.forms.py,클래스 이름
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '//'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

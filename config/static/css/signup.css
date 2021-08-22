@@ -73,7 +73,7 @@
 
 .container {
     width: 100vw;
-    height: 100vh;
+    height: 150vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem;
