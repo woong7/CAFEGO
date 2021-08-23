@@ -19,7 +19,19 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'JoongnajocheM-KSCpc-EUC-H';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_13@1.0/JoongnajocheM-KSCpc-EUC-H.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: 'JoongnajocheL-KSCpc-EUC-H';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_13@1.0/JoongnajocheL-KSCpc-EUC-H.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 @font-face {
   font-family: 'Wemakeprice-Bold';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Wemakeprice-Bold.woff') format('woff');
@@ -208,7 +220,7 @@ div.container4 p {
 .hoverbox {
   width: 100vw;
   height: 100vh;
-  background: url(../../static/image/main_1st.jpg);
+  background: url(../../static/image/ex4.jpeg);
 }
 
 .hoverbox [class*='hud']{
@@ -341,6 +353,10 @@ div.container4 p {
   color: white;
 }
 
+.action .desc .mainbtn {
+  transform: translateY(0);
+  -webkit-transform: translateY(0);
+}
 
 
 /* -----------------------main 2nd--------------------- */
@@ -417,6 +433,46 @@ div.container4 p {
 }
 
 /* -----------------------main 3rd--------------------- */
+.mainbtn {
+  border: 2px solid #573728;
+  border-radius: 10px;
+  transition: transform 3s,background-color .5s,color .5s;
+  transform: translateY(70px);
+  -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+  -webkit-transform: translateY(70px);
+  width: 112px;
+  height: 42px;
+  display: inline-block;
+  overflow: hidden;
+  font-size: 17px;
+  letter-spacing: -.5px;
+  line-height: 40px;
+  color: #573728;
+  background-color: #fff;
+  text-align: center;
+}
+
+.mainbtn:hover {
+  background-color: #704F3F;
+  color: white;
+}
+
+.pagetitle {
+  font-family: JoongnajocheM-KSCpc-EUC-H;
+  position:absolute; 
+  left:0px; 
+  bottom:7px; 
+  font-size:36px; 
+  text-indent:0;
+}
+
+.pagecontent {
+  font-family: JoongnajocheL-KSCpc-EUC-H;
+  font-size: 19px;
+  color: #333;
+
+}
+
 /* .color {
   #F0A986
   #d58e6f

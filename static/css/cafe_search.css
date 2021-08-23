@@ -98,7 +98,9 @@ td {
 .table-title {
     font-size: 1.35em;
     font-weight: 800;
+    font-family: NEXON Lv2 Gothic Bold;
 }
+
 .table-content {
     font-size: 1.05em;
     font-family: NEXON Lv1 Gothic OTF;
@@ -130,3 +132,16 @@ select, input[type=text]{
     padding-left: 10px;
     padding-right: 10px;
 }
+
+@font-face {
+    font-family: 'SDSamliphopangche_Outline';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/SDSamliphopangche_Outline.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.modalcontent {
+    font-family: SDSamliphopangche_Outline;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Playball&family=Roboto:ital,wght@1,100&display=swap');

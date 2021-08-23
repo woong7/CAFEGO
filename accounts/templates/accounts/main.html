@@ -66,11 +66,11 @@
                         </div>
                         <p class="m2-ctx">서울 시내 37000여개의 카페 중에 내가 방문한 카페를 추가할 수 있습니다.<br> 카페리스트에서 검색하거나, 현재위치 근처의 카페들을 지도에서 찾아 추가할 수 있습니다.<br> 카페에서 마신 음료도 함께 기록해보세요!</p>
                         {% if user.is_authenticated %}
-                        <button class="m2-btn" href="{% url 'cafe:cafe_list' %}">검색하여 카페추가</button>
-                        <a class="link_sample" href="{% url 'cafe:cafe_map' %}" style="width: 160px;"><span>지도에서 카페추가</span></a>
+                        <a class="mainbtn" href="{% url 'cafe:cafe_list' %}" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
+                        <a class="mainbtn" href="{% url 'cafe:cafe_map' %}" style="width: 160px;"><span>지도에서 카페추가</span></a>
                         {% else %}
-                        <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
-                        <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>지도에서 카페추가</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>지도에서 카페추가</span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -85,15 +85,15 @@
                         <div class="title" style="background-image:none!important;">
                             <span class="m3-even-title">방문카페들이 기록된 <br>나만의 카페지도를 만들어보세요.</span>
                         </div>
-                        <p>방문 추가한 카페들이 지도 위에 이모티콘으로 표시됩니다. 카페를 방문한 횟수에 따라 달라지는 이모티콘을 직접 확인해보세요!</p>
+                        <p>방문 추가한 카페들이 지도 위에 이모티콘으로 표시됩니다. 카페를 방문한 횟수에 따라 변화하는 이모티콘을 직접 확인해보세요!</p>
                         {% if user.is_authenticated %}
                             {% if user.total_visit == 0 %}
-                            <a class="link_sample" href="{% url 'cafe:cafe_list' %}" onclick="return confirm('방문했던 카페등록이 하나이상 필요한 페이지입니다. 지금 바로 첫번째 카페를 방문추가 하시겠습니까?');" style="width: 149px;"><span>나의 카페지도 보기</span></a>
+                            <a class="mainbtn" href="{% url 'cafe:cafe_list' %}" onclick="return confirm('방문했던 카페등록이 하나이상 필요한 페이지입니다. 지금 바로 첫번째 카페를 방문추가 하시겠습니까?');" style="width: 149px;"><span>나의 카페지도 보기</span></a>
                             {% else %}
-                            <a class="link_sample" href="{% url 'user_cafe_map' %}" style="width: 149px;"><span>나의 카페지도 보기</span></a>
+                            <a class="mainbtn" href="{% url 'user_cafe_map' %}" style="width: 149px;"><span>나의 카페지도 보기</span></a>
                             {% endif %}
                         {% else %}
-                        <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 149px;"><span>나의 카페지도 보기</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 149px;"><span>나의 카페지도 보기</span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -113,13 +113,13 @@
                         <div class="title" style="background-image:none!important;">
                             <span class="m4-odd-title" >방문했던 카페에 리뷰를 남기고<br>댓글을 달아보세요.</span>
                         </div>
-                        <p style="width: 417px;">리뷰에 댓글을 달아 카페 사용자에게 직접 물어볼 수 있습니다. 여러 카페를 방문한 사람에게, 그 카페 단골에게 <br>사용자 입장에서의 솔직한 답변을 들어보세요.</p>
+                        <p style="width: 417px;">카페 방문자가 남긴 리뷰에 댓글을 달아 직접 질문을 해보세요. 여러 카페를 방문한 사람에게, 그 카페 단골에게 <br>사용자 입장에서의 답변을 들어보세요.</p>
                         {% if user.is_authenticated %}
-                        <a class="link_sample" href="{% url 'enroll_visited_cafe' %}" style="width: 146px; margin-right: 10px;"><span>리뷰 쓰기</span></a>
-                        <a class="link_sample" href="{% url 'cafe:cafe_list' %}" style="width: 160px;"><span>리뷰에 댓글 쓰기</span></a>
+                        <a class="mainbtn" href="{% url 'enroll_visited_cafe' %}" style="width: 146px; margin-right: 10px;"><span>리뷰 쓰기</span></a>
+                        <a class="mainbtn" href="{% url 'cafe:cafe_list' %}" style="width: 160px;"><span>리뷰에 댓글 쓰기</span></a>
                         {% else %}
-                        <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 146px; margin-right: 10px;"><span>방문카페 리뷰 쓰기</span></a>
-                        <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>리뷰에 댓글 쓰러가기</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 146px; margin-right: 10px;"><span>방문카페 리뷰 쓰기</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>리뷰에 댓글 쓰러가기</span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -139,11 +139,11 @@
                         </div>
                         <p style="width: 410px;">카페를 얼마나 갔는지, 리뷰를 얼마나 썼는지에 따라 누적순위와 지난달 순위를 랭킹 페이지에서 확인해볼 수 있습니다. 랭킹에 들어 뱃지들을 획득해보세요!</p>
                         {% if user.is_authenticated %}
-                        <a class="link_sample" href="{%url 'rank_list' %}" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
-                        <a class="link_sample" href="{%url 'badge_list' user.pk %}"><span>배지 보러가기</span></a>
+                        <a class="mainbtn" href="{%url 'rank_list' %}" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
+                        <a class="mainbtn" href="{%url 'badge_list' user.pk %}"><span>배지 보러가기</span></a>
                         {% else %}
-                        <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
-                        <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');"><span>배지 보러가기</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');"><span>배지 보러가기</span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -161,9 +161,9 @@
                         </div>
                         <p style="width: 411px;">유저 검색 페이지에서 친구의 아이디를 검색하여 팔로우할 수 있습니다. 근처 동네를 검색해서 다른 사용자들의 카페지도를 확인해볼 수 있습니다.</p>
                         {% if user.is_authenticated %}
-                        <a class="link_sample" href="{% url 'friend_search' %}"><span>유저검색 하기</span></a>
+                        <a class="mainbtn" href="{% url 'friend_search' %}"><span>유저검색 하기</span></a>
                         {% else %}
-                        <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');"><span>유저검색 하기</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');"><span>유저검색 하기</span></a>
                         {% endif %}
                     </div>
                 </div>
