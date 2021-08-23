@@ -629,8 +629,11 @@ def visit_register(request):
         req_post = request.POST
         #음료 내용 받아온다.
         str_cafename = req_post.__getitem__('cafename')
-        str_drinkname = req_post.__getitem__('beverage')
-
+        try:
+            str_drinkname = req_post.__getitem__('beverage')
+        except:
+            messages.error(request, '음료를 하나 선택해주세요!')
+            return redirect('cafe:cafe_list')
         #카페를 방문한 유저와 그 유저의 방문 횟수 +1
         
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페

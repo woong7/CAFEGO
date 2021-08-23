@@ -93,8 +93,8 @@
                 <!-- Modal -->
                 
             {% else %}     
-                <tr>
-                    <td>등록된 유저가 없습니다.</td>
+                <tr class="text-center">
+                    <td colspan="10">등록된 유저가 없습니다.</td>
                 </tr>
             {% endif %}            
         </tbody>
@@ -106,22 +106,22 @@
     <!-- 페이징 처리 -->
     {% if is_paginated %}
     <div class="btn-group me-2" role="group" aria-label="First group">
-    <ul class="pagination" style="justify-content: space-around;">
+    <ul class="pagination" style="justify-content: space-around; font-family: RIDIBatang; color: black;">
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}">
-                <button type="button" class="btn btn-outline-secondary">처음</button>
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}" style="color:black;">
+                처음
             </a>
         </li>
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">
-                <button type="button" class="btn btn-outline-secondary">이전</button>
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1" style="color:black;">
+                이전
             </a>
         </li>
         {% else %}
         <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1">
-                <button type="button" class="btn btn-outline-secondary">이전</button>
+            <a class="page-link" href="#" tabindex="-1" >
+                이전
             </a>
         </li>
         {% endif %}
@@ -129,8 +129,8 @@
         {% for page in page_range %}
         <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
             
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">
-                <button type="button" class="btn btn-outline-secondary">{{ page }}</button>
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}" style="color: black;">
+                {{ page }}
             </a>
             
         </li>
@@ -138,24 +138,26 @@
 
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">
-                <button type="button" class="btn btn-outline-secondary">다음</button>
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}" style="color: black;">
+                다음
             </a>
         </li>
         {% else %}
         <li class="page-item disabled">
             <a class="page-link" href="#">
-                <button type="button" class="btn btn-outline-secondary">다음</button>
+                다음
             </a>
         </li>
         {% endif %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}">
-                <button type="button" class="btn btn-outline-secondary">마지막</button>
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}" style="color: black;">
+                마지막
             </a>
         </li>
-        <span>{{page_obj}}</span>
     </ul>
+    </div>
+    <div style="height:38px;">
+        <span class="page-obj">{{page_obj}}</span>
     </div>
     {% endif %}
 
