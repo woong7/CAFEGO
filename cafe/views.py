@@ -206,12 +206,14 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
+
     cafes = CafeList.objects.all().order_by('location_x')
     cafe_list = serializers.serialize('json', cafes)
     ctx = {
         'data': cafe_list,
     }
     return render(request, 'cafe/cafe_map.html', ctx)
+
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -336,11 +338,14 @@ def cafe_delete(request, pk):
     return redirect('cafe:cafe_list')
 
 def enroll_cafe_from_map(request, pk):
+
     cafe = CafeList.objects.get(pk=pk)
+    next = request.GET['next']
     ctx = {
         'cafe': cafe,
+        "next": next
     }
-    return render(request, 'cafe/enroll_cafe_from_map.html', ctx)
+    return render(request, 'cafe/enroll_cafe_from_map.html', ctx) 
 
 @csrf_exempt
 def enroll_cafe(request):
