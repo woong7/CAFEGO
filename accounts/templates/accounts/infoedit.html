@@ -28,22 +28,22 @@
                 <div class="input-div">
                     <div class="i table"><i class="fas fa-user-alt icon"></i></div>
                     <div class="table">
-                        <label for="id_username">아이디</label>
-                        <input class="input" type="text" name="username" maxlength="150" autofocus="" required="" id="id_username">
+                        <label for="id_username"></label>
+                        <input class="input" type="text" name="username" value="{{user.username}}" disabled maxlength="150" autofocus="" required="" id="id_username">
                     </div>    
                 </div>
                 <div class="input-div">
                     <div class="i table"><i class="fas fa-envelope icon"></i></div>
                     <div class="table">
-                        <label for="id_email">이메일</label>
-                        <input class="input" type="email" name="email" maxlength="254" id="id_email">
+                        <label for="id_email"></label>
+                        <input class="input" type="email" name="email" value="{{user.email}}" disabled maxlength="254" id="id_email">
                     </div>    
                 </div>
                 <div class="input-div">
                     <div class="i table"><i class="fas fa-address-book icon"></i></div>
                     <div class="table">
-                        <label for="id_nickname">닉네임</label>
-                        <input class="input" type="text" name="nickname" maxlength="150" required="" id="id_nickname">
+                        <label for="id_nickname"></label>
+                        <input class="input" type="text" name="nickname" value="{{user.nickname}}" disabled maxlength="150" required="" id="id_nickname">
                     </div>
                 </div>
                 <div class="input-div">

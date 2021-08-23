@@ -1,47 +1,7 @@
-@font-face {
-    font-family: 'Cafe24Danjunghae';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Danjunghae.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+body {
+    height: 100vh;
+    background-color: #F0D9CE;
 }
-
-@font-face {
-    font-family: 'RIDIBatang';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'twaysky';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-  font-family: 'HSGyoulnoonkot';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/HSGyoulnoonkot.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-    font-family: 'Wemakeprice-Bold';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Wemakeprice-Bold.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-/* .color {
-    #F0A986 
-    #B3A29A
-    #A3735B
-    #F0D9CE /페이지 배경색
-    #704F3F /페이지 글자색
-    #573728
-    #1f5753
-    #5ba39e
-} */
 
 /* 버튼 */
 .button {
