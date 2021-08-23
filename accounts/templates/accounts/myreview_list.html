@@ -15,6 +15,11 @@
         <div class="page_title">
             <span>나의 리뷰 목록</span>
         </div>
+        <div>
+            <button class="exit-button" onclick="location.href='{% url 'mypage' request.user.id %}'">
+                X
+            </button>
+        </div>
         <table class="table mt-3">
         <thead>
             <tr class="table-title">
