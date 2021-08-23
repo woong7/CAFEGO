@@ -73,10 +73,22 @@
     font-style: normal;
 }
 
+div {
+    font-family: Pretendard-Regular;
+}
+
+span {
+    font-family: Pretendard-Regular;
+}
+
+nav {
+    height: 6.7vh;
+}
+
 #header-logo-image {
     display: inline-block;
     width: 120px;
-    height: 39px;
+    height: 40px;
     /*background: url(../../media/static/image/logo.png) no-repeat;
     background-size: 120px;*/
     font-family: HSGyoulnoonkot;
