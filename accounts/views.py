@@ -144,15 +144,15 @@ def user_cafe_map(request):
 
 def rank_list(request):
     now = datetime.today() #오늘
-    this_month = now.month-1
-    last_month_first = datetime(now.year, now.month-1, 1) #오늘을 기준으로 저번달 첫 시간
+    this_month = now.month
+    last_month_first = datetime(now.year, now.month, 1) #오늘을 기준으로 저번달 첫 시간
     this_month_first = last_month_first + relativedelta.relativedelta(months=1)
     last_month_last = this_month_first - timedelta(seconds=1) #저번달 막 시간
     
     #test용TODO:나중에 지우깅!!
-    August = datetime(now.year, now.month, 1)
-    September = August + relativedelta.relativedelta(months=1)
-    August_fin = September - timedelta(seconds=1)
+    # August = datetime(now.year, now.month, 1)
+    # September = August + relativedelta.relativedelta(months=1)
+    # August_fin = September - timedelta(seconds=1)
     
     ####################  A_총 방문 랭킹  ####################
     A_users=User.objects.all().exclude(total_visit=0).order_by('-total_visit')
@@ -170,8 +170,6 @@ def rank_list(request):
     
     ####################  B_한 달 방문 랭킹  ####################
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
-    # B_users_js=json.dumps([user.json() for user in B_users])
-    # B_users_js=json.dumps(list(B_users), cls=DjangoJSONEncoder)
     B_me=User.objects.get(username=request.user)
 
     if B_me in B_users:
@@ -182,7 +180,7 @@ def rank_list(request):
         B_my_grade = 0
 
     ####################  C_한 달 카페 종류 랭킹  ####################
-    C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin)))
+    C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(last_month_first), datetime.date(last_month_last)))
     C_monthly_kinds_dict = {}
     for i in C_monthly_visited_cafe:
         if i.user not in C_monthly_kinds_dict.keys():#키 리스트
