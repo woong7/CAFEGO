@@ -83,7 +83,7 @@ def comment_write(request):
         boolDayOrNight = '오후'
     else:
         boolDayOrNight = '오전'   
-    timeString = now.strftime('%Y년 %#m월 %#d일 %#I:%M '+boolDayOrNight)
+    timeString = now.strftime('%Y년 X%m월 X%d일 X%I:%M '+boolDayOrNight).replace('X0','X').replace('X','')
 
     notification = Notification.objects.create(notification_type=2, from_user=request.user, to_user=review.username, comment=comment)
     notification.save()
@@ -352,7 +352,8 @@ def enroll_cafe(request):
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
         this_cafe = CafeList.objects.get(name=str_cafename)
-        if req_post.__getitem__('beverage'):
+        try:
+            req_post.__getitem__('beverage')
             
             str_drinkname = req_post.__getitem__('beverage')
 
@@ -389,7 +390,7 @@ def enroll_cafe(request):
             v_cafe.save()
             next = request.POST['next']
             return redirect(next)
-        else:
+        except:
             next = request.POST['next']
             return render(request, 'cafe/enroll_cafe_from_map.html', {'cafe':this_cafe, 'next': next, 'error': '음료를 하나 선택해주세요!'})
     else:
