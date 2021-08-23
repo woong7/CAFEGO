@@ -38,6 +38,22 @@ def signup(request):
     #실패시 안넘어감
     return render(request, 'accounts/signup.html')
 
+def login(request):
+    if request.method == "POST":
+        username = request.POST["login"]
+        password = request.POST["password"]
+        # name이 next인 input으로 받은 url 값 
+        user = auth.authenticate(request, username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('mypage', user.pk)
+            # next로 redirect 
+        else:
+            return render(request, 'accounts/login.html', {'error': '아이디 혹은 비밀번호가 틀립니다'})
+    else:
+        return render(request, 'accounts/login.html')
+
+
 
 ##allauth 써서 필요 없나??
 @login_required
@@ -62,7 +78,7 @@ def home(request):
     return render(request,'accounts/home.html', ctx)
 
 def create_admin(request):
-    User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True, is_active=True, city="서울특별시", gu="관악구", dong="신림동")
+    User.objects.create(username="admin", email="pirocafego@gmail.com", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="관리자", is_admin=True, is_active=True, city="서울특별시", gu="관악구", dong="신림동")
     return redirect('home')
 
 def badge_list(request, pk):
@@ -859,6 +875,7 @@ def this_cafe_map(request, pk):
         'cafe_address':cafe.address,
     }
     return render(request, 'accounts/cafe_map.html', ctx)
+    
 
 ##알림 기능
 class CommentNotification(View):
@@ -930,7 +947,7 @@ class UserRegistrationView(CreateView):
     model = get_user_model()
     form_class = UserRegistrationForm
     template_name="accounts/signup.html"
-    success_url = '/account/login/'
+    success_url = '/login/'
     verify_url = '/verify/' 
     token_generator = default_token_generator
 
@@ -953,7 +970,7 @@ from django.views.generic.base import TemplateView
 class UserVerificationView(TemplateView):
     
     model = get_user_model()
-    redirect_url = '/account/login/'
+    redirect_url = '/login/'
     token_generator = default_token_generator
 
     def get(self, request, *args, **kwargs):

@@ -160,7 +160,7 @@
                         <div class="overlay-cafe-address">${place.fields.address}</div>
                         <div class="overlay-buttons">
                             <button class="overlay-btn" onClick="location.href='../review_list/${place.pk}'">리뷰 보기</button>
-                            <button class="overlay-btn" onClick="location.href='../enroll_cafe_from_map/${place.pk}'">방문 추가</button>
+                            <button class="overlay-btn" onClick="location.href='../enroll_cafe_from_map/${place.pk}?next={{request.path}}'">방문 추가</button>
                         </div>
                     </div>
                 </div>

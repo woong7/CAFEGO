@@ -155,7 +155,7 @@
                         <div class="overlay-buttons">
                             <button class="overlay-btn" onClick="location.href='../cafe/review_list/${place[0].pk}'">리뷰 보기</button>
                             <button class="overlay-btn" onClick="location.href='../cafe/review_create/${place[0].pk}'">리뷰 작성</button>
-                            <button class="overlay-btn" onClick="location.href='../cafe/enroll_cafe_from_map/${place[0].pk}'">방문 추가</button>
+                            <button class="overlay-btn" onClick="location.href='../cafe/enroll_cafe_from_map/${place[0].pk}?next={{request.path}}'">방문 추가</button>
                         </div>
                     </div>
                 </div>
