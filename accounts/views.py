@@ -361,7 +361,7 @@ def infoupdate(request, pk):
         user_change_form = MyCustomForm(request.POST, request.FILES, instance=request.user)
         if user_change_form.is_valid():
             user_change_form.save(request)
-            return redirect('mypage', request.user.pk)
+        return redirect('mypage', request.user.pk)
     
     else:
 	    user_change_form = MyCustomForm(instance = request.user)
