@@ -134,14 +134,6 @@
     }
 }
 
-.logo { 
-    color: white;
-    margin-top: 1.5rem;
-    font-size: 135px; 
-    border: 2px black; 
-    font-family: 'HSGyoulnoonkot';
-    text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;
-}
 
 .img img {
     width: 90%;

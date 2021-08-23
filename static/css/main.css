@@ -364,36 +364,8 @@ div.container4 p {
 
 
 
-/* -----------------------main 1st--------------------- */
-/* .color {
-  #F0A986
-  #d58e6f
-  #a56768
-  #743957 
-  #d38842
-  #d5b054
-  #ececee
-  #dcd3cc
-  #F0D9CE
-  #B3A29A
-  #998884
-  #bb937e
-  #A3735B /페이지 배경색
-  #915549
-  #704F3F /페이지 글자색
-  #573728
-  #362f37
-  #1f5753
-  #5ba39e
-  #6e7a67
-} */
+/* -----------------------main 2nd--------------------- */
 
-@font-face { /*  */
-  font-family: 'Cafe24Ssurround';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
 @font-face {
   font-family: 'EliceDigitalBaeum_Bold';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/EliceDigitalBaeum_Bold.woff') format('woff');
@@ -431,7 +403,7 @@ div.container4 p {
   text-indent:0; 
   margin-top: 1rem;
   font-family: EliceDigitalBaeum_Bold;
-  color: #F0D9CE;
+  color: #e0c4b8;
   text-shadow: 2px 2px 2px #704F3F;
 }
 
@@ -443,7 +415,7 @@ div.container4 p {
   text-indent:0; 
   margin-top: 1rem;
   font-family: EliceDigitalBaeum_Bold;
-  color: #704F3F;
+  color: #5a4236;
   text-shadow: 2px 2px 2px #d58e6f;
 }
 
@@ -463,4 +435,58 @@ div.container4 p {
   font-size: 1.2em;
   font-family: Wemakeprice-Bold;
   color: #704F3F;
+}
+
+/* -----------------------main 3rd--------------------- */
+/* .color {
+  #F0A986
+  #d58e6f
+  #a56768
+  #743957 
+  #d38842
+  #d5b054
+  #ececee
+  #dcd3cc
+  #F0D9CE
+  #B3A29A
+  #998884
+  #bb937e
+  #A3735B /페이지 배경색
+  #915549
+  #704F3F /페이지 글자색
+  #573728
+  #362f37
+  #1f5753
+  #5ba39e
+  #6e7a67
+} */
+
+.m3-wrap {
+  position: relative;
+}
+
+#m3-img {
+  position: absolute;
+  left: 20%;
+  top: 35%;
+  border-radius: 50%;
+  background: yellow;
+  width:25%;
+  height: 50%;
+  opacity: 0;
+}
+
+/* 이 클래스가 있으면 애니 작동 */
+#m3-img.m3-animate {
+  transform: translateY(-5rem);
+}
+
+.m3-animate {
+  animation: m3-fadeIn .5s forwards ease-in;
+  transition: .5s ease-in-out;
+}
+
+@keyframes m3-fadeIn{
+  0% {opacity: 0;}
+  100% {opacity: 1;}
 }
