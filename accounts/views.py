@@ -618,7 +618,11 @@ def visited_register(request):
     if request.method == 'POST':
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
-        str_drinkname = req_post.__getitem__('beverage')
+        try:
+            str_drinkname = req_post.__getitem__('beverage')
+        except:
+            messages.error(request, '음료를 하나 선택해주세요!')
+            return redirect('enroll_visited_cafe')
 
         user = User.objects.get(username=request.user)
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
