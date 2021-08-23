@@ -46,6 +46,13 @@
 }
 
 @font-face {
+    font-family: 'NEXON Lv2 Gothic Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv2 Gothic Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
     font-family: 'Wemakeprice-Bold';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Wemakeprice-Bold.woff') format('woff');
     font-weight: normal;
@@ -73,10 +80,27 @@
     font-style: normal;
 }
 
+div {
+    font-family: Pretendard-Regular;
+}
+
+span {
+    font-family: Pretendard-Regular;
+}
+
+nav {
+    height: 6.7vh;
+}
+
+.navbar-collapse .nav-item {
+    max-width: 130px;
+    background-color: #725a4e;
+}
+
 #header-logo-image {
     display: inline-block;
     width: 120px;
-    height: 39px;
+    height: 40px;
     /*background: url(../../media/static/image/logo.png) no-repeat;
     background-size: 120px;*/
     font-family: HSGyoulnoonkot;
@@ -121,7 +145,8 @@
 
 a {
     text-decoration: none;
-    color: #553d31;
+    /* color: #1a1715; */
+    color: black;
     font-weight: bold;
 }
 
@@ -135,14 +160,6 @@ ul {
 
 .nav-item-hover:hover {
     color: #f0a986;
-}
-
-.bg-cafego-blue {
-    background-color: #386ABB;
-}
-
-.bg-cafego-yellow {
-    background-color: #FFCC03;
 }
 
 /*notification!*/
@@ -178,7 +195,8 @@ ul {
 }
 
 .dropdown-content a:hover {
-	background-color: #ddd;
+	/* background-color: #ddd; */
+    color : #704F3F;
 }
 
 .dropdown-item-parent {
@@ -222,7 +240,7 @@ ul {
 
 .table-title {
     width: 100%;
-    font-family: NEXON Lv1 Gothic OTF;
+    font-family: NEXON Lv2 Gothic Bold;
     font-weight: bold;
     font-size: 1.2em;
     color: #573728;

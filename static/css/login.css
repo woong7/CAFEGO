@@ -1,34 +1,7 @@
-@font-face {
-    font-family: 'Cafe24Danjunghae';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Danjunghae.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+body {
+    height: 100vh;
+    background-color: #F0D9CE;
 }
-
-@font-face {
-    font-family: 'RIDIBatang';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'twaysky';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* .color {
-    #F0A986 
-    #B3A29A
-    #A3735B
-    #F0D9CE /페이지 배경색
-    #704F3F /페이지 글자색
-    #573728
-    #1f5753
-    #5ba39e
-} */
 
 /* 버튼 */
 .button {
@@ -51,6 +24,8 @@
     margin: 0;
     box-sizing: border-box;
 }
+
+
 
 /* page 기본내용 */
 #login_page {
@@ -81,7 +56,7 @@
 
 .container {
     width: 100vw;
-    height: 650px;
+    height: 100vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem;
@@ -132,9 +107,9 @@ form {
 
 .login-container {
     display: flex;
-    align-items: flex-start;
     text-align: center;
     justify-content: space-around;
+    align-items: center;
     z-index: 5;
 }
 
@@ -214,7 +189,7 @@ form {
     transition: .3s;
     font-size: 1.2rem;
     font-weight: bold;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
     color: #B3A29A;
 }
 
@@ -247,7 +222,7 @@ form {
     left: 15%;
     font-size: 15px;
     font-weight: lighter;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
     color: #B3A29A;
 }
 
@@ -314,6 +289,8 @@ form {
     transition: .3s;
     font-family: RIDIBatang;
     color: #704F3F;
+    font-weight: lighter;
+    cursor: pointer;
 }
 
 .findPw:hover {
@@ -323,9 +300,41 @@ form {
 .social-btn {
     font-size: 11px;
     font-weight: lighter;
-    font-family: twaysky;
+    font-family: Wemakeprice-Bold;
+}
+.social-btn:hover {
+    color: white;
 }
 
+.naver {
+    color: #00B818; 
+    border-color: #00B818;
+}
+
+.naver:hover {
+    color: #fff;
+    background-color: #00B818;
+}
+
+.kakao {
+    color: #FBE300; 
+    border-color: #FBE300;
+}
+
+.kakao:hover {
+    color: black;
+    background-color: #FBE300;
+}
+
+.google {
+    color : #DC4B29;
+    border-color: #DC4B29;
+}
+
+.google:hover {
+    color: #fff;
+    background-color: #DC4B29;
+}
 /* 반응형 */
 @media screen and (max-width: 1100px){
 	.container{

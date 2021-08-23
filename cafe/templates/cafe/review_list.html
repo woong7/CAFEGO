@@ -150,7 +150,7 @@
                                         <div class="col-4" style="font-size: 13px;">{{comment.created_at}}</div>
                                         {% if comment.username == user %}
                                         <div class="col-2">
-                                            <button class="main-btn" style="margin-left: 29px;" onclick="commentDelete('{{comment.id}}');">삭제</button>
+                                            <button class="main-btn" style="margin-left: 27px;" onclick="commentDelete('{{comment.id}}');">삭제</button>
                                         </div>
                                         {% endif %}
                                     </div>
@@ -159,7 +159,7 @@
                             {% endif %}
                         {% endfor %}
                         </div>
-                        <input class="input-{{reviews.id}} comment-write" type="text" placeholder="댓글 달기"/>
+                        <input class="input-{{reviews.id}} comment-write" type="text" style="width:90%" placeholder="댓글 달기" value="" onkeyup="if(window.event.keyCode==13){commentWrite('{{reviews.id}}')}"/>
                         <button class="main-reverse-btn" onclick="commentWrite('{{reviews.id}}');">게시</button>
                     </details>        
                 <br/>
@@ -167,7 +167,7 @@
         </article>
     {% else %}
     <div class="cafe_info position-relative overflow-hidden m-0 text-center" style="padding: 1rem;">
-        <span>아직 등록된 리뷰가 없습니다. 방문카페 등록 후 첫번째 리뷰의 주인공이 되어 보세요!</span>
+        <span>아직 등록된 리뷰가 없어요😭😭  &nbsp; 방문카페 등록 후 첫번째 리뷰의 주인공이 되어 보세요!</span>
     <hr/>
     {% endif %}
     </div>
@@ -178,6 +178,11 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
 <script type="text/javascript">
+    //댓글 달때 value 초기화
+    function valueReset(review_id) {
+        $(`.input-${review_id}`).val("");
+    }
+
     // 댓글 작성
     const requestWrite = new XMLHttpRequest();
 
@@ -195,9 +200,9 @@
     const writeResponse = () => {
         if(requestWrite.status < 400) {
             const {review_id, comment_user, content, comment_id, username, comment_time, notification} = JSON.parse(requestWrite.response);
-            console.log(content);
             const comments = document.querySelector(`.comments-${review_id}`);
             const element = document.querySelector(`.input-${review_id}`);
+            valueReset(review_id);
             comments.innerHTML += `
                 <div class="comment-${comment_id} my-1">
                     <div class="row align-items-center">

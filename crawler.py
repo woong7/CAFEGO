@@ -69,12 +69,12 @@ def make_map(dfs):
 
 
 keyword='카페'
-start_x=126.94
-start_y=37.54
+start_x=126.75
+start_y=37.43
 next_x=0.01
 next_y=0.01
-num_x=1
-num_y=1
+num_x=44
+num_y=28
 
 
 overlapped_result= overlapped_data(keyword, start_x, start_y, next_x, next_y, num_x, num_y)
@@ -101,6 +101,6 @@ for place in results:
 print('total_result_number = ' , len(df))
 
 print(df)
-df.to_csv("crawledminor.csv", mode='w')
+df.to_csv("crawled.csv", mode='w')
 
 #make_map(df)
