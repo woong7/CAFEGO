@@ -152,7 +152,7 @@
                     </button>
                 </div>
             
-            
+            {% if owner.is_active %}
                 {% if user.id == owner.id %}
                 <div class="col text-center">
                     <button class="button col-4" style="width: 150px; height: 50px; font-size:20px;" onClick="location.href='{% url 'info_edit' user.pk %}'">개인정보 수정</button>
@@ -176,6 +176,7 @@
                         <button class="button col-4" style="width: 150px; height: 50px; font-size:20px;" onClick="location.href='{% url 'user_cafe_map' %}'">나의 카페지도</button>
                     </div>
                 {% endif %}
+            {% endif %}
             </div>
         </div>
         

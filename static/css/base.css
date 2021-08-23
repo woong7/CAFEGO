@@ -46,6 +46,13 @@
 }
 
 @font-face {
+    font-family: 'NEXON Lv2 Gothic Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv2 Gothic Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
     font-family: 'Wemakeprice-Bold';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/Wemakeprice-Bold.woff') format('woff');
     font-weight: normal;
@@ -133,7 +140,8 @@ nav {
 
 a {
     text-decoration: none;
-    color: #553d31;
+    /* color: #1a1715; */
+    color: black;
     font-weight: bold;
 }
 
@@ -190,7 +198,8 @@ ul {
 }
 
 .dropdown-content a:hover {
-	background-color: #ddd;
+	/* background-color: #ddd; */
+    color : #704F3F;
 }
 
 .dropdown-item-parent {
@@ -234,7 +243,7 @@ ul {
 
 .table-title {
     width: 100%;
-    font-family: NEXON Lv1 Gothic OTF;
+    font-family: NEXON Lv2 Gothic Bold;
     font-weight: bold;
     font-size: 1.2em;
     color: #573728;

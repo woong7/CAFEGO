@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="container review-content d-flex align-items-center justify-content-center" style="height:93.3vh;">
     <div class="cafe-info shadow-sm card" style="height:60vh; width:40vw;">
         <form action="{% url 'cafe:enroll_cafe' %}" method='post' class="my-auto">
@@ -21,7 +22,11 @@
                         <span style="font-size: 30px;">{{cafe.name}}</span>
                     </div>
                 </div>
-            
+                {% if error %}
+                    <div style="color:red;">
+                        {{error}} 
+                    </div>
+                {% endif %}
                 <div class="d-flex mt-5 drink-list" style="flex-direction: column;">
                     <p style="font-size: 20px; text-align: center; margin-bottom:7%;">마신 음료를 체크해주세요!</p>
                     <div>
@@ -64,6 +69,7 @@
                 </div>
                 
                 <div class="mt-5 mb-3 d-flex justify-content-center">
+                    <input type="hidden" name="next" value="{{ next }}">
                     <button type="submit" id="submit_btn_{{cafe.id}}" class="main-reverse-btn">등록하기</button>
                 </div>
             </div>
