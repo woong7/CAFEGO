@@ -1,17 +1,9 @@
 @font-face {
-  font-family: 'Cafe24Oneprettynight';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Oneprettynight.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
   font-family: 'Cafe24SsurroundAir';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
-
 
 @font-face {
   font-family: 'HSGyoulnoonkot';
@@ -25,7 +17,6 @@
   font-weight: normal;
   font-style: normal;
 }
-
 @font-face {
   font-family: 'JoongnajocheL-KSCpc-EUC-H';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_13@1.0/JoongnajocheL-KSCpc-EUC-H.woff') format('woff');
@@ -38,17 +29,6 @@
   font-weight: normal;
   font-style: normal;
 }
-/* .color {
-  #F0A986 
-  #B3A29A
-  #A3735B
-  #F0D9CE /페이지 배경색
-  #704F3F /페이지 글자색
-  #573728
-  #1f5753
-  #5ba39e
-} */
-
 /* 버튼 */
 .button {
   margin-top: 10px;
@@ -64,11 +44,6 @@
 .button:hover {
   background-color: #704F3F;
   color: white;
-}
-
-
-h1 {
-    color : #386ABB;
 }
 
 a {
@@ -89,33 +64,33 @@ div.container4 {
     justify-content: center }
 
 div.container4 p {
-    margin: 0 }
+    margin: 0 
+}
 
 .layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        text-align: center
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center
 }
 .layer .content {
-        display: inline-block;
-        background: #f00;
-        vertical-align: middle;
+  display: inline-block;
+  background: #f00;
+  vertical-align: middle;
 }
 .layer:before {
-        content: '';
-        display: inline-block;
-        width: 0;
-        height: 100%;
-        vertical-align: middle;
-        margin-right: -4px;
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
 }
 .bg-darkblue {
     background-color: #386ABB;
 }
-
 
 .ptb-12 {
     padding-top: 19rem;
@@ -241,8 +216,8 @@ div.container4 p {
   left: 48%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 35rem;
-  height: 35rem;
+  width: 36rem;
+  height: 36rem;
   border-radius: 50%; 
   z-index: 1;
   background-image: url(../../static/image/main_plate.jpg);
@@ -254,8 +229,8 @@ div.container4 p {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 35rem;
-  height: 35rem;
+  width: 37rem;
+  height: 37rem;
   background-color: transparent;
   z-index: 2;
   animation:show-img 1s ease;
@@ -264,22 +239,27 @@ div.container4 p {
 
 @keyframes show-img {
   0% {display: none;}
-  20% {width: 7rem; height: 7rem;}
-  40% {width: 14rem; height: 14rem;}
-  60% {width: 21rem; height: 21rem;}
-  80% {width: 29rem;height: 29rem; }
-  100% {width: 35rem; height: 35rem;}
+  10% {width: 4rem; height: 4rem;}
+  20% {width: 8rem; height: 8rem;}
+  30% {width: 12rem; height: 12rem;}
+  40% {width: 16rem; height: 16rem;}
+  50% {width: 20rem; height: 20rem;}
+  60% {width: 24rem; height: 24rem;}
+  70% {width: 28rem; height: 28rem;}
+  80% {width: 31rem;height: 31rem; }
+  90% {width: 34rem;height: 34rem; }
+  100% {width: 37rem; height: 37rem;}
 }
 
 .m1_mug img {
   max-width: none;
   width: 100%;
-  animation:rolling01 6s linear infinite; 
+  animation:rolling 6s linear infinite; 
   animation-delay: 2s;
   transform-origin: 50% 50%;
 }
 
-@keyframes rolling01 { 
+@keyframes rolling { 
   100% {transform:rotate(360deg);}
 }
 
@@ -291,6 +271,7 @@ div.container4 p {
   left: 35%;
   top: 30%;
   width: 30%;
+  margin-top: 1.8rem;
 }
 
 .m1_logo { 
@@ -300,30 +281,43 @@ div.container4 p {
   font-family: 'HSGyoulnoonkot';
   text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;
   animation: show-logo 2s ease;
-  /* animation-delay: 3s; */
-  /* opacity: 0; */
+
+  transition: transform 2.5s,background-color .5s,color .5s;
+  transform: translateY(50px);
+  -webkit-transition: -webkit-transform 2.5s,background-color .5s,color .5s;
+  -webkit-transform: translateY(50px);
+}
+
+.action .m1_logo {
+transform: translateY(0);
+-webkit-transform: translateY(0);
 }
 
 @keyframes show-logo {
-  0% {display: none;}
-  20% {display: 0.2;}
-  40% {display: 0.4;}
-  60% {opacity: 0.6;}
+  0% {opacity: 0;}
+  20% {opacity: 0;}
+  40% {opacity: 0.2;}
+  50% {opacity: 0.4;}
+  60% {opacity: 0.5;}
+  70% {opacity: 0.7;}
   80% {opacity: 0.8;}
+  90% {opacity: 0.9;}
   100% {opacity: 1;}
 }
-
 
 @keyframes show-ctx {
-  0% {display: none;}
-  20% {display: 0.2;}
-  40% {display: 0.4;}
-  60% {opacity: 0.6;}
-  80% {opacity: 0.8;}
+  0% {opacity: 0;}
+  20% {opacity: 0;}
+  40% {opacity: 0;}
+  50% {opacity: 0;}
+  60% {opacity: 0.2;}
+  70% {opacity: 0.4;}
+  80% {opacity: 0.6;}
+  90% {opacity: 0.8;}
   100% {opacity: 1;}
 }
 
-.m1_ctx {
+.m1_info {
   position: absolute;
   margin-top: 1rem;
   font-size: 1.5em;
@@ -332,7 +326,6 @@ div.container4 p {
   color: #F0D9CE; 
   text-shadow: 1px 1px 1px #573728;
   animation: show-ctx 2s ease;
-  /* animation-delay: 3s; */
 }
 
 .startbtn {
@@ -340,12 +333,11 @@ div.container4 p {
   background-color: white;
   border-radius: 10px;
   padding: 6px 7px 2px;
-  font-size: 1.1em;
+  font-size: 1.5em;
   font-family: Wemakeprice-Bold;
   color: #704F3F;
   font-weight: bolder;
   animation: show-ctx 2s ease;
-  /* animation-delay: 3s; */
 }
 
 .startbtn:hover {
@@ -353,33 +345,26 @@ div.container4 p {
   color: white;
 }
 
-.action .desc .mainbtn {
-  transform: translateY(0);
-  -webkit-transform: translateY(0);
-}
-
 
 /* -----------------------main 2nd--------------------- */
-
 @font-face {
   font-family: 'EliceDigitalBaeum_Bold';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/EliceDigitalBaeum_Bold.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
-@font-face {
-  font-family: 'IM_Hyemin-Bold';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-.m2-back {
+.m2-even-back {
   background-image:url(../../../static/image/coffee-main-1.jpeg); 
   position: absolute; 
   width:100%; 
   height: 100%; 
   background-position: 40%; 
-  opacity: 0.5;
+}
+
+[class*='even-back'] {
+  opacity: 0.9;
+  filter: blur(5px);
+  transform: scale(1.1);
 }
 
 [class*='num'] {
@@ -414,42 +399,45 @@ div.container4 p {
   text-shadow: 2px 2px 2px #d58e6f;
 }
 
-.m2-ctx {
-  width: 415px; 
-  background: white;
-  opacity: .5;
-  border-radius: 5px;
-  font-family: IM_Hyemin-Bold;
+[class*='ctx'] {
+  width: 40vw;
 }
 
-.m2-btn {
-  border: 2px solid #704F3F;
-  background-color: white;
-  border-radius: 10px;
-  padding: 6px 7px 2px;
-  font-size: 1.2em;
-  font-family: Wemakeprice-Bold;
-  color: #704F3F;
+@font-face {
+  font-family: 'Cafe24SsurroundAir';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+.desc {
+  font-family: Cafe24SsurroundAir;
 }
 
 /* -----------------------main 3rd--------------------- */
 .mainbtn {
-  border: 2px solid #573728;
-  border-radius: 10px;
-  transition: transform 3s,background-color .5s,color .5s;
-  transform: translateY(70px);
-  -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
-  -webkit-transform: translateY(70px);
   width: 112px;
   height: 42px;
   display: inline-block;
   overflow: hidden;
+  border: 2px solid #573728;
+  background-color: #fff;
+  border-radius: 10px;
+  
   font-size: 17px;
   letter-spacing: -.5px;
   line-height: 40px;
   color: #573728;
-  background-color: #fff;
   text-align: center;
+
+  transition: transform 3s,background-color .5s,color .5s;
+  transform: translateY(70px);
+  -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+  -webkit-transform: translateY(70px);
+}
+
+.action .desc .mainbtn {
+  transform: translateY(0);
+  -webkit-transform: translateY(0);
 }
 
 .mainbtn:hover {
@@ -470,7 +458,6 @@ div.container4 p {
   font-family: JoongnajocheL-KSCpc-EUC-H;
   font-size: 19px;
   color: #333;
-
 }
 
 /* .color {
@@ -510,32 +497,179 @@ div.container4 p {
   top: 30%;
 }
 
-.m3-wrap {
+.m3-wrap, .m4-wrap, .m5-wrap, .m6-wrap {
   position: relative;
 }
 
-#m3-img {
+[id*='img-wrap'] {
   position: absolute;
-  left: 20%;
-  top: 35%;
   border-radius: 50%;
-  background: yellow;
-  width:25%;
-  height: 50%;
-  opacity: 0;
+  width: 25rem;
+  height: 25rem;
 }
 
-/* 이 클래스가 있으면 애니 작동 */
-#m3-img.m3-animate {
-  transform: translateY(-5rem);
+#m3-img-wrap, #m5-img-wrap {
+  left: 21%;
+  top: 16%;
 }
 
-.m3-animate {
-  animation: m3-fadeIn .5s forwards ease-in;
-  transition: .5s ease-in-out;
+#m4-img-wrap, #m6-img-wrap {
+  left: 52%;
+  top: 27%;
+  z-index: 1;
 }
 
-@keyframes m3-fadeIn{
-  0% {opacity: 0;}
-  100% {opacity: 1;}
+[class*='mainimg'] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 1px 1px 3px gray;
+  transition: transform 3s,background-color .5s,color .5s;
+  transform: translateY(70px);
+  -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+  -webkit-transform: translateY(70px);
+  background-position: center;
+  background-size: cover;
+}
+
+.action [class*='mainimg'] {
+  transform: translateY(0);
+  -webkit-transform: translateY(0);
+}
+
+/* 아이콘+부가적인 ani */
+[class*='m3-icon-stop'] {
+  position: absolute;
+  width: 9%;
+  height: 9%;  
+  z-index: 10;
+}
+
+[class*='m3-icon-move'] {
+  position: absolute;
+  width: 7%;
+  height: 7%;  
+  z-index: 2;
+}
+
+.m3-circle {
+  position: absolute;
+  width: 95%;
+  height: 95%;    
+  left: -35%;
+  top: 30%;
+  z-index: -1;
+  border-radius: 50%;
+  border: 2px dashed #e7bba9;
+  animation:rolling 26s linear infinite; 
+}
+
+.m3-rollani-icon03 {
+  animation:rolling 6s linear infinite; 
+}
+.m3-rollani-icon04 {
+  animation:rolling 4s linear infinite; 
+}
+.m3-rollani-icon05 {
+  animation:rolling 5s linear infinite; 
+  animation-direction: reverse;
+}
+
+[class*='m3-showani'] {
+  transition: transform 3s,background-color .5s,color .5s;
+  transform: translateY(50px);
+  -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+  -webkit-transform: translateY(50px);
+}
+
+.action [class*='m3-showani'] {
+  transform: translateY(0);
+  -webkit-transform: translateY(0);
+}
+
+.action [class*='m3-icon-stop'] {
+  animation: jump 1.3s ease infinite;
+  animation-delay: 2s;
+}
+
+.m3-icon-stop01:hover {
+  animation: jump 1s ease;
+}
+
+@keyframes jump {
+  0% {transform: translateY(0px);}
+  10% {transform: translateY(0px);}
+  20% {transform: translateY(-3px);}
+  40% {transform: translateY(1px);}
+  60% {transform: translateY(-2px);}
+  60% {transform: translateY(1px);}
+  90% {transform: translateY(0px);}
+  100% {transform: translateY(0px);}
+}
+
+
+.m4-circle {
+  position: absolute;
+  width: 95%;
+  height: 95%;    
+  left: 34%;
+  top: -21%;
+  z-index: -1;
+  border-radius: 50%;
+  border: 2.5px dashed rgb(207, 207, 207);
+  animation:rolling 26s linear infinite; 
+}
+
+/* ----------------------main 5th-------------------- */
+
+[class*='m5-icon-move'] {
+  position: absolute;
+  width: 8%;
+  height: 8%;  
+  z-index: 2;
+}
+
+.m5-circle {
+  position: absolute;
+  width: 95%;
+  height: 95%;    
+  left: -35%;
+  top: 30%;
+  z-index: -1;
+  border-radius: 50%;
+  border: 2px dashed #5ba39e;
+  animation:rolling 26s linear infinite; 
+}
+
+.m5-rollani-icon01 {
+  animation:rolling 4s linear infinite; 
+}
+.m5-rollani-icon02 {
+  animation:rolling 5s linear infinite; 
+  animation-direction: reverse;
+}
+.m5-rollani-icon03 {
+  animation:rolling 6s linear infinite; 
+}
+
+
+/* ----------------------main 6th-------------------- */
+.m6-circle {
+  position: absolute;
+  width: 95%;
+  height: 95%;    
+  left: 34%;
+  top: -21%;
+  z-index: -1;
+  border-radius: 50%;
+  border: 2px dashed white;
+  animation:rolling 26s linear infinite; 
+}
+
+
+/* ----------------------footer-------------------- */
+.footer-item {
+  font-family: Wemakeprice-Bold;
+  font-size: 1.4rem;
 }
