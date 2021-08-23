@@ -219,7 +219,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 import os
 def init_data(request):
-    with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawled.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []
@@ -227,7 +227,7 @@ def init_data(request):
         st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i], s['ID'][i])
         ss.append(st)
     for i in range(len(s)):
-        CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3], id=ss[i][4])#id값 써도 될려낭
+        CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3], id=ss[i][4])
 
     Badge.objects.create(badge_name="카페홀릭", badge_image="../static/image/barista.png", badge_get="카페 총 누적 방문횟수 50회 이상") 
     Badge.objects.create(badge_name="사교왕", badge_image="../static/image/follower.png", badge_get="친구 수 20명 이상")    
@@ -237,8 +237,7 @@ def init_data(request):
     Badge.objects.create(badge_name="랭킹 2위", badge_image="../static/image/silver-cup.png", badge_get="누적 방문 랭킹 2위")    
     Badge.objects.create(badge_name="랭킹 3위", badge_image="../static/image/bronze-cup.png", badge_get="누적 방문 랭킹 3위")    
 
-    
-    return redirect('home')
+    return redirect('main')
 
 def sort_latest(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 

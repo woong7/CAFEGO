@@ -37,7 +37,7 @@
                     <td>{{ review.review_stars }}</td>
                     <td>{{ review.content }}</td>
                     <td>{{ review.created_at }}</td> 
-                    <td><button class="main-reverse-btn" onclick="location.href="{% url 'review_update' review.id %}"">리뷰수정</button></td>        
+                    <td><button class="main-reverse-btn" onclick="location.href='{% url 'review_update' review.id %}'">리뷰수정</button></td>        
                 </tr>
             {% endfor %}    
         </tbody>

@@ -24,6 +24,7 @@ import operator
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Count
 
 @csrf_protect 
 def signup(request):
@@ -60,24 +61,13 @@ def logout(request):
     return render(request, "accounts/main.html")
 
 def main(request):
-    return render(request, 'accounts/main.html')
-
-
-def home(request):
-    users = User.objects.all()
-    user = request.user
-    cafenum=CafeList.objects.all()
-    ctx = {
-        'cafenum':len(cafenum), 
-        'usernum':len(users), 
-    }
-    if user.is_authenticated:
-        ctx['total_visit'] = user.total_visit
-    return render(request,'accounts/home.html', ctx)
+    return render(request, 'accounts/main.html', {'usernum': User.objects.count(), 'cafenum':CafeList.objects.count()})
 
 def create_admin(request):
     User.objects.create(username="admin", email="pirocafego@gmail.com", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="관리자", is_admin=True, is_active=True, city="서울특별시", gu="관악구", dong="신림동")
-    return redirect('home')
+    user = auth.authenticate(request, username='admin', password='adminadmin')
+    auth.login(request, user)
+    return redirect('main')
 
 def badge_list(request, pk):
     user=User.objects.get(id=pk)

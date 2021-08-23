@@ -46,7 +46,14 @@
                     <div class="m1_group" style="background-color: transparent; color: white;">
                         <div class="m1_info">지도기반 카페 이용기록 웹서비스</div>
                         <span class="m1_logo">CAFEGO</span>
-
+                        {% if usernum == 0 %}
+                            <button class="btn btn-outline-primary" onClick="location.href='{%url 'create_admin' %}'">슈퍼유저 생성</button>
+                        {% endif %}
+                        {% if user.is_admin %}
+                            {% if cafenum == 0%}
+                                <p><a class="btn btn-outline-primary" href="{% url 'cafe:init_data' %}" >카페 데이터 받기(리셋 후 한번만 실행해 주세요!)</a></p>
+                            {% endif %}
+                        {% endif %}
                         {% if not user.is_authenticated %}
                             <button class="startbtn" onclick="location.href='/login'">Let's Go!</button>
                         {% endif %}

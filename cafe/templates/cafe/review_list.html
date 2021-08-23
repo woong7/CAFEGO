@@ -159,7 +159,7 @@
                             {% endif %}
                         {% endfor %}
                         </div>
-                        <input class="input-{{reviews.id}} comment-write" type="text" placeholder="댓글 달기" value="" onkeyup="if(window.event.keyCode==13){commentWrite('{{reviews.id}}')}"/>
+                        <input class="input-{{reviews.id}} comment-write" type="text" style="width:90%" placeholder="댓글 달기" value="" onkeyup="if(window.event.keyCode==13){commentWrite('{{reviews.id}}')}"/>
                         <button class="main-reverse-btn" onclick="commentWrite('{{reviews.id}}');">게시</button>
                     </details>        
                 <br/>
