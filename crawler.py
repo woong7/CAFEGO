@@ -101,6 +101,6 @@ for place in results:
 print('total_result_number = ' , len(df))
 
 print(df)
-df.to_csv("crawledagain.csv", mode='w')
+df.to_csv("crawled.csv", mode='w')
 
 #make_map(df)
