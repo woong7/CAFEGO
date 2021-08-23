@@ -302,7 +302,39 @@ form {
     font-weight: lighter;
     font-family: Wemakeprice-Bold;
 }
+.social-btn:hover {
+    color: white;
+}
 
+.naver {
+    color: #00B818; 
+    border-color: #00B818;
+}
+
+.naver:hover {
+    color: #fff;
+    background-color: #00B818;
+}
+
+.kakao {
+    color: #FBE300; 
+    border-color: #FBE300;
+}
+
+.kakao:hover {
+    color: black;
+    background-color: #FBE300;
+}
+
+.google {
+    color : #DC4B29;
+    border-color: #DC4B29;
+}
+
+.google:hover {
+    color: #fff;
+    background-color: #DC4B29;
+}
 /* 반응형 */
 @media screen and (max-width: 1100px){
 	.container{

@@ -145,3 +145,96 @@ select, input[type=text]{
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Playball&family=Roboto:ital,wght@1,100&display=swap');
+
+
+/* 체크박스 */
+.check-div {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.check_wrap {
+    display: flex;
+}
+
+.check {
+    position: absolute;
+    width: 20px;
+}
+
+.checkbox, .check_icon {
+    position: absolute;
+    left: 0px;
+    top: 5px; 
+}
+
+.check > input {
+    display: none;
+}
+
+.check_icon {
+    background-color: #F0D9CE;
+    width: 15px;
+    height: 15px;
+    border-radius: 2px;
+}
+
+.check_icon::before, .check_icon::after {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 0;
+    background-color: #B3A29A;
+    position: absolute;
+    transform-origin: left top;
+    border-radius: 1px;
+}
+
+.check_icon::before {
+    top: 7px;
+    left: 1px;
+    transform: rotate(-45deg);
+}
+
+.check_icon::after {
+    top: 12.5px;
+    left: 7.5px;
+    transform: rotate(-135deg);
+}
+
+.check input:checked ~ .check_icon::before {
+    height: 7px;
+    transition: all .3s ease;
+}
+
+.check input:checked ~ .check_icon::after { 
+    height: 15px;
+    transition: all .35s ease .3s;
+}
+/* ~: 동일 선상의 요소, 부모자식 아니고 동일 선상에 있는 태그들 */
+
+
+.check_label {
+    font-size: 17px;
+    font-weight: lighter;
+    font-family: Wemakeprice-Bold;
+    color: #704F3F;
+    text-align: left;
+    padding-left: 30px;
+}
+
+.button2 {
+    font-family: SDSamliphopangche_Outline;
+    color: black;
+    border: 2px solid #573728;
+    border-radius: 10px;
+    font-size: 20px;
+    color: #573728;
+    text-align: center;
+}
+
+.button2:hover {
+    background-color: #704F3F;
+    color: white;
+}
