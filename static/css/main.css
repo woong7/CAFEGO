@@ -66,11 +66,6 @@
   color: white;
 }
 
-
-h1 {
-    color : #386ABB;
-}
-
 a {
     width: 226px;
 }
@@ -264,10 +259,15 @@ div.container4 p {
 
 @keyframes show-img {
   0% {display: none;}
+  10% {width: 3rem; height: 3rem;}
   20% {width: 7rem; height: 7rem;}
+  30% {width: 10rem; height: 10rem;}
   40% {width: 14rem; height: 14rem;}
+  50% {width: 18rem; height: 18rem;}
   60% {width: 21rem; height: 21rem;}
+  70% {width: 25rem; height: 25rem;}
   80% {width: 29rem;height: 29rem; }
+  90% {width: 32rem;height: 32rem; }
   100% {width: 35rem; height: 35rem;}
 }
 
@@ -323,7 +323,7 @@ div.container4 p {
   100% {opacity: 1;}
 }
 
-.m1_ctx {
+.m1_info {
   position: absolute;
   margin-top: 1rem;
   font-size: 1.5em;
@@ -353,11 +353,6 @@ div.container4 p {
   color: white;
 }
 
-.action .desc .mainbtn {
-  transform: translateY(0);
-  -webkit-transform: translateY(0);
-}
-
 
 /* -----------------------main 2nd--------------------- */
 
@@ -373,13 +368,18 @@ div.container4 p {
   font-weight: normal;
   font-style: normal;
 }
-.m2-back {
+.m2-even-back {
   background-image:url(../../../static/image/coffee-main-1.jpeg); 
   position: absolute; 
   width:100%; 
   height: 100%; 
   background-position: 40%; 
-  opacity: 0.5;
+}
+
+[class*='even-back'] {
+  opacity: 0.9;
+  filter: blur(5px);
+  transform: scale(1.1);
 }
 
 [class*='num'] {
@@ -414,42 +414,46 @@ div.container4 p {
   text-shadow: 2px 2px 2px #d58e6f;
 }
 
-.m2-ctx {
-  width: 415px; 
-  background: white;
-  opacity: .5;
-  border-radius: 5px;
-  font-family: IM_Hyemin-Bold;
+
+[class*='ctx'] {
+  width: 40vw;
 }
 
-.m2-btn {
-  border: 2px solid #704F3F;
-  background-color: white;
-  border-radius: 10px;
-  padding: 6px 7px 2px;
-  font-size: 1.2em;
-  font-family: Wemakeprice-Bold;
-  color: #704F3F;
+@font-face {
+  font-family: 'Cafe24SsurroundAir';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+.desc {
+  font-family: Cafe24SsurroundAir;
 }
 
 /* -----------------------main 3rd--------------------- */
 .mainbtn {
-  border: 2px solid #573728;
-  border-radius: 10px;
-  transition: transform 3s,background-color .5s,color .5s;
-  transform: translateY(70px);
-  -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
-  -webkit-transform: translateY(70px);
   width: 112px;
   height: 42px;
   display: inline-block;
   overflow: hidden;
+  border: 2px solid #573728;
+  background-color: #fff;
+  border-radius: 10px;
+  
   font-size: 17px;
   letter-spacing: -.5px;
   line-height: 40px;
   color: #573728;
-  background-color: #fff;
   text-align: center;
+
+  transition: transform 3s,background-color .5s,color .5s;
+  transform: translateY(70px);
+  -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+  -webkit-transform: translateY(70px);
+}
+
+.action .desc .mainbtn {
+  transform: translateY(0);
+  -webkit-transform: translateY(0);
 }
 
 .mainbtn:hover {
@@ -470,7 +474,6 @@ div.container4 p {
   font-family: JoongnajocheL-KSCpc-EUC-H;
   font-size: 19px;
   color: #333;
-
 }
 
 /* .color {
@@ -510,32 +513,50 @@ div.container4 p {
   top: 30%;
 }
 
-.m3-wrap {
+.m3-wrap, .m4-wrap, .m5-wrap, .m6-wrap {
   position: relative;
 }
 
-#m3-img {
+[id*='img-wrap'] {
   position: absolute;
-  left: 20%;
-  top: 35%;
   border-radius: 50%;
-  background: yellow;
-  width:25%;
-  height: 50%;
-  opacity: 0;
+  width: 25rem;
+  height: 25rem;
 }
 
-/* 이 클래스가 있으면 애니 작동 */
-#m3-img.m3-animate {
-  transform: translateY(-5rem);
+#m3-img-wrap, #m5-img-wrap {
+  left: 20%;
+  top: 20%;
 }
 
-.m3-animate {
-  animation: m3-fadeIn .5s forwards ease-in;
-  transition: .5s ease-in-out;
+#m4-img-wrap, #m6-img-wrap {
+  left: 55%;
+  top: 20%;
+  z-index: 1;
 }
 
-@keyframes m3-fadeIn{
-  0% {opacity: 0;}
-  100% {opacity: 1;}
+[class*='mainimg'] {
+  position: absolute;
+  background: aqua;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transition: transform 3s,background-color .5s,color .5s;
+  transform: translateY(70px);
+  -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+  -webkit-transform: translateY(70px);
+  background-position: center;
+  background-size: cover;
+}
+
+
+.action [class*='mainimg'] {
+  transform: translateY(0);
+  -webkit-transform: translateY(0);
+}
+
+/* ----------------------footer-------------------- */
+.footer-item {
+  font-family: Wemakeprice-Bold;
+  font-size: 1.4rem;
 }
