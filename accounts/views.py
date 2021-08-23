@@ -142,12 +142,6 @@ def user_cafe_map(request):
     }
     return render(request, 'accounts/user_cafe_map.html', ctx)
 
-def user_detail(request):
-    return render(request, 'accounts/detail.html')
-
-def rank_detail(request):
-    return render(request, 'accounts/rank_detail.html')
-
 def rank_list(request):
     now = datetime.today() #오늘
     this_month = now.month-1
@@ -277,72 +271,6 @@ def rank_list(request):
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
-
-@login_required
-def enroll_home(request):
-    return render(request, "accounts/enroll_home.html")
-
-class EnrollNewCafeListView(ListView):
-    model = VisitedCafe
-    paginate_by = 10
-    template_name = 'accounts/enroll_new_cafe.html'
-    context_object_name = 'new_cafe_list'
-
-    #검색기능
-    def get_queryset(self):
-        search_keyword = self.request.GET.get('q', '')
-        search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).order_by('-id')
-        
-        names_to_exclude = [o.cafe for o in visited_cafe_list] 
-        new_cafe_list = CafeList.objects.exclude(name__in=names_to_exclude)
-
-        if search_keyword:
-            if len(search_keyword) > 1:
-                if search_type == 'name':
-                    search_cafe_list = new_cafe_list.filter(name__icontains=search_keyword)
-                elif search_type == 'address':
-                    search_cafe_list = new_cafe_list.filter(address__icontains=search_keyword)
-                elif search_type == 'all':
-                    search_cafe_list = new_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
-                return search_cafe_list
-            else:
-                messages.error(self.request, '2글자 이상 입력해주세요.')
-        return new_cafe_list
-
-    #하단부에 페이징 처리
-    #Django Paginator를 사용하여 간단하게 페이징처리를 구현할 수 있지만 
-    #하단부의 페이지 숫자 범위를 커스텀하기 위해 
-    #get_context_data 메소드로 페이지 숫자 범위 Context를 생성하여 템플릿에 전달한다.
-    def get_context_data(self, **kwargs):
-        #pk값 얻어옴, *kwargs는 키워드된 n개의 변수들을 함수의 인자로 보낼 때 사용
-        context = super().get_context_data(**kwargs)
-        paginator = context['paginator']
-        #10번째 버튼?
-        page_numbers_range = 10
-        #page_range():(1부터 시작하는)페이지 리스트 반환 
-        max_index = len(paginator.page_range)
-
-        page = self.request.GET.get('page')
-        current_page = int(page) if page else 1
-
-        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
-        end_index = start_index + page_numbers_range
-        if end_index >= max_index:
-            end_index = max_index
-
-        page_range = paginator.page_range[start_index:end_index]
-        context['page_range'] = page_range
-
-        ##
-        search_keyword = self.request.GET.get('q', '')
-        search_type = self.request.GET.get('type', '') 
-
-        if len(search_keyword) > 1:
-            context['q'] = search_keyword
-        context['type'] = search_type
-
-        return context
 
 class EnrollVisitedCafeListView(ListView):
     model = VisitedCafe
