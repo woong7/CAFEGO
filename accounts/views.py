@@ -42,12 +42,10 @@ def login(request):
     if request.method == "POST":
         username = request.POST["login"]
         password = request.POST["password"]
-        # name이 next인 input으로 받은 url 값 
         user = auth.authenticate(request, username=username, password=password)
         if user is not None:
             auth.login(request, user)
             return redirect('mypage', user.pk)
-            # next로 redirect 
         else:
             return render(request, 'accounts/login.html', {'error': '아이디 혹은 비밀번호가 틀립니다'})
     else:
