@@ -32,19 +32,20 @@
             <div class="page first_page" id="intro">
                 <div class="wrap" style="position: relative;">
                     <!-- 가운데 점선 원 -->
+
+                    <!---------------- main 1st ------------------>
                     <div class="hoverbox">
                         <div class="hud01">
-                            <div class="main_1st_mugplate">
-                                <div class="main_1st_mug">
-                                    <img src="../../../static/image/main_roll.png">
+                            <div class="m1_mugplate">
+                                <div class="m1_mug">
+                                    <img src="../../../static/image/main_rollcoffee.png">
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="main_1st_group" style="background-color: transparent; color: white;">
-                        <div class="main_1st_ctx">지도기반 카페 이용기록 웹서비스</div>
-                        <span class="main_1st_logo">CAFEGO</span>
+                    <div class="m1_group" style="background-color: transparent; color: white;">
+                        <div class="m1_ctx">지도기반 카페 이용기록 웹서비스</div>
+                        <span class="m1_logo">CAFEGO</span>
 
                         {% if not user.is_authenticated %}
                             <button class="startbtn" onclick="location.href='/account/login'">Let's Go!</button>
@@ -53,21 +54,19 @@
                 </div>
             </div>
 
+            <!---------------- main 2nd ------------------>
             <div class="page" id="feature1">
-                <!-- <div class="bg"></div> -->
-                
                 <div class="wrap" id="start_page">
-                    <!-- <div style="background-image:url(../../../static/image/coffee_main.svg); background-repeat: no-repeat; height: 50%; position: relative; left:60%; width:20%; top: 30%;"></div> -->
-                    <div style="background-image:url(../../../static/image/coffee-main-1.jpeg); height: 100%; position: absolute; width:100%; background-size: 100%; background-position: bottom; opacity: 0.5;"></div>
-                    <div class="main-image" style="background-image:url(../../../static/image/search_cafe.png);"></div> 
+                    <div class="m2-back">
+                    </div>
                     <div class="desc left">
-                        <em><span>01</span></em>
+                        <em><span class="m2-num">01</span></em>
                         <div class="title" style="background-image:none!important;">
-                            <span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">방문했던 카페를 찾아 나의 방문카페 목록에 추가해보세요.</span>
+                            <span class="m2-odd-title">방문했던 카페를 찾아 <br>나의 카페 목록에 추가해보세요.</span>
                         </div>
-                        <p style="width: 415px; color: black;">서울 시내 37733개의 카페 중에 내가 방문했던 카페를 찾아 추가할 수 있습니다. 카페리스트에서 검색하거나, 현재위치<br> 근처의 카페들을 지도에서 찾아 추가할 수 있습니다. 카페에서 마신 음료도 함께 기록해보세요.</p>
+                        <p class="m2-ctx">서울 시내 37000여개의 카페 중에 내가 방문한 카페를 추가할 수 있습니다.<br> 카페리스트에서 검색하거나, 현재위치 근처의 카페들을 지도에서 찾아 추가할 수 있습니다.<br> 카페에서 마신 음료도 함께 기록해보세요!</p>
                         {% if user.is_authenticated %}
-                        <a class="link_sample" href="{% url 'cafe:cafe_list' %}" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
+                        <button class="m2-btn" href="{% url 'cafe:cafe_list' %}">검색하여 카페추가</button>
                         <a class="link_sample" href="{% url 'cafe:cafe_map' %}" style="width: 160px;"><span>지도에서 카페추가</span></a>
                         {% else %}
                         <a class="link_sample" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
@@ -77,15 +76,14 @@
                 </div>
             </div>
 
+            <!---------------- main 3rd ------------------>
             <div class="page" id="feature2">
-                <!-- <div class="bg"></div> -->
-
-                <div class="wrap">
-                    <div class="main-image" style="background-image:url(../../../static/image/user_cafe_map.png); background-size: 400px; left:15%;"></div> 
+                <div class="wrap m3-wrap">
+                    <div id="m3-img"></div> 
                     <div class="desc white right">
-                        <em><span>02</span></em>
+                        <em><span class="m3-num">02</span></em>
                         <div class="title" style="background-image:none!important;">
-                            <span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">방문카페들이 기록된 나만의 <br>카페지도를 확인해보세요.</span>
+                            <span class="m3-even-title">방문카페들이 기록된 <br>나만의 카페지도를 만들어보세요.</span>
                         </div>
                         <p>방문 추가한 카페들이 지도 위에 이모티콘으로 표시됩니다. 카페를 방문한 횟수에 따라 달라지는 이모티콘을 직접 확인해보세요!</p>
                         {% if user.is_authenticated %}
@@ -111,9 +109,9 @@
                     <div class="main-image" style="background-image:url(../../../static/image/review_cafe.png);"></div> 
                     <!--왼쪽 글 -->
                     <div class="desc left">
-                        <em><span>03</span></em>
+                        <em><span class="m4-num">03</span></em>
                         <div class="title" style="background-image:none!important;">
-                            <span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">방문했던 카페에 리뷰를 남기고 댓글을 달아보세요.</span>
+                            <span class="m4-odd-title" >방문했던 카페에 리뷰를 남기고<br>댓글을 달아보세요.</span>
                         </div>
                         <p style="width: 417px;">리뷰에 댓글을 달아 카페 사용자에게 직접 물어볼 수 있습니다. 여러 카페를 방문한 사람에게, 그 카페 단골에게 <br>사용자 입장에서의 솔직한 답변을 들어보세요.</p>
                         {% if user.is_authenticated %}
@@ -135,8 +133,10 @@
 
                     <!--오른쪽 글-->
                     <div class="desc white right">
-                        <em><span>04</span></em>
-                        <div class="title" style="background-image:none!important;"><span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">매달 갱신되는 랭킹 시스템으로 나의 순위를 확인해보세요.</span></div>
+                        <em><span class="m5-num">04</span></em>
+                        <div class="title" style="background-image:none!important;">
+                            <span class="m5-even-title">매달 갱신되는 랭킹 시스템으로<br>나의 순위를 확인해보세요.</span>
+                        </div>
                         <p style="width: 410px;">카페를 얼마나 갔는지, 리뷰를 얼마나 썼는지에 따라 누적순위와 지난달 순위를 랭킹 페이지에서 확인해볼 수 있습니다. 랭킹에 들어 뱃지들을 획득해보세요!</p>
                         {% if user.is_authenticated %}
                         <a class="link_sample" href="{%url 'rank_list' %}" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
@@ -155,9 +155,9 @@
                     <div style="background-image:url(../../../static/image/coffee-main-5.jpeg); height: 100%; position: absolute; width:100%; background-size: 100%; background-position: bottom; opacity: 0.5;"></div>
                     <div class="main-image" style="background-image:url(../../../static/image/coffee_main.svg);"></div> 
                     <div class="desc left">
-                        <em><span>05</span></em>
+                        <em><span class="m6-num">05</span></em>
                         <div class="title" style="background-image:none!important;">
-                            <span style="position:absolute; left:0px; bottom:7px; font-size:32px; text-indent:0; font-family: NanumGothic,'Malgun Gothic',dotum,'ë‹ì›€',sans-serif;">아이디나 동네를 검색해서<br>다른 사용자들을 팔로우 해보세요.</span>
+                            <span class="m6-odd-title">아이디나 동네를 키워드로 검색해<br>다른 유저들을 팔로우 해보세요.</span>
                         </div>
                         <p style="width: 411px;">유저 검색 페이지에서 친구의 아이디를 검색하여 팔로우할 수 있습니다. 근처 동네를 검색해서 다른 사용자들의 카페지도를 확인해볼 수 있습니다.</p>
                         {% if user.is_authenticated %}
