@@ -148,8 +148,7 @@ a:hover {
 }
 
 .reviewer-name span {
-    /* letter-spacing: -5px; */
-    letter-spacing: 6px;
+    letter-spacing: 0px;
     line-height: 200%;
 }
 

@@ -3,6 +3,9 @@
 
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/cafe_search.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playball&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block title %}
@@ -124,37 +127,45 @@
                                             </div>
                                         
                                             <div class="modal-body d-flex drink-list" style="flex-direction: column;">
-                                                <p style="font-size: 20px; text-align: center; margin-bottom:7%;">마신 음료를 체크해주세요!</p>
+                                                <p class="modalcontent" style="font-size: 23px; text-align: center; margin-bottom:7%;">마신 음료를 체크해주세요!</p>
                                                 <div>
                                                     <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="아메리카노">
+                                                    <img src="../../../static/image/coffee-cup (2).png" style="width:10%; height:10%">
                                                     <span>아메리카노</span>
                                                 </div>
                                                 <div>
                                                     <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="바닐라라떼">
-                                                    <span>바닐라라떼</span>
+                                                    <img src="../../../static/image/coffee-cup (2).png" style="width:10%; height:10%">
+                                                    <span>바닐라 라떼</span>
                                                 </div>
                                                 <div>
                                                     <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카페라떼">
+                                                    <img src="../../../static/image/coffee-cup (2).png" style="width:10%; height:10%">
                                                     <span>카페라떼</span>
                                                 </div>
                                                 <div>
                                                     <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카라멜마끼야또">
+                                                    <img src="../../../static/image/coffee-cup (2).png" style="width:10%; height:10%">
                                                     <span>카라멜마끼야또</span>
                                                 </div>
                                                 <div>
                                                     <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="초코라떼">
+                                                    <img src="../../../static/image/coffee-cup (2).png" style="width:10%; height:10%">
                                                     <span>초코라떼</span>
                                                 </div>
                                                 <div>
                                                     <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="녹차라떼">
+                                                    <img src="../../../static/image/coffee-cup (2).png" style="width:10%; height:10%">
                                                     <span>녹차라떼</span>
                                                 </div>
                                                 <div>
                                                     <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="에이드">
+                                                    <img src="../../../static/image/coffee-cup (2).png" style="width:10%; height:10%">
                                                     <span>에이드</span>
                                                 </div>
                                                 <div>
                                                     <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="허브차">
+                                                    <img src="../../../static/image/coffee-cup (2).png" style="width:10%; height:10%">
                                                     <span>허브차</span>
                                                 </div>
                                                 <div>
