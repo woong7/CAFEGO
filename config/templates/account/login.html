@@ -20,7 +20,6 @@
 <section id="login_page" class="py-4 px-5 text-center">
   <header class="pt-3 login_head">
       <div class="pricing-header p-2 pb-md-4 mx-auto text-center">
-          <p id="header-logo-image"></p>
           <p class="fs-5 text-muted page_info">로그인을 해서 카페고의 모든 서비스를 즐겨보세요!</p>
       </div>
   </header>
@@ -84,8 +83,8 @@
           <a class="btn btn-outline-success social-btn" href="{% provider_login_url 'naver' %}">네이버 로그인</a>
           <a class="btn btn-outline-warning social-btn" href="{% provider_login_url 'kakao' %}">카카오 로그인</a>
           <br><br>
-          <div class="findPw">계정이 없다면 <a href="{% url 'signup' %}" style="color: #5ba39e; cursor:pointer;">회원가입</a>을 진행하세요.</div>
-          <a class="secondaryAction findPw" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+          <a href="{% url 'signup' %}" class="findPw">계정이 없다면 <span style="color: #5ba39e; cursor:pointer;">회원가입</span>을 진행하세요.</a>
+          <a class="findPw" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
           <br>
           
         </form>
@@ -96,6 +95,9 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
 
 <script type="text/javascript">
+  //로그인 입력 효과
+  const inputs = document.querySelectorAll('.input');
+
   function focusFunc() {
     let parent = this.parentNode.parentNode;
     parent.classList.add('focus');
@@ -116,7 +118,7 @@
   if(is_failed==1)
   {
     alert("아이디 또는 비밀번호가 맞지 않습니다");
-  }*/
+  }
 
 
   </script>
