@@ -81,6 +81,12 @@
                 <div class="wrap m3-wrap">
                     <div id="m3-img-wrap">
                         <div class="m3-mainimg" style="background-image:url(../../../static/image/user_cafe_map.PNG);"></div>
+                        <div class="m3-circle"></div>
+                        <div class="m3-icon-stop01" style="left: 70%; top: 66%;"><img class="m3-showani-icon01" src="../../../static/image/m3_coffee-shop (1).png"></div>
+                        <div class="m3-icon-stop02" style="left: 32%; top: 27%;"><img class="m3-showani-icon02" src="../../../static/image/m3_coffee-shop (1).png"></div>
+                        <div class="m3-icon-move03" style="left: -19%; top: 36%;"><img class="m3-rollani-icon03" src= "../../../static/image/m3_coffee-beans.png"></div>
+                        <div class="m3-icon-move04" style="left: 17%; top: 120%;"><img class="m3-rollani-icon04" src="../../../static/image/m3_placeholder.png"></div>
+                        <div class="m3-icon-move05" style="left: -36%; top: 62%;"><img class="m3-rollani-icon05" src="../../../static/image/m3_world.png"></div>
                     </div> 
                     <div class="desc white right">
                         <em><span class="m3-num">02</span></em>
@@ -106,6 +112,7 @@
                 <div class="wrap m4-wrap">
                     <div id="m4-img-wrap">
                         <div class="m4-mainimg" style="background-image:url(../../../static/image/review_cafe.png);"></div>
+                        <div class="m4-circle"></div>
                     </div> 
                     <!--오른쪽 그림 + 애니메이션-->
                     <div class="m4-even-back" style="background-image:url(../../../static/image/coffee-main-3.jpeg); height: 100%; position: absolute; width:100%; background-size: 100%; background-position: 30%;"></div>
@@ -116,7 +123,7 @@
                         <div class="title" style="background-image:none!important;">
                             <span class="m4-odd-title" >방문했던 카페에 리뷰를 남기고<br>댓글을 달아보세요.</span>
                         </div>
-                        <p class="m4-ctx" style="color:white; text-shadow: 2px 2px 1px black;">카페 방문자가 남긴 리뷰에 댓글을 달아 직접 질문을 해보세요.<br>먼저 다녀간 사람에게 답변을 들어보세요.</p>
+                        <p class="m4-ctx" style="color:white; text-shadow: 2px 2px 1px black;">카페 방문자가 남긴 리뷰에 댓글을 달아 직접 질문을 해보세요.<br>먼저 다녀간 사람에게 답변을 들어볼 수 있어요!</p>
                         {% if user.is_authenticated %}
                         <a class="mainbtn" href="{% url 'enroll_visited_cafe' %}" style="width: 146px; margin-right: 10px;"><span>리뷰 쓰기</span></a>
                         <a class="mainbtn" href="{% url 'cafe:cafe_list' %}" style="width: 160px;"><span>리뷰에 댓글 쓰기</span></a>
@@ -134,6 +141,10 @@
                 <div class="wrap m5-wrap">
                     <div id="m5-img-wrap">
                         <div class="m5-mainimg" style="background-image:url(../../../static/image/ranking.png);"></div>
+                        <div class="m5-circle"></div>
+                        <div class="m5-icon-move01" style="left: -21%; top: 110%;"><img class="m5-rollani-icon01" src="../../../static/image/m5_award.png"></div>
+                        <div class="m5-icon-move02" style="left: -38%; top: 69%;"><img class="m5-rollani-icon02" src="../../../static/image/m5_cup.png"></div>
+                        <div class="m5-icon-move03" style="left: -34%; top: 51%;"><img class="m5-rollani-icon03" src="../../../static/image/m5_silvercup.png"></div>
                     </div> 
 
                     <!--오른쪽 글-->
@@ -142,10 +153,10 @@
                         <div class="title" style="background-image:none!important;">
                             <span class="m5-even-title">매달 갱신되는 랭킹 시스템으로<br>나의 순위를 확인해보세요.</span>
                         </div>
-                        <p class="m5-ctx" style="color: rgb(63, 63, 63); font-weight: normal;">카페 방문 횟수, 리뷰 작성 횟수에 따라<br>누적순위와 월별 순위를 랭킹 페이지에서 확인해볼 수 있습니다.<br>랭킹에 들어 뱃지를 획득해보세요!</p>
+                        <p class="m5-ctx" style="color: rgb(63, 63, 63); font-weight: normal;">카페 방문 횟수, 리뷰 작성 횟수에 따라<br>누적 순위와 월별 순위를 랭킹 페이지에서 확인해볼 수 있습니다.<br>순위권에 들어 뱃지를 획득해보세요!</p>
                         {% if user.is_authenticated %}
-                        <a class="mainbtn" href="{%url 'rank_list' %}" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
-                        <a class="mainbtn" href="{%url 'badge_list' user.pk %}"><span>배지 보러가기</span></a>
+                        <a class="mainbtn" href="{%url 'rank_list' %}" style="margin-right: 10px;"><span>랭킹 확인하기</span></a>
+                        <a class="mainbtn" href="{%url 'badge_list' user.pk %}"><span>배지 확인하기</span></a>
                         {% else %}
                         <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
                         <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');"><span>배지 보러가기</span></a>
@@ -158,7 +169,8 @@
             <div class="page" id="feature5">
                 <div class="wrap m6-wrap">
                     <div id="m6-img-wrap">
-                        <div class="m6-mainimg"></div>
+                        <div class="m6-mainimg" style="background-image:url(../../../static/image/m6_friendSearch.png);"></div>
+                        <div class="m6-circle"></div>
                     </div> 
                     <div class="m6-even-back" style="background-image:url(../../../static/image/coffee-main-5.jpeg); height: 100%; position: absolute; width:100%; background-size: 100%; background-position: bottom;"></div>
                     <div class="desc left" style="left: 15%;">
