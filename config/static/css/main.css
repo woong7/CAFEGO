@@ -1,4 +1,25 @@
 @font-face {
+  font-family: 'Cafe24Danjunghae';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Danjunghae.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'RIDIBatang';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'twaysky';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_tway@1.0/twaysky.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'Cafe24Oneprettynight';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Oneprettynight.woff') format('woff');
   font-weight: normal;
@@ -202,7 +223,7 @@ div.container4 p {
 .hoverbox {
   width: 100vw;
   height: 100vh;
-  background: url(../../static/image/main_1st.jpg);
+  background: url(../../media/static/image/main_1st.jpg);
 }
 
 .hoverbox [class*='hud']{
@@ -227,7 +248,7 @@ div.container4 p {
   height: 35rem;
   border-radius: 50%; 
   z-index: 1;
-  background-image: url(../../static/image/main_plate.jpg);
+  background-image: url(../../media/static/image/main_plate.jpg);
   background-size: cover;
 }
 
@@ -346,17 +367,3 @@ div.container4 p {
   #1f5753
   #5ba39e
 } */
-
-.main-image {
-  background-color: #F0D9CE;
-  background-repeat: no-repeat; 
-  background-size: 500px;
-  background-position: top;
-  border-radius: 50%;
-  border: 1px solid gray;
-  position: relative;
-  width: 400px;
-  height: 400px;
-  left: 55%;
-  top: 30%;
-}
