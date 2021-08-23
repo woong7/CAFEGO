@@ -118,7 +118,7 @@ def review_create(request, pk):
             user.total_review += 1
             user.review_count_lastmonth += 1
             user.save()
-
+            
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
         for img in request.FILES.getlist('imgs'):
             #photo 객체 하나 생성
