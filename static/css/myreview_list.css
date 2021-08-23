@@ -76,3 +76,20 @@ td:nth-child(5) {
 .main-reverse-btn:hover {
     background-color: #A3735B;
 }
+
+.exit-button {
+    text-align: center;
+    color: #704F3F;
+    font-weight: bold;
+    background-color:#F0D9CE;
+    border: 1px solid #704F3F;
+    border-radius: 8px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 30px;
+}
+
+.exit-button:hover {
+    background-color: #A3735B;
+}

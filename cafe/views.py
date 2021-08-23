@@ -118,7 +118,7 @@ def review_create(request, pk):
             user.total_review += 1
             user.review_count_lastmonth += 1
             user.save()
-
+            
         #review_form.html의 name 속성이 imgs인 input 태그에서 받은 파일을 반복문으로 하나씩 가져온다.
         for img in request.FILES.getlist('imgs'):
             #photo 객체 하나 생성
@@ -206,12 +206,14 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
+
     cafes = CafeList.objects.all().order_by('location_x')
     cafe_list = serializers.serialize('json', cafes)
     ctx = {
         'data': cafe_list,
     }
     return render(request, 'cafe/cafe_map.html', ctx)
+
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -336,50 +338,61 @@ def cafe_delete(request, pk):
     return redirect('cafe:cafe_list')
 
 def enroll_cafe_from_map(request, pk):
+
     cafe = CafeList.objects.get(pk=pk)
+    next = request.GET['next']
     ctx = {
         'cafe': cafe,
+        "next": next
     }
-    return render(request, 'cafe/enroll_cafe_from_map.html', ctx)
+    return render(request, 'cafe/enroll_cafe_from_map.html', ctx) 
 
 @csrf_exempt
 def enroll_cafe(request):
     if request.method == 'POST':
         req_post = request.POST
-        #음료 내용 받아온다.
         str_cafename = req_post.__getitem__('cafename')
-        str_drinkname = req_post.__getitem__('beverage')
-
-        #카페를 방문한 유저와 그 유저의 방문 횟수 +1
-        
-        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
-        visited_cafes = VisitedCafe.objects.filter(user=request.user)
-        vcs=[]
-        for vc in visited_cafes:
-            vcs.append(vc.cafe)
-        if this_cafe in vcs: #이전에 갔을 때
-            v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
-        else: #처음 갔을 때
-            v_cafe = VisitedCafe()
-            v_cafe.user = request.user
-            v_cafe.cafe = CafeList.objects.get(name=str_cafename)
-
-        v_cafe.visit_check = True
-        v_cafe.visit_count += 1
-
-        user = User.objects.get(username=request.user)
-        user.total_visit += 1
-
-        #모달창에서 선택한 음료 저장
-        jsonDec=json.decoder.JSONDecoder()
-        drinkList=jsonDec.decode(v_cafe.drink_list)
-
-        drinkList.append(str_drinkname)
-        user.visit_count_lastmonth += 1 
+        this_cafe = CafeList.objects.get(name=str_cafename)
+        if req_post.__getitem__('beverage'):
             
-        v_cafe.drink_list=json.dumps(drinkList)
+            str_drinkname = req_post.__getitem__('beverage')
 
-        user.save()
-        v_cafe.save()
+            #카페를 방문한 유저와 그 유저의 방문 횟수 +1
+            
+            #전체 카페 중 그 카페
+            visited_cafes = VisitedCafe.objects.filter(user=request.user)
+            vcs=[]
+            for vc in visited_cafes:
+                vcs.append(vc.cafe)
+            if this_cafe in vcs: #이전에 갔을 때
+                v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
+            else: #처음 갔을 때
+                v_cafe = VisitedCafe()
+                v_cafe.user = request.user
+                v_cafe.cafe = CafeList.objects.get(name=str_cafename)
 
-    return redirect('cafe:cafe_map')
+            v_cafe.visit_check = True
+            v_cafe.visit_count += 1
+
+            user = User.objects.get(username=request.user)
+            user.total_visit += 1
+
+            #모달창에서 선택한 음료 저장
+            jsonDec=json.decoder.JSONDecoder()  
+            drinkList=jsonDec.decode(v_cafe.drink_list)
+
+            drinkList.append(str_drinkname)
+            user.visit_count_lastmonth += 1 
+                
+            v_cafe.drink_list=json.dumps(drinkList)
+
+            user.save()
+            v_cafe.save()
+            next = request.POST['next']
+            return redirect(next)
+        else:
+            next = request.POST['next']
+            return render(request, 'cafe/enroll_cafe_from_map.html', {'cafe':this_cafe, 'next': next, 'error': '음료를 하나 선택해주세요!'})
+    else:
+        next = request.GET['next']
+        return render(request, 'cafe/enroll_cafe_from_map.html', {"next": next})

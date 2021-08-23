@@ -48,7 +48,7 @@
                         <span class="m1_logo">CAFEGO</span>
 
                         {% if not user.is_authenticated %}
-                            <button class="startbtn" onclick="location.href='/account/login'">Let's Go!</button>
+                            <button class="startbtn" onclick="location.href='/login'">Let's Go!</button>
                         {% endif %}
                     </div>
                 </div>
@@ -69,8 +69,8 @@
                         <a class="mainbtn" href="{% url 'cafe:cafe_list' %}" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
                         <a class="mainbtn" href="{% url 'cafe:cafe_map' %}" style="width: 160px;"><span>지도에서 카페추가</span></a>
                         {% else %}
-                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
-                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>지도에서 카페추가</span></a>
+                        <a class="mainbtn" href="/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
+                        <a class="mainbtn" href="/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>지도에서 카페추가</span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                             <a class="mainbtn" href="{% url 'user_cafe_map' %}" style="width: 149px;"><span>나의 카페지도 보기</span></a>
                             {% endif %}
                         {% else %}
-                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 149px;"><span>나의 카페지도 보기</span></a>
+                        <a class="mainbtn" href="/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 149px;"><span>나의 카페지도 보기</span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -158,8 +158,8 @@
                         <a class="mainbtn" href="{%url 'rank_list' %}" style="margin-right: 10px;"><span>랭킹 확인하기</span></a>
                         <a class="mainbtn" href="{%url 'badge_list' user.pk %}"><span>배지 확인하기</span></a>
                         {% else %}
-                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
-                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');"><span>배지 보러가기</span></a>
+                        <a class="mainbtn" href="/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="margin-right: 10px;"><span>랭킹 보러가기</span></a>
+                        <a class="mainbtn" href="/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');"><span>배지 보러가기</span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -182,7 +182,7 @@
                         {% if user.is_authenticated %}
                         <a class="mainbtn" href="{% url 'friend_search' %}"><span>유저검색 하기</span></a>
                         {% else %}
-                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');"><span>유저검색 하기</span></a>
+                        <a class="mainbtn" href="/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');"><span>유저검색 하기</span></a>
                         {% endif %}
                     </div>
                 </div>

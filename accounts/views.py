@@ -38,6 +38,20 @@ def signup(request):
     #실패시 안넘어감
     return render(request, 'accounts/signup.html')
 
+def login(request):
+    if request.method == "POST":
+        username = request.POST["login"]
+        password = request.POST["password"]
+        user = auth.authenticate(request, username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('mypage', user.pk)
+        else:
+            return render(request, 'accounts/login.html', {'error': '아이디 혹은 비밀번호가 틀립니다'})
+    else:
+        return render(request, 'accounts/login.html')
+
+
 
 ##allauth 써서 필요 없나??
 @login_required
@@ -62,7 +76,7 @@ def home(request):
     return render(request,'accounts/home.html', ctx)
 
 def create_admin(request):
-    User.objects.create(username="admin", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="tester1", is_admin=True, is_active=True, city="서울특별시", gu="관악구", dong="신림동")
+    User.objects.create(username="admin", email="pirocafego@gmail.com", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="관리자", is_admin=True, is_active=True, city="서울특별시", gu="관악구", dong="신림동")
     return redirect('home')
 
 def badge_list(request, pk):
@@ -127,12 +141,6 @@ def user_cafe_map(request):
         'cafe_list': cafe_list
     }
     return render(request, 'accounts/user_cafe_map.html', ctx)
-
-def user_detail(request):
-    return render(request, 'accounts/detail.html')
-
-def rank_detail(request):
-    return render(request, 'accounts/rank_detail.html')
 
 def rank_list(request):
     now = datetime.today() #오늘
@@ -263,72 +271,6 @@ def rank_list(request):
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
-
-@login_required
-def enroll_home(request):
-    return render(request, "accounts/enroll_home.html")
-
-class EnrollNewCafeListView(ListView):
-    model = VisitedCafe
-    paginate_by = 10
-    template_name = 'accounts/enroll_new_cafe.html'
-    context_object_name = 'new_cafe_list'
-
-    #검색기능
-    def get_queryset(self):
-        search_keyword = self.request.GET.get('q', '')
-        search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).order_by('-id')
-        
-        names_to_exclude = [o.cafe for o in visited_cafe_list] 
-        new_cafe_list = CafeList.objects.exclude(name__in=names_to_exclude)
-
-        if search_keyword:
-            if len(search_keyword) > 1:
-                if search_type == 'name':
-                    search_cafe_list = new_cafe_list.filter(name__icontains=search_keyword)
-                elif search_type == 'address':
-                    search_cafe_list = new_cafe_list.filter(address__icontains=search_keyword)
-                elif search_type == 'all':
-                    search_cafe_list = new_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
-                return search_cafe_list
-            else:
-                messages.error(self.request, '2글자 이상 입력해주세요.')
-        return new_cafe_list
-
-    #하단부에 페이징 처리
-    #Django Paginator를 사용하여 간단하게 페이징처리를 구현할 수 있지만 
-    #하단부의 페이지 숫자 범위를 커스텀하기 위해 
-    #get_context_data 메소드로 페이지 숫자 범위 Context를 생성하여 템플릿에 전달한다.
-    def get_context_data(self, **kwargs):
-        #pk값 얻어옴, *kwargs는 키워드된 n개의 변수들을 함수의 인자로 보낼 때 사용
-        context = super().get_context_data(**kwargs)
-        paginator = context['paginator']
-        #10번째 버튼?
-        page_numbers_range = 10
-        #page_range():(1부터 시작하는)페이지 리스트 반환 
-        max_index = len(paginator.page_range)
-
-        page = self.request.GET.get('page')
-        current_page = int(page) if page else 1
-
-        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
-        end_index = start_index + page_numbers_range
-        if end_index >= max_index:
-            end_index = max_index
-
-        page_range = paginator.page_range[start_index:end_index]
-        context['page_range'] = page_range
-
-        ##
-        search_keyword = self.request.GET.get('q', '')
-        search_type = self.request.GET.get('type', '') 
-
-        if len(search_keyword) > 1:
-            context['q'] = search_keyword
-        context['type'] = search_type
-
-        return context
 
 class EnrollVisitedCafeListView(ListView):
     model = VisitedCafe
@@ -629,8 +571,11 @@ def visit_register(request):
         req_post = request.POST
         #음료 내용 받아온다.
         str_cafename = req_post.__getitem__('cafename')
-        str_drinkname = req_post.__getitem__('beverage')
-
+        try:
+            str_drinkname = req_post.__getitem__('beverage')
+        except:
+            messages.error(request, '음료를 하나 선택해주세요!')
+            return redirect('cafe:cafe_list')
         #카페를 방문한 유저와 그 유저의 방문 횟수 +1
         
         this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
@@ -859,6 +804,7 @@ def this_cafe_map(request, pk):
         'cafe_address':cafe.address,
     }
     return render(request, 'accounts/cafe_map.html', ctx)
+    
 
 ##알림 기능
 class CommentNotification(View):
@@ -930,7 +876,7 @@ class UserRegistrationView(CreateView):
     model = get_user_model()
     form_class = UserRegistrationForm
     template_name="accounts/signup.html"
-    success_url = '/account/login/'
+    success_url = '/login/'
     verify_url = '/verify/' 
     token_generator = default_token_generator
 
@@ -953,7 +899,7 @@ from django.views.generic.base import TemplateView
 class UserVerificationView(TemplateView):
     
     model = get_user_model()
-    redirect_url = '/account/login/'
+    redirect_url = '/login/'
     token_generator = default_token_generator
 
     def get(self, request, *args, **kwargs):

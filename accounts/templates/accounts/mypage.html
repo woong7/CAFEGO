@@ -8,12 +8,12 @@
 
 {% block content %}
 {% if not owner.is_active %}
-<h1 class="display-5 fw-bold text-center page_title" style="color:red;">비활성화된 계정입니다</h1>
+<p class="display-5 fw-bold text-center page_title" style="color:red;">비활성화된 계정입니다</p>
 {% endif %}
 <div class="py-4 my_page p-5 d-flex flex-column">
     <div class="p-5 mb-4 rounded-3 d-flex flex-column ">
         <h1 class="display-5 fw-bold text-center page_title">{{owner.nickname}}'s Mypage</h1>
-        <div class="container-fluid pt-2 d-flex flex-row">          
+        <div class="container-fluid pt-2 d-flex flex-row justify-content-around">          
             <div class="d-flex flex-row justify-content-center align-items-top">
                 <div class="d-flex flex-column">
                     <div class=" px-5">
@@ -32,7 +32,7 @@
                     <div class="d-flex flex-row" style="max-height: 100px;">
                         <div class="row justify-content-center align-items-md-stretch" style="max-width: 250px;">
                             <span class="btn button px-5 pt-5 pb-0 fw-bold" style="border:none; background:none;" data-bs-toggle="collapse" data-bs-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample">Following ▼</span>
-                            <span class="btn button text-center" style="height:50px; width:100px; border:none; background:none;" >
+                            <span class="text-center" style="height:50px; width:100px; border:none; background:none;font-weight: bold; color: #704F3F; height:50px; width:150px; background:none; font-size: 1em; font-family: Pretendard-Regular;" >
                             {{followingnum}}
                             </span>
                     
@@ -50,7 +50,7 @@
                         </div>
                         <div class="d-flex justify-content-center row align-items-md-stretch" style="max-width: 250px;">
                             <span class="btn button pt-5 pb-0 px-5 fw-bold" style="border:none; background:none;" data-bs-toggle="collapse" data-bs-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample">Follower ▼</span>
-                            <span class="btn button text-center" style="height:50px; width:100px; border:none; background:none;" >
+                            <span class="text-center" style="font-weight: bold; color: #704F3F; height:50px; width:150px; background:none; font-size: 1em; font-family: Pretendard-Regular;" >
                             {{owner.follwernum}}
                             </span>
                             <div class="collapse" id="collapseExample5">
@@ -58,8 +58,7 @@
                                     
                                     {% for follwer in follwers %}
                                         <div>
-                                            <li style="font-size: 20px; font-weight: bold"><a href="{% url 'mypage' follwer.pk%}">{{ follwer.nickname }}</a></li>
-                                            
+                                            <div class="friends"><a href="{% url 'mypage' follwer.pk %}">{{ follwer.nickname }}</a></div>
                                             <br>
                                         </div>
                                     {% endfor %}
@@ -68,11 +67,11 @@
                         </div>
                         <div class="d-flex justify-content-center row align-items-md-stretch" style="max-width: 250px;">
                             <span class="btn button pt-5 pb-0 px-5 fw-bold" style="border:none; background:none;" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">방문한 카페 ▼</span>
-                            <span class="btn button text-center" style="border: none; height:50px; width:150px; background:none;" >
+                            <span class="text-center" style="font-weight: bold; color: #704F3F; height:50px; width:150px; background:none; font-size: 1em; font-family: Pretendard-Regular;">
                                 {{visit_cafes.count}}곳 / 총 {{ total_visit }}회
                             </span>
                             <div class="collapse" id="collapseExample2">
-                                <div class="card card-body overflow-auto">
+                                <div class="card card-body">
                                     {% for cafe, drinks in drink_list_dic.items %} 
                                         <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.id%}">{{cafe}}</a></span>
                                         <span> 방문 횟수: {{cafe.visit_count}}</span>
@@ -80,6 +79,7 @@
                                         {% for drink in drinks %}
                                             <span>{{drink}}</span>
                                         {% endfor %}
+                                        <br/>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -106,19 +106,11 @@
                                             {% elif reviews.review_stars == '5.0' %}
                                                 <span>⭐⭐⭐⭐⭐</span>
                                             {% endif %}
-                                            {{ reviews.content }}<br/>
-
-                                            {% if review_photo %}
-                                                {% for img in review_photo %}
-                                                    {% if img.review.id == reviews.id %}
-                                                        <img src="{{img.image.url}}" style="width: 5%; height: 5%;">         
-                                                    {% endif %}
-                                                {% endfor %}   
-                                            {% endif %}
                                             <br/>
-                                        
+                                            {{ reviews.content }}
+                                            <br/>
                                             <span style="font-size:13px;">{{ reviews.created_at }}</span>
-                                            <hr/>
+                                            <br/><br/>
                                         {% endfor %}
                                     </article>
                                 </div>
@@ -133,7 +125,7 @@
     </div>
     <div class="container">
     <div class="row">
-        <div class="col container" >
+        <div class="col container bottom-item">
             <div class="row">
                 {% for badge in taken_badges %}
                     <div class="col d-flex flex-column align-items-center">
@@ -144,7 +136,7 @@
             </div>
             
         </div>
-        <div class="col container">
+        <div class="col container bottom-item d-flex justify-content-center align-items-center">
             <div class="row">
                 <div class="col text-center">
                     <button class="button" style="width: 150px; height: 50px; font-size:20px;" onClick="location.href='{% url 'badge_list' owner.pk %}'">
