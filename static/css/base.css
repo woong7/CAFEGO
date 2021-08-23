@@ -92,6 +92,11 @@ nav {
     height: 6.7vh;
 }
 
+.navbar-collapse .nav-item {
+    max-width: 130px;
+    background-color: #725a4e;
+}
+
 #header-logo-image {
     display: inline-block;
     width: 120px;
@@ -155,14 +160,6 @@ ul {
 
 .nav-item-hover:hover {
     color: #f0a986;
-}
-
-.bg-cafego-blue {
-    background-color: #386ABB;
-}
-
-.bg-cafego-yellow {
-    background-color: #FFCC03;
 }
 
 /*notification!*/
