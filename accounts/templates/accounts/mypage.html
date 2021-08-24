@@ -73,7 +73,7 @@
                             <div class="collapse" id="collapseExample2">
                                 <div class="card card-body">
                                     {% for cafe, drinks in drink_list_dic.items %} 
-                                        <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.id %}">{{cafe}}</a></span>
+                                        <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{cafe}} </a></span>
                                         <span> 방문 횟수: {{cafe.visit_count}}</span>
                                         <span> 마신음료 : </span>
                                         {% for drink in drinks %}
