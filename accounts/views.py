@@ -559,6 +559,7 @@ def visit_register(request):
         req_post = request.POST
         #음료 내용 받아온다.
         str_cafename = req_post.__getitem__('cafename')
+        str_cafeid = req_post.__getitem__('cafeid')
         try:
             str_drinkname = req_post.__getitem__('beverage')
         except:
@@ -566,7 +567,7 @@ def visit_register(request):
             return redirect('cafe:cafe_list')
         #카페를 방문한 유저와 그 유저의 방문 횟수 +1
         
-        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        this_cafe = CafeList.objects.get(id=str_cafeid)#전체 카페 중 그 카페
         visited_cafes = VisitedCafe.objects.filter(user=request.user)
         vcs=[]
         for vc in visited_cafes:
@@ -576,7 +577,7 @@ def visit_register(request):
         else: #처음 갔을 때
             v_cafe = VisitedCafe()
             v_cafe.user = request.user
-            v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+            v_cafe.cafe = CafeList.objects.get(id=str_cafeid)
 
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
@@ -608,6 +609,7 @@ def visited_register(request):
     if request.method == 'POST':
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
+        str_cafeid = req_post.__getitem__('cafeid')
         try:
             str_drinkname = req_post.__getitem__('beverage')
         except:
@@ -615,7 +617,7 @@ def visited_register(request):
             return redirect('enroll_visited_cafe')
 
         user = User.objects.get(username=request.user)
-        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        this_cafe = CafeList.objects.get(id=str_cafeid)#전체 카페 중 그 카페
         v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
         v_cafe.visit_count += 1
         user.total_visit += 1
