@@ -173,10 +173,11 @@ def rank_list(request):
     C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(last_month_first), datetime.date(last_month_last)))
     C_monthly_kinds_dict = {}
     for i in C_monthly_visited_cafe:
-        if i.user not in C_monthly_kinds_dict.keys():#키 리스트
-            C_monthly_kinds_dict[i.user.nickname] = [i.cafe]
-        else:
+        if i.user.nickname in C_monthly_kinds_dict.keys():#키 리스트
             C_monthly_kinds_dict[i.user.nickname].append(i.cafe)
+        else:
+            C_monthly_kinds_dict[i.user.nickname] = [i.cafe]
+            print(C_monthly_kinds_dict.keys())
     #여기까지 {user이름:[카페리스트]}이렇게 내가 원하는 대로 나옴!!
 
     # 카페 종류 **개수**를 넣어주기
