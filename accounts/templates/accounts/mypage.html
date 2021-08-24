@@ -73,7 +73,7 @@
                             <div class="collapse" id="collapseExample2">
                                 <div class="card card-body">
                                     {% for cafe, drinks in drink_list_dic.items %} 
-                                        <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.id%}">{{cafe}}</a></span>
+                                        <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.id %}">{{cafe}}</a></span>
                                         <span> 방문 횟수: {{cafe.visit_count}}</span>
                                         <span> 마신음료 : </span>
                                         {% for drink in drinks %}
@@ -129,7 +129,7 @@
             <div class="row">
                 {% for badge in taken_badges %}
                     <div class="col d-flex flex-column align-items-center">
-                        <img src="{{badge.badge_image.url}}" style="width: 50px; height: 50px;"><br/>
+                        <img src="/{{badge.badge_image.url}}" style="width: 50px; height: 50px;"><br/>
                         <span class="mx-auto" style="font-size: 15px; font-family: NEXON Lv1 Gothic OTF;">{{badge.badge_name}}</span>
                     </div>
                 {% endfor %}

@@ -180,7 +180,7 @@ ACCOUNT_FORMS = {'signup': 'accounts.forms.UserRegistrationForm'} #앱이름.for
 
 MEDIA_ROOT = BASE_DIR
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
