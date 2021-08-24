@@ -20,7 +20,7 @@
 				{% elif notification.badge %}
 					<div class="dropdown-item-parent">
 					<p>
-						<img src="/{{notification.badge.badge_image.url}}" style="width:10%; height:10%">
+						<img src="{{notification.badge.badge_image.url}}" style="width:10%; height:10%">
 						<a href="{% url 'badge_list' notification.to_user.pk %}">@새로운 배지를 획득했습니다!-{{notification.badge.badge_name}}<br/>획득일시: {{notification.created_at}}</a>
 					</p>
 						<span class="dropdown-item-close" onclick="removeNotification(`{% url 'notification-delete' notification.pk %}`, `{{ request.path }}`)">&times;</span>
