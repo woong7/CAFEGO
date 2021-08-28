@@ -73,7 +73,7 @@
                             <div class="collapse" id="collapseExample2">
                                 <div class="card card-body">
                                     {% for cafe, drinks in drink_list_dic.items %} 
-                                        <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.id%}">{{cafe}}</a></span>
+                                        <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{cafe}} </a></span>
                                         <span> 방문 횟수: {{cafe.visit_count}}</span>
                                         <span> 마신음료 : </span>
                                         {% for drink in drinks %}
@@ -86,9 +86,15 @@
                         </div>
                         <div class="d-flex justify-content-center row align-items-md-stretch" style="max-width: 250px;">
                             <span class="btn button pt-5 pb-0 px-5 fw-bold" style="border:none; background:none;"  data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample">작성한 리뷰 ▼</span>
+                            {% if user.id == owner.id %}
                             <span class="btn button text-center" style="border: none;; height:50px; width:150px; background:none;" onClick="location.href='{% url 'myreview_list' %}'">
                                 {{all_review_count}}건 ▷
                             </span>
+                            {% else %}
+                            <span class="btn button text-center" style="border: none;; height:50px; width:150px; background:none;">
+                                {{all_review_count}}건
+                            </span>
+                            {% endif %}
                             <div class="collapse" id="collapseExample3">
                                 <div class="card card-body">
                                     <article class="each_review">

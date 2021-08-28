@@ -123,7 +123,7 @@
                             {% for img in review_photo %}
                                 {% if img.review.id == reviews.id %}
                                     <!-- TODO: 이미지 크기 키우는 modal 만들기-->
-                                    <img src="{{img.image.url}}">       
+                                    <img src={{img.image.url}}>       
                                 {% endif %}
                             {% endfor %}   
                         {% endif %}

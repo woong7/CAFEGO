@@ -351,7 +351,8 @@ def enroll_cafe(request):
     if request.method == 'POST':
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
-        this_cafe = CafeList.objects.get(name=str_cafename)
+        str_cafeid = req_post.__getitem__('cafeid')
+        this_cafe = CafeList.objects.get(id=str_cafeid)
         try:
             req_post.__getitem__('beverage')
             
@@ -369,7 +370,7 @@ def enroll_cafe(request):
             else: #처음 갔을 때
                 v_cafe = VisitedCafe()
                 v_cafe.user = request.user
-                v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+                v_cafe.cafe = CafeList.objects.get(id=str_cafeid)
 
             v_cafe.visit_check = True
             v_cafe.visit_count += 1
