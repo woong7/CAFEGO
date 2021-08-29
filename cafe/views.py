@@ -83,7 +83,7 @@ def comment_write(request):
         boolDayOrNight = '오후'
     else:
         boolDayOrNight = '오전'   
-    timeString = now.strftime('%Y년 %#m월 %#d일 %#I:%M '+boolDayOrNight)
+    timeString = now.strftime('%Y년 X%m월 X%d일 X%I:%M '+boolDayOrNight).replace('X0','X').replace('X','')
 
     notification = Notification.objects.create(notification_type=2, from_user=request.user, to_user=review.username, comment=comment)
     notification.save()
@@ -206,6 +206,7 @@ class CafeListView(ListView):
 
 # 카페 지도
 def cafe_map(request):
+
     cafes = CafeList.objects.all().order_by('location_x')
     cafe_list = serializers.serialize('json', cafes)
     ctx = {
@@ -213,11 +214,12 @@ def cafe_map(request):
     }
     return render(request, 'cafe/cafe_map.html', ctx)
 
+
 from django.conf import settings
 from django.conf.urls.static import static
 import os
 def init_data(request):
-    with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawled.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []
@@ -225,7 +227,7 @@ def init_data(request):
         st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i], s['ID'][i])
         ss.append(st)
     for i in range(len(s)):
-        CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3], id=ss[i][4])#id값 써도 될려낭
+        CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3], id=ss[i][4])
 
     Badge.objects.create(badge_name="카페홀릭", badge_image="../static/image/barista.png", badge_get="카페 총 누적 방문횟수 50회 이상") 
     Badge.objects.create(badge_name="사교왕", badge_image="../static/image/follower.png", badge_get="친구 수 20명 이상")    
@@ -235,8 +237,7 @@ def init_data(request):
     Badge.objects.create(badge_name="랭킹 2위", badge_image="../static/image/silver-cup.png", badge_get="누적 방문 랭킹 2위")    
     Badge.objects.create(badge_name="랭킹 3위", badge_image="../static/image/bronze-cup.png", badge_get="누적 방문 랭킹 3위")    
 
-    
-    return redirect('home')
+    return redirect('main')
 
 def sort_latest(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
@@ -336,50 +337,63 @@ def cafe_delete(request, pk):
     return redirect('cafe:cafe_list')
 
 def enroll_cafe_from_map(request, pk):
+
     cafe = CafeList.objects.get(pk=pk)
+    next = request.GET['next']
     ctx = {
         'cafe': cafe,
+        "next": next
     }
-    return render(request, 'cafe/enroll_cafe_from_map.html', ctx)
+    return render(request, 'cafe/enroll_cafe_from_map.html', ctx) 
 
 @csrf_exempt
 def enroll_cafe(request):
     if request.method == 'POST':
         req_post = request.POST
-        #음료 내용 받아온다.
         str_cafename = req_post.__getitem__('cafename')
-        str_drinkname = req_post.__getitem__('beverage')
-
-        #카페를 방문한 유저와 그 유저의 방문 횟수 +1
-        
-        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
-        visited_cafes = VisitedCafe.objects.filter(user=request.user)
-        vcs=[]
-        for vc in visited_cafes:
-            vcs.append(vc.cafe)
-        if this_cafe in vcs: #이전에 갔을 때
-            v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
-        else: #처음 갔을 때
-            v_cafe = VisitedCafe()
-            v_cafe.user = request.user
-            v_cafe.cafe = CafeList.objects.get(name=str_cafename)
-
-        v_cafe.visit_check = True
-        v_cafe.visit_count += 1
-
-        user = User.objects.get(username=request.user)
-        user.total_visit += 1
-
-        #모달창에서 선택한 음료 저장
-        jsonDec=json.decoder.JSONDecoder()
-        drinkList=jsonDec.decode(v_cafe.drink_list)
-
-        drinkList.append(str_drinkname)
-        user.visit_count_lastmonth += 1 
+        str_cafeid = req_post.__getitem__('cafeid')
+        this_cafe = CafeList.objects.get(id=str_cafeid)
+        try:
+            req_post.__getitem__('beverage')
             
-        v_cafe.drink_list=json.dumps(drinkList)
+            str_drinkname = req_post.__getitem__('beverage')
 
-        user.save()
-        v_cafe.save()
+            #카페를 방문한 유저와 그 유저의 방문 횟수 +1
+            
+            #전체 카페 중 그 카페
+            visited_cafes = VisitedCafe.objects.filter(user=request.user)
+            vcs=[]
+            for vc in visited_cafes:
+                vcs.append(vc.cafe)
+            if this_cafe in vcs: #이전에 갔을 때
+                v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
+            else: #처음 갔을 때
+                v_cafe = VisitedCafe()
+                v_cafe.user = request.user
+                v_cafe.cafe = CafeList.objects.get(id=str_cafeid)
 
-    return redirect('cafe:cafe_map')
+            v_cafe.visit_check = True
+            v_cafe.visit_count += 1
+
+            user = User.objects.get(username=request.user)
+            user.total_visit += 1
+
+            #모달창에서 선택한 음료 저장
+            jsonDec=json.decoder.JSONDecoder()  
+            drinkList=jsonDec.decode(v_cafe.drink_list)
+
+            drinkList.append(str_drinkname)
+            user.visit_count_lastmonth += 1 
+                
+            v_cafe.drink_list=json.dumps(drinkList)
+
+            user.save()
+            v_cafe.save()
+            next = request.POST['next']
+            return redirect(next)
+        except:
+            next = request.POST['next']
+            return render(request, 'cafe/enroll_cafe_from_map.html', {'cafe':this_cafe, 'next': next, 'error': '음료를 하나 선택해주세요!'})
+    else:
+        next = request.GET['next']
+        return render(request, 'cafe/enroll_cafe_from_map.html', {"next": next})
