@@ -89,7 +89,7 @@
                 <hr/>
                 <div class="d-flex justify-content-between">
                     <div class="reviewer-name d-flex">
-                        <a href="{% url 'mypage' reviews.username.pk %}" style="font-weight:bold;">{{ reviews.username }} </a>
+                        <a href="{% url 'mypage' reviews.username.pk %}" style="font-weight:bold;">{{ reviews.username.nickname }} </a>
 
                         {% if reviews.review_stars == '1.0' %}
                             <span>⭐</span>
