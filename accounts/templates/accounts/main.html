@@ -3,6 +3,7 @@
 
 {% block css %}
 <meta property="og:type" content="website">
+<meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0" />
 
 <link rel="stylesheet" type="text/css" href="//t1.daumcdn.net/mapapisdoc/cssjs/1619092942440/css/web.min.css">
 
@@ -74,10 +75,10 @@
                         <p class="m2-ctx" style="color:white; text-shadow: 2px 2px 1px black;">서울 시내 37,000여개의 카페 중 본인이 방문한 카페를 기록할 수 있습니다.<br> 카페 리스트의 검색기능과 지도의 위치기반 서비스를 이용해 카페를 추가해 보세요!<br> 카페에서 마신 음료도 함께 기록해보세요!</p>
                         {% if user.is_authenticated %}
                         <a class="mainbtn" href="{% url 'cafe:cafe_list' %}" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
-                        <a class="mainbtn" href="{% url 'cafe:cafe_map' %}" style="width: 160px;"><span>지도에서 카페추가</span></a>
+                        <a class="mainbtn btn-2" href="{% url 'cafe:cafe_map' %}" style="width: 160px;"><span>지도에서 카페추가</span></a>
                         {% else %}
                         <a class="mainbtn" href="/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px; margin-right: 10px;" ><span>검색하여 카페추가</span></a>
-                        <a class="mainbtn" href="/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>지도에서 카페추가</span></a>
+                        <a class="mainbtn btn-2" href="/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>지도에서 카페추가</span></a>
                         {% endif %}
                     </div>
                 </div>

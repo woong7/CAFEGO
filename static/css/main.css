@@ -673,3 +673,104 @@ transform: translateY(0);
   font-family: Wemakeprice-Bold;
   font-size: 1.4rem;
 }
+
+
+/* 휴대폰 사이즈 반응형 구현 */
+@media screen and (max-width: 400px) {
+  .m1_logo {
+    font-size: 78px;
+    margin-top: 4.5rem;
+    /* font-size: 135px;  */
+    border: 2px black; 
+    font-family: 'HSGyoulnoonkot';
+    text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;
+    animation: show-logo 2s ease;
+  
+    transition: transform 2.5s,background-color .5s,color .5s;
+    transform: translateY(50px);
+    -webkit-transition: -webkit-transform 2.5s,background-color .5s,color .5s;
+    -webkit-transform: translateY(50px);
+  }
+  .m1_info {
+    font-size: 1.3em;
+    width: 248px;
+    margin-top: 3rem;
+  }
+  .m1_mugplate{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 23rem;
+    height: 23rem;
+    border-radius: 50%; 
+    z-index: 1;
+    background-image: url(../../static/image/main_plate.jpg);
+    background-size: cover;
+  }
+  .m1_mug { 
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 29rem;
+    height: 29rem;
+    background-color: transparent;
+    z-index: 2;
+    animation:show-img 1s ease;
+    /* animation-delay: .2s; */
+  }
+
+  [class*='odd-title'] {
+    position:absolute; 
+    left:50%; 
+    bottom:-224%; 
+    font-size: 2rem; 
+    text-indent:0; 
+    margin-top: 1rem;
+    font-family: EliceDigitalBaeum_Bold;
+    color: #e0c4b8;
+    text-shadow: 2px 2px 2px #704F3F;
+  }
+
+  [class*='ctx'] {
+    width: 40vw;
+    position:absolute;
+    left: 44%;
+    bottom: -47%;
+    width: 288px;
+  }
+  .mainbtn {
+    width: 112px;
+    position: relative;
+    left: 60%;
+    bottom: -125%;
+    height: 42px;
+    display: inline-block;
+    overflow: hidden;
+    border: 2px solid #573728;
+    background-color: #fff;
+    border-radius: 10px;
+    
+    font-size: 17px;
+    letter-spacing: -.5px;
+    line-height: 40px;
+    color: #573728;
+    text-align: center;
+  
+    transition: transform 3s,background-color .5s,color .5s;
+    transform: translateY(70px);
+    -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+    -webkit-transform: translateY(70px);
+  }
+  .btn-2 {
+    bottom: -144%;
+    left: 17%;
+  }
+  em {
+    position: absolute;
+    left: 50%;
+    bottom: 57%;
+  }
+
+}
