@@ -50,11 +50,6 @@ body {
     font-family: Wemakeprice-Bold;
 }
 
-.container {
-    width: 78%; 
-    border-radius: 1%;
-}
-
 .wave{
     position: absolute;
     height: 89%;
@@ -65,6 +60,8 @@ body {
 }
 
 .container {
+    width: 78%; 
+    border-radius: 1%;
     width: 100vw;
     height: 100vh;
     display: grid;
