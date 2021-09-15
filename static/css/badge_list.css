@@ -35,7 +35,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    width: 1300px; 
+    width: 100%; 
     transform-style: preserve-3d;
 }
 
