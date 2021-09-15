@@ -9,6 +9,17 @@ html, body {
     background-color: #F0D9CE;
 }
 
+@media (max-width:575px) {
+    html {
+        font-size: 10px;
+    }
+}
+@media (min-width:576px) {
+    html {
+        font-size: 20px;
+    }
+}
+
 li {
     text-decoration: none;
 }
@@ -27,10 +38,19 @@ a:hover {
 }
 
 /* 전체 틀 잡기 */
-.review-content {
-    width: 800px;
-    padding-top: 16px;
-    margin: 0 auto;
+@media (max-width:575px) {
+    .review-content {
+        width: 95%;
+        padding-top: 8px;
+        margin: 0 auto;
+    }
+}
+@media (min-width:576px) {
+    .review-content {
+        width: 800px;
+        padding-top: 16px;
+        margin: 0 auto;
+    }
 }
 
 /* 카페 정보 최상위 */
@@ -38,17 +58,32 @@ a:hover {
     width: 100%;
 }
 
+.cafe-name {
+    font-size: 2rem;
+}
+
 .review-cafe-address {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 1.6rem;
     margin-bottom: 10px;
 }
 
-.map-icon {
-    width: 25px;
-    height: auto;
+@media (max-width:575px) {
+    .map-icon {
+        width: 12px;
+        height: auto;
+    }
 }
+
+@media (min-width:576px) {
+    .map-icon {
+        width: 24px;
+        height: auto;
+    }
+}
+
 
 .map-icon path {
     fill: #2482EE;
@@ -59,60 +94,119 @@ a:hover {
     cursor: pointer;
 }
 
-.another-review-button {
-    width: 120px;
-}
-
 /* 별점 최상위 */
-.rating_wrap_parents {
-    display: inline-block;
-    width: 180px;
-    margin-bottom: 25px;
+@media (max-width:575px) {
+    .rating_wrap_parents {
+        display: inline-block;
+        width: 100px;
+        height: 22px;
+    }
+    
+    .rating_wrap {
+        position: absolute;
+    }
+    
+    .rating .star_wrap {
+        width: 15px;
+        display: inline-block;
+    }
+    
+    .not_rating .star_wrap {
+        width: 15px;
+        display: inline-block;
+    }
+    
+    .rating .star {
+        width: 0;
+        overflow: hidden;
+    }
+    
+    .full_star { /* 별 */
+        font-size: 14px;
+        color: rgb(255, 238, 0);
+    } 
+    
+    .empty_star { /* 별 */
+        font-size: 14px;
+        color: gray;
+    }
 }
 
-.rating_wrap {
-    position: absolute;
+@media (min-width:576px) {
+    .rating_wrap_parents {
+        display: inline-block;
+        width: 200px;
+        height: 45px;
+    }
+    
+    .rating_wrap {
+        position: absolute;
+    }
+    
+    .rating .star_wrap {
+        width: 30px;
+        display: inline-block;
+    }
+    
+    .not_rating .star_wrap {
+        width: 30px;
+        display: inline-block;
+    }
+    
+    .rating .star {
+        width: 0;
+        overflow: hidden;
+    }
+    
+    .full_star { /* 별 */
+        font-size: 28px;
+        color: rgb(255, 238, 0);
+    } 
+    
+    .empty_star { /* 별 */
+        font-size: 28px;
+        color: gray;
+    }
 }
 
-.rating .star_wrap {
-    width: 30px;
-    display: inline-block;
+.rating_number {
+    font-size: 1.4rem;
+    font-weight: lighter;
 }
 
-.not_rating .star_wrap {
-    width: 30px;
-    display: inline-block;
+@media (max-width:575px) {
+    .another-review-button {
+        width: 80px;
+        font-size: 0.8rem;
+    }
 }
 
-.rating .star {
-    width: 0;
-    overflow: hidden;
+@media (min-width:576px) {
+    .another-review-button {
+        width: 120px;
+        font-size: 0.8rem;
+    }
 }
-
-.full_star { /* 별 */
-    font-size: 28px;
-    color: rgb(255, 238, 0);
-} 
-
-/* .full_star:hover {
-    transform: rotate(15deg) scale(1);
-} */
-
-.empty_star { /* 별 */
-    font-size: 28px;
-    color: gray;
-}
-
-/* .empty_star:hover {
-    transform: rotate(15deg) scale(1);
-} */
 
 /* 리뷰 작성 */
-.review-create {
-    height: 100px;
+@media (max-width:575px) {
+    .review-create {
+        height: 50px;
+        font-size: 1.5rem;
+        color: #704F3F;
+    }
+}
+
+@media (min-width:576px) {
+    .review-create {
+        height: 100px;
+        font-size: 1.5rem;
+        color: #704F3F;
+    }
+}
+
+.review-create div span {
     font-family: ONE-Mobile-POP;
-    font-size: x-large;
-    color: #704F3F;
 }
 
 .review-create:hover {
@@ -143,26 +237,61 @@ a:hover {
 }
 
 .reviewer-name a {
-    font-size: 20px;
+    font-size: 1rem;
     margin-right: 5px;
+}
+
+@media (max-width:575px) {
+    .reviewer-name a {
+        font-size: 1rem;
+        margin-right: 2.5px;
+    }
+}
+
+@media (min-width:576px) {
+    .reviewer-name a {
+        font-size: 1rem;
+        margin-right: 5px;
+    }
 }
 
 .reviewer-name span {
     letter-spacing: 0px;
-    line-height: 200%;
+    line-height: 140%;
 }
 
-.reviewer-info {
-    margin-left: 5px;
-    display: flex;
-    align-items: center;
+@media (max-width:575px) {
+    .reviewer-info {
+        margin-left: 2.5px;
+        display: flex;
+        align-items: center;
+    }
 }
 
-.reviewer-info span {
-    margin-left: 10px;
-    letter-spacing: -2px;
-    font-size: 13px;
-    color: gray;
+@media (min-width:576px) {
+    .reviewer-info {
+        margin-left: 5px;
+        display: flex;
+        align-items: center;
+    }
+}
+
+@media (max-width:575px) {
+    .reviewer-info span {
+        margin-left: 5px;
+        letter-spacing: -1px;
+        font-size: 0.65rem;
+        color: gray;
+    }
+}
+
+@media (min-width:576px) {
+    .reviewer-info span {
+        margin-left: 10px;
+        letter-spacing: -2px;
+        font-size: 0.65rem;
+        color: gray;
+    }
 }
 
 .main-btn {
@@ -193,21 +322,44 @@ a:hover {
     background-color: #A3735B;
 }
 
-.each-review-content {
-    white-space:pre-line;
-    padding-left: 10px;
-    padding-bottom: 10px;
+@media (max-width:575px) {
+    .each-review-content {
+        white-space:pre-line;
+        padding-left: 5px;
+        padding-bottom: 5px;
+    }
+
+    .review-img {
+        display: flex;
+        justify-content: center;
+        padding-left: 5px;
+        padding-bottom: 5px;
+    }
+
+    .review-img img {
+        max-height: 400px;
+        max-width: 300px;
+    }
 }
 
-.review-img {
-    display: flex;
-    justify-content: center;
-    padding-left: 10px;
-    padding-bottom: 10px;
-}
+@media (min-width:576px) {
+    .each-review-content {
+        white-space:pre-line;
+        padding-left: 10px;
+        padding-bottom: 10px;
+    }
 
-.review-img img {
-    width: 600px;
+    .review-img {
+        display: flex;
+        justify-content: center;
+        padding-left: 10px;
+        padding-bottom: 10px;
+    }
+
+    .review-img img {
+        max-height: 300px;
+        max-width: 600px;
+    }
 }
 
 .review-create-at {
@@ -216,13 +368,23 @@ a:hover {
 }
 
 .review-create-at span{
-    font-size: 13px;
+    font-size: 0.65rem;
 }
 
-details {
-    padding: 16px;
-    border: 1px solid #B3A29A;
-    border-radius: 10px;
+@media (max-width:575px) {
+    details {
+        padding: 4px;
+        border: 1px solid #B3A29A;
+        border-radius: 10px;
+    }
+}
+
+@media (min-width:576px) {
+    details {
+        padding: 16px;
+        border: 1px solid #B3A29A;
+        border-radius: 10px;
+    }
 }
 
 summary {
@@ -233,10 +395,162 @@ summary:hover {
     color:#704F3F;
 }
 
-.comment-write {
-    width: 90%;
+@media (max-width:575px) {
+    .comment-date {
+        font-size: 10px;
+    }
+    .comment-delete-btn {
+        margin-left: 0px;
+    }
+    .comment-write {
+        height: 20px !important;
+    }
 }
+
+@media (min-width:576px) {
+    .comment-date {
+        font-size: 12px;
+    }
+    .comment-delete-btn {
+        margin-left: 27px;
+    }
+    .comment-write-btn {
+        margin-left: 27px;
+    }
+}
+
+.comment-write {
+    width: 100% !important;
+}
+/* Finish review_list.html */
 
 .drink-list div {
     margin-left: 27%;
+}
+
+select, input[type=text]{
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    border: 1px solid #573728;
+    color: black;
+    width: 110px;
+    height: 30px;
+    padding-left: 10px;
+}
+
+.drink-list div {
+    display: -webkit-inline-box;
+    /* padding-left: 20%; */
+}
+
+.drink-list div span {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+@font-face {
+    font-family: 'SDSamliphopangche_Outline';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/SDSamliphopangche_Outline.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.modalcontent {
+    font-family: SDSamliphopangche_Outline;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Playball&family=Roboto:ital,wght@1,100&display=swap');
+
+
+/* 체크박스 */
+.check-div {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.check_wrap {
+    display: flex;
+}
+
+.check {
+    position: absolute;
+    width: 20px;
+}
+
+.checkbox, .check_icon {
+    position: absolute;
+    left: 0px;
+    top: 5px; 
+}
+
+.check > input {
+    display: none;
+}
+
+.check_icon {
+    background-color: #F0D9CE;
+    width: 15px;
+    height: 15px;
+    border-radius: 2px;
+}
+
+.check_icon::before, .check_icon::after {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 0;
+    background-color: #B3A29A;
+    position: absolute;
+    transform-origin: left top;
+    border-radius: 1px;
+}
+
+.check_icon::before {
+    top: 7px;
+    left: 1px;
+    transform: rotate(-45deg);
+}
+
+.check_icon::after {
+    top: 12.5px;
+    left: 7.5px;
+    transform: rotate(-135deg);
+}
+
+.check input:checked ~ .check_icon::before {
+    height: 7px;
+    transition: all .3s ease;
+}
+
+.check input:checked ~ .check_icon::after { 
+    height: 15px;
+    transition: all .35s ease .3s;
+}
+/* ~: 동일 선상의 요소, 부모자식 아니고 동일 선상에 있는 태그들 */
+
+
+.check_label {
+    font-size: 17px;
+    font-weight: lighter;
+    font-family: Wemakeprice-Bold;
+    color: #704F3F;
+    text-align: left;
+    padding-left: 30px;
+}
+
+.button2 {
+    font-family: SDSamliphopangche_Outline;
+    color: black;
+    border: 2px solid #573728;
+    border-radius: 10px;
+    font-size: 20px;
+    color: #573728;
+    text-align: center;
+}
+
+.button2:hover {
+    background-color: #704F3F;
+    color: white;
 }

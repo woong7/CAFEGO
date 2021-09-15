@@ -8,7 +8,6 @@ import os
 
 urlpatterns = [
     path('', views.main, name='main'),
-    path('home/', views.home, name='home'),
     path('signup/', views.UserRegistrationView.as_view(), name='signup'),
     path('logout/', views.logout, name='logout'),
     path('login/', views.login, name='login'),
