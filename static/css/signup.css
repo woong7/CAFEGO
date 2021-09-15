@@ -85,11 +85,12 @@
 
 .page_info {
     font-size: 10px;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
 }
 
 .container {
-    width: 100vw;
+    width: 78%; 
+    /* width: 100vw; */
     height: 150vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -399,13 +400,8 @@ select:active .home_icon {
 		grid-template-columns: 1fr;
 	}
 
-	.img{
-		display: none;
-	}
-
-	.wave{
-		display: none;
-	}
+	.img{ display: none;}
+	.wave{display: none;}
 
     .avatar {
         width: 130px;
@@ -414,4 +410,40 @@ select:active .home_icon {
 	.login-content{
 		justify-content: center;
 	}
+} 
+
+@media screen and (max-width: 400px){
+	.container{
+        width: 100%;
+        /* width: 70vw; */
+        padding: 5px 0px;
+        display: flex;
+	}
+
+	.img{ display: none;}
+	.wave{ display: none; }
+
+    .signup-container { width: 100%; }
+    form{ width: 90%; }
+
+    .avatar {width: 120px;}
+    form{width: 88%;}
+    .signup_table {width:100%;}
+	.signup-content{justify-content: center;}
+
+    .input-div {
+        width: 80%;
+        margin: 20px auto;
+    }
+
+    .check-div { 
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        margin-left: 10%;
+    }
+
+    .house {
+        flex-direction: column;
+    }
 } 
