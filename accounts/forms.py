@@ -29,9 +29,6 @@ class UserForm(forms.ModelForm):
         fields = '__all__'
 
 class MyCustomForm(forms.ModelForm):
-    agree_terms = forms.BooleanField(label='서비스 이용약관 및 개인정보방침 동의')
-    agree_marketing = forms.BooleanField(label='마케팅 이용 동의')
-    nickname = forms.CharField(max_length=150, label='닉네임을 입력하세요')
 
     def save(self, request):
         user = super(MyCustomForm, self).save(request)
@@ -40,17 +37,14 @@ class MyCustomForm(forms.ModelForm):
         user.city = req_post.__getitem__('city')
         user.gu = req_post.__getitem__('gu')
         user.dong = req_post.__getitem__('dong')
-        user.nickname = self.cleaned_data['nickname']
-        user.self_intro = self.cleaned_data['self_intro']
+        user.self_intro = req_post.__getitem__('self_intro')
         user.self_image = req_files.__getitem__('self_image')
-        user.agree_terms = self.cleaned_data['agree_terms']
-        user.agree_marketing = self.cleaned_data['agree_marketing']
         user.save()
         return user
 
     class Meta:
         model = User
-        fields = ('nickname', 'self_intro', 'self_image', 'city', 'gu', 'dong', 'agree_terms', 'agree_marketing')
+        fields = ('self_intro', 'self_image', 'city', 'gu', 'dong')
 
 
 class UserRegistrationForm(UserCreationForm):

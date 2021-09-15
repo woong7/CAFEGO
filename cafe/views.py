@@ -83,7 +83,7 @@ def comment_write(request):
         boolDayOrNight = '오후'
     else:
         boolDayOrNight = '오전'   
-    timeString = now.strftime('%Y년 %#m월 %#d일 %#I:%M '+boolDayOrNight)
+    timeString = now.strftime('%Y년 X%m월 X%d일 X%I:%M '+boolDayOrNight).replace('X0','X').replace('X','')
 
     notification = Notification.objects.create(notification_type=2, from_user=request.user, to_user=review.username, comment=comment)
     notification.save()
@@ -219,7 +219,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 import os
 def init_data(request):
-    with open('cafe/crawledminor.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawled.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []
@@ -227,7 +227,7 @@ def init_data(request):
         st = (s['stores'][i], s['X'][i], s['Y'][i],  s['road_address'][i], s['ID'][i])
         ss.append(st)
     for i in range(len(s)):
-        CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3], id=ss[i][4])#id값 써도 될려낭
+        CafeList.objects.create(name=ss[i][0], location_x=ss[i][1], location_y=ss[i][2], address=ss[i][3], id=ss[i][4])
 
     Badge.objects.create(badge_name="카페홀릭", badge_image="../static/image/barista.png", badge_get="카페 총 누적 방문횟수 50회 이상") 
     Badge.objects.create(badge_name="사교왕", badge_image="../static/image/follower.png", badge_get="친구 수 20명 이상")    
@@ -237,8 +237,7 @@ def init_data(request):
     Badge.objects.create(badge_name="랭킹 2위", badge_image="../static/image/silver-cup.png", badge_get="누적 방문 랭킹 2위")    
     Badge.objects.create(badge_name="랭킹 3위", badge_image="../static/image/bronze-cup.png", badge_get="누적 방문 랭킹 3위")    
 
-    
-    return redirect('home')
+    return redirect('main')
 
 def sort_latest(request, pk):
     this_cafe = CafeList.objects.get(pk=pk) 
@@ -352,8 +351,10 @@ def enroll_cafe(request):
     if request.method == 'POST':
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
-        this_cafe = CafeList.objects.get(name=str_cafename)
-        if req_post.__getitem__('beverage'):
+        str_cafeid = req_post.__getitem__('cafeid')
+        this_cafe = CafeList.objects.get(id=str_cafeid)
+        try:
+            req_post.__getitem__('beverage')
             
             str_drinkname = req_post.__getitem__('beverage')
 
@@ -369,7 +370,7 @@ def enroll_cafe(request):
             else: #처음 갔을 때
                 v_cafe = VisitedCafe()
                 v_cafe.user = request.user
-                v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+                v_cafe.cafe = CafeList.objects.get(id=str_cafeid)
 
             v_cafe.visit_check = True
             v_cafe.visit_count += 1
@@ -390,7 +391,7 @@ def enroll_cafe(request):
             v_cafe.save()
             next = request.POST['next']
             return redirect(next)
-        else:
+        except:
             next = request.POST['next']
             return render(request, 'cafe/enroll_cafe_from_map.html', {'cafe':this_cafe, 'next': next, 'error': '음료를 하나 선택해주세요!'})
     else:

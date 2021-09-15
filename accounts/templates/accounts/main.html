@@ -46,7 +46,14 @@
                     <div class="m1_group" style="background-color: transparent; color: white;">
                         <div class="m1_info">지도기반 카페 이용기록 웹서비스</div>
                         <span class="m1_logo">CAFEGO</span>
-
+                        {% if usernum == 0 %}
+                            <button class="btn btn-outline-primary" onClick="location.href='{%url 'create_admin' %}'">슈퍼유저 생성</button>
+                        {% endif %}
+                        {% if user.is_admin %}
+                            {% if cafenum == 0%}
+                                <p><a class="btn btn-outline-primary" href="{% url 'cafe:init_data' %}" >카페 데이터 받기(리셋 후 한번만 실행해 주세요!)</a></p>
+                            {% endif %}
+                        {% endif %}
                         {% if not user.is_authenticated %}
                             <button class="startbtn" onclick="location.href='/login'">Let's Go!</button>
                         {% endif %}
@@ -128,8 +135,8 @@
                         <a class="mainbtn" href="{% url 'enroll_visited_cafe' %}" style="width: 146px; margin-right: 10px;"><span>리뷰 쓰기</span></a>
                         <a class="mainbtn" href="{% url 'cafe:cafe_list' %}" style="width: 160px;"><span>리뷰에 댓글 쓰기</span></a>
                         {% else %}
-                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 146px; margin-right: 10px;"><span>방문카페 리뷰 쓰기</span></a>
-                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 160px;"><span>리뷰에 댓글 쓰기</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 10rem; margin-right: 10px;"><span>방문카페 리뷰 쓰기</span></a>
+                        <a class="mainbtn" href="/account/login" onclick="return confirm('로그인이 필요한 페이지입니다. 지금 바로 로그인 하시겠습니까?');" style="width: 10rem;"><span>리뷰에 댓글 쓰기</span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -206,7 +213,6 @@
         </div>
     </div>
                 
-    <script type="text/javascript" src="//m1.daumcdn.net/tiara/js/td.min.js"></script>
     <script type="text/javascript">var _tiq = 'undefined' !== typeof _tiq ? _tiq : [];window._tiq = _tiq; _tiq.push(['__trackPageview']);</script>
     <script type="text/javascript" src="//t1.daumcdn.net/mapapisdoc/cssjs/1619092942440/js/service.min.js"></script>
 
