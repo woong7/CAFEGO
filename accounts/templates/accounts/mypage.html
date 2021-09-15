@@ -99,7 +99,7 @@
                                 <div class="card card-body">
                                     <article class="each_review">
                                         {% for reviews in my_all_review %}
-                                            <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username }}</a> 
+                                            <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username.nickname }}</a> 
 
                                             {% if reviews.review_stars == '1.0' %}
                                                 <span>⭐</span>

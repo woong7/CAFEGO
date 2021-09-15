@@ -40,11 +40,10 @@
     <nav class="navbar navbar-expand-lg bg-lightgray sticky-top px-2">
         <div class="container-fluid">
             {% if user.is_authenticated %}
-                <a href="{% url 'main' %}" class="navbar-brand" style="width: 126px;">
+                <a href="{% url 'main' %}" class="navbar-brand">
                     <span id="header-logo-image">CAFE GO!</span>
                 </a><span class="blind-logo">카페고 로고</span>
-                
-                <span class="mx-3 nev_text">{{user.nickname}}님 안녕하세요!</span>
+                <span class="nev_text base-nickname">{{user.nickname}}님 안녕하세요!</span>
                 <div class="nav-item" style="padding-bottom: 0.3%;">
                     {% show_notifications %}
                 </div>
@@ -77,7 +76,7 @@
                     </ul>
                 </div>
             {% else %}
-                <a href="{% url 'main' %}" class="navbar-brand" style="width: 126px;">
+                <a href="{% url 'main' %}" class="navbar-brand">
                     <span id="header-logo-image">CAFE GO!</span>
                 </a><span class="blind-logo">카페고 로고</span>
                 <div class="d-flex">
