@@ -219,7 +219,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 import os
 def init_data(request):
-    with open('cafe/crawled.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawledkorea.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []
