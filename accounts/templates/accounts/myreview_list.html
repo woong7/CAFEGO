@@ -11,9 +11,14 @@
 
 {% block content %}
 <div class="container review-content">
-    <div class="px-4 py-3 my-5 cafe-info shadow-sm card" style="height:80vh;">
+    <div class="px-4 py-3 my-5 cafe-info shadow-sm card" style="min-height:80vh;">
         <div class="page_title">
             <span>나의 리뷰 목록</span>
+        </div>
+        <div>
+            <button class="exit-button" onclick="location.href='{% url 'mypage' request.user.id %}'">
+                X
+            </button>
         </div>
         <table class="table mt-3">
         <thead>
@@ -32,7 +37,7 @@
                     <td>{{ review.review_stars }}</td>
                     <td>{{ review.content }}</td>
                     <td>{{ review.created_at }}</td> 
-                    <td><button class="main-reverse-btn" onclick="location.href="{% url 'review_update' review.id %}"">리뷰수정</button></td>        
+                    <td><button class="main-reverse-btn" onclick="location.href='{% url 'review_update' review.id %}'">리뷰수정</button></td>        
                 </tr>
             {% endfor %}    
         </tbody>

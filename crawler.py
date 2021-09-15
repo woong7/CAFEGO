@@ -14,7 +14,7 @@ def whole_region(keyword, start_x, start_y, end_x, end_y):
     while(1):
         url='https://dapi.kakao.com/v2/local/search/keyword.json'
         params={'query':keyword, 'page':page_num, 'rect': f'{start_x},{start_y},{end_x},{end_y}'}
-        headers={'Authorization': 'KakaoAK 8a39917a1ea51c15d8c0d936782abf3a'}
+        headers={'Authorization': 'KakaoAK 5595e9b8209b83161571a42bc8b662c0'}
         resp=requests.get(url, params=params, headers=headers)
 
         search_count=resp.json()['meta']['total_count']
@@ -69,12 +69,12 @@ def make_map(dfs):
 
 
 keyword='카페'
-start_x=126.75
-start_y=37.43
-next_x=0.01
-next_y=0.01
-num_x=44
-num_y=28
+start_x=124.60
+start_y=33.11
+next_x=0.5
+next_y=0.5
+num_x=13
+num_y=12
 
 
 overlapped_result= overlapped_data(keyword, start_x, start_y, next_x, next_y, num_x, num_y)
@@ -100,7 +100,7 @@ for place in results:
 
 print('total_result_number = ' , len(df))
 
-print(df)
-df.to_csv("crawledagain.csv", mode='w')
+#print(df)
+df.to_csv("crawled_korea.csv", mode='w')
 
 #make_map(df)

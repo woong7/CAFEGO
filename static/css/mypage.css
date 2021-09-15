@@ -4,10 +4,6 @@
     font-family: NEXON Lv1 Gothic OTF;
 }
 
-span {
-    font-family: Pretendard-Regular;
-}
-
 .my_page {
     background-color: #F0D9CE;
 }
@@ -20,5 +16,18 @@ span {
 }
 
 .bg-deepbrown {
-    background-color: #a3735b
+    background-color: #a3735b;
+}
+
+.bottom-item {
+    border: 2px solid #b19d92;
+    border-radius: 10px;
+    padding: 30px 0;
+    margin: 0 20px;
+}
+
+.card {
+    background-color: #f5eae6;
+    max-height: 100%;
+    overflow-y: auto;
 }

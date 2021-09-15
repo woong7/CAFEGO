@@ -20,10 +20,10 @@
         </header>
         
         <body>
-            <div class="container px-5">
-                <article class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mb-3 text-center">
+            <div class="container px-5 table-responsive">
+                <article class="mb-3 text-center col-12 d-flex" style="flex-wrap:wrap;">
                 {% for badge in badges %}
-                    {% if badge in taken_badges %}    
+                    {% if badge in taken_badges %}   
                         <div class="taken_badges">
                             <div class="box">
                                 <div class="imgbox taken_imgbox">
@@ -39,6 +39,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <img class="success-icon" src="https://image.flaticon.com/icons/png/512/5261/5261664.png" />
                         </div>  
                     {% else %}    
                         <div class="box">

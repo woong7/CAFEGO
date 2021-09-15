@@ -24,6 +24,7 @@ import operator
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Count
 
 @csrf_protect 
 def signup(request):
@@ -60,24 +61,13 @@ def logout(request):
     return render(request, "accounts/main.html")
 
 def main(request):
-    return render(request, 'accounts/main.html')
-
-
-def home(request):
-    users = User.objects.all()
-    user = request.user
-    cafenum=CafeList.objects.all()
-    ctx = {
-        'cafenum':len(cafenum), 
-        'usernum':len(users), 
-    }
-    if user.is_authenticated:
-        ctx['total_visit'] = user.total_visit
-    return render(request,'accounts/home.html', ctx)
+    return render(request, 'accounts/main.html', {'usernum': User.objects.count(), 'cafenum':CafeList.objects.count()})
 
 def create_admin(request):
     User.objects.create(username="admin", email="pirocafego@gmail.com", password="pbkdf2_sha256$260000$L95dMuH6iFqEPNxkUzccWw$kVY2VDHFJe4WiywG6HA4/SLbB1wWwHoeJtkxxY7KHRY=", nickname="관리자", is_admin=True, is_active=True, city="서울특별시", gu="관악구", dong="신림동")
-    return redirect('home')
+    user = auth.authenticate(request, username='admin', password='adminadmin')
+    auth.login(request, user)
+    return redirect('main')
 
 def badge_list(request, pk):
     user=User.objects.get(id=pk)
@@ -142,23 +132,17 @@ def user_cafe_map(request):
     }
     return render(request, 'accounts/user_cafe_map.html', ctx)
 
-def user_detail(request):
-    return render(request, 'accounts/detail.html')
-
-def rank_detail(request):
-    return render(request, 'accounts/rank_detail.html')
-
 def rank_list(request):
     now = datetime.today() #오늘
-    this_month = now.month-1
-    last_month_first = datetime(now.year, now.month-1, 1) #오늘을 기준으로 저번달 첫 시간
+    this_month = now.month
+    last_month_first = datetime(now.year, now.month, 1) #오늘을 기준으로 저번달 첫 시간
     this_month_first = last_month_first + relativedelta.relativedelta(months=1)
     last_month_last = this_month_first - timedelta(seconds=1) #저번달 막 시간
     
     #test용TODO:나중에 지우깅!!
-    August = datetime(now.year, now.month, 1)
-    September = August + relativedelta.relativedelta(months=1)
-    August_fin = September - timedelta(seconds=1)
+    # August = datetime(now.year, now.month, 1)
+    # September = August + relativedelta.relativedelta(months=1)
+    # August_fin = September - timedelta(seconds=1)
     
     ####################  A_총 방문 랭킹  ####################
     A_users=User.objects.all().exclude(total_visit=0).order_by('-total_visit')
@@ -176,8 +160,6 @@ def rank_list(request):
     
     ####################  B_한 달 방문 랭킹  ####################
     B_users=User.objects.all().exclude(visit_count_lastmonth=0).order_by('-visit_count_lastmonth')
-    # B_users_js=json.dumps([user.json() for user in B_users])
-    # B_users_js=json.dumps(list(B_users), cls=DjangoJSONEncoder)
     B_me=User.objects.get(username=request.user)
 
     if B_me in B_users:
@@ -188,13 +170,14 @@ def rank_list(request):
         B_my_grade = 0
 
     ####################  C_한 달 카페 종류 랭킹  ####################
-    C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(August), datetime.date(August_fin)))
+    C_monthly_visited_cafe = VisitedCafe.objects.filter(updated_at__date__range=(datetime.date(last_month_first), datetime.date(last_month_last)))
     C_monthly_kinds_dict = {}
     for i in C_monthly_visited_cafe:
-        if i.user not in C_monthly_kinds_dict.keys():#키 리스트
-            C_monthly_kinds_dict[i.user.nickname] = [i.cafe]
-        else:
+        if i.user.nickname in C_monthly_kinds_dict.keys():#키 리스트
             C_monthly_kinds_dict[i.user.nickname].append(i.cafe)
+        else:
+            C_monthly_kinds_dict[i.user.nickname] = [i.cafe]
+            print(C_monthly_kinds_dict.keys())
     #여기까지 {user이름:[카페리스트]}이렇게 내가 원하는 대로 나옴!!
 
     # 카페 종류 **개수**를 넣어주기
@@ -277,72 +260,6 @@ def rank_list(request):
     }
 
     return render(request, 'accounts/rank_list.html', context=ctx)
-
-@login_required
-def enroll_home(request):
-    return render(request, "accounts/enroll_home.html")
-
-class EnrollNewCafeListView(ListView):
-    model = VisitedCafe
-    paginate_by = 10
-    template_name = 'accounts/enroll_new_cafe.html'
-    context_object_name = 'new_cafe_list'
-
-    #검색기능
-    def get_queryset(self):
-        search_keyword = self.request.GET.get('q', '')
-        search_type = self.request.GET.get('type', '') 
-        visited_cafe_list = VisitedCafe.objects.filter(user=self.request.user).order_by('-id')
-        
-        names_to_exclude = [o.cafe for o in visited_cafe_list] 
-        new_cafe_list = CafeList.objects.exclude(name__in=names_to_exclude)
-
-        if search_keyword:
-            if len(search_keyword) > 1:
-                if search_type == 'name':
-                    search_cafe_list = new_cafe_list.filter(name__icontains=search_keyword)
-                elif search_type == 'address':
-                    search_cafe_list = new_cafe_list.filter(address__icontains=search_keyword)
-                elif search_type == 'all':
-                    search_cafe_list = new_cafe_list.filter(Q(name__icontains=search_keyword) | Q(address__icontains=search_keyword))
-                return search_cafe_list
-            else:
-                messages.error(self.request, '2글자 이상 입력해주세요.')
-        return new_cafe_list
-
-    #하단부에 페이징 처리
-    #Django Paginator를 사용하여 간단하게 페이징처리를 구현할 수 있지만 
-    #하단부의 페이지 숫자 범위를 커스텀하기 위해 
-    #get_context_data 메소드로 페이지 숫자 범위 Context를 생성하여 템플릿에 전달한다.
-    def get_context_data(self, **kwargs):
-        #pk값 얻어옴, *kwargs는 키워드된 n개의 변수들을 함수의 인자로 보낼 때 사용
-        context = super().get_context_data(**kwargs)
-        paginator = context['paginator']
-        #10번째 버튼?
-        page_numbers_range = 10
-        #page_range():(1부터 시작하는)페이지 리스트 반환 
-        max_index = len(paginator.page_range)
-
-        page = self.request.GET.get('page')
-        current_page = int(page) if page else 1
-
-        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
-        end_index = start_index + page_numbers_range
-        if end_index >= max_index:
-            end_index = max_index
-
-        page_range = paginator.page_range[start_index:end_index]
-        context['page_range'] = page_range
-
-        ##
-        search_keyword = self.request.GET.get('q', '')
-        search_type = self.request.GET.get('type', '') 
-
-        if len(search_keyword) > 1:
-            context['q'] = search_keyword
-        context['type'] = search_type
-
-        return context
 
 class EnrollVisitedCafeListView(ListView):
     model = VisitedCafe
@@ -433,7 +350,7 @@ def infoupdate(request, pk):
         user_change_form = MyCustomForm(request.POST, request.FILES, instance=request.user)
         if user_change_form.is_valid():
             user_change_form.save(request)
-            return redirect('mypage', request.user.pk)
+        return redirect('mypage', request.user.pk)
     
     else:
 	    user_change_form = MyCustomForm(instance = request.user)
@@ -643,11 +560,15 @@ def visit_register(request):
         req_post = request.POST
         #음료 내용 받아온다.
         str_cafename = req_post.__getitem__('cafename')
-        str_drinkname = req_post.__getitem__('beverage')
-
+        str_cafeid = req_post.__getitem__('cafeid')
+        try:
+            str_drinkname = req_post.__getitem__('beverage')
+        except:
+            messages.error(request, '음료를 하나 선택해주세요!')
+            return redirect('cafe:cafe_list')
         #카페를 방문한 유저와 그 유저의 방문 횟수 +1
         
-        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        this_cafe = CafeList.objects.get(id=str_cafeid)#전체 카페 중 그 카페
         visited_cafes = VisitedCafe.objects.filter(user=request.user)
         vcs=[]
         for vc in visited_cafes:
@@ -657,7 +578,7 @@ def visit_register(request):
         else: #처음 갔을 때
             v_cafe = VisitedCafe()
             v_cafe.user = request.user
-            v_cafe.cafe = CafeList.objects.get(name=str_cafename)
+            v_cafe.cafe = CafeList.objects.get(id=str_cafeid)
 
         v_cafe.visit_check = True
         v_cafe.visit_count += 1
@@ -689,10 +610,15 @@ def visited_register(request):
     if request.method == 'POST':
         req_post = request.POST
         str_cafename = req_post.__getitem__('cafename')
-        str_drinkname = req_post.__getitem__('beverage')
+        str_cafeid = req_post.__getitem__('cafeid')
+        try:
+            str_drinkname = req_post.__getitem__('beverage')
+        except:
+            messages.error(request, '음료를 하나 선택해주세요!')
+            return redirect('enroll_visited_cafe')
 
         user = User.objects.get(username=request.user)
-        this_cafe = CafeList.objects.get(name=str_cafename)#전체 카페 중 그 카페
+        this_cafe = CafeList.objects.get(id=str_cafeid)#전체 카페 중 그 카페
         v_cafe = VisitedCafe.objects.get(cafe=this_cafe, user=request.user)
         v_cafe.visit_count += 1
         user.total_visit += 1

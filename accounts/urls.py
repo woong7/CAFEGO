@@ -8,7 +8,6 @@ import os
 
 urlpatterns = [
     path('', views.main, name='main'),
-    path('home/', views.home, name='home'),
     path('signup/', views.UserRegistrationView.as_view(), name='signup'),
     path('logout/', views.logout, name='logout'),
     path('login/', views.login, name='login'),
@@ -26,15 +25,11 @@ urlpatterns = [
     path('myreview_list/', views.MyCafeReviewListView.as_view(), name='myreview_list'),
     path('review_update/<int:pk>/', views.review_update, name='review_update'),
     path('rank/list/', views.rank_list, name='rank_list'),
-    path('rank/detail/', views.rank_detail, name='rank_detail'),
     path('cafemap/', views.user_cafe_map, name='user_cafe_map'),
     path('this_cafe_map/<int:pk>/', views.this_cafe_map, name='this_cafe_map'),
-    #path('detail/', views.user_detail, name='user_detail'),
 
-    path('enroll_home/', views.enroll_home, name="enroll_home"),
     path('visit_register/', views.visit_register, name="visit_register"),
     path('visited_register/', views.visited_register, name="visited_register"),
-    path('enroll_new_cafe/', views.EnrollNewCafeListView.as_view(), name="enroll_new_cafe"),
     path('enroll_visited_cafe/', views.EnrollVisitedCafeListView.as_view(), name="enroll_visited_cafe"),
     
     path('notification/<int:notification_pk>/comment/<int:review_pk>', views.CommentNotification.as_view(), name='comment-notification'),
