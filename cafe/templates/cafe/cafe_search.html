@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem;">
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center">
     <header class="pt-3">
         <div class="p-2 mx-auto text-center">
             <div class="page_title">Search Cafe</div>
@@ -27,7 +27,7 @@
             <option value="address">주소</option>
             <option value="all">카페+주소</option>
         </select>
-        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색"  style="font-family: Pretendard-Regular; width: 550px;">
+        <input class="cafe-search-box" type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
         <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
     {% if messages %}
@@ -43,8 +43,8 @@
             <tr class="table-title">
                 <th> </th>
                 <th>카페명</th>
-                <th>위치</th>
-                <th>별점</th>             
+                <th class="hidden-col">위치</th>
+                <th class="hidden-col">별점</th>             
                 <th>방문추가</th>
                 <th>리뷰쓰기</th>             
             </tr>
@@ -70,10 +70,10 @@
                         <td style="vertical-align: middle;">
                             <a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a>
                         </td>
-                        <td style="vertical-align: middle;">
+                        <td class="hidden-col" style="vertical-align: middle;">
                             <a href="{% url 'this_cafe_map' cafe.id %}">{{ cafe.address }}</a>
                         </td>
-                        <td>
+                        <td class="hidden-col">
                             {%if cafe.cafe_stars == 0.0 %}
                             <div class="rating_wrap_parents">
                                 <div class="rating_wrap">
@@ -228,15 +228,15 @@
     <!-- 페이징 처리 -->
     {% if is_paginated %}
     <div class="btn-group me-2" role="group" aria-label="First group">
-    <ul class="pagination" style="justify-content: space-around; font-family: RIDIBatang; color: black;">
+    <ul class="pagination">
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}" style="color:black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}">
                 처음
             </a>
         </li>
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1" style="color:black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">
                 이전
             </a>
         </li>
@@ -251,7 +251,7 @@
         {% for page in page_range %}
         <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
             
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}" style="color: black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">
                 {{ page }}
             </a>
             
@@ -260,7 +260,7 @@
 
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}" style="color: black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">
                 다음
             </a>
         </li>
@@ -272,13 +272,13 @@
         </li>
         {% endif %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}" style="color: black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}">
                 마지막
             </a>
         </li>
     </ul>
     </div>
-    <div style="height:38px;">
+    <div>
         <span class="page-obj">{{page_obj}}</span>
     </div>
     {% endif %}

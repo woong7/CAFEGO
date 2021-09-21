@@ -171,13 +171,13 @@ nav {
 
 @media (min-width: 576px) {
     .hello_text {
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-family: Pretendard-Regular;
         color: #f0d9ce;
     }
     
     .nev_text {
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-family: Wemakeprice-Bold;
         padding-left: 1rem;
         color: #f0d9ce;
@@ -188,7 +188,7 @@ nav {
     }
     
     .nickname-font {
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-weight: bold;
         color: #B3A29A;
     }

@@ -3,8 +3,31 @@ body {
     background-color: #F0D9CE;
 }
 
+@media (max-width:575px) {
+    html {
+        font-size: 10px;
+    }
+}
+
+@media (min-width:576px) and (max-width:991px) {
+    html {
+        font-size: 15px;
+    }
+}
+@media (min-width:992px) {
+    html {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 991px) {
+    .hidden-col {
+        display: none;
+    }
+}
+
 .page_title {
-    font-size: 45px;
+    font-size: 2rem;
     font-family: EliceDigitalBaeum_Bold;
     text-shadow: 0px 1px 0px #B3A29A;
     color: #704F3F;
@@ -17,10 +40,12 @@ table {
 }
 
 th {
+    font-size: 1rem;
     height: 60px;
 }
 
 td {
+    font-size: 0.8rem;
     height: 50px;
     color: black;
     vertical-align: middle;
@@ -67,6 +92,7 @@ td:nth-child(5) {
     display: inline-block;
     text-align: center;
     color: #704F3F;
+    font-size: 0.8rem;
     font-weight: bold;
     background-color:#F0D9CE;
     border: 1px solid #704F3F;
