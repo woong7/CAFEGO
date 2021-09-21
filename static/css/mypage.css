@@ -28,6 +28,6 @@
 
 .card {
     background-color: #f5eae6;
-    max-height: 500px;
+    max-height: 100%;
     overflow-y: auto;
 }

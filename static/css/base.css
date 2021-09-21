@@ -97,19 +97,38 @@ nav {
     background-color: #725a4e;
 }
 
-#header-logo-image {
-    display: inline-block;
-    width: 120px;
-    height: 40px;
-    /*background: url(../../media/static/image/logo.png) no-repeat;
-    background-size: 120px;*/
-    font-family: HSGyoulnoonkot;
-    color:#fff;
-    text-shadow: 3px 1px 2px beige; 
-    font-weight: 400;
-    
-    font-size: 30px;
-    vertical-align: middle;
+@media (max-width: 575px) {
+    #header-logo-image {
+        display: inline-block;
+        width: 90px;
+        height: 30px;
+        /*background: url(../../media/static/image/logo.png) no-repeat;
+        background-size: 120px;*/
+        font-family: HSGyoulnoonkot;
+        color:#fff;
+        text-shadow: 2px 1px 1.5px beige; 
+        font-weight: 300;
+        
+        font-size: 20px;
+        vertical-align: middle;
+    }
+}
+
+@media (min-width: 576px) {
+    #header-logo-image {
+        display: inline-block;
+        width: 120px;
+        height: 40px;
+        /*background: url(../../media/static/image/logo.png) no-repeat;
+        background-size: 120px;*/
+        font-family: HSGyoulnoonkot;
+        color:#fff;
+        text-shadow: 3px 1px 2px beige; 
+        font-weight: 400;
+        
+        font-size: 30px;
+        vertical-align: middle;
+    }
 }
 
 .blind-logo {
@@ -125,22 +144,54 @@ nav {
     background-color: #725a4e;
 }
 
-.hello_text {
-    font-size: 1.2rem;
-    font-family: Pretendard-Regular;
-    color: #f0d9ce;
+@media (max-width: 575px) {
+    .hello_text {
+        font-size: 0.6rem;
+        font-family: Pretendard-Regular;
+        color: #f0d9ce;
+    }
+    
+    .nev_text {
+        font-size: 0.6rem;
+        font-family: Wemakeprice-Bold;
+        padding-left: 0.5rem;
+        color: #f0d9ce;
+    }
+    
+    .base-nickname {
+        margin: 0 5px;
+    }
+    
+    .nickname-font {
+        font-size: 0.6rem;
+        font-weight: bold;
+        color: #B3A29A;
+    }
 }
 
-.nev_text {
-	font-size: 1.2rem;
-    font-family: Wemakeprice-Bold;
-    color: #f0d9ce;
-}
-
-.nickname-font {
-    font-size: 20px;
-    font-weight: bold;
-    color: #B3A29A;
+@media (min-width: 576px) {
+    .hello_text {
+        font-size: 1.2rem;
+        font-family: Pretendard-Regular;
+        color: #f0d9ce;
+    }
+    
+    .nev_text {
+        font-size: 1.2rem;
+        font-family: Wemakeprice-Bold;
+        padding-left: 1rem;
+        color: #f0d9ce;
+    }
+    
+    .base-nickname {
+        margin: 0 10px;
+    }
+    
+    .nickname-font {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #B3A29A;
+    }
 }
 
 a {
