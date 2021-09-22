@@ -674,6 +674,13 @@ transform: translateY(0);
   font-size: 1.4rem;
 }
 
+.left {
+  left: 15%;
+}
+
+.cst-title {
+  position: relative;
+}
 
 /* 휴대폰 사이즈 반응형 구현 */
 @media screen and (max-width: 400px) {
@@ -723,8 +730,9 @@ transform: translateY(0);
 
   [class*='odd-title'] {
     position:absolute; 
-    left:50%; 
-    bottom:-224%; 
+    left:8%; 
+    bottom:-51%;
+    max-width: 251px; 
     font-size: 2rem; 
     text-indent:0; 
     margin-top: 1rem;
@@ -736,15 +744,15 @@ transform: translateY(0);
   [class*='ctx'] {
     width: 40vw;
     position:absolute;
-    left: 44%;
-    bottom: -47%;
+    left: 11%;
+    bottom: -150%;
     width: 288px;
   }
   .mainbtn {
     width: 112px;
-    position: relative;
-    left: 60%;
-    bottom: -125%;
+    position: absolute;
+    left: 30%;
+    bottom: -171%;
     height: 42px;
     display: inline-block;
     overflow: hidden;
@@ -764,13 +772,36 @@ transform: translateY(0);
     -webkit-transform: translateY(70px);
   }
   .btn-2 {
-    bottom: -144%;
-    left: 17%;
+    bottom: -193%;
+    left: 30%;
   }
   em {
     position: absolute;
-    left: 50%;
-    bottom: 57%;
+    left: 13%;
+    bottom: -44%;
+  }
+
+  [class*='even-title'] {
+    position:absolute; 
+    left:8%; 
+    bottom:-187%; 
+    font-size: 2rem; 
+    width: 344px;
+    text-indent:0; 
+    margin-top: 1rem;
+    font-family: EliceDigitalBaeum_Bold;
+    color: #5a4236;
+    text-shadow: 2px 2px 2px #d58e6f;
+  }
+
+  .left {
+    position: relative !important;
+  }
+
+  .cst-title {
+    position: absolute;
+    bottom: -80%;
+    left: 3%;
   }
 
 }
