@@ -361,6 +361,24 @@ transform: translateY(0);
   background-position: 40%; 
 }
 
+.m4-even-back {
+  background-image:url(../../../static/image/coffee-main-3.jpeg);
+  position: absolute; 
+  width:100%; 
+  height: 100%; 
+  background-position: 30%; 
+  /* background-size: 100%; */
+}
+
+.m6-even-back {
+  background-image:url(../../../static/image/coffee-main-5.jpeg);
+  position: absolute; 
+  width:100%; 
+  height: 100%; 
+  background-position: bottom;
+  /* background-size: 100%; */
+}
+
 [class*='even-back'] {
   opacity: 0.9;
   filter: blur(5px);
@@ -729,10 +747,10 @@ transform: translateY(0);
   }
 
   [class*='odd-title'] {
-    position:absolute; 
+    /* position:absolute; 
     left:8%; 
-    bottom:-51%;
-    max-width: 251px; 
+    bottom:-51%; */
+    width: 347px; 
     font-size: 2rem; 
     text-indent:0; 
     margin-top: 1rem;
@@ -782,11 +800,11 @@ transform: translateY(0);
   }
 
   [class*='even-title'] {
-    position:absolute; 
+    /* position:absolute; 
     left:8%; 
-    bottom:-187%; 
+    bottom:-51%; */
     font-size: 2rem; 
-    width: 344px;
+    width: 347px;
     text-indent:0; 
     margin-top: 1rem;
     font-family: EliceDigitalBaeum_Bold;
@@ -798,10 +816,28 @@ transform: translateY(0);
     position: relative !important;
   }
 
+  .right {
+    position: relative !important;
+  }
+
   .cst-title {
     position: absolute;
-    bottom: -80%;
-    left: 3%;
+    bottom: -89%;
+    left: 8%;
+  }
+
+  [class*='mainimg'] {
+    position: absolute;
+    width: 69%;
+    height: 69%;
+    border-radius: 50%;
+    box-shadow: 1px 1px 3px gray;
+    transition: transform 3s,background-color .5s,color .5s;
+    transform: translateY(70px);
+    -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+    -webkit-transform: translateY(70px);
+    background-position: center;
+    background-size: cover;
   }
 
 }
