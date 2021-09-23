@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem; min-height: 93.3vh;">
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="min-height: 93.3vh;">
     <header class="pt-3">
         <div class="p-2 mx-auto text-center">
             <div class="page_title">Search User</div>
@@ -24,7 +24,7 @@
             <option value="dong">동네</option>
             <option value="all">닉네임+동네</option>
         </select>
-        <input type="text" name="q" value="{{ q }}" placeholder="유저 닉네임 검색" style="font-family: RIDIBatang; width: 550px;">
+        <input type="text" name="q" value="{{ q }}" placeholder="유저 닉네임 검색" style="font-family: RIDIBatang;">
         <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
     {% if messages %}
