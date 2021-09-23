@@ -956,4 +956,8 @@ transform: translateY(0);
     height: 75%;
     left: 16%;
   }
+  #m6-img-wrap{
+    left: 1%;
+    top:62%;
+  }
 }
