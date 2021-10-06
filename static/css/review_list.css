@@ -178,7 +178,7 @@ a:hover {
 @media (max-width:575px) {
     .another-review-button {
         width: 80px;
-        font-size: 0.8rem;
+        font-size: 0.8rem !important;
     }
 }
 
@@ -186,7 +186,7 @@ a:hover {
     .another-review-button {
         width: 155px;
         /* 원래 120 */
-        font-size: 0.8rem;
+        font-size: 0.8rem !important;
     }
 }
 
