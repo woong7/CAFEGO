@@ -27,6 +27,12 @@ body {
     }
 }
 
+@media (min-width: 992px) {
+    .unhidden-col {
+        display: none;
+    }
+}
+
 @media (max-width: 575px) {
     #search_page {
         padding: 0;

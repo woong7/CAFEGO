@@ -43,7 +43,7 @@
                 <th> </th>
                 <th>카페명</th>
                 <th class="hidden-col">위치</th>
-                <th class="hidden-col">별점</th>             
+                <th>별점</th>             
                 <th class="hidden-col">방문횟수</th>
                 <th>방문추가</th>             
                 <th>방문취소</th>             
@@ -102,7 +102,11 @@
                                 </div>
                             {% endif %}
                         </td>
-
+                        <td class="unhidden-col">
+                            <div>
+                                <span>{{cafe.cafe.cafe_stars}}</span>
+                            </div>
+                        </td>
                         <td class="hidden-col" style="vertical-align: middle;">{{ cafe.visit_count }}</td>
                         
                         <td><input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.cafe.id }}" name="visit" value="방문추가"></td>

@@ -41,10 +41,20 @@
     <table class="table">
         <thead>
             <tr class="table-title">
-                <th> </th>
+                <th>
+                    {% comment %} <div class="dropdown">
+                        <a class="btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            <b>{{selected}}</b>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href='{% url 'cafe:cafe_list' this_cafe.id %}'>별점 순</a></li>
+                            <li><a class="dropdown-item" href='{% url 'cafe:sort_visit' this_cafe.id %}'>방문 순</a></li>
+                        </ul>
+                    </div> {% endcomment %}
+                </th>
                 <th>카페명</th>
                 <th class="hidden-col">위치</th>
-                <th class="hidden-col">별점</th>             
+                <th>별점</th>             
                 <th>방문추가</th>
                 <th>리뷰쓰기</th>             
             </tr>
@@ -108,6 +118,11 @@
                                     </div>
                                 </div>
                             {% endif %}
+                        </td>
+                        <td class="unhidden-col">
+                            <div>
+                                <span>{{cafe.cafe_stars}}</span>
+                            </div>
                         </td>
                         <!--카페 추가 버튼-->
                         <td>
