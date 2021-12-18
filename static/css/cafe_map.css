@@ -4,12 +4,28 @@
     display: table;
 }
 
+.toggle-btn {
+    position: absolute;
+    top: 50%;
+    left: 320px;
+    padding: 0.4rem;
+    background-color: #704F3F;
+    border: 1px solid lightgray;
+    border-radius: 0px 8px 8px 0px;
+    z-index: 2;
+}
+
+.toggle-img {
+    width: 25px;
+    height: 25px;
+    transform: rotate(0.5turn);
+}
+
 .cafe_map-container div {
     display: table-cell;
 }
 
 #keyword-search {
-    width: 300px;
     height: 93.3vh;
 }
 
