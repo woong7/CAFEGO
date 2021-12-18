@@ -12,14 +12,14 @@
     signup
 {% endblock %}
 {% block content %}
-<section id="signup_page" class="py-4 px-5 text-center">
+<section id="signup_page" class="py-4 text-center">
     <header class="pt-3 login_head">
         <div class="pricing-header p-2 pb-md-4 mx-auto text-center">
             <p class="fs-5 text-muted page_info">회원가입을 해서 카페고의 모든 서비스를 즐겨보세요!</p>
         </div>
     </header>
 
-    <div class="container position-relative overflow-hidden mx-auto pt-5 text-center bg-light" style="width: 78%; border-radius: 1%;">
+    <div class="container position-relative overflow-hidden mx-auto pt-5 text-center bg-light" style="border-radius: 1%;">
         <div class="signup-container">
             <form class="signup" id="signup_form" method="post" action="{% url 'signup' %}" enctype="multipart/form-data">
                 <img class="avatar" src="../../../static/image/undraw_female_avatar_w3jk.svg">
@@ -81,8 +81,10 @@
                     <a class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_1" style="font-family: 'RIDIBatang'; font-size: 1em; padding-top: 2px;">정보제공 및 마케팅활용 약관보기</a>
                     
                     <section class="house" style="padding-top: 20px;">
-                        <div><i class="fas fa-home home_icon"></i></div>
-                        <span>거주지 </span>
+                        <div class="house_mark">
+                            <div><i class="fas fa-home home_icon"></i></div>
+                            <span>거주지 </span>                            
+                        </div>
                         <select class="home-div" name="city" id="addressRegion" form="signup_form"></select>
                         <select name="gu" id="addressDo" form="signup_form"></select>
                         <select name="dong" id="addressSiGunGu" form="signup_form"></select>

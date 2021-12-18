@@ -170,6 +170,10 @@ class CafeListView(ListView):
                 messages.error(self.request, '2글자 이상 입력해주세요.')
         return cafe_list
 
+    def sort_visit(request):
+        cafe_list = CafeList.objects.order_by('cafe_stars')
+        return cafe_list
+
     #하단부에 페이징 처리
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -219,7 +223,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 import os
 def init_data(request):
-    with open('cafe/crawled.csv','r', encoding='utf-8') as f:
+    with open('cafe/crawledkorea.csv','r', encoding='utf-8') as f:
         dr = csv.DictReader(f)
         s = pd.DataFrame(dr)
     ss = []

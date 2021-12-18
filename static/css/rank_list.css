@@ -135,7 +135,7 @@
 
 .ranking_title {
     font-family: twaysky;
-    font-size: 1.8em;
+    font-size: 1.5em;
     color: #573728;
     text-shadow: 2px 2px 2px #F0D9CE;
     position: relative;
@@ -150,7 +150,7 @@
     left: 23px;
     top: 27px;
 
-    width: 210px; 
+    width: 180px; 
     height: 45px; 
     background-color: #704F3F;
 }
@@ -160,7 +160,7 @@
     left: 23px;
     top: 60px;
 
-    width: 330px;
+    width: 80%;
     height: 150px;
     margin-top: 30px;
     background-color: #704F3F;
@@ -190,7 +190,7 @@
     left: 23px;
     top: 60px;
 
-    width: 330px;
+    width: 80%;
     height: 150px;
     margin-top: 30px;
     padding: 20px;

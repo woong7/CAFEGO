@@ -20,8 +20,8 @@
         </header>
         
         <body>
-            <div class="container px-5">
-                <article class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mb-3 text-center">
+            <div class="container px-5 table-responsive">
+                <article class="mb-3 text-center col-12 d-flex" style="flex-wrap:wrap;">
                 {% for badge in badges %}
                     {% if badge in taken_badges %}   
                         <div class="taken_badges">

@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem;">
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center">
     <header class="pt-3">
         <div class="p-2 mx-auto text-center">
             <div class="page_title">Search Visited Cafe</div>
@@ -24,7 +24,7 @@
             <option value="address">주소</option>
             <option value="all">카페+주소</option>
         </select>
-        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색" style="font-family: Pretendard-Regular; width: 550px;">
+        <input class="cafe-search-box" type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
         <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
     
@@ -42,9 +42,9 @@
             <tr class="table-title">
                 <th> </th>
                 <th>카페명</th>
-                <th>위치</th>
+                <th class="hidden-col">위치</th>
                 <th>별점</th>             
-                <th>방문횟수</th>
+                <th class="hidden-col">방문횟수</th>
                 <th>방문추가</th>             
                 <th>방문취소</th>             
                 <th>리뷰쓰기</th>             
@@ -63,10 +63,10 @@
 
                 {% for cafe in visited_cafe_list %}
                     <tr class="text-center table-content">
-                        <td style="vertical-align: middle; font-size:1.2em;">{{forloop.counter0|add:page_obj.start_index}}</td>
+                        <td style="vertical-align: middle;">{{forloop.counter0|add:page_obj.start_index}}</td>
                         <td style="vertical-align: middle;"><a href="{% url 'cafe:review_list' cafe.cafe.id %}" class="atag">{{ cafe.cafe.name }}</a></td>
-                        <td style="vertical-align: middle;"><a href="{% url 'this_cafe_map' cafe.cafe.id %}" class="atag">{{ cafe.cafe.address }}</a></td>
-                        <td>
+                        <td class="hidden-col" style="vertical-align: middle;"><a href="{% url 'this_cafe_map' cafe.cafe.id %}" class="atag">{{ cafe.cafe.address }}</a></td>
+                        <td class="hidden-col">
                             {%if cafe.cafe.cafe_stars == 0.0 %}
                             <div class="rating_wrap_parents">
                                 <div class="rating_wrap">
@@ -102,8 +102,12 @@
                                 </div>
                             {% endif %}
                         </td>
-
-                        <td style="vertical-align: middle; font-size:1.1em; color: black;">{{ cafe.visit_count }}</td>
+                        <td class="unhidden-col">
+                            <div>
+                                <span>{{cafe.cafe.cafe_stars}}</span>
+                            </div>
+                        </td>
+                        <td class="hidden-col" style="vertical-align: middle;">{{ cafe.visit_count }}</td>
                         
                         <td><input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.cafe.id }}" name="visit" value="방문추가"></td>
                                         <!-- Modal -->

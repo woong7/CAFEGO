@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Cafe24SsurroundAir';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     height: 100vh;
     background-color: #F0D9CE;
@@ -25,24 +32,22 @@ body {
     box-sizing: border-box;
 }
 
-
-
 /* page 기본내용 */
 #login_page {
     background-color: #F0D9CE;
-    padding: 50px 0px;
+    padding: 50px 10%;
 }
 
 .page_title {
     font-size: 80px;
-    font-family: Cafe24Danjunghae;
+    font-family: Cafe24SsurroundAir;
     text-shadow: 2px 2px 2px #B3A29A;
     color: #704F3F;
 }
 
 .page_info {
     font-size: 10px;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
 }
 
 .wave{
@@ -55,7 +60,9 @@ body {
 }
 
 .container {
-    width: 100vw;
+    width: 100%; 
+    border-radius: 1%;
+    /* width: 100vw; */
     height: 100vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -120,6 +127,10 @@ form {
     margin: 25px 0;
     padding: 5px 0;
     border-bottom: 2px solid #B3A29A;
+}
+
+.login_table {
+    width:100%;
 }
 
 /* 입력칸 focus 효과 */
@@ -287,7 +298,7 @@ form {
     text-decoration: none;
     font-size: 0.9rem;
     transition: .3s;
-    font-family: RIDIBatang;
+    font-family: Cafe24SsurroundAir;
     color: #704F3F;
     font-weight: lighter;
     cursor: pointer;
@@ -297,13 +308,46 @@ form {
     color: #F0A986;
 }
 
+.social_group {
+    display: flex;
+    flex-direction: row;
+}
+
+.each_social {
+    display: flex;
+    align-items: center;
+    width: 33%;
+}
+
+.social_logo {
+    width: 28%;
+}
+
 .social-btn {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: lighter;
-    font-family: Wemakeprice-Bold;
+    font-family: Cafe24SsurroundAir;
 }
 .social-btn:hover {
     color: white;
+}
+
+.google_img {
+    background-color: #fff;
+}
+
+.google {
+    color : #DC4B29;
+    border-color: #DC4B29;
+}
+
+.google:hover {
+    color: #fff;
+    background-color: #DC4B29;
+}
+
+.naver_img {
+    width: 100%;
 }
 
 .naver {
@@ -324,16 +368,6 @@ form {
 .kakao:hover {
     color: black;
     background-color: #FBE300;
-}
-
-.google {
-    color : #DC4B29;
-    border-color: #DC4B29;
-}
-
-.google:hover {
-    color: #fff;
-    background-color: #DC4B29;
 }
 /* 반응형 */
 @media screen and (max-width: 1100px){
@@ -365,13 +399,8 @@ form {
 		grid-template-columns: 1fr;
 	}
 
-	.img{
-		display: none;
-	}
-
-	.wave{
-		display: none;
-	}
+	.img{ display: none;}
+	.wave{display: none;}
 
     .avatar {
         width: 150px;
@@ -381,7 +410,52 @@ form {
 		justify-content: center;
 	}
 
+    .social_group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .each_social {
+        width: 50%;
+    }
+
     .social-btn {
         font-size: 7px;
+        width: 100%;
+    }
+} 
+
+@media screen and (max-width: 400px){
+	#login_page { padding: 50px 5%; }
+    .container{
+        width: 90%;
+        padding: 5px 0px;
+        display: flex;
+	}
+
+	.img{ display: none;}
+	.wave{display: none;}
+
+    .login-container {width: 100%;}
+
+    .avatar {width: 120px;}
+    .form{width: 88%;}
+    .login_table {width:100%;}
+	.login-content{justify-content: center;}
+
+    .social_group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .each_social {
+        width: 50%;
+    }
+
+    .social-btn {
+        font-size: 7px;
+        width: 100%;
     }
 } 

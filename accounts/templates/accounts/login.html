@@ -17,14 +17,14 @@
 
 {% get_providers as socialaccount_providers %}
 
-<section id="login_page" class="py-4 px-5 text-center">
+<section id="login_page" class="py-4 text-center">
   <header class="pt-3 login_head">
       <div class="pricing-header p-2 pb-md-4 mx-auto text-center">
           <p class="fs-5 text-muted page_info">로그인을 해서 카페고의 모든 서비스를 즐겨보세요!</p>
       </div>
   </header>
   
-  <div class="container position-relative overflow-hidden mx-auto pt-5 text-center bg-light" style="width: 78%; border-radius: 1%;">
+  <div class="container position-relative overflow-hidden mx-auto pt-5 px-3 text-center bg-light">
     
       <div class="img">
         <img src="../../../static/image/undraw_coffee_break_j3of.svg">
@@ -47,7 +47,7 @@
 
             </div>
             {% endif %}
-            <table class="text-center mt-3" style="width:100%;">
+            <table class="text-center mt-3 login_table">
               {% csrf_token %}
 
               <tr class="input-div one">
@@ -85,19 +85,29 @@
           <button class="btn button" type="submit">Cafe GO!</button>
 
           <hr style="color: #B3A29A;"/>
-          <div>
-          <img src="../../../static/image/Google__G__Logo.svg" style="width:8%; height:10%; background-color: #fff;">
-          <a class="btn social-btn google" href="{% provider_login_url 'google' %}" style="position :relative; left: -4px;">구글 로그인</a>
-
-          <img src="../../../static/image/naver_logo.png" style="width:10%; height:10%">
-          <a class="btn social-btn naver" href="{% provider_login_url 'naver' %}" style="position :relative; left: -9px;">네이버 로그인</a>
-          
-          <img src="../../../static/image/kakaotalk.svg" style="width:8%; height:10%">
-          <a class="btn social-btn kakao" href="{% provider_login_url 'kakao' %}" style="position :relative; left: -6px;">카카오 로그인</a>
+          <div class=social_group>
+            <div class=each_social>
+              <div class="social_logo">
+                <img class="google_img" src="../../../static/image/Google__G__Logo.svg">
+              </div>
+              <a class="btn social-btn google" href="{% provider_login_url 'google' %}">구글 로그인</a>
+            </div>
+            <div class=each_social>
+              <div class="social_logo">
+                <img class="naver_img" src="../../../static/image/naver_logo.png">
+              </div>
+              <a class="btn social-btn naver" href="{% provider_login_url 'naver' %}">네이버 로그인</a>
+            </div>
+            <div class=each_social>
+              <div class="social_logo">
+                <img src="../../../static/image/kakaotalk.svg">
+              </div>
+              <a class="btn social-btn kakao" href="{% provider_login_url 'kakao' %}">카카오 로그인</a>
+            </div>
           </div>
           
           <br><br>
-          <a href="{% url 'signup' %}" class="findPw">계정이 없다면 <span style="color: #5ba39e; cursor:pointer;">회원가입</span>을 진행하세요.</a>
+          <a href="{% url 'signup' %}" class="findPw">계정이 없다면 <span style="color: #5ba39e; cursor:pointer; font-family: Cafe24SsurroundAir;">회원가입</span>을 진행하세요.</a>
           <a class="findPw" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
           <br>
           

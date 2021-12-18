@@ -7,7 +7,7 @@
 
 {% block title %}
     리뷰작성
-{% endblock %}
+{% endblock %} 
 
 {% block content %}
 <div class="container review-content d-flex justify-content-center align-items-center" style="height:93.3vh;">
@@ -20,7 +20,7 @@
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <!-- 다른 요소들은 form에서 입력받음 -->
-                <p>별점 : {{ form.review_stars}}</p>
+                <p>별점 : {{ form.review_stars }}</p>
                 <p>{{ form.content }}</p>
                 <!-- 사진은 여러 개라서 따로 등록  -->
                 <div>
@@ -29,7 +29,8 @@
                 </div>
 
                 <div class="d-flex justify-content-center mt-5">
-                    <button type="submit" class="main-reverse-btn" style="width:120px; height:40px;">작성완료</button>
+                    <button type="submit" class="main-reverse-btn" >작성완료</button> 
+                    <button onclick="location.href='{% url 'cafe:review_list' cafe_name.id %}'" class="main-reverse-btn">취소</button>
                 </div>
             </form> 
         </div>

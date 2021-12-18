@@ -73,7 +73,7 @@
 /* page 기본내용 */
 #signup_page {
     background-color: #F0D9CE;
-    padding: 50px 0px;
+    padding: 50px 10%;
 }
 
 .page_title {
@@ -85,11 +85,12 @@
 
 .page_info {
     font-size: 10px;
-    font-family: RIDIBatang;
+    font-family: Wemakeprice-Bold;
 }
 
 .container {
-    width: 100vw;
+    width: 100%; 
+    /* width: 100vw; */
     height: 150vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -255,7 +256,7 @@ form{
     color: #f0a986;
 }
 
-.home-div.focus .house > div {
+.home-div.focus .house > div > div {
     color: #f0a986;
 }
 
@@ -338,11 +339,6 @@ form{
     color: #704F3F;
 }
 
-
-
-
-
-
 /* 거주지 선택, select */
 .house {
     display: flex;
@@ -354,11 +350,16 @@ form{
     color: #B3A29A;
 }
 
-.house > div {
-    position: relative;
+.house_mark {
+    display: flex;
 }
 
-.house > div > i {
+.house > div > div {
+    position: relative;
+    margin-right: 10px;
+}
+
+.house > div > div > i {
     margin-right: 2px;
     position: absolute;
     top: 50%;
@@ -399,13 +400,8 @@ select:active .home_icon {
 		grid-template-columns: 1fr;
 	}
 
-	.img{
-		display: none;
-	}
-
-	.wave{
-		display: none;
-	}
+	.img{ display: none;}
+	.wave{display: none;}
 
     .avatar {
         width: 130px;
@@ -414,4 +410,47 @@ select:active .home_icon {
 	.login-content{
 		justify-content: center;
 	}
+} 
+
+@media screen and (max-width: 400px){
+	#signup_page { padding: 50px 5%; }
+	.container{
+        width: 90%;
+        padding: 5px 0px;
+        display: flex;
+	}
+
+	.img{ display: none;}
+	.wave{ display: none; }
+
+    .signup-container { width: 100%; }
+    form{ width: 90%; }
+
+    .avatar {width: 120px;}
+    form{width: 100%;}
+    .signup_table {width:100%;}
+	.signup-content{justify-content: center;}
+
+    .input-div {
+        width: 80%;
+        margin: 20px auto;
+    }
+
+    .house {
+        padding: 20px;
+    }
+    .house_mark {
+        justify-content: center;
+    }
+    
+    .check-div { 
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        margin-left: 10%;
+    }
+
+    .house {
+        flex-direction: column;
+    }
 } 

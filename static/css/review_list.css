@@ -56,6 +56,7 @@ a:hover {
 /* 카페 정보 최상위 */
 .cafe-info {
     width: 100%;
+    padding: 20px;
 }
 
 .cafe-name {
@@ -177,14 +178,15 @@ a:hover {
 @media (max-width:575px) {
     .another-review-button {
         width: 80px;
-        font-size: 0.8rem;
+        font-size: 0.8rem !important;
     }
 }
 
 @media (min-width:576px) {
     .another-review-button {
-        width: 120px;
-        font-size: 0.8rem;
+        width: 155px;
+        /* 원래 120 */
+        font-size: 0.8rem !important;
     }
 }
 
@@ -309,6 +311,9 @@ a:hover {
 }
 
 .main-reverse-btn {
+    width:120px; 
+    height:40px;
+    margin: 0 20px;
     display: inline-block;
     text-align: center;
     color: #704F3F;
