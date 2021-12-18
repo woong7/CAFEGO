@@ -61,6 +61,8 @@ body {
 #search_page {
     background-color: #F0D9CE;
     padding: 0px 0px;
+    padding-left:8rem; 
+    padding-right:8rem;
 }
 
 .page_title {
@@ -132,6 +134,10 @@ select, input[type=text]{
     width: 110px;
     height: 30px;
     padding-left: 10px;
+}
+
+input[type=text]{
+    width: 66%;
 }
 
 .drink-list div {
@@ -248,4 +254,44 @@ select, input[type=text]{
 .button2:hover {
     background-color: #704F3F;
     color: white;
+}
+
+.search_box{
+    font-family: Pretendard-Regular; 
+    /* width: 1rem; */
+}
+
+/* 휴대폰 사이즈 반응형 구현 */
+@media screen and (max-width: 400px) {
+    #search_page {
+        background-color: #F0D9CE;
+        padding: 0px 0px;
+    }
+
+    select{
+        width: 101px;
+    }
+/* 
+    .search_box{
+        width: 194px;
+    } */
+    input[type=text]{
+        width: 194px;
+    }
+
+    table {
+        overflow-x: auto;
+    }
+
+    .table>:not(caption)>*>* {
+        padding: 0 !important;
+    }
+    .rating_wrap_parents {
+        left: 0;
+        width: 120px;
+    }
+    .page-link{
+        padding: .375rem .45rem !important;
+    }
+
 }
