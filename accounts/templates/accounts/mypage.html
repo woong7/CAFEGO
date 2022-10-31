@@ -33,18 +33,21 @@
                         <div class="row justify-content-center align-items-md-stretch" style="max-width: 250px;">
                             <span class="btn button px-5 pt-5 pb-0 fw-bold" style="border:none; background:none;" data-bs-toggle="collapse" data-bs-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample">Following ▼</span>
                             <span class="text-center" style="height:50px; width:100px; border:none; background:none;font-weight: bold; color: #704F3F; height:50px; width:150px; background:none; font-size: 1em; font-family: Pretendard-Regular;" >
-                            {{followingnum}}
+                            {{ followingnum }}
                             </span>
                     
                             <div class="collapse" id="collapseExample4">
                                 <div class="card card-body">
-                                    <br>
-                                    {% for friend in friends %}
-                                        <div>
-                                            <div class="friends"><a href="{% url 'mypage' friend.pk %}">{{ friend.nickname }}</a></div>
-                                            <br>
-                                        </div>
-                                    {% endfor %}
+                                    {% if followingnum == 0 %}
+                                        <div>등록된 following이 없습니다.</div>
+                                    {% else %}
+                                        {% for friend in friends %}
+                                            <div>
+                                                <div class="friends"><a href="{% url 'mypage' friend.pk %}">{{ friend.nickname }}</a></div>
+                                                <br>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -55,13 +58,16 @@
                             </span>
                             <div class="collapse" id="collapseExample5">
                                 <div class="card card-body">
-                                    
-                                    {% for follwer in follwers %}
-                                        <div>
-                                            <div class="friends"><a href="{% url 'mypage' follwer.pk %}">{{ follwer.nickname }}</a></div>
-                                            <br>
-                                        </div>
-                                    {% endfor %}
+                                    {% if owner.follwernum == 0 %}
+                                        <div>등록된 follower가 없습니다.</div>
+                                    {% else %}
+                                        {% for follwer in follwers %}
+                                            <div>
+                                                <div class="friends"><a href="{% url 'mypage' follwer.pk %}">{{ follwer.nickname }}</a></div>
+                                                <br>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -72,15 +78,19 @@
                             </span>
                             <div class="collapse" id="collapseExample2">
                                 <div class="card card-body">
-                                    {% for cafe, drinks in drink_list_dic.items %} 
-                                        <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{cafe}} </a></span>
-                                        <span> 방문 횟수: {{cafe.visit_count}}</span>
-                                        <span> 마신음료 : </span>
-                                        {% for drink in drinks %}
-                                            <span>{{drink}}</span>
+                                    {% if total_visit == 0 %}
+                                        <div>방문한 카페가 없습니다.</div>
+                                    {% else %}
+                                        {% for cafe, drinks in drink_list_dic.items %} 
+                                            <span style="font-size: 20px; font-weight: bold"><a href="{% url 'cafe:review_list' cafe.cafe.id %}">{{cafe}} </a></span>
+                                            <span> 방문 횟수: {{cafe.visit_count}}</span>
+                                            <span> 마신음료 : </span>
+                                            {% for drink in drinks %}
+                                                <span>{{drink}}</span>
+                                            {% endfor %}
+                                            <br/>
                                         {% endfor %}
-                                        <br/>
-                                    {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -97,6 +107,9 @@
                             {% endif %}
                             <div class="collapse" id="collapseExample3">
                                 <div class="card card-body">
+                                    {% if all_review_count == 0 %}
+                                        <div>등록된 리뷰가 없습니다.</div>
+                                    {% else %}
                                     <article class="each_review">
                                         {% for reviews in my_all_review %}
                                             <a href="{% url 'mypage' reviews.username.pk %}">{{ reviews.username.nickname }}</a> 
@@ -118,6 +131,7 @@
                                             <span style="font-size:13px;">{{ reviews.created_at }}</span>
                                             <br/><br/>
                                         {% endfor %}
+                                    {% endif %}
                                     </article>
                                 </div>
                             </div>

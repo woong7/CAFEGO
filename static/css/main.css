@@ -46,10 +46,6 @@
   color: white;
 }
 
-a {
-    width: 226px;
-}
-
 .center {
     display: block;
     margin-left: auto;
@@ -361,6 +357,24 @@ transform: translateY(0);
   background-position: 40%; 
 }
 
+.m4-even-back {
+  background-image:url(../../../static/image/coffee-main-3.jpeg);
+  position: absolute; 
+  width:100%; 
+  height: 100%; 
+  background-position: 30%; 
+  /* background-size: 100%; */
+}
+
+.m6-even-back {
+  background-image:url(../../../static/image/coffee-main-5.jpeg);
+  position: absolute; 
+  width:100%; 
+  height: 100%; 
+  background-position: bottom;
+  /* background-size: 100%; */
+}
+
 [class*='even-back'] {
   opacity: 0.9;
   filter: blur(5px);
@@ -553,6 +567,27 @@ transform: translateY(0);
   z-index: 2;
 }
 
+.m3-icon-stop01{
+  left: 70%; 
+  top: 66%;
+}
+.m3-icon-stop02{
+  left: 32%; 
+  top: 27%;
+}
+.m3-icon-move03{
+  left: -19%; 
+  top: 36%;
+}
+.m3-icon-move04{
+  left: 17%; 
+  top: 120%;
+}
+.m3-icon-move05{
+  left: -36%; 
+  top: 62%;
+}
+
 .m3-circle {
   position: absolute;
   width: 95%;
@@ -642,6 +677,19 @@ transform: translateY(0);
   animation:rolling 26s linear infinite; 
 }
 
+.m5-icon-move01{
+  left: -21%; 
+  top: 110%;
+}
+.m5-icon-move02{
+  left: -38%; 
+  top: 69%;
+}
+.m5-icon-move03{
+  left: -34%; 
+  top: 51%;
+}
+
 .m5-rollani-icon01 {
   animation:rolling 4s linear infinite; 
 }
@@ -672,4 +720,240 @@ transform: translateY(0);
 .footer-item {
   font-family: Wemakeprice-Bold;
   font-size: 1.4rem;
+}
+
+.left {
+  left: 15%;
+}
+
+.cst-title {
+  position: relative;
+}
+
+/* 휴대폰 사이즈 반응형 구현 */
+@media screen and (max-width: 400px) {
+  .m1_logo {
+    font-size: 78px;
+    margin-top: 4.5rem;
+    /* font-size: 135px;  */
+    border: 2px black; 
+    font-family: 'HSGyoulnoonkot';
+    text-shadow: -5px 0 brown, 0 5px brown, 5px 0 beige, 0 -5px beige;
+    animation: show-logo 2s ease;
+  
+    transition: transform 2.5s,background-color .5s,color .5s;
+    transform: translateY(50px);
+    -webkit-transition: -webkit-transform 2.5s,background-color .5s,color .5s;
+    -webkit-transform: translateY(50px);
+  }
+  .m1_info {
+    font-size: 1.3em;
+    width: 248px;
+    margin-top: 3rem;
+  }
+  .m1_mugplate{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 23rem;
+    height: 23rem;
+    border-radius: 50%; 
+    z-index: 1;
+    background-image: url(../../static/image/main_plate.jpg);
+    background-size: cover;
+  }
+  .m1_mug { 
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 29rem;
+    height: 29rem;
+    background-color: transparent;
+    z-index: 2;
+    animation:show-img 1s ease;
+    /* animation-delay: .2s; */
+  }
+
+  [class*='odd-title'] {
+    /* position:absolute; 
+    left:8%; 
+    bottom:-51%; */
+    width: 347px; 
+    font-size: 2rem; 
+    text-indent:0; 
+    margin-top: 1rem;
+    font-family: EliceDigitalBaeum_Bold;
+    color: #e0c4b8;
+    text-shadow: 2px 2px 2px #704F3F;
+  }
+
+  [class*='ctx'] {
+    width: 40vw;
+    position:absolute;
+    left: 11%;
+    bottom: -150%;
+    width: 288px;
+  }
+  .mainbtn {
+    width: 112px;
+    position: absolute;
+    left: 30%;
+    bottom: -171%;
+    height: 42px;
+    display: inline-block;
+    overflow: hidden;
+    border: 2px solid #573728;
+    background-color: #fff;
+    border-radius: 10px;
+    
+    font-size: 17px;
+    letter-spacing: -.5px;
+    line-height: 40px;
+    color: #573728;
+    text-align: center;
+  
+    transition: transform 3s,background-color .5s,color .5s;
+    transform: translateY(70px);
+    -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+    -webkit-transform: translateY(70px);
+  }
+  .btn-2 {
+    bottom: -193%;
+    left: 30%;
+  }
+  em {
+    position: absolute;
+    left: 13%;
+    bottom: -44%;
+  }
+
+  [class*='even-title'] {
+    /* position:absolute; 
+    left:8%; 
+    bottom:-51%; */
+    font-size: 2rem; 
+    width: 347px;
+    text-indent:0; 
+    margin-top: 1rem;
+    font-family: EliceDigitalBaeum_Bold;
+    color: #5a4236;
+    text-shadow: 2px 2px 2px #d58e6f;
+  }
+
+  .left {
+    position: relative !important;
+  }
+
+  .right {
+    position: relative !important;
+  }
+
+  .cst-title {
+    position: absolute;
+    bottom: -89%;
+    left: 8%;
+  }
+
+  [class*='mainimg'] {
+    position: absolute;
+    width: 69%;
+    height: 69%;
+    border-radius: 50%;
+    box-shadow: 1px 1px 3px gray;
+    transition: transform 3s,background-color .5s,color .5s;
+    transform: translateY(70px);
+    -webkit-transition: -webkit-transform 3s,background-color .5s,color .5s;
+    -webkit-transform: translateY(70px);
+    background-position: center;
+    background-size: cover;
+  }
+
+  .m6-odd-title{
+    bottom: -43%;
+  }
+
+  [id*='img-wrap'] {
+    /* position: relative; */
+    border-radius: 50%;
+    width: 25rem;
+    height: 25rem;
+  }
+
+  .m3-circle{
+    width: 75%;
+    height: 75%;
+    left: -24%;
+  }
+  
+  #m3-img-wrap {
+    left: 27%;
+    top: 22%;
+  }
+
+  .m3-mainimg{
+    bottom: -27%;
+  }
+
+  .m3-icon-stop01{
+    top: 92%;
+    left: 30%;
+  }
+  .m3-icon-stop02{
+    left: 44%;
+    top: 70%;
+  }
+  .m3-icon-move03{
+    left: 10%;
+    top: 26%;
+  }
+  .m3-icon-move04{
+    left: -10%;
+    top: 94%;
+  }
+  .m3-icon-move05{
+    left: -26%;
+    top: 62%;
+  }
+  #m4-img-wrap{
+    left: 2%;
+    top: 55%;
+  }
+  .m4-circle{
+    width: 75%;
+    height: 75%;
+    left: 16%;
+  }
+  #m5-img-wrap{
+    left: 25%;
+    top: 61%;
+  }
+  .m5-circle{
+    width: 75%;
+    height: 75%;
+    left: -23%;
+    top:-31%;
+  }
+  .m5-icon-move01{
+    left: -23%;
+    top: -13%;
+  }
+  .m5-icon-move02{
+    left: -11%;
+    top: 34%;
+  }
+  .m5-icon-move03{
+    left: 46%;
+    top: -10%;
+  }
+  .m6-circle{
+    width: 75%;
+    height: 75%;
+    left: 16%;
+  }
+  #m6-img-wrap{
+    left: 1%;
+    top:62%;
+  }
 }

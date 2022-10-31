@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="search_page" class="position-relative overflow-hidden m-0 text-center" style="padding-left:8rem; padding-right:8rem;">
+<div id="search_page" class="position-relative overflow-hidden m-0 text-center">
     <header class="pt-3">
         <div class="p-2 mx-auto text-center">
             <div class="page_title">Search Cafe</div>
@@ -27,7 +27,7 @@
             <option value="address">주소</option>
             <option value="all">카페+주소</option>
         </select>
-        <input type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색"  style="font-family: Pretendard-Regular; width: 550px;">
+        <input class="cafe-search-box" type="text" name="q" value="{{ q }}" placeholder="카페 이름 검색">
         <button class="button" type="submit" id="search_btn">search</button><br/>
     </form>
     {% if messages %}
@@ -37,13 +37,34 @@
             {% endfor %}
         </div>
     {% endif %}
+    {% if q %}
+        <h5 style="font-family: Pretendard-Regular;">'{{ q }}' 검색 결과입니다.</h5><br/>
+        <p style="font-family: Pretendard-Regular;">검색 결과: {{page_obj.paginator.count}}개</p>
+    {% else %}    
+        <button class="button" onClick="location.href='{% url 'enroll_visited_cafe' %}'" style="mb-1;">방문 카페 리스트 보기</button>
+    {% endif %}
+
+    <div id="mobile" class="page_info text-muted">
+
+    </div>
+
     <!-- 카페 리스트  -->
     <table class="table">
         <thead>
             <tr class="table-title">
-                <th> </th>
+                <th>
+                    {% comment %} <div class="dropdown">
+                        <a class="btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            <b>{{selected}}</b>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href='{% url 'cafe:cafe_list' this_cafe.id %}'>별점 순</a></li>
+                            <li><a class="dropdown-item" href='{% url 'cafe:sort_visit' this_cafe.id %}'>방문 순</a></li>
+                        </ul>
+                    </div> {% endcomment %}
+                </th>
                 <th>카페명</th>
-                <th>위치</th>
+                <th class="hidden-col">위치</th>
                 <th>별점</th>             
                 <th>방문추가</th>
                 <th>리뷰쓰기</th>             
@@ -70,10 +91,10 @@
                         <td style="vertical-align: middle;">
                             <a href="{% url 'cafe:review_list' cafe.id %}">{{ cafe.name }}</a>
                         </td>
-                        <td style="vertical-align: middle;">
+                        <td class="hidden-col" style="vertical-align: middle;">
                             <a href="{% url 'this_cafe_map' cafe.id %}">{{ cafe.address }}</a>
                         </td>
-                        <td>
+                        <td class="hidden-col">
                             {%if cafe.cafe_stars == 0.0 %}
                             <div class="rating_wrap_parents">
                                 <div class="rating_wrap">
@@ -88,7 +109,7 @@
                             </div>
                             {% else %}
                                 <div class="rating_wrap_parents">
-                                    <div class="rating_wrap" style="vertical-align: middle;">
+                                    <div class="rating_wrap">
                                         <div class="not_rating">
                                             <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
                                             <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
@@ -97,23 +118,20 @@
                                             <div class="star_wrap"><div class="star"><i class="fas fa-star empty_star"></i></div></div>
                                         </div>
                                     </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating" data-rate="{{cafe.cafe_stars}}">
-                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                                            <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
-                                        </div>
-                                    </div>
                                 </div>
                             {% endif %}
+                        </td>
+                        <td class="unhidden-col">
+                            <div>
+                                <span>{{cafe.cafe_stars}}</span>
+                            </div>
                         </td>
                         <!--카페 추가 버튼-->
                         <td>
                             <input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="방문추가">
                         </td>
                         <!-- backdrop 삭제 -->
+                        <td>
                             <div class="modal fade" id="exampleModal_{{ cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <form action="{% url 'visit_register' %}" method='post'>
@@ -125,84 +143,115 @@
                                                     <span style="font-size: 30px; font-weight: bold; font-family: NEXON Lv2 Gothic Bold;">{{cafe.name}}</span>
                                                 </h5>
                                             </div>
-                                            <div class="modal-body d-flex drink-list" style="flex-direction: column;">
-                                                <p class="modalcontent" style="font-size: 23px; text-align: center; margin-bottom:5%;">마신 음료를 체크해주세요!</p>
-                                                <section class="check-div mb-3">
-                                                    <div class="check_wrap">
-                                                        <label class="check">
-                                                            <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="아메리카노" class="save_check">
-                                                            <span class="check_icon"></span>
-                                                        </label>
-                                                        <label class="check_label mb-1">아메리카노</label>
-                                                    </div>
-                                                    <div class="check_wrap">
-                                                        <label class="check">
-                                                            <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="바닐라라떼" class="save_check">
-                                                            <span class="check_icon"></span>
-                                                        </label>
-                                                        <label class="check_label mb-1">바닐라 라떼</label>
-                                                    </div>
-                                                    <div class="check_wrap">
-                                                        <label class="check">
-                                                            <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카페라떼" class="save_check">
-                                                            <span class="check_icon"></span>
-                                                        </label>
-                                                        <label class="check_label mb-1">카페라떼</label>
-                                                    </div>
-                                                    <div class="check_wrap">
-                                                        <label class="check">
-                                                            <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카라멜마끼야또" class="save_check">
-                                                            <span class="check_icon"></span>
-                                                        </label>
-                                                        <label class="check_label mb-1">카라멜마끼야또</label>
-                                                    </div>  
-                                                    <div class="check_wrap">
-                                                        <label class="check">
-                                                            <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="초코라떼" class="save_check">
-                                                            <span class="check_icon"></span>
-                                                        </label>
-                                                        <label class="check_label mb-1">초코라떼</label>
-                                                    </div>  
-                                                    <div class="check_wrap">
-                                                        <label class="check">
-                                                            <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="녹차라떼" class="save_check">
-                                                            <span class="check_icon"></span>
-                                                        </label>
-                                                        <label class="check_label mb-1">녹차라떼</label>
-                                                    </div>  
-                                                    <div class="check_wrap">
-                                                        <label class="check">
-                                                            <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="에이드" class="save_check">
-                                                            <span class="check_icon"></span>
-                                                        </label>
-                                                        <label class="check_label mb-1">에이드</label>
-                                                    </div>  
-                                                    <div class="check_wrap">
-                                                        <label class="check">
-                                                            <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="허브차" class="save_check">
-                                                            <span class="check_icon"></span>
-                                                        </label>
-                                                        <label class="check_label mb-1">허브차</label>
-                                                    </div>  
-                                                    <div class="check_wrap">
-                                                        <label class="check">
-                                                            <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = false;" name="beverage" class="save_check">
-                                                            <span class="check_icon"></span>
-                                                        </label>
-                                                        <label class="check_label mb-1">기타</label>
-                                                        <input type="text" id="etc_{{cafe.id}}" name="beverage" value="" placeholder="음료명" disabled="disabled" style="height:25px; margin-left: 10px; font-family: Wemakeprice-Bold;"/>
-                                                    </div>
-                                                </section>
-                                            </div>
-                                            
-                                            <div class="modal-footer">
-                                                <button type="submit" id="submit_btn_{{cafe.id}}" class="button2" style="background-color:lightblue;">추가</button>
-                                                <button type="button" class="button2" data-bs-dismiss="modal" style="background-color:lightpink; margin-right: 10px;">닫기</button>
+                                        </div>
+                                        <div class="rating_wrap">
+                                            <div class="rating" data-rate="{{cafe.cafe_stars}}">
+                                                <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                                                <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                                                <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                                                <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
+                                                <div class="star_wrap"><div class="star"><i class="fas fa-star full_star"></i></div></div>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
+                            
                             </div>
+                        </td>
+                        <!--카페 추가 버튼-->
+                        <td>
+                            <input type="submit" class="button" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ cafe.id }}" name="visit" value="방문추가">
+                        </td>
+                        <!-- backdrop 삭제 -->
+                        <div class="modal fade" id="exampleModal_{{ cafe.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form action="{% url 'visit_register' %}" method='post'>
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="text-align: center; justify-content: center;">
+                                            <h5 class="modal-title table_title" id="exampleModalLabel">
+                                                <input type="hidden" name="cafename" value="{{ cafe.name }}">
+                                                <input type="hidden" name="cafeid" value="{{ cafe.id }}">
+                                                <span style="font-size: 30px; font-weight: bold; font-family: NEXON Lv2 Gothic Bold;">{{cafe.name}}</span>
+                                            </h5>
+                                        </div>
+                                        <div class="modal-body d-flex drink-list" style="flex-direction: column;">
+                                            <p class="modalcontent" style="font-size: 23px; text-align: center; margin-bottom:5%;">마신 음료를 체크해주세요!</p>
+                                            <section class="check-div mb-3">
+                                                <div class="check_wrap">
+                                                    <label class="check">
+                                                        <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="아메리카노" class="save_check">
+                                                        <span class="check_icon"></span>
+                                                    </label>
+                                                    <label class="check_label mb-1">아메리카노</label>
+                                                </div>
+                                                <div class="check_wrap">
+                                                    <label class="check">
+                                                        <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="바닐라라떼" class="save_check">
+                                                        <span class="check_icon"></span>
+                                                    </label>
+                                                    <label class="check_label mb-1">바닐라 라떼</label>
+                                                </div>
+                                                <div class="check_wrap">
+                                                    <label class="check">
+                                                        <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카페라떼" class="save_check">
+                                                        <span class="check_icon"></span>
+                                                    </label>
+                                                    <label class="check_label mb-1">카페라떼</label>
+                                                </div>
+                                                <div class="check_wrap">
+                                                    <label class="check">
+                                                        <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="카라멜마끼야또" class="save_check">
+                                                        <span class="check_icon"></span>
+                                                    </label>
+                                                    <label class="check_label mb-1">카라멜마끼야또</label>
+                                                </div>  
+                                                <div class="check_wrap">
+                                                    <label class="check">
+                                                        <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="초코라떼" class="save_check">
+                                                        <span class="check_icon"></span>
+                                                    </label>
+                                                    <label class="check_label mb-1">초코라떼</label>
+                                                </div>  
+                                                <div class="check_wrap">
+                                                    <label class="check">
+                                                        <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="녹차라떼" class="save_check">
+                                                        <span class="check_icon"></span>
+                                                    </label>
+                                                    <label class="check_label mb-1">녹차라떼</label>
+                                                </div>  
+                                                <div class="check_wrap">
+                                                    <label class="check">
+                                                        <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="에이드" class="save_check">
+                                                        <span class="check_icon"></span>
+                                                    </label>
+                                                    <label class="check_label mb-1">에이드</label>
+                                                </div>  
+                                                <div class="check_wrap">
+                                                    <label class="check">
+                                                        <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = true;" name="beverage" value="허브차" class="save_check">
+                                                        <span class="check_icon"></span>
+                                                    </label>
+                                                    <label class="check_label mb-1">허브차</label>
+                                                </div>  
+                                                <div class="check_wrap">
+                                                    <label class="check">
+                                                        <input type="radio" onclick="document.getElementById('etc_{{cafe.id}}').disabled = false;" name="beverage" class="save_check">
+                                                        <span class="check_icon"></span>
+                                                    </label>
+                                                    <label class="check_label mb-1">기타</label>
+                                                    <input type="text" id="etc_{{cafe.id}}" name="beverage" value="" placeholder="음료명" disabled="disabled" style="height:25px; margin-left: 10px; font-family: Wemakeprice-Bold;"/>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        
+                                        <div class="modal-footer">
+                                            <button type="submit" id="submit_btn_{{cafe.id}}" class="button2" style="background-color:lightblue;">추가</button>
+                                            <button type="button" class="button2" data-bs-dismiss="modal" style="background-color:lightpink; margin-right: 10px;">닫기</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <td>
                             <!--리뷰 작성 버튼-->
                             {% if cafe in user_visited_cafes %}
@@ -220,23 +269,24 @@
                     </td>
                 </tr>
             {% endif %}            
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
 
 
     <!-- 페이징 처리 -->
     {% if is_paginated %}
     <div class="btn-group me-2" role="group" aria-label="First group">
-    <ul class="pagination" style="justify-content: space-around; font-family: RIDIBatang; color: black;">
+    <ul class="pagination">
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}" style="color:black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{1}}">
                 처음
             </a>
         </li>
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1" style="color:black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}" tabindex="-1">
                 이전
             </a>
         </li>
@@ -251,7 +301,7 @@
         {% for page in page_range %}
         <li class="page-item {% if page == page_obj.number %} activate {% endif %}">
             
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}" style="color: black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">
                 {{ page }}
             </a>
             
@@ -260,7 +310,7 @@
 
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}" style="color: black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">
                 다음
             </a>
         </li>
@@ -272,13 +322,13 @@
         </li>
         {% endif %}
         <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}" style="color: black;">
+            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{page_obj.paginator.num_pages}}">
                 마지막
             </a>
         </li>
     </ul>
     </div>
-    <div style="height:38px;">
+    <div>
         <span class="page-obj">{{page_obj}}</span>
     </div>
     {% endif %}
@@ -305,5 +355,17 @@
             }
         }
     });
+
+    var windowWidth = $(window).width();
+
+    console.log("window width:", windowWidth);
+    var mobile = document.getElementById("mobile");
+    console.log("mobile:", mobile);
+    if (windowWidth < 400){
+        mobile.innerHTML = "<p style=\"margin-bottom: 0;\">모바일로 보실 땐, 옆으로 스크롤해서 카페정보들을 확인해주세요~</p>";
+    }
+    else {
+        mobile.innerHTML = "";
+    }
 </script>
 {% endblock %}

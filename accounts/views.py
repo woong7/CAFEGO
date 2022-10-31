@@ -381,17 +381,6 @@ def mypage(request, pk):
         total_drink.append(drink_list)# 각각에 모든 음료 데이터들이 들어감,,,
         total_drink_dic[v_cafe] = drink_list
 
-    
-    #print("vcafe:", visit_cafes)
-    
-    #print("total drink:", total_drink)#
-    #print("total drink dic:", total_drink_dic)#
-    #print("total drink dic type:", type(total_drink_dic))#
-
-        #drink_list = Drink.objects.get(visited_cafe=cafe)#되나?
-    
-    #print("drink", drink)
-    #print(drink_list.drinkname)
     jsonDec=json.decoder.JSONDecoder()
     badgeList_before=jsonDec.decode(owner.badge_taken)
     badge_before=len(badgeList_before)
@@ -411,14 +400,12 @@ def mypage(request, pk):
             friends.append(user)
         if user.nickname in follwersList:
             follwers.append(user)
-        
 
     my_all_review = Review.objects.filter(username=owner)
     all_review_count = len(my_all_review)
     review_photo = ReviewPhoto.objects.all() 
     comments=Comment.objects.filter(username=owner)
 
-        
     users=users.order_by('-total_visit')
     
     badgeList=[]
@@ -457,9 +444,6 @@ def mypage(request, pk):
     #user에 총 카페 방문횟수 저장
     owner.badge_taken=json.dumps(badgeList)
     owner.save()
-    #print("!!!!", this_user.total_visit)
-
-
 
     ctx={
         'owner':owner,

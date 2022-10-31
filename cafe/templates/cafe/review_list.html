@@ -43,9 +43,9 @@
                 <span class="rating_number">({{ this_cafe.cafe_stars }}점)</span>
             </div>
             <div class="row gap-2 justify-content-center">
-                <button class="fw-bold btn btn-outline-warning another-review-button" onclick="location.href= 'https://place.map.kakao.com/{{this_cafe.pk}}'">카카오 리뷰</button>
-                <button class="fw-bold btn btn-outline-success another-review-button" onClick="location.href='https://map.naver.com/v5/search/{{this_cafe.name}}'">네이버 리뷰</button>
-                <button class="fw-bold btn btn-outline-danger another-review-button" onClick="location.href='https://google.com/search?q={{this_cafe.name}}'">구글 리뷰</button>
+                <a class="another-review-button" href="https://place.map.kakao.com/{{this_cafe.pk}}" target="_blank"><button class="fw-bold btn btn-outline-warning">카카오 리뷰</button></a>
+                <a class="another-review-button" href="https://map.naver.com/v5/search/{{this_cafe.name}}" target="_blank"><button class="fw-bold btn btn-outline-success">네이버 리뷰</button></a>
+                <a class="another-review-button" href="https://google.com/search?q={{this_cafe.name}}" target="_blank"><button class="fw-bold btn btn-outline-danger">구글 리뷰</button></a>
             </div>
         </div>
     </div>

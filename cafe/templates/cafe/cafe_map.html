@@ -9,6 +9,9 @@
 
 {% block content %}
     <div class="cafe_map-container">
+        <button class="toggle-btn">
+            <img class="toggle-img" src="https://cdn-icons-png.flaticon.com/512/32/32213.png" />
+        </button>
         <div id="keyword-search">
             <div class="bg-search-area search d-flex flex-column justify-content-center align-items-center">
                 <div class="py-1">
@@ -35,7 +38,28 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fcbe48a94474ef23703951ea76b61e90&libraries=services"></script>
-    <script  type="text/javascript"> 
+    <script  type="text/javascript">
+    //button 클릭 시 검색창 토글
+    var obj1 = $(".toggle-btn").offset(),
+        obj2 = $(".mycafe-btn").offset();
+    $(document).ready(function(){
+        $(".toggle-btn").click(function(){
+            if($("#keyword-search").css("display") === "none") {
+                $("#keyword-search").show();
+                $(".toggle-btn").css("left", obj1.left);
+                $(".mycafe-btn").css("left", obj2.left);
+                $(".toggle-img").css("transform", "rotate(0.5turn)")
+            }
+            else {
+                $("#keyword-search").hide();
+                $(".toggle-btn").css("left", obj1.left - 320);
+                $(".mycafe-btn").css("left", obj2.left - 320);
+                $(".toggle-img").css("transform", "rotate(0)")
+            }
+        });
+    });
+    
+
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
         mapOption = {
             center: new kakao.maps.LatLng(37.5642135, 127.0016985), // 지도의 중심좌표
@@ -189,7 +213,7 @@
     function checkKeyword(keyword, markers, keywordMarkers, places, keywordPlaces) {
         for(var i=0; i < markers.length; i++) {
             // keyword를 포함한 카페가 있는 경우에 keywordMarkers 배열에 해당 카페 객체를 추가
-            if(markers[i].Fb.includes(keyword)) {
+            if(markers[i].Gb.includes(keyword)) {
                 // 검색된 카페를 지도에 보이기 위한 함수
                 markers[i].setVisible(true);
                 // keywordMarkers에 keyword를 포함한 마커 추가
